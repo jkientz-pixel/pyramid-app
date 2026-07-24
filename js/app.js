@@ -185,18 +185,46 @@ function screenState(st) {
   }
 }
 
+function playerRow(p, rank) {
+  return `<li><a href="#/player/${CLUBS.indexOf(p.c)}/${p.i}">
+    <span class="rk">${rank}</span>${crestHtml(p.c)}
+    <span class="cl-name"><b>${p.name}</b><span>${p.pos} · ${esc(p.c.n)}</span></span>
+    <span class="cl-rt">${p.pvr}</span></a></li>`;
+}
 function screenTable() {
   crumb.textContent = 'Table';
-  const render = () => pool().filter(c => c.r && leagueFilter.has(c.g)).sort((a, b) => b.r - a.r)
+  const renderClubs = () => pool().filter(c => c.r && leagueFilter.has(c.g)).sort((a, b) => b.r - a.r)
     .slice(0, 40).map((c, i) => clubRow(c, i + 1)).join('');
+  const renderPlayers = () => allPlayers(sex)
+    .filter(p => leagueFilter.has(p.c.g) && (posFilter === 'all' || p.pos === posFilter))
+    .sort((a, b) => b.pvr - a.pvr).slice(0, 40).map((p, i) => playerRow(p, i + 1)).join('');
+  const render = () => tableMode === 'clubs' ? renderClubs() : renderPlayers();
   view.innerHTML = `
     ${sexToggle()}
     <div class="kicker">Cross-league · demo ratings</div>
     <h2 class="disp">The National Table</h2>
+    <div class="chips seg" id="modeseg">
+      <button class="chip solid" data-mode="clubs" aria-pressed="${tableMode === 'clubs'}">Clubs</button>
+      <button class="chip solid" data-mode="players" aria-pressed="${tableMode === 'players'}">Players</button>
+    </div>
+    <div class="chips" id="poschips" style="display:${tableMode === 'players' ? 'flex' : 'none'}">${['all', 'GK', 'DF', 'MF', 'FW'].map(pp =>
+      `<button class="chip solid" data-pos="${pp}" aria-pressed="${posFilter === pp}">${pp === 'all' ? 'All positions' : pp}</button>`).join('')}</div>
     ${leagueChips()}
     <ul class="clublist" id="tablelist">${render()}</ul>
-    <p class="note">Ratings are illustrative until the results pipeline is live. Men's and women's tables are ranked separately.</p>`;
+    <p class="note">${tableMode === 'players'
+      ? 'Player value ratings weight production by opposition strength — demo stats until verified reporting is live.'
+      : "Ratings are illustrative until the results pipeline is live. Men's and women's tables are ranked separately."}</p>`;
   wireSexToggle();
+  view.querySelector('#modeseg').addEventListener('click', e => {
+    const b = e.target.closest('[data-mode]'); if (!b || b.dataset.mode === tableMode) return;
+    tableMode = b.dataset.mode; screenTable();
+  });
+  view.querySelector('#poschips').addEventListener('click', e => {
+    const b = e.target.closest('[data-pos]'); if (!b) return;
+    posFilter = b.dataset.pos;
+    view.querySelectorAll('#poschips .chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.pos === posFilter));
+    view.querySelector('#tablelist').innerHTML = render();
+  });
   view.querySelector('#lgchips').addEventListener('click', e => {
     const b = e.target.closest('.chip'); if (!b) return;
     const k = b.dataset.lg;
@@ -301,15 +329,49 @@ function worldLadder(c) {
 const MNAMES = ['Marcus','Diego','Jalen','Mateo','Ethan','Luis','Andre','Caleb','Santiago','Noah','Tyler','Rafael','Owen','Bryan','Ali','Emeka','Kofi','Jordan','Devin','Hugo','Tomas','Wes','Nico','Sam','Alexis','Victor','Trey','Milan','Ibrahim','Cole'];
 const WNAMES = ['Alex','Sofia','Maya','Jess','Camila','Riley','Morgan','Ashley','Taylor','Kelsey','Lena','Bri','Naomi','Val','Grace','Emma','Sydney','Rose','Mal','Kika','Ella','Ava','Tori','Jade','Dani','Reese','Skye','Nina','Paige','Zoe'];
 const LNAMES = ['Rivera','Johnson','Smith','Garcia','Martinez','Brown','Lee','Nguyen','Walker','Hernandez','Silva','Jones','Diaz','Thompson','Castro','Okafor','Kim','Lopez','Wright','Mensah','Ortiz','Reed','Vargas','King','Ramos','Bell','Torres','Hayes','Moreno','Price'];
-const POSNS = ['GK','GK','DF','DF','DF','DF','DF','DF','MF','MF','MF','MF','MF','MF','FW','FW','FW','FW'];
-function genSquad(c, seed) {
+const POSNS = ['GK','GK','GK','DF','DF','DF','DF','DF','DF','DF','DF','MF','MF','MF','MF','MF','MF','MF','FW','FW','FW','FW','FW','FW'];
+function clubSeed(c) { let x = 0; for (const ch of c.n) x = (x * 31 + ch.charCodeAt(0)) % 233; return x; }
+function genSquad(c) {
+  const seed = clubSeed(c);
   const first = c.x === 'w' ? WNAMES : MNAMES;
-  return POSNS.map((pos, i) => ({
-    num: pos === 'GK' ? (i === 0 ? 1 : 25) : i + 1,
-    name: first[(seed * 7 + i * 13) % 30] + ' ' + LNAMES[(seed * 11 + i * 17) % 30],
-    pos, age: 19 + ((seed + i * 29) % 15),
-    form: ((62 + ((seed * 3 + i * 41) % 33)) / 10).toFixed(1)
-  }));
+  return POSNS.map((pos, i) => {
+    const apps = 8 + ((seed + i * 37) % 15);
+    const goals = pos === 'FW' ? (seed + i * 19) % 14 : pos === 'MF' ? (seed + i * 19) % 8 : pos === 'DF' ? (seed + i * 19) % 4 : 0;
+    const assists = pos === 'GK' ? 0 : (seed + i * 23) % (pos === 'MF' ? 10 : 7);
+    const saves = pos === 'GK' ? apps * (2 + (seed + i) % 3) : 0;
+    const cs = pos === 'GK' ? Math.round(apps * (20 + (seed * (i + 1)) % 30) / 100) : 0;
+    const pvr = Math.round((goals * 4 + assists * 3 + apps * 0.6 + cs * 2.5 + saves * 0.06) * (c.r / 1800) * 10) / 10;
+    return {
+      num: pos === 'GK' ? (i === 0 ? 1 : i === 1 ? 25 : 31) : i + 1,
+      name: first[(seed * 7 + i * 13) % 30] + ' ' + LNAMES[(seed * 11 + i * 17) % 30],
+      pos, age: 19 + ((seed + i * 29) % 15),
+      apps, goals, assists, saves, cs,
+      yc: (seed + i * 7) % 6, rc: ((seed + i * 11) % 17) === 0 ? 1 : 0,
+      mins: apps * (62 + (seed + i) % 29), pvr,
+      form: ((62 + ((seed * 3 + i * 41) % 33)) / 10).toFixed(1)
+    };
+  });
+}
+function genStaff(c) {
+  const seed = clubSeed(c);
+  const pool = c.x === 'w' ? WNAMES.concat(MNAMES) : MNAMES;
+  return {
+    hc: { name: pool[(seed * 13 + 5) % pool.length] + ' ' + LNAMES[(seed * 17 + 3) % 30], age: 41 + (seed % 22) },
+    ac: { name: pool[(seed * 19 + 11) % pool.length] + ' ' + LNAMES[(seed * 23 + 7) % 30], age: 34 + ((seed * 3) % 20) }
+  };
+}
+let _pcache = {};
+function allPlayers(sx) {
+  if (_pcache[sx]) return _pcache[sx];
+  const out = [];
+  CLUBS.forEach(c => { if (c.x !== sx || !c.r) return; genSquad(c).forEach((pl, i) => out.push({ ...pl, c, i })); });
+  return _pcache[sx] = out;
+}
+const PRO = new Set(['mls', 'uslc', 'usl1', 'mnp', 'nwsl', 'uslw']);
+function verifyBadge(c) {
+  return PRO.has(c.g)
+    ? '<span class="badge v">Stats: league match reports (demo)</span>'
+    : '<span class="badge c">Stats: club-submitted, email-verified (demo)</span>';
 }
 
 function screenClub(idx) {
@@ -359,8 +421,12 @@ function screenClub(idx) {
        <span class="res-delta">${h.date} · ${h.delta} Elo</span></li>`).join('')}</ul>
     <p class="note">Green rows are wins as the underdog; red rows are losses as the favorite — form versus expectation, the number a straight table hides.</p>
     <div class="kicker" style="margin-top:14px">Squad · demo roster</div>
-    <ul class="squad">${genSquad(c, seed).map(pl =>
-      `<li><span class="sq-num">${pl.num}</span><span class="sq-name">${pl.name}</span><span class="sq-pos">${pl.pos}</span><span class="sq-age">${pl.age}</span><span class="sq-form">${pl.form}</span></li>`).join('')}</ul>
+    ${verifyBadge(c)}
+    <ul class="squad staff">${(st2 => `
+      <li><span class="sq-num">HC</span><span class="sq-name">${st2.hc.name}</span><span class="sq-pos">Head Coach</span><span class="sq-age">${st2.hc.age}</span><span class="sq-form"></span></li>
+      <li><span class="sq-num">AC</span><span class="sq-name">${st2.ac.name}</span><span class="sq-pos">Assistant</span><span class="sq-age">${st2.ac.age}</span><span class="sq-form"></span></li>`)(genStaff(c))}</ul>
+    <ul class="squad">${genSquad(c).map((pl, pi) =>
+      `<li><a href="#/player/${CLUBS.indexOf(c)}/${pi}"><span class="sq-num">${pl.num}</span><span class="sq-name">${pl.name}</span><span class="sq-pos">${pl.pos}</span><span class="sq-ga">${pl.pos === 'GK' ? pl.cs + ' CS' : pl.goals + 'g ' + pl.assists + 'a'}</span><span class="sq-form">${pl.pvr}</span></a></li>`).join('')}</ul>
     <p class="note">Placeholder players — real rosters come from claimed clubs and league feeds.</p>
     ${worldLadder(c)}` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
     <div class="kicker">Follow</div>
@@ -391,12 +457,42 @@ function screenAbout() {
   </div>`;
 }
 
+function screenPlayer(ci, pi) {
+  const c = CLUBS[+ci]; if (!c || !c.r) return screenMap();
+  const sq = genSquad(c); const pl = sq[+pi]; if (!pl) return screenClub(ci);
+  crumb.textContent = c.st;
+  const peers = allPlayers(c.x).filter(p => p.pos === pl.pos).sort((a, b) => b.pvr - a.pvr);
+  const rank = peers.findIndex(p => p.c === c && p.i === +pi) + 1;
+  view.innerHTML = `
+    <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/club/${ci}'">&larr; ${esc(c.n)}</button>
+    <div class="clubhead">${crestHtml(c)}
+      <div><h2 class="disp" style="margin:0">${pl.name}</h2>
+      <span class="sub">#${pl.num} · ${pl.pos} · ${pl.age} yrs · ${esc(c.n)}</span></div>
+    </div>
+    ${verifyBadge(c)}
+    <div class="statgrid">
+      <div class="stat"><b>${pl.pvr}</b><span>Value rating</span></div>
+      <div class="stat"><b>#${rank}</b><span>${pl.pos} · ${c.x === 'w' ? "women's" : "men's"} pool</span></div>
+      <div class="stat"><b>${pl.apps}</b><span>Appearances</span></div>
+      ${pl.pos === 'GK'
+        ? `<div class="stat"><b>${pl.cs}</b><span>Clean sheets</span></div>
+           <div class="stat"><b>${pl.saves}</b><span>Saves</span></div>`
+        : `<div class="stat"><b>${pl.goals}</b><span>Goals</span></div>
+           <div class="stat"><b>${pl.assists}</b><span>Assists</span></div>`}
+      <div class="stat"><b>${pl.mins.toLocaleString()}</b><span>Minutes</span></div>
+    </div>
+    <p class="note">Value rating weights goals, assists, minutes and keeper actions by the strength of the team's opposition (demo formula on demo stats). Cards: ${pl.yc} yellow${pl.rc ? ', 1 red' : ''}.</p>
+    <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Player profile: ' + pl.name + ' (' + c.n + ')')}">Is this you? Claim your profile</a>
+    <p class="note">Claimed player profiles add film links, verified stats history, and recruiting visibility.</p>`;
+}
+
+let tableMode = 'clubs', posFilter = 'all';
 /* ---- router ---- */
 function route() {
   const h = location.hash || '#/map';
   const parts = h.slice(2).split('/');
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active',
-    a.dataset.tab === (['state', 'region', 'club'].includes(parts[0]) ? 'map' : parts[0])));
+    a.dataset.tab === (['state', 'region', 'club', 'player'].includes(parts[0]) ? 'map' : parts[0])));
   view.scrollTop = 0;
   if (parts[0] === 'table') screenTable();
   else if (parts[0] === 'matches') screenMatches();
@@ -404,6 +500,7 @@ function route() {
   else if (parts[0] === 'state') screenState(parts[1]);
   else if (parts[0] === 'region') screenRegion(parts[1]);
   else if (parts[0] === 'club') screenClub(parts[1]);
+  else if (parts[0] === 'player') screenPlayer(parts[1], parts[2]);
   else screenMap();
 }
 addEventListener('hashchange', route);
