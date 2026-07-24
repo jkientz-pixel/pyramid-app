@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Pyramid — every US soccer club, one map</title>
+<meta name="description" content="Concept app: US soccer's national club map and cross-league rankings, MLS to the grassroots.">
+<meta name="theme-color" content="#0C1512">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="stage">
+  <aside class="pitch-copy">
+    <h1 class="disp">The Pyramid</h1>
+    <p>Every club in American soccer — MLS to the grassroots — on one map, with one national ranking. This is a working concept: real clubs, real locations, demo ratings.</p>
+    <ul>
+      <li>Tap a state to zoom to its clubs</li>
+      <li>Browse by region, league, or the national table</li>
+      <li>Every club links out to its own site and socials</li>
+    </ul>
+    <p class="fine">Concept by Jeremy Kientz · 185 clubs loaded · ratings illustrative</p>
+  </aside>
+  <div class="phone">
+    <div class="screen">
+      <header class="appbar">
+        <span class="disp brand">The Pyramid</span>
+        <span class="sub" id="crumb">USA</span>
+      </header>
+      <main id="view" tabindex="-1"></main>
+      <nav class="tabbar" aria-label="App sections">
+        <a href="#/map" data-tab="map"><svg viewBox="0 0 24 24"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2V6z" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="11" r="2.4" fill="currentColor"/></svg>Map</a>
+        <a href="#/table" data-tab="table"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 10h16M4 15h10M4 20h7" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round"/></svg>Table</a>
+        <a href="#/matches" data-tab="matches"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 7.5l3 2.2-1.1 3.6h-3.8L9 9.7z" fill="currentColor"/></svg>Matches</a>
+        <a href="#/about" data-tab="about"><svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M9 20v-6h6v6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>About</a>
+      </nav>
+    </div>
+  </div>
+</div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
