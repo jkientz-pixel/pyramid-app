@@ -26,6 +26,7 @@ const pool = () => CLUBS.filter(c => c.x === sex);
 const visible = clubs => clubs.filter(c => leagueFilter.has(c.g));
 
 function crestHtml(c) {
+  if (c.img) return `<img class="crest imgcrest" src="${c.img}" alt="${esc(c.n)} crest" loading="lazy">`;
   return `<span class="crest" style="background:${LEAGUES[c.g].color}">${initials(c.n)}</span>`;
 }
 
@@ -166,12 +167,22 @@ function screenState(st) {
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/map'">&larr; Back</button>
     ${sexToggle()}
     <div class="kicker">State</div><h2 class="disp">${STATE_NAME[st]}</h2>
-    ${clubs.length ? renderMapSvg(clubs) : ''}
+    ${clubs.length ? renderMapSvg(visible(clubs)) : ''}
+    ${clubs.length ? leagueChips() : ''}
     <div class="kicker" style="margin-top:10px">${clubs.length ? `Clubs · ${clubs.length}` : 'No clubs mapped yet'}</div>
-    <ul class="clublist">${ranked.map((c, i) => clubRow(c, i + 1)).join('')}${concepts.map(c => clubRow(c)).join('')}</ul>
+    <ul class="clublist" id="statelist">${ranked.map((c, i) => clubRow(c, i + 1)).join('')}${concepts.map(c => clubRow(c)).join('')}</ul>
     ${clubs.length ? '' : '<p class="note">This is where league expansion starts — the dataset grows as leagues are added.</p>'}`;
   wireSexToggle();
-  if (clubs.length) wireMap([st]);
+  if (clubs.length) {
+    wireMap([st]);
+    const chips = view.querySelector('#lgchips');
+    if (chips) chips.addEventListener('click', e => {
+      if (!e.target.closest('.chip')) return;
+      const r2 = clubs.filter(c => c.r && leagueFilter.has(c.g)).sort((a, b) => b.r - a.r);
+      const c2 = clubs.filter(c => !c.r && leagueFilter.has(c.g));
+      view.querySelector('#statelist').innerHTML = r2.map((c, i) => clubRow(c, i + 1)).join('') + c2.map(c => clubRow(c)).join('');
+    });
+  }
 }
 
 function screenTable() {
