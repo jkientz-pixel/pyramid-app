@@ -1,5 +1,5 @@
 import { PROJ, USMAP } from './usmap.js';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL } from './data.js';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -467,6 +467,10 @@ function screenAbout() {
     <div class="kicker" style="margin-top:14px">The leagues</div>
     <ul class="lglist">${Object.entries(LEAGUES).filter(([k, m]) => m.url).map(([k, m]) =>
       `<li><a href="${m.url}" target="_blank" rel="noopener">${m.img ? `<img src="${m.img}" alt="" loading="lazy">` : `<span class="dot" style="background:${m.color};width:12px;height:12px;border-radius:50%"></span>`}<b>${m.label}</b><span>${m.url.replace('https://', '').replace('www.', '')}</span></a></li>`).join('')}</ul>
+    <div class="kicker" style="margin-top:14px">Coming layers</div>
+    <ul class="lglist">${ROADMAP.map(r =>
+      `<li><a href="${r.url}" target="_blank" rel="noopener"><span class="dot" style="background:var(--ink-dim);width:12px;height:12px;border-radius:50%;opacity:.4"></span><b>${r.label}</b><span>~${r.teams} teams · ${r.sex === 'w' ? "women's" : "men's"}</span></a></li>`).join('')}</ul>
+    <p class="note">NISA is currently unsanctioned by U.S. Soccer (Dec 2024); its clubs are shown for completeness. UPSL layer holds the clubs mapped so far — the full league is 400+ clubs.</p>
     <p class="fine" style="font-size:.75rem">Concept by Jeremy Kientz · 2026</p>
   </div>`;
 }
