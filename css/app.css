@@ -162,3 +162,12 @@ a.lgchip{text-decoration:none}
 .squad.staff{margin-bottom:8px}
 .squad.staff li{display:flex;align-items:center;gap:10px;padding:7px 12px}
 .squad.staff .sq-pos{width:auto}
+.pathway{list-style:none;margin:8px 0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--raise)}
+.pathway li{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);font-size:.86rem}
+.pathway li:last-child{border-bottom:none}
+.pathway span{color:var(--ink-dim);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;width:7.5em;flex:none}
+.pathway a{color:var(--accent);text-decoration:none}
+.fifaid{border:1px dashed var(--line);border-radius:10px;padding:9px 12px;margin:10px 0;background:var(--ground2)}
+.fifaid span{display:block;color:var(--ink-dim);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase}
+.fifaid b{font-variant-numeric:tabular-nums;letter-spacing:.06em}
+.fifaid i{display:block;color:var(--ink-dim);font-size:.68rem;font-style:normal;margin-top:2px}

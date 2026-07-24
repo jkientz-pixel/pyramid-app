@@ -1,5 +1,5 @@
 import { PROJ, USMAP } from './usmap.js';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS } from './data.js';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL } from './data.js';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -130,7 +130,7 @@ function screenMap() {
       `<button class="chip solid" data-region="${r}" aria-pressed="${r === 'all'}">${r === 'all' ? 'All USA' : REGION_LABEL[r]}</button>`).join('')}</div>
     ${renderMapSvg(visible(clubs))}
     ${leagueChips()}
-    <p class="note">Tap a state to zoom in. Tap a pin for the club. Hollow dots are expansion concepts.</p>`;
+    <p class="note">Tap a state to zoom in. Tap a pin for the club.</p>`;
   wireSexToggle();
   wireMap(null);
   view.querySelector('#regionchips').addEventListener('click', e => {
@@ -429,6 +429,20 @@ function screenClub(idx) {
       `<li><a href="#/player/${CLUBS.indexOf(c)}/${pi}"><span class="sq-num">${pl.num}</span><span class="sq-name">${pl.name}</span><span class="sq-pos">${pl.pos}</span><span class="sq-ga">${pl.pos === 'GK' ? pl.cs + ' CS' : pl.goals + 'g ' + pl.assists + 'a'}</span><span class="sq-form">${pl.pvr}</span></a></li>`).join('')}</ul>
     <p class="note">Placeholder players — real rosters come from claimed clubs and league feeds.</p>
     ${worldLadder(c)}` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
+    ${(() => {
+      const kids = AFFIL[c.n] || [];
+      const parent = Object.entries(AFFIL).find(([, v]) => v.some(a => a.split(' · ')[0] === c.n));
+      if (!kids.length && !parent) return '';
+      const linkify = nm => {
+        const base = nm.split(' · ')[0];
+        const idx = CLUBS.findIndex(o => o.n === base);
+        return idx >= 0 ? `<a href="#/club/${idx}">${nm}</a>` : nm;
+      };
+      return `<div class="kicker">Pathway</div><ul class="pathway">` +
+        (parent ? `<li><span>Parent club</span><b>${linkify(parent[0])}</b></li>` : '') +
+        kids.map(k => `<li><span>Second team</span><b>${linkify(k)}</b></li>`).join('') +
+        `</ul><p class="note">The route a player climbs: second team to first team, tier to tier.</p>`;
+    })()}
     <div class="kicker">Follow</div>
     <div class="linkrow">
       ${c.url ? `<a href="${c.url}" target="_blank" rel="noopener"><b>Official site</b></a>` : `<a href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}
@@ -482,6 +496,7 @@ function screenPlayer(ci, pi) {
       <div class="stat"><b>${pl.mins.toLocaleString()}</b><span>Minutes</span></div>
     </div>
     <p class="note">Value rating weights goals, assists, minutes and keeper actions by the strength of the team's opposition (demo formula on demo stats). Cards: ${pl.yc} yellow${pl.rc ? ', 1 red' : ''}.</p>
+    <div class="fifaid"><span>FIFA Connect ID</span><b>USA-${String(1000 + (clubSeed(c) * 7) % 9000)}-${String(10000 + (clubSeed(c) * 31 + +pi * 977) % 90000)}</b><i>demo format — real IDs come from US Soccer registration data</i></div>
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Player profile: ' + pl.name + ' (' + c.n + ')')}">Is this you? Claim your profile</a>
     <p class="note">Claimed player profiles add film links, verified stats history, and recruiting visibility.</p>`;
 }
