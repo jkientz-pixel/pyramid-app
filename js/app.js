@@ -298,6 +298,20 @@ function worldLadder(c) {
     <p class="note">Reference ratings are illustrative anchors, not measured values. Cross-continent comparison is a projection — nobody plays these games.</p>`;
 }
 
+const MNAMES = ['Marcus','Diego','Jalen','Mateo','Ethan','Luis','Andre','Caleb','Santiago','Noah','Tyler','Rafael','Owen','Bryan','Ali','Emeka','Kofi','Jordan','Devin','Hugo','Tomas','Wes','Nico','Sam','Alexis','Victor','Trey','Milan','Ibrahim','Cole'];
+const WNAMES = ['Alex','Sofia','Maya','Jess','Camila','Riley','Morgan','Ashley','Taylor','Kelsey','Lena','Bri','Naomi','Val','Grace','Emma','Sydney','Rose','Mal','Kika','Ella','Ava','Tori','Jade','Dani','Reese','Skye','Nina','Paige','Zoe'];
+const LNAMES = ['Rivera','Johnson','Smith','Garcia','Martinez','Brown','Lee','Nguyen','Walker','Hernandez','Silva','Jones','Diaz','Thompson','Castro','Okafor','Kim','Lopez','Wright','Mensah','Ortiz','Reed','Vargas','King','Ramos','Bell','Torres','Hayes','Moreno','Price'];
+const POSNS = ['GK','GK','DF','DF','DF','DF','DF','DF','MF','MF','MF','MF','MF','MF','FW','FW','FW','FW'];
+function genSquad(c, seed) {
+  const first = c.x === 'w' ? WNAMES : MNAMES;
+  return POSNS.map((pos, i) => ({
+    num: pos === 'GK' ? (i === 0 ? 1 : 25) : i + 1,
+    name: first[(seed * 7 + i * 13) % 30] + ' ' + LNAMES[(seed * 11 + i * 17) % 30],
+    pos, age: 19 + ((seed + i * 29) % 15),
+    form: ((62 + ((seed * 3 + i * 41) % 33)) / 10).toFixed(1)
+  }));
+}
+
 function screenClub(idx) {
   const c = CLUBS[+idx];
   if (!c) return screenMap();
@@ -326,7 +340,7 @@ function screenClub(idx) {
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/map'">&larr; Back</button>
     <div class="clubhead">${crestHtml(c)}
       <div><h2 class="disp" style="margin:0">${esc(c.n)}</h2>
-      <span class="lgchip" style="background:${m.color}">${m.label}</span>
+      ${m.url ? `<a class="lgchip" href="${m.url}" target="_blank" rel="noopener" style="background:${m.color}">${m.img ? `<img class="lgimg" src="${m.img}" alt="">` : ''}${m.label} &nearr;</a>` : `<span class="lgchip" style="background:${m.color}">${m.label}</span>`}
       <span class="sub" style="margin-left:8px">${STATE_NAME[c.st] || c.st}</span></div>
     </div>
     ${c.r ? `<div class="statgrid">
@@ -344,6 +358,10 @@ function screenClub(idx) {
        ${h.bl ? '<span class="res-tag tag-bl">bad loss — ' + (h.pWin * 100).toFixed(0) + '% to win</span>' : ''}</span>
        <span class="res-delta">${h.date} · ${h.delta} Elo</span></li>`).join('')}</ul>
     <p class="note">Green rows are wins as the underdog; red rows are losses as the favorite — form versus expectation, the number a straight table hides.</p>
+    <div class="kicker" style="margin-top:14px">Squad · demo roster</div>
+    <ul class="squad">${genSquad(c, seed).map(pl =>
+      `<li><span class="sq-num">${pl.num}</span><span class="sq-name">${pl.name}</span><span class="sq-pos">${pl.pos}</span><span class="sq-age">${pl.age}</span><span class="sq-form">${pl.form}</span></li>`).join('')}</ul>
+    <p class="note">Placeholder players — real rosters come from claimed clubs and league feeds.</p>
     ${worldLadder(c)}` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
     <div class="kicker">Follow</div>
     <div class="linkrow">
@@ -366,6 +384,9 @@ function screenAbout() {
     <p><b>World context.</b> Each club page projects the club onto a hypothetical global ladder against European reference sides — a conversation-starter, clearly labeled, never presented as measurement.</p>
     <p><b>What's real in this demo.</b> All ${CLUBS.length} clubs and locations come from the project dataset. Ratings, records and fixtures are illustrative until the results pipeline is live.</p>
     <p><b>Roadmap.</b> Amateur league layers (UPSL, NPSL, USL League Two) from live feeds · claimed club pages · player profiles · clean crest art · youth club directory layer.</p>
+    <div class="kicker" style="margin-top:14px">The leagues</div>
+    <ul class="lglist">${Object.entries(LEAGUES).filter(([k, m]) => m.url).map(([k, m]) =>
+      `<li><a href="${m.url}" target="_blank" rel="noopener">${m.img ? `<img src="${m.img}" alt="" loading="lazy">` : `<span class="dot" style="background:${m.color};width:12px;height:12px;border-radius:50%"></span>`}<b>${m.label}</b><span>${m.url.replace('https://', '').replace('www.', '')}</span></a></li>`).join('')}</ul>
     <p class="fine" style="font-size:.75rem">Concept by Jeremy Kientz · 2026</p>
   </div>`;
 }
