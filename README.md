@@ -1,4 +1,4 @@
-# The Pyramid (concept app)
+# Rank XI (concept app)
 
 Every US soccer club — MLS to the grassroots — on one map with one national ranking.
 

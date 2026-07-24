@@ -1,5 +1,6 @@
 import { PROJ, USMAP } from './usmap.js';
 import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -130,6 +131,14 @@ function screenMap() {
       `<button class="chip solid" data-region="${r}" aria-pressed="${r === 'all'}">${r === 'all' ? 'All USA' : REGION_LABEL[r]}</button>`).join('')}</div>
     ${renderMapSvg(visible(clubs))}
     ${leagueChips()}
+    ${(() => {
+      const f = favs();
+      if (!f.clubs.length && !f.players.length) return '';
+      return `<div class="kicker" style="margin-top:10px">Following</div><div class="chips">` +
+        f.clubs.map(i => CLUBS[+i] ? `<a class="chip" href="#/club/${i}" style="text-decoration:none">&#9733; ${esc(CLUBS[+i].n)}</a>` : '').join('') +
+        f.players.map(id => { const parts2 = id.split('/'); const c2 = CLUBS[+parts2[0]]; if (!c2) return '';
+          const p2 = squadFor(c2)[+parts2[1]]; return p2 ? `<a class="chip" href="#/player/${id}" style="text-decoration:none">&#9733; ${p2.name}</a>` : ''; }).join('') + `</div>`;
+    })()}
     <p class="note">Tap a state to zoom in. Tap a pin for the club.</p>`;
   wireSexToggle();
   wireMap(null);
@@ -259,7 +268,7 @@ const moneyline = p => p >= 0.5 ? '-' + Math.round(100 * p / (1 - p)) : '+' + Ma
 function matchCard(h, a, when) {
   const o = oddsFor(h, a);
   return `<div class="match">
-    <div class="mrow"><span class="side">${esc(h.n)}</span><span class="vs">${when || 'NEUTRAL'}</span><span class="side away">${esc(a.n)}</span></div>
+    <div class="mrow"><a class="side" href="#/club/${CLUBS.indexOf(h)}">${esc(h.n)}</a><span class="vs">${when || 'NEUTRAL'}</span><a class="side away" href="#/club/${CLUBS.indexOf(a)}">${esc(a.n)}</a></div>
     <div class="meta"><span>${LEAGUES[h.g].label}${h.g !== a.g ? ' v ' + LEAGUES[a.g].label : ''}</span><span>${h.st}${h.st !== a.st ? ' · ' + a.st : ''}</span></div>
     <div class="scoreline">${o.score[0]}–${o.score[1]}</div>
     <div class="meta" style="justify-content:center;margin-top:0"><span>most likely score</span></div>
@@ -360,15 +369,61 @@ function genStaff(c) {
     ac: { name: pool[(seed * 19 + 11) % pool.length] + ' ' + LNAMES[(seed * 23 + 7) % 30], age: 34 + ((seed * 3) % 20) }
   };
 }
+function pseed(nm) { let x = 0; for (const ch of nm) x = (x * 131 + ch.charCodeAt(0)) % 1009; return x; }
+function statLine(pos, sd, c) {
+  const apps = 8 + (sd % 15);
+  const goals = pos === 'FW' ? sd % 14 : pos === 'MF' ? sd % 8 : pos === 'DF' ? sd % 4 : 0;
+  const assists = pos === 'GK' ? 0 : (sd * 3) % (pos === 'MF' ? 10 : 7);
+  const saves = pos === 'GK' ? apps * (2 + sd % 3) : 0;
+  const cs = pos === 'GK' ? Math.round(apps * (20 + sd % 30) / 100) : 0;
+  const pvr = Math.round((goals * 4 + assists * 3 + apps * 0.6 + cs * 2.5 + saves * 0.06) * (c.r / 1800) * 10) / 10;
+  return { apps, goals, assists, saves, cs, pvr,
+    yc: sd % 6, rc: (sd % 17) === 0 ? 1 : 0, mins: apps * (62 + sd % 29),
+    form: ((62 + (sd * 3) % 33) / 10).toFixed(1) };
+}
+function squadFor(c) {
+  const real = ROSTERS[c.n];
+  if (!real) return genSquad(c);
+  return real.map((rp, i) => ({
+    ...statLine(rp.pos, pseed(rp.name), c),
+    num: rp.num || i + 1, name: rp.name, pos: rp.pos,
+    nat: rp.nat ? rp.nat.toUpperCase() : null, wiki: rp.wiki, real: true, age: null
+  }));
+}
+function staffFor(c) {
+  const real = COACHES[c.n];
+  if (real) return [{ tag: 'HC', name: real.name, role: real.role, age: '' }];
+  const g = genStaff(c);
+  return [{ tag: 'HC', name: g.hc.name, role: 'Head Coach', age: g.hc.age },
+          { tag: 'AC', name: g.ac.name, role: 'Assistant', age: g.ac.age }];
+}
+const favs = () => { try { return JSON.parse(localStorage.getItem('pyr-favs')) || { clubs: [], players: [] }; } catch { return { clubs: [], players: [] }; } };
+function favToggle(type, id) {
+  const f = favs(); const arr = f[type]; const i = arr.indexOf(id);
+  if (i >= 0) arr.splice(i, 1); else arr.push(id);
+  localStorage.setItem('pyr-favs', JSON.stringify(f)); return i < 0;
+}
+const isFav = (type, id) => favs()[type].includes(id);
+function favBtn(type, id) {
+  return `<button class="favbtn${isFav(type, id) ? ' on' : ''}" data-ft="${type}" data-fi="${id}">${isFav(type, id) ? '&#9733; Following' : '&#9734; Follow'}</button>`;
+}
+function wireFav() {
+  view.querySelectorAll('.favbtn').forEach(b => b.addEventListener('click', () => {
+    const on = favToggle(b.dataset.ft, b.dataset.fi);
+    b.classList.toggle('on', on);
+    b.innerHTML = on ? '&#9733; Following' : '&#9734; Follow';
+  }));
+}
 let _pcache = {};
 function allPlayers(sx) {
   if (_pcache[sx]) return _pcache[sx];
   const out = [];
-  CLUBS.forEach(c => { if (c.x !== sx || !c.r) return; genSquad(c).forEach((pl, i) => out.push({ ...pl, c, i })); });
+  CLUBS.forEach(c => { if (c.x !== sx || !c.r) return; squadFor(c).forEach((pl, i) => out.push({ ...pl, c, i })); });
   return _pcache[sx] = out;
 }
 const PRO = new Set(['mls', 'uslc', 'usl1', 'mnp', 'nwsl', 'uslw']);
 function verifyBadge(c) {
+  if (ROSTERS[c.n]) return '<span class="badge v">Roster: live from Wikipedia, refreshed every 2 days · stats demo</span>';
   return PRO.has(c.g)
     ? '<span class="badge v">Stats: league match reports (demo)</span>'
     : '<span class="badge c">Stats: club-submitted, email-verified (demo)</span>';
@@ -405,6 +460,8 @@ function screenClub(idx) {
       ${m.url ? `<a class="lgchip" href="${m.url}" target="_blank" rel="noopener" style="background:${m.color}">${m.img ? `<img class="lgimg" src="${m.img}" alt="">` : ''}${m.label} &nearr;</a>` : `<span class="lgchip" style="background:${m.color}">${m.label}</span>`}
       <span class="sub" style="margin-left:8px">${STATE_NAME[c.st] || c.st}</span></div>
     </div>
+    ${favBtn('clubs', String(CLUBS.indexOf(c)))}
+    ${(HONOURS[c.n] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[c.n] || []).map(h2 => `<li><b>${h2.t}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
       <div class="stat"><b>${c.r}</b><span>Rating (demo)</span></div>
       <div class="stat"><b>#${rank}</b><span>${m.label}</span></div>
@@ -422,11 +479,10 @@ function screenClub(idx) {
     <p class="note">Green rows are wins as the underdog; red rows are losses as the favorite — form versus expectation, the number a straight table hides.</p>
     <div class="kicker" style="margin-top:14px">Squad · demo roster</div>
     ${verifyBadge(c)}
-    <ul class="squad staff">${(st2 => `
-      <li><span class="sq-num">HC</span><span class="sq-name">${st2.hc.name}</span><span class="sq-pos">Head Coach</span><span class="sq-age">${st2.hc.age}</span><span class="sq-form"></span></li>
-      <li><span class="sq-num">AC</span><span class="sq-name">${st2.ac.name}</span><span class="sq-pos">Assistant</span><span class="sq-age">${st2.ac.age}</span><span class="sq-form"></span></li>`)(genStaff(c))}</ul>
-    <ul class="squad">${genSquad(c).map((pl, pi) =>
-      `<li><a href="#/player/${CLUBS.indexOf(c)}/${pi}"><span class="sq-num">${pl.num}</span><span class="sq-name">${pl.name}</span><span class="sq-pos">${pl.pos}</span><span class="sq-ga">${pl.pos === 'GK' ? pl.cs + ' CS' : pl.goals + 'g ' + pl.assists + 'a'}</span><span class="sq-form">${pl.pvr}</span></a></li>`).join('')}</ul>
+    <ul class="squad staff">${staffFor(c).map(st2 =>
+      `<li><span class="sq-num">${st2.tag}</span><span class="sq-name">${st2.name}</span><span class="sq-pos">${st2.role}</span><span class="sq-age">${st2.age}</span><span class="sq-form"></span></li>`).join('')}</ul>
+    <ul class="squad">${squadFor(c).map((pl, pi) =>
+      `<li><a href="#/player/${CLUBS.indexOf(c)}/${pi}"><span class="sq-num">${pl.num}</span><span class="sq-name">${pl.name}</span><span class="sq-pos">${pl.pos}</span><span class="sq-age">${pl.real ? (pl.nat || '') : ''}</span><span class="sq-ga">${pl.pos === 'GK' ? pl.cs + ' CS' : pl.goals + 'g ' + pl.assists + 'a'}</span><span class="sq-form">${pl.pvr}</span></a></li>`).join('')}</ul>
     <p class="note">Placeholder players — real rosters come from claimed clubs and league feeds.</p>
     ${worldLadder(c)}` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
     ${(() => {
@@ -452,6 +508,7 @@ function screenClub(idx) {
     </div>
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim club: ' + c.n)}">Run this club? Claim this page</a>
     <p class="note">Claimed clubs manage their crest, links, roster and schedule.</p>`;
+  wireFav();
 }
 
 function screenAbout() {
@@ -459,7 +516,7 @@ function screenAbout() {
   view.innerHTML = `<div class="about">
     <div class="kicker">Concept</div>
     <h2 class="disp">One pyramid, one table</h2>
-    <p>American soccer has no single place to see every club, how they rank, and how the levels connect. <b>The Pyramid</b> maps all of it: MLS to the grassroots, with men's and women's tables ranked separately.</p>
+    <p>American soccer has no single place to see every club, how they rank, and how the levels connect. <b>Rank XI</b> maps all of it: MLS to the grassroots, with men's and women's tables ranked separately.</p>
     <p><b>How rankings work.</b> League results feed a weekly Elo rating. Cup competitions — Open Cup qualifying, the National Amateur Cup — are where leagues actually meet, and those matches calibrate the cross-league scale. Every rating change is published with the match that caused it.</p>
     <p><b>World context.</b> Each club page projects the club onto a hypothetical global ladder against European reference sides — a conversation-starter, clearly labeled, never presented as measurement.</p>
     <p><b>What's real in this demo.</b> All ${CLUBS.length} clubs and locations come from the project dataset. Ratings, records and fixtures are illustrative until the results pipeline is live.</p>
@@ -477,7 +534,7 @@ function screenAbout() {
 
 function screenPlayer(ci, pi) {
   const c = CLUBS[+ci]; if (!c || !c.r) return screenMap();
-  const sq = genSquad(c); const pl = sq[+pi]; if (!pl) return screenClub(ci);
+  const sq = squadFor(c); const pl = sq[+pi]; if (!pl) return screenClub(ci);
   crumb.textContent = c.st;
   const peers = allPlayers(c.x).filter(p => p.pos === pl.pos).sort((a, b) => b.pvr - a.pvr);
   const rank = peers.findIndex(p => p.c === c && p.i === +pi) + 1;
@@ -485,7 +542,7 @@ function screenPlayer(ci, pi) {
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/club/${ci}'">&larr; ${esc(c.n)}</button>
     <div class="clubhead">${crestHtml(c)}
       <div><h2 class="disp" style="margin:0">${pl.name}</h2>
-      <span class="sub">#${pl.num} · ${pl.pos} · ${pl.age} yrs · ${esc(c.n)}</span></div>
+      <span class="sub">#${pl.num} · ${pl.pos}${pl.real ? (pl.nat ? ' · ' + pl.nat : '') : ' · ' + pl.age + ' yrs'} · ${esc(c.n)}</span></div>
     </div>
     ${verifyBadge(c)}
     <div class="statgrid">
@@ -500,9 +557,21 @@ function screenPlayer(ci, pi) {
       <div class="stat"><b>${pl.mins.toLocaleString()}</b><span>Minutes</span></div>
     </div>
     <p class="note">Value rating weights goals, assists, minutes and keeper actions by the strength of the team's opposition (demo formula on demo stats). Cards: ${pl.yc} yellow${pl.rc ? ', 1 red' : ''}.</p>
+    ${favBtn('players', ci + '/' + pi)}
+    <div class="kicker" style="margin-top:10px">International</div>
+    <p class="note">${pl.real
+      ? `Nationality: <b>${pl.nat || 'unlisted'}</b>. National-team caps are tracked separately from club stats — pulled per player in the roster pipeline's next phase.`
+      : `Demo player — international caps shown only for real rosters.`}</p>
+    <div class="kicker" style="margin-top:10px">Links</div>
+    <div class="linkrow">
+      ${pl.wiki ? `<a href="${pl.wiki}" target="_blank" rel="noopener"><b>Wikipedia bio</b></a>` : ''}
+      <a href="${gsearch(pl.name + ' ' + c.n, 'instagram')}" target="_blank" rel="noopener">Instagram</a>
+      <a href="${gsearch(pl.name + ' ' + c.n, 'transfermarkt')}" target="_blank" rel="noopener">Transfermarkt</a>
+    </div>
     <div class="fifaid"><span>FIFA Connect ID</span><b>USA-${String(1000 + (clubSeed(c) * 7) % 9000)}-${String(10000 + (clubSeed(c) * 31 + +pi * 977) % 90000)}</b><i>demo format — real IDs come from US Soccer registration data</i></div>
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Player profile: ' + pl.name + ' (' + c.n + ')')}">Is this you? Claim your profile</a>
     <p class="note">Claimed player profiles add film links, verified stats history, and recruiting visibility.</p>`;
+  wireFav();
 }
 
 let tableMode = 'clubs', posFilter = 'all';
