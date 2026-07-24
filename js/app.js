@@ -306,8 +306,22 @@ function screenClub(idx) {
   const peers = CLUBS.filter(o => o.g === c.g && o.r).sort((a, b) => b.r - a.r);
   const rank = c.r ? peers.indexOf(c) + 1 : null;
   const natl = CLUBS.filter(o => o.x === c.x && o.r).sort((a, b) => b.r - a.r);
-  const opps = neighbors(c, 5);
+  const opps = neighbors(c, 7);
   let seed = 0; for (const ch of c.n) seed = (seed * 31 + ch.charCodeAt(0)) % 233;
+  const PAST = ['JUL 19', 'JUL 12', 'JUL 5', 'JUN 28', 'JUN 21', 'JUN 14', 'JUN 7', 'MAY 31'];
+  const history = c.r ? PAST.map((date, i) => {
+    const o = opps[i % Math.min(opps.length, 5)];
+    if (!o) return null;
+    const home = i % 2 === 0;
+    const od = home ? oddsFor(c, o) : oddsFor(o, c);
+    const pWin = home ? od.pH : od.pA;
+    const r2 = ((seed * 7 + i * 61) % 100) / 100;
+    const wl = r2 < pWin * 0.85 ? 'W' : r2 < pWin * 0.85 + 0.22 ? 'D' : 'L';
+    const uw = wl === 'W' && pWin < 0.42, bl = wl === 'L' && pWin > 0.62;
+    const score = wl === 'W' ? (pWin > 0.6 ? '3–1' : '2–1') : wl === 'L' ? (pWin > 0.5 ? '1–2' : '0–2') : '1–1';
+    const delta = wl === 'W' ? '+' + Math.round(24 * (1 - pWin)) : wl === 'L' ? '-' + Math.round(24 * pWin) : (pWin < 0.5 ? '+' : '-') + Math.round(Math.abs(0.5 - pWin) * 20);
+    return { o, home, wl, uw, bl, score, delta, date, pWin };
+  }).filter(Boolean) : [];
   view.innerHTML = `
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/map'">&larr; Back</button>
     <div class="clubhead">${crestHtml(c)}
@@ -320,17 +334,20 @@ function screenClub(idx) {
       <div class="stat"><b>#${rank}</b><span>${m.label}</span></div>
       <div class="stat"><b>#${natl.indexOf(c) + 1}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
     </div>
-    <div class="kicker">Last 5 · demo</div>
-    <ul class="results">${opps.map((o, i) => {
-      const roll = (seed + i * 47) % 10;
-      const wl = roll < 5 ? 'W' : roll < 8 ? 'L' : 'D';
-      const delta = wl === 'W' ? '+' + (8 + (seed + i) % 14) : wl === 'L' ? '-' + (6 + (seed + i) % 12) : '+2';
-      return `<li><span class="wl ${wl}">${wl}</span><span class="res-opp">${wl === 'W' ? '2–1' : wl === 'L' ? '0–1' : '1–1'} v ${esc(o.n)}</span><span class="res-delta">${delta} Elo</span></li>`;
-    }).join('')}</ul>
+    <div class="kicker">Upcoming · demo fixtures</div>
+    ${opps.slice(5, 7).map((o, i) => matchCard(i === 0 ? c : o, i === 0 ? o : c, i === 0 ? 'SAT JUL 26' : 'SAT AUG 2')).join('') || '<p class="note">No nearby opponents in the dataset yet.</p>'}
+    <div class="kicker" style="margin-top:14px">Results · demo</div>
+    <ul class="results">${history.map(h =>
+      `<li class="${h.uw ? 'uw' : ''}${h.bl ? 'bl' : ''}"><span class="wl ${h.wl}">${h.wl}</span>
+       <span class="res-opp">${h.score} ${h.home ? 'v' : '@'} ${esc(h.o.n)}
+       ${h.uw ? '<span class="res-tag tag-uw">upset win — ' + (h.pWin * 100).toFixed(0) + '% to win</span>' : ''}
+       ${h.bl ? '<span class="res-tag tag-bl">bad loss — ' + (h.pWin * 100).toFixed(0) + '% to win</span>' : ''}</span>
+       <span class="res-delta">${h.date} · ${h.delta} Elo</span></li>`).join('')}</ul>
+    <p class="note">Green rows are wins as the underdog; red rows are losses as the favorite — form versus expectation, the number a straight table hides.</p>
     ${worldLadder(c)}` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
     <div class="kicker">Follow</div>
     <div class="linkrow">
-      <a href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Website</a>
+      ${c.url ? `<a href="${c.url}" target="_blank" rel="noopener"><b>Official site</b></a>` : `<a href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}
       <a href="${gsearch(c.n, 'instagram')}" target="_blank" rel="noopener">Instagram</a>
       <a href="${gsearch(c.n, 'twitter x')}" target="_blank" rel="noopener">X</a>
       <a href="${gsearch(c.n, 'tickets')}" target="_blank" rel="noopener">Tickets</a>
