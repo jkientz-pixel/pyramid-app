@@ -1,2 +1,14 @@
 .claude/
 raw_*.png
+ep.json
+probe.html
+*_standings.html
+v.json
+wln
+wl_*
+w2_*
+w3_*
+wn_*
+wm_*
+wraw_*
+npsl_geo.json

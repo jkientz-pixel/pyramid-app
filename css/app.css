@@ -179,3 +179,5 @@ a.lgchip{text-decoration:none}
 .favbtn.on{background:#FBF3E3;border-color:var(--accent);color:#8A6215;font-weight:700}
 .match a.side{color:inherit;text-decoration:none}
 .match a.side:hover{color:var(--accent)}
+.res-opp a.opp-link{color:inherit;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:2px}
+.res-opp a.opp-link:hover{color:var(--accent)}

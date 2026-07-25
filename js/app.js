@@ -472,7 +472,7 @@ function screenClub(idx) {
     <div class="kicker" style="margin-top:14px">Results · demo</div>
     <ul class="results">${history.map(h =>
       `<li class="${h.uw ? 'uw' : ''}${h.bl ? 'bl' : ''}"><span class="wl ${h.wl}">${h.wl}</span>
-       <span class="res-opp">${h.score} ${h.home ? 'v' : '@'} ${esc(h.o.n)}
+       <span class="res-opp">${h.score} ${h.home ? 'v' : '@'} <a class="opp-link" href="#/club/${CLUBS.indexOf(h.o)}">${esc(h.o.n)}</a>
        ${h.uw ? '<span class="res-tag tag-uw">upset win — ' + (h.pWin * 100).toFixed(0) + '% to win</span>' : ''}
        ${h.bl ? '<span class="res-tag tag-bl">bad loss — ' + (h.pWin * 100).toFixed(0) + '% to win</span>' : ''}</span>
        <span class="res-delta">${h.date} · ${h.delta} Elo</span></li>`).join('')}</ul>
@@ -501,11 +501,9 @@ function screenClub(idx) {
     })()}
     <div class="kicker">Follow</div>
     <div class="linkrow">
-      ${c.url ? `<a href="${c.url}" target="_blank" rel="noopener"><b>Official site</b></a>` : `<a href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}
-      <a href="${gsearch(c.n, 'instagram')}" target="_blank" rel="noopener">Instagram</a>
-      <a href="${gsearch(c.n, 'twitter x')}" target="_blank" rel="noopener">X</a>
-      <a href="${gsearch(c.n, 'tickets')}" target="_blank" rel="noopener">Tickets</a>
+      ${c.url ? `<a href="${c.url}" target="_blank" rel="noopener"><b>Official site</b></a>` : `<a href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Search for website</a>`}
     </div>
+    <p class="note">Club socials and tickets appear here once the club claims its page — links always go exactly where they say.</p>
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim club: ' + c.n)}">Run this club? Claim this page</a>
     <p class="note">Claimed clubs manage their crest, links, roster and schedule.</p>`;
   wireFav();
@@ -565,9 +563,9 @@ function screenPlayer(ci, pi) {
     <div class="kicker" style="margin-top:10px">Links</div>
     <div class="linkrow">
       ${pl.wiki ? `<a href="${pl.wiki}" target="_blank" rel="noopener"><b>Wikipedia bio</b></a>` : ''}
-      <a href="${gsearch(pl.name + ' ' + c.n, 'instagram')}" target="_blank" rel="noopener">Instagram</a>
-      <a href="${gsearch(pl.name + ' ' + c.n, 'transfermarkt')}" target="_blank" rel="noopener">Transfermarkt</a>
+      <a href="https://www.transfermarkt.us/schnellsuche/ergebnis/schnellsuche?query=${encodeURIComponent(pl.name)}" target="_blank" rel="noopener">Transfermarkt</a>
     </div>
+    <p class="note">Socials appear here once the player claims the profile — no guessed links.</p>
     <div class="fifaid"><span>FIFA Connect ID</span><b>USA-${String(1000 + (clubSeed(c) * 7) % 9000)}-${String(10000 + (clubSeed(c) * 31 + +pi * 977) % 90000)}</b><i>demo format — real IDs come from US Soccer registration data</i></div>
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Player profile: ' + pl.name + ' (' + c.n + ')')}">Is this you? Claim your profile</a>
     <p class="note">Claimed player profiles add film links, verified stats history, and recruiting visibility.</p>`;
