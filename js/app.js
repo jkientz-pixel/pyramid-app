@@ -188,7 +188,7 @@ const LEVELS = {
   all: null,
   pro: ['mls', 'uslc', 'usl1', 'mnp', 'nisa', 'nwsl', 'uslw'],
   amateur: ['npsl', 'upsl', 'loc'],
-  college: ['ncaa1']
+  college: ['ncaa1', 'ncaa2']
 };
 let level = 'all';
 function levelChips() {
@@ -306,7 +306,7 @@ function screenTable() {
     <ul class="clublist" id="tablelist">${render()}</ul>
     <p class="note">${tableMode === 'players'
       ? 'Player value ratings weight production by opposition strength — demo stats until verified reporting is live.'
-      : "NPSL ratings come from real 2026 results (346 matches, Elo). UPSL ratings derive from real league standings. Other leagues remain illustrative until their results feeds land. Men's and women's ranked separately."}</p>`;
+      : "MLS and UPSL ratings derive from real 2026 standings; NPSL ratings come from real results (346 matches, Elo). Other leagues remain illustrative until their feeds land. Men's and women's ranked separately."}</p>`;
   wireSexToggle();
   view.querySelector('#modeseg').addEventListener('click', e => {
     const b = e.target.closest('[data-mode]'); if (!b || b.dataset.mode === tableMode) return;
@@ -622,6 +622,7 @@ function screenAbout() {
     <p><b>How rankings work.</b> League results feed a weekly Elo rating. Cup competitions — Open Cup qualifying, the National Amateur Cup — are where leagues actually meet, and those matches calibrate the cross-league scale. Every rating change is published with the match that caused it.</p>
     <p><b>World context.</b> Each club page projects the club onto a hypothetical global ladder against European reference sides — a conversation-starter, clearly labeled, never presented as measurement.</p>
     <p><b>What's real in this demo.</b> All ${CLUBS.length} clubs and locations come from the project dataset. Ratings, records and fixtures are illustrative until the results pipeline is live.</p>
+    <p><b>Pricing.</b> The app is free; paid extras are listed plainly at <a href="#/pricing" style="color:var(--accent)">Pricing</a>.</p>
     <p><b>Roadmap.</b> Amateur league layers (UPSL, NPSL, USL League Two) from live feeds · claimed club pages · player profiles · clean crest art · youth club directory layer.</p>
     <div class="kicker" style="margin-top:14px">The leagues</div>
     <ul class="lglist">${Object.entries(LEAGUES).filter(([k, m]) => m.url).map(([k, m]) =>
@@ -701,7 +702,7 @@ const TIERS = {
     { t: 'Division III', pro: true, leagues: ['usl1', 'mnp'], note: 'NISA: unsanctioned since Dec 2024', extra: ['nisa'] },
     { t: 'National amateur', leagues: ['npsl', 'upsl'], coming: ['USL League Two · 158 clubs'] },
     { t: 'Regional & emerging', leagues: ['loc'], coming: ['Regional leagues (EPSL, etc.)', 'State, city & rec leagues'] },
-    { t: 'College & youth', leagues: ['ncaa1'], coming: ['D2 / D3 / NAIA · next', 'Youth clubs · directory layer'] }
+    { t: 'College & youth', leagues: ['ncaa1', 'ncaa2'], coming: ['D3 / NAIA · next', 'Youth clubs · directory layer'] }
   ],
   w: [
     { t: 'Division I', pro: true, leagues: ['nwsl', 'uslw'] },
@@ -756,7 +757,48 @@ function screenFreeAgents() {
         <span class="cl-rt" style="font-size:.7rem;color:var(--ink-dim)">${f.seeks}${f.video ? ' · film' : ''}</span></a></li>`).join('')}</ul>
     <p class="note">Sample listings — the real board opens with player claims.</p>
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Free agent listing request')}&body=${encodeURIComponent('Name:\nPosition:\nAge:\nRegion:\nLast club/level:\nLevel seeking:\nHighlight film link:\n')}">List yourself — $25 per season</a>
-    <p class="note">Flat listing fee. No commissions, no placement cuts — your deal is yours. Clubs: browsing is free, and posting open-tryout dates is coming.</p>`;
+    <p class="note">Flat listing fee. No commissions, no placement cuts — your deal is yours. Clubs: browsing is free, and posting open-tryout dates is coming. <a href="#/pricing" style="color:var(--accent)">See all pricing &rarr;</a></p>`;
+}
+
+function screenPricing() {
+  crumb.textContent = 'Pricing';
+  view.innerHTML = `
+    <div class="kicker">What's free, what's paid</div>
+    <h2 class="disp">Rank XI Pricing</h2>
+    <div class="pricecard"><b>The app · Free, always</b>
+      <p>The map, the tables, every club and player page, matchups and odds. Rankings stay free — that's the whole point.</p></div>
+    <div class="pricecard paid"><b>Free Agent listing · $25 per season</b>
+      <p>No club? Get listed: position, region, film, level sought — searchable by every club on the map. Flat fee, no commissions, your deal is yours.</p>
+      <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Free agent listing request')}">Reserve a founding listing</a></div>
+    <div class="pricecard paid"><b>Claimed player profile · $30 per year</b>
+      <p>Verify your page: photo, film links, socials, corrected stats history, and recruiting visibility to clubs browsing your region and level.</p>
+      <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim my player profile')}">Claim yours</a></div>
+    <div class="pricecard paid"><b>Youth club directory placement · $99 per year</b>
+      <p>Coming: your youth club on the national map with a pathway line to the pros above you — the picture every parent asks for.</p>
+      <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Youth club directory interest')}">Join the waitlist</a></div>
+    <div class="pricecard"><b>Clubs · Free</b>
+      <p>Claiming your club page, managing crest/links/roster, and browsing free agents costs nothing. Clubs are the product's heart, not its wallet.</p></div>
+    <p class="note">Founding-member pricing — payments open with accounts. Reserving costs nothing and locks the rate.</p>`;
+}
+
+function screenFollowing() {
+  crumb.textContent = 'Following';
+  const f = favs();
+  const clubRows = f.clubs.map(i => CLUBS[+i] ? clubRow(CLUBS[+i]) : '').join('');
+  const playerRows = f.players.map(id => {
+    const [ci, pi] = id.split('/'); const c = CLUBS[+ci]; if (!c) return '';
+    const pl = squadFor(c)[+pi]; if (!pl) return '';
+    return `<li><a href="#/player/${id}"><img class="crest imgcrest" src="${AVATAR}" alt="">
+      <span class="cl-name"><b>${pl.name}</b><span>${pl.pos} · ${esc(c.n)}</span></span>
+      <span class="cl-rt">${pl.pvr}</span></a></li>`;
+  }).join('');
+  view.innerHTML = `
+    <div class="kicker">Your clubs and players</div>
+    <h2 class="disp">Following</h2>
+    ${(!f.clubs.length && !f.players.length) ? `<p class="note" style="font-size:.9rem">Nothing yet. Tap <b>&#9734; Follow</b> on any club or player page and they'll live here — quick access from every visit, and match alerts once notifications land.</p>` : ''}
+    ${f.clubs.length ? `<div class="kicker" style="margin-top:8px">Clubs · ${f.clubs.length}</div><ul class="clublist">${clubRows}</ul>` : ''}
+    ${f.players.length ? `<div class="kicker" style="margin-top:12px">Players · ${f.players.length}</div><ul class="clublist">${playerRows}</ul>` : ''}
+    ${(f.clubs.length || f.players.length) ? '<p class="note">To unfollow, open the page and tap the star again.</p>' : ''}`;
 }
 
 /* ---- router ---- */
@@ -768,6 +810,8 @@ function route() {
   view.scrollTop = 0;
   if (parts[0] === 'tiers') screenPyramid();
   else if (parts[0] === 'freeagents') screenFreeAgents();
+  else if (parts[0] === 'pricing') screenPricing();
+  else if (parts[0] === 'following') screenFollowing();
   else if (parts[0] === 'table') screenTable();
   else if (parts[0] === 'matches') screenMatches();
   else if (parts[0] === 'about') screenAbout();
