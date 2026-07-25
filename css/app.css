@@ -210,3 +210,14 @@ image.pin{cursor:pointer}
 .tierlg.dimmed{opacity:.55}
 .tier-note{color:var(--ink-dim);font-size:.66rem;text-align:center;margin-top:6px}
 .searchwrap.global{margin:10px 16px 0;flex:none}
+.mapbox{position:relative}
+.mapctl{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:6px}
+.mapctl button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--raise);color:var(--ink);font-size:1.05rem;cursor:pointer;box-shadow:0 2px 8px rgba(30,40,32,.12)}
+svg.usmap{cursor:grab;touch-action:none}
+details.how{border:1px solid var(--line);border-radius:12px;background:var(--raise);padding:9px 13px;margin:10px 0;font-size:.84rem}
+details.how summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:.8rem}
+details.how p{color:var(--ink-dim);margin:.5em 0 0}
+details.how b{color:var(--ink)}
+.fa-card{display:block;background:var(--raise);border:1px solid var(--accent);border-radius:12px;padding:12px 14px;margin:12px 0 4px;text-decoration:none;color:var(--ink)}
+.fa-card b{color:var(--accent)}
+.fa-card span{display:block;color:var(--ink-dim);font-size:.8rem;margin-top:2px}

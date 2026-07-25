@@ -91,7 +91,8 @@ function renderMapSvg(clubs, useCrests) {
       ? `<circle ${base} fill="none" stroke="${m.color}" stroke-width="1.6"><title>${esc(c.n)}</title></circle>`
       : `<circle ${base} fill="${m.color}" fill-opacity=".9"><title>${esc(c.n)}</title></circle>`;
   }).join('');
-  return `<div class="mapbox"><svg class="usmap" viewBox="0 0 980 560" role="img" aria-label="US soccer club map">${USMAP}<g id="pins">${pins}</g></svg></div>`;
+  return `<div class="mapbox"><svg class="usmap" viewBox="0 0 980 560" role="img" aria-label="US soccer club map">${USMAP}<g id="pins">${pins}</g></svg>
+    <div class="mapctl"><button data-z="in" aria-label="Zoom in">+</button><button data-z="out" aria-label="Zoom out">&minus;</button><button data-z="reset" aria-label="Reset zoom">&#8634;</button></div></div>`;
 }
 
 function zoomTo(svg, states) {
@@ -113,13 +114,47 @@ function zoomTo(svg, states) {
 function wireMap(scopeStates) {
   const svg = view.querySelector('svg.usmap');
   if (!svg) return;
+  let dragged = false;
   svg.addEventListener('click', e => {
+    if (dragged) { dragged = false; return; }
     const pin = e.target.closest('.pin');
     if (pin) { location.hash = `#/club/${pin.dataset.idx}`; return; }
     const st = e.target.closest('.states path');
     if (st) location.hash = `#/state/${st.dataset.st}`;
   });
   if (scopeStates) zoomTo(svg, scopeStates);
+  const homeVB = svg.getAttribute('viewBox').split(' ').map(Number);
+  const getVB = () => svg.getAttribute('viewBox').split(' ').map(Number);
+  const setVB = v => svg.setAttribute('viewBox', v.map(n => n.toFixed(1)).join(' '));
+  function zoom(factor) {
+    const [x, y, w, h] = getVB();
+    const nw = w * factor, nh = h * factor;
+    if (nw > homeVB[2]) { setVB(homeVB); return; }
+    if (nw < homeVB[2] / 24) return;
+    setVB([x + (w - nw) / 2, y + (h - nh) / 2, nw, nh]);
+  }
+  const ctl = view.querySelector('.mapctl');
+  if (ctl) ctl.addEventListener('click', e => {
+    const b = e.target.closest('[data-z]'); if (!b) return;
+    if (b.dataset.z === 'in') zoom(1 / 1.6);
+    else if (b.dataset.z === 'out') zoom(1.6);
+    else setVB(homeVB);
+  });
+  svg.addEventListener('wheel', e => {
+    e.preventDefault();
+    zoom(e.deltaY > 0 ? 1.25 : 1 / 1.25);
+  }, { passive: false });
+  let pd = null;
+  svg.addEventListener('pointerdown', e => { pd = { x: e.clientX, y: e.clientY, vb: getVB() }; });
+  svg.addEventListener('pointermove', e => {
+    if (!pd) return;
+    const dx = e.clientX - pd.x, dy = e.clientY - pd.y;
+    if (Math.abs(dx) + Math.abs(dy) > 6) dragged = true;
+    if (!dragged) return;
+    const r = svg.getBoundingClientRect();
+    setVB([pd.vb[0] - dx * pd.vb[2] / r.width, pd.vb[1] - dy * pd.vb[3] / r.height, pd.vb[2], pd.vb[3]]);
+  });
+  addEventListener('pointerup', () => { pd = null; });
   const chips = view.querySelector('#lgchips');
   if (chips) chips.addEventListener('click', e => {
     const b = e.target.closest('.chip'); if (!b) return;
@@ -189,7 +224,8 @@ function screenMap() {
         f.players.map(id => { const parts2 = id.split('/'); const c2 = CLUBS[+parts2[0]]; if (!c2) return '';
           const p2 = squadFor(c2)[+parts2[1]]; return p2 ? `<a class="chip" href="#/player/${id}" style="text-decoration:none">&#9733; ${p2.name}</a>` : ''; }).join('') + `</div>`;
     })()}
-    <p class="note">Tap a state to zoom in. Tap a pin for the club.</p>`;
+    <a class="fa-card" href="#/freeagents"><b>&#9733; Free Agents</b><span>No club right now? Get seen by every club on this map.</span></a>
+    <p class="note">Tap a state to zoom in. Tap a pin for the club. Pinch, scroll, or use +/&minus; to zoom further.</p>`;
   wireSexToggle();
   wireLevelChips();
   wireMap(null);
@@ -263,6 +299,10 @@ function screenTable() {
     <div class="chips" id="poschips" style="display:${tableMode === 'players' ? 'flex' : 'none'}">${['all', 'GK', 'DF', 'MF', 'FW'].map(pp =>
       `<button class="chip solid" data-pos="${pp}" aria-pressed="${posFilter === pp}">${pp === 'all' ? 'All positions' : pp}</button>`).join('')}</div>
     ${leagueChips()}
+    <details class="how"><summary>How are these numbers made?</summary>
+      <p><b>Clubs.</b> Where we hold real results (NPSL: 346 matches in 2026), ratings are Elo: everyone starts at 1500, winners take points from losers — more for upsets, more for big margins (K=40, log goal-margin, +50 home edge). Where we hold real standings but not results (UPSL), ratings derive from points and goal difference. Everywhere else the rating is an illustrative placeholder and says so.</p>
+      <p><b>Players.</b> The value rating weights production — goals ×4, assists ×3, appearances ×0.6, keeper clean sheets and saves — scaled by the strength of the club's opposition. Player stats are demo data until verified reporting is live; each profile's badge says which.</p>
+    </details>
     <ul class="clublist" id="tablelist">${render()}</ul>
     <p class="note">${tableMode === 'players'
       ? 'Player value ratings weight production by opposition strength — demo stats until verified reporting is live.'
@@ -536,6 +576,11 @@ function screenClub(idx) {
        ${h.bl ? '<span class="res-tag tag-bl">bad loss — ' + (h.pWin * 100).toFixed(0) + '% to win</span>' : ''}</span>
        <span class="res-delta">${h.date} · ${h.delta} Elo</span></li>`).join('')}</ul>
     <p class="note">Green rows are wins as the underdog; red rows are losses as the favorite — form versus expectation, the number a straight table hides.</p>
+    <details class="how"><summary>How is this club's rating made?</summary><p>${c.rr === 1
+      ? "From real results: Elo over this season's matches — everyone starts at 1500, winners take points from losers, weighted by upset size and goal margin, with a +50 home edge."
+      : c.rr === 2
+      ? 'From real league standings: points and goal difference set the rating band until a full results feed lands.'
+      : "Illustrative placeholder until this league's results feed is connected — the number demonstrates the product, not the club."}</p></details>
     <div class="kicker" style="margin-top:14px">Squad · demo roster</div>
     ${verifyBadge(c)}
     <ul class="squad staff">${staffFor(c).map(st2 =>
@@ -692,6 +737,28 @@ function screenPyramid() {
   });
 }
 
+const FREE_AGENTS = [
+  { name: 'Sample: J. Alvarez', pos: 'FW', age: 23, region: 'SoCal', last: 'UPSL Premier', seeks: 'USL2 / NPSL trial', video: true },
+  { name: 'Sample: M. Okoye', pos: 'DF', age: 21, region: 'DFW, Texas', last: 'NCAA D2', seeks: 'UPSL Premier+', video: true },
+  { name: 'Sample: T. Nguyen', pos: 'GK', age: 25, region: 'Pacific NW', last: 'NPSL', seeks: 'Open tryouts', video: false },
+  { name: 'Sample: D. Carter', pos: 'MF', age: 22, region: 'Southeast', last: 'NCAA D1', seeks: 'MLS Next Pro / USL1', video: true }
+];
+function screenFreeAgents() {
+  crumb.textContent = 'Free agents';
+  view.innerHTML = `
+    <div class="kicker">Get seen by ${CLUBS.length.toLocaleString()} clubs</div>
+    <h2 class="disp">Free Agents</h2>
+    <p class="note" style="font-size:.88rem">Players without a club list themselves here: position, region, level sought, film. Clubs browse free and reach out directly — Rank XI never sits in the middle of a deal. Listings are self-reported; players with match history in our data carry a verified badge.</p>
+    <ul class="clublist">${FREE_AGENTS.map(f => `
+      <li><a href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Contact free agent: ' + f.name)}">
+        <img class="crest imgcrest" src="${AVATAR}" alt="">
+        <span class="cl-name"><b>${f.name}</b><span>${f.pos} · ${f.age} · ${f.region} · last: ${f.last}</span></span>
+        <span class="cl-rt" style="font-size:.7rem;color:var(--ink-dim)">${f.seeks}${f.video ? ' · film' : ''}</span></a></li>`).join('')}</ul>
+    <p class="note">Sample listings — the real board opens with player claims.</p>
+    <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Free agent listing request')}&body=${encodeURIComponent('Name:\nPosition:\nAge:\nRegion:\nLast club/level:\nLevel seeking:\nHighlight film link:\n')}">List yourself — $25 per season</a>
+    <p class="note">Flat listing fee. No commissions, no placement cuts — your deal is yours. Clubs: browsing is free, and posting open-tryout dates is coming.</p>`;
+}
+
 /* ---- router ---- */
 function route() {
   const h = location.hash || '#/map';
@@ -700,6 +767,7 @@ function route() {
     a.dataset.tab === (['state', 'region', 'club', 'player'].includes(parts[0]) ? 'map' : parts[0])));
   view.scrollTop = 0;
   if (parts[0] === 'tiers') screenPyramid();
+  else if (parts[0] === 'freeagents') screenFreeAgents();
   else if (parts[0] === 'table') screenTable();
   else if (parts[0] === 'matches') screenMatches();
   else if (parts[0] === 'about') screenAbout();
