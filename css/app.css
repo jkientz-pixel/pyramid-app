@@ -226,3 +226,7 @@ details.how b{color:var(--ink)}
 .pricecard b{font-size:.95rem}
 .pricecard p{color:var(--ink-dim);font-size:.86rem;margin:.4em 0}
 .pricecard .claim{margin:8px 0 2px;padding:10px}
+.histwrap{max-height:300px;overflow-y:auto;border-radius:12px}
+.maptip{position:absolute;pointer-events:none;background:var(--raise);border:1px solid var(--line);border-radius:9px;padding:6px 10px;font-size:.78rem;box-shadow:0 8px 24px rgba(30,40,32,.2);z-index:20;max-width:160px}
+.maptip b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.maptip span{color:var(--ink-dim);font-size:.7rem}

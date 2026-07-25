@@ -84,15 +84,17 @@ function renderMapSvg(clubs, useCrests) {
     const [x, y] = XY(c.la, c.lo);
     const m = LEAGUES[c.g], idx = CLUBS.indexOf(c);
     if (useCrests && c.img) {
-      return `<image class="pin" data-idx="${idx}" href="${c.img}" x="${(x - 11).toFixed(1)}" y="${(y - 11).toFixed(1)}" width="22" height="22"><title>${esc(c.n)}</title></image>`;
+      return `<image class="pin" data-idx="${idx}" data-cx="${x.toFixed(1)}" data-cy="${y.toFixed(1)}" href="${c.img}" x="${(x - 11).toFixed(1)}" y="${(y - 11).toFixed(1)}" width="22" height="22"></image>`;
     }
-    const base = `class="pin" data-idx="${idx}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${c.g === 'mls' ? 7 : c.g === 'loc' ? 4.5 : 5.5}"`;
+    const r0 = c.g === 'mls' ? 7 : c.g === 'loc' ? 4.5 : 5.5;
+    const base = `class="pin" data-idx="${idx}" data-r="${r0}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r0}"`;
     return m.hollow
-      ? `<circle ${base} fill="none" stroke="${m.color}" stroke-width="1.6"><title>${esc(c.n)}</title></circle>`
-      : `<circle ${base} fill="${m.color}" fill-opacity=".9"><title>${esc(c.n)}</title></circle>`;
+      ? `<circle ${base} fill="none" stroke="${m.color}" stroke-width="1.6"></circle>`
+      : `<circle ${base} fill="${m.color}" fill-opacity=".9"></circle>`;
   }).join('');
   return `<div class="mapbox"><svg class="usmap" viewBox="0 0 980 560" role="img" aria-label="US soccer club map">${USMAP}<g id="pins">${pins}</g></svg>
-    <div class="mapctl"><button data-z="in" aria-label="Zoom in">+</button><button data-z="out" aria-label="Zoom out">&minus;</button><button data-z="reset" aria-label="Reset zoom">&#8634;</button></div></div>`;
+    <div class="mapctl"><button data-z="in" aria-label="Zoom in">+</button><button data-z="out" aria-label="Zoom out">&minus;</button><button data-z="reset" aria-label="Reset zoom">&#8634;</button></div>
+    <div class="maptip" hidden></div></div>`;
 }
 
 function zoomTo(svg, states) {
@@ -125,7 +127,33 @@ function wireMap(scopeStates) {
   if (scopeStates) zoomTo(svg, scopeStates);
   const homeVB = svg.getAttribute('viewBox').split(' ').map(Number);
   const getVB = () => svg.getAttribute('viewBox').split(' ').map(Number);
-  const setVB = v => svg.setAttribute('viewBox', v.map(n => n.toFixed(1)).join(' '));
+  function rescalePins(vbW) {
+    const f = Math.max(0.12, vbW / 980);
+    svg.querySelectorAll('circle.pin').forEach(c2 => c2.setAttribute('r', (+c2.dataset.r * f).toFixed(2)));
+    svg.querySelectorAll('image.pin').forEach(im => {
+      const sz = 22 * f;
+      im.setAttribute('width', sz.toFixed(1)); im.setAttribute('height', sz.toFixed(1));
+      im.setAttribute('x', (+im.dataset.cx - sz / 2).toFixed(1));
+      im.setAttribute('y', (+im.dataset.cy - sz / 2).toFixed(1));
+    });
+  }
+  const setVB = v => { svg.setAttribute('viewBox', v.map(n => n.toFixed(1)).join(' ')); rescalePins(v[2]); };
+  rescalePins(homeVB[2]);
+  const tip = view.querySelector('.maptip');
+  svg.addEventListener('pointerover', e => {
+    const pin = e.target.closest('.pin'); if (!pin || !tip) return;
+    const c2 = CLUBS[pin.dataset.idx]; if (!c2) return;
+    tip.innerHTML = `<b>${esc(c2.n)}</b><span>${LEAGUES[c2.g].label}${c2.r ? ' · ' + c2.r : ''}</span>`;
+    tip.hidden = false;
+  });
+  svg.addEventListener('pointermove', e => {
+    if (!tip || tip.hidden) return;
+    const wrap = svg.parentElement.getBoundingClientRect();
+    tip.style.left = Math.min(e.clientX - wrap.left + 12, wrap.width - 170) + 'px';
+    tip.style.top = (e.clientY - wrap.top - 8) + 'px';
+  });
+  svg.addEventListener('pointerout', e => { if (tip && !e.target.closest('.pin')) tip.hidden = true; });
+  svg.addEventListener('pointerleave', () => { if (tip) tip.hidden = true; });
   function zoom(factor) {
     const [x, y, w, h] = getVB();
     const nw = w * factor, nh = h * factor;
@@ -502,6 +530,18 @@ function allPlayers(sx) {
   CLUBS.forEach(c => { if (c.x !== sx || !c.r) return; squadFor(c).forEach((pl, i) => out.push({ ...pl, c, i })); });
   return _pcache[sx] = out;
 }
+function ord(n) {
+  const v = n % 100;
+  if (v >= 11 && v <= 13) return n + 'th';
+  return n + ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th');
+}
+let _mlshist = null;
+async function mlsHistory() {
+  if (_mlshist) return _mlshist;
+  try { _mlshist = await (await fetch('data/mls_history.json')).json(); }
+  catch { _mlshist = {}; }
+  return _mlshist;
+}
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
@@ -528,9 +568,10 @@ function verifyBadge(c) {
     : '<span class="badge c">Stats: club-submitted, email-verified (demo)</span>';
 }
 
-function screenClub(idx) {
+async function screenClub(idx) {
   const c = CLUBS[+idx];
   if (!c) return screenMap();
+  const hist = c.g === 'mls' ? (await mlsHistory()) : null;
   crumb.textContent = c.st;
   const m = LEAGUES[c.g];
   const peers = CLUBS.filter(o => o.g === c.g && o.r).sort((a, b) => b.r - a.r);
@@ -589,6 +630,20 @@ function screenClub(idx) {
       `<li><a href="#/player/${CLUBS.indexOf(c)}/${pi}"><span class="sq-num">${pl.num}</span><span class="sq-name">${pl.name}</span><span class="sq-pos">${pl.pos}</span><span class="sq-age">${pl.real ? (pl.nat || '') : ''}</span><span class="sq-ga">${pl.pos === 'GK' ? pl.cs + ' CS' : pl.goals + 'g ' + pl.assists + 'a'}</span><span class="sq-form">${pl.pvr}</span></a></li>`).join('')}</ul>
     <p class="note">Placeholder players — real rosters come from claimed clubs and league feeds.</p>
     ${worldLadder(c)}` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
+    ${(() => {
+      if (!hist) return '';
+      const rows = [];
+      for (const [yr, teams] of Object.entries(hist)) {
+        const r = teams.find(t => t.canon === c.n);
+        if (r) rows.push({ yr, ...r, of: teams.length });
+      }
+      if (!rows.length) return '';
+      rows.sort((a, b) => b.yr - a.yr);
+      return `<div class="kicker" style="margin-top:14px">Season by season · since ${rows[rows.length - 1].yr}</div>
+      <div class="histwrap"><ul class="careerway">${rows.map(r =>
+        `<li><span class="cw-years">${r.yr}</span><span class="cw-club">${r.w}-${r.d}-${r.l} · ${r.pts} pts</span><span class="cw-stat">${ord(r.pos)} of ${r.of}</span></li>`).join('')}</ul></div>
+      <p class="note">Overall league finish by points, from Wikipedia season records back to the club's first season${rows.some(r => +r.yr < 2000) ? ' (shootout-era seasons scored as modern 3-1-0)' : ''}.</p>`;
+    })()}
     ${(() => {
       const kids = AFFIL[c.n] || [];
       const parent = Object.entries(AFFIL).find(([, v]) => v.some(a => a.split(' · ')[0] === c.n));
