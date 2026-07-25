@@ -69,10 +69,13 @@ function clubRow(c, rank) {
     `</a></li>`;
 }
 
-function renderMapSvg(clubs) {
+function renderMapSvg(clubs, useCrests) {
   const pins = clubs.map(c => {
     const [x, y] = XY(c.la, c.lo);
     const m = LEAGUES[c.g], idx = CLUBS.indexOf(c);
+    if (useCrests && c.img) {
+      return `<image class="pin" data-idx="${idx}" href="${c.img}" x="${(x - 11).toFixed(1)}" y="${(y - 11).toFixed(1)}" width="22" height="22"><title>${esc(c.n)}</title></image>`;
+    }
     const base = `class="pin" data-idx="${idx}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${c.g === 'mls' ? 7 : c.g === 'loc' ? 4.5 : 5.5}"`;
     return m.hollow
       ? `<circle ${base} fill="none" stroke="${m.color}" stroke-width="1.6"><title>${esc(c.n)}</title></circle>`
@@ -104,7 +107,7 @@ function wireMap(scopeStates) {
     const pin = e.target.closest('.pin');
     if (pin) { location.hash = `#/club/${pin.dataset.idx}`; return; }
     const st = e.target.closest('.states path');
-    if (st && !st.classList.contains('dim')) location.hash = `#/state/${st.dataset.st}`;
+    if (st) location.hash = `#/state/${st.dataset.st}`;
   });
   if (scopeStates) zoomTo(svg, scopeStates);
   const chips = view.querySelector('#lgchips');
@@ -119,14 +122,57 @@ function wireMap(scopeStates) {
   });
 }
 
+function wireSearch() {
+  const q = view.querySelector('#q'), res = view.querySelector('#qres');
+  if (!q) return;
+  q.addEventListener('input', () => {
+    const term = q.value.trim().toLowerCase();
+    if (term.length < 2) { res.hidden = true; return; }
+    const clubs = CLUBS.map((c, i) => ({ c, i }))
+      .filter(o => o.c.n.toLowerCase().includes(term)).slice(0, 7);
+    const players = allPlayers('m').concat(allPlayers('w'))
+      .filter(p => p.real && p.name.toLowerCase().includes(term)).slice(0, 5);
+    if (!clubs.length && !players.length) { res.innerHTML = '<div class="qrow qnone">No matches</div>'; res.hidden = false; return; }
+    res.innerHTML =
+      clubs.map(o => `<a class="qrow" href="#/club/${o.i}">${crestHtml(o.c)}<span><b>${esc(o.c.n)}</b><i>${LEAGUES[o.c.g].label} · ${o.c.st}</i></span></a>`).join('') +
+      players.map(p => `<a class="qrow" href="#/player/${CLUBS.indexOf(p.c)}/${p.i}"><img class="crest imgcrest" src="${AVATAR}" alt=""><span><b>${p.name}</b><i>${p.pos} · ${esc(p.c.n)}</i></span></a>`).join('');
+    res.hidden = false;
+  });
+  res.addEventListener('click', () => { res.hidden = true; q.value = ''; });
+  q.addEventListener('keydown', e => { if (e.key === 'Escape') { res.hidden = true; q.blur(); } });
+}
+
 /* ---- screens ---- */
 
+const LEVELS = {
+  all: null,
+  pro: ['mls', 'uslc', 'usl1', 'mnp', 'nisa', 'nwsl', 'uslw'],
+  amateur: ['npsl', 'upsl', 'loc'],
+  college: ['ncaa1']
+};
+let level = 'all';
+function levelChips() {
+  return `<div class="chips" id="lvlchips">${Object.keys(LEVELS).map(k =>
+    `<button class="chip solid" data-lvl="${k}" aria-pressed="${level === k}">${k === 'all' ? 'All levels' : k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div>`;
+}
+function wireLevelChips() {
+  const el = view.querySelector('#lvlchips');
+  if (!el) return;
+  el.addEventListener('click', e => {
+    const b = e.target.closest('[data-lvl]'); if (!b) return;
+    level = b.dataset.lvl;
+    leagueFilter = new Set(LEVELS[level] ? leaguesFor(sex).filter(k => LEVELS[level].includes(k)) : leaguesFor(sex));
+    route();
+  });
+}
 function screenMap() {
   crumb.textContent = 'USA';
   const clubs = pool();
   view.innerHTML = `
     ${sexToggle()}
-    <div class="kicker">National map · ${clubs.length} clubs</div>
+    <div class="searchwrap"><input id="q" type="search" placeholder="Search clubs and players" autocomplete="off" aria-label="Search clubs and players"><div id="qres" class="qres" hidden></div></div>
+    ${levelChips()}
+    <div class="kicker">National map · ${visible(clubs).length} of ${clubs.length} clubs</div>
     <div class="chips" id="regionchips">${['all', ...Object.keys(REGIONS)].map(r =>
       `<button class="chip solid" data-region="${r}" aria-pressed="${r === 'all'}">${r === 'all' ? 'All USA' : REGION_LABEL[r]}</button>`).join('')}</div>
     ${renderMapSvg(visible(clubs))}
@@ -141,7 +187,9 @@ function screenMap() {
     })()}
     <p class="note">Tap a state to zoom in. Tap a pin for the club.</p>`;
   wireSexToggle();
+  wireLevelChips();
   wireMap(null);
+  wireSearch();
   view.querySelector('#regionchips').addEventListener('click', e => {
     const b = e.target.closest('[data-region]'); if (!b) return;
     location.hash = b.dataset.region === 'all' ? '#/map' : `#/region/${b.dataset.region}`;
@@ -158,7 +206,7 @@ function screenRegion(key) {
     <button class="backbtn" onclick="location.hash='#/map'">&larr; All USA</button>
     ${sexToggle()}
     <div class="kicker">Region</div><h2 class="disp">${REGION_LABEL[key]}</h2>
-    ${renderMapSvg(visible(clubs))}
+    ${renderMapSvg(visible(clubs), true)}
     ${leagueChips()}
     <div class="kicker" style="margin-top:10px">Top clubs · ${clubs.length} in region</div>
     <ul class="clublist">${ranked.slice(0, 15).map((c, i) => clubRow(c, i + 1)).join('')}</ul>`;
@@ -176,7 +224,7 @@ function screenState(st) {
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/map'">&larr; Back</button>
     ${sexToggle()}
     <div class="kicker">State</div><h2 class="disp">${STATE_NAME[st]}</h2>
-    ${clubs.length ? renderMapSvg(visible(clubs)) : ''}
+    ${clubs.length ? renderMapSvg(visible(clubs), true) : ''}
     ${clubs.length ? leagueChips() : ''}
     <div class="kicker" style="margin-top:10px">${clubs.length ? `Clubs · ${clubs.length}` : 'No clubs mapped yet'}</div>
     <ul class="clublist" id="statelist">${ranked.map((c, i) => clubRow(c, i + 1)).join('')}${concepts.map(c => clubRow(c)).join('')}</ul>
@@ -421,6 +469,24 @@ function allPlayers(sx) {
   CLUBS.forEach(c => { if (c.x !== sx || !c.r) return; squadFor(c).forEach((pl, i) => out.push({ ...pl, c, i })); });
   return _pcache[sx] = out;
 }
+let _profiles = null;
+async function profilesDb() {
+  if (_profiles) return _profiles;
+  try { _profiles = await (await fetch('data/players.json')).json(); }
+  catch { _profiles = {}; }
+  return _profiles;
+}
+const AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23EFF2EC'/%3E%3Ccircle cx='50' cy='38' r='19' fill='%23AAB8A8'/%3E%3Cpath d='M14 94c5-24 19-32 36-32s31 8 36 32z' fill='%23AAB8A8'/%3E%3C/svg%3E";
+function clubIdxByName(nm) {
+  const k = nm.toLowerCase().replace(/\b(fc|sc|cf|afc|club|the)\b/g, '').replace(/\s+/g, '');
+  return CLUBS.findIndex(c => c.n.toLowerCase().replace(/\b(fc|sc|cf|afc|club|the)\b/g, '').replace(/\s+/g, '') === k);
+}
+function careerRow(step) {
+  const idx = clubIdxByName(step.club);
+  const nm = idx >= 0 ? `<a href="#/club/${idx}">${esc(step.club)}</a>` : esc(step.club);
+  const stat = step.apps ? `${step.apps} apps${step.goals ? ' · ' + step.goals + ' gls' : ''}` : '';
+  return `<li><span class="cw-years">${esc(step.years || '')}</span><span class="cw-club">${nm}</span><span class="cw-stat">${stat}</span></li>`;
+}
 const PRO = new Set(['mls', 'uslc', 'usl1', 'mnp', 'nwsl', 'uslw']);
 function verifyBadge(c) {
   if (ROSTERS[c.n]) return '<span class="badge v">Roster: live from Wikipedia, refreshed every 2 days · stats demo</span>';
@@ -530,15 +596,18 @@ function screenAbout() {
   </div>`;
 }
 
-function screenPlayer(ci, pi) {
+async function screenPlayer(ci, pi) {
   const c = CLUBS[+ci]; if (!c || !c.r) return screenMap();
   const sq = squadFor(c); const pl = sq[+pi]; if (!pl) return screenClub(ci);
+  const prof = pl.real ? ((await profilesDb())[pl.name] || {}) : {};
+  if (crumb.textContent !== c.st && location.hash !== `#/player/${ci}/${pi}`) return;
   crumb.textContent = c.st;
   const peers = allPlayers(c.x).filter(p => p.pos === pl.pos).sort((a, b) => b.pvr - a.pvr);
   const rank = peers.findIndex(p => p.c === c && p.i === +pi) + 1;
   view.innerHTML = `
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/club/${ci}'">&larr; ${esc(c.n)}</button>
-    <div class="clubhead">${crestHtml(c)}
+    <div class="clubhead">
+      <img class="pphoto" src="${prof.photo || AVATAR}" alt="${pl.name}" onerror="this.src='${AVATAR}'">
       <div><h2 class="disp" style="margin:0">${pl.name}</h2>
       <span class="sub">#${pl.num} · ${pl.pos}${pl.real ? (pl.nat ? ' · ' + pl.nat : '') : ' · ' + pl.age + ' yrs'} · ${esc(c.n)}</span></div>
     </div>
@@ -556,16 +625,29 @@ function screenPlayer(ci, pi) {
     </div>
     <p class="note">Value rating weights goals, assists, minutes and keeper actions by the strength of the team's opposition (demo formula on demo stats). Cards: ${pl.yc} yellow${pl.rc ? ', 1 red' : ''}.</p>
     ${favBtn('players', ci + '/' + pi)}
+    ${(prof.career || prof.youth || prof.college) ? `<div class="kicker" style="margin-top:10px">Career pathway</div>
+    <ul class="careerway">
+      ${(prof.youth || []).map(y => `<li><span class="cw-years">youth</span><span class="cw-club">${esc(y)}</span><span class="cw-stat"></span></li>`).join('')}
+      ${prof.college ? `<li><span class="cw-years">college</span><span class="cw-club">${esc(prof.college)}</span><span class="cw-stat"></span></li>` : ''}
+      ${(prof.career || []).map(careerRow).join('')}
+    </ul>` : ''}
     <div class="kicker" style="margin-top:10px">International</div>
-    <p class="note">${pl.real
-      ? `Nationality: <b>${pl.nat || 'unlisted'}</b>. National-team caps are tracked separately from club stats — pulled per player in the roster pipeline's next phase.`
-      : `Demo player — international caps shown only for real rosters.`}</p>
+    ${(prof.nat && prof.nat.length) ? `<ul class="careerway">${prof.nat.map(n2 =>
+      `<li><span class="cw-years">${esc(n2.years || '')}</span><span class="cw-club">${esc(n2.team)}</span><span class="cw-stat">${n2.caps ? n2.caps + ' caps' + (n2.goals ? ' · ' + n2.goals + ' gls' : '') : ''}</span></li>`).join('')}</ul>`
+    : `<p class="note">${pl.real
+      ? `Nationality: <b>${pl.nat || 'unlisted'}</b>. No national-team record listed.`
+      : `Demo player — international records shown only for real rosters.`}</p>`}
+    ${(prof.honours && prof.honours.length) ? `<div class="kicker" style="margin-top:10px">Honours</div>
+    <ul class="honours">${prof.honours.map(h2 => `<li><b>${esc(h2.t)}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     <div class="kicker" style="margin-top:10px">Links</div>
     <div class="linkrow">
-      ${pl.wiki ? `<a href="${pl.wiki}" target="_blank" rel="noopener"><b>Wikipedia bio</b></a>` : ''}
+      ${prof.site ? `<a href="${prof.site}" target="_blank" rel="noopener"><b>Official site</b></a>` : ''}
+      ${prof.ig ? `<a href="${prof.ig}" target="_blank" rel="noopener">Instagram</a>` : ''}
+      ${prof.x ? `<a href="${prof.x}" target="_blank" rel="noopener">X</a>` : ''}
+      ${pl.wiki ? `<a href="${pl.wiki}" target="_blank" rel="noopener">Wikipedia bio</a>` : ''}
       <a href="https://www.transfermarkt.us/schnellsuche/ergebnis/schnellsuche?query=${encodeURIComponent(pl.name)}" target="_blank" rel="noopener">Transfermarkt</a>
     </div>
-    <p class="note">Socials appear here once the player claims the profile — no guessed links.</p>
+    ${(prof.ig || prof.x || prof.site) ? '' : '<p class="note">Socials appear when listed on the player\'s Wikipedia article or once the player claims the profile — no guessed links.</p>'}
     <div class="fifaid"><span>FIFA Connect ID</span><b>USA-${String(1000 + (clubSeed(c) * 7) % 9000)}-${String(10000 + (clubSeed(c) * 31 + +pi * 977) % 90000)}</b><i>demo format — real IDs come from US Soccer registration data</i></div>
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Player profile: ' + pl.name + ' (' + c.n + ')')}">Is this you? Claim your profile</a>
     <p class="note">Claimed player profiles add film links, verified stats history, and recruiting visibility.</p>`;
@@ -573,6 +655,49 @@ function screenPlayer(ci, pi) {
 }
 
 let tableMode = 'clubs', posFilter = 'all';
+const TIERS = {
+  m: [
+    { t: 'Division I', pro: true, leagues: ['mls'] },
+    { t: 'Division II', pro: true, leagues: ['uslc'] },
+    { t: 'Division III', pro: true, leagues: ['usl1', 'mnp'], note: 'NISA: unsanctioned since Dec 2024', extra: ['nisa'] },
+    { t: 'National amateur', leagues: ['npsl', 'upsl'], coming: ['USL League Two · 158 clubs'] },
+    { t: 'Regional & emerging', leagues: ['loc'], coming: ['Regional leagues (EPSL, etc.)', 'State, city & rec leagues'] },
+    { t: 'College & youth', leagues: ['ncaa1'], coming: ['D2 / D3 / NAIA · next', 'Youth clubs · directory layer'] }
+  ],
+  w: [
+    { t: 'Division I', pro: true, leagues: ['nwsl', 'uslw'] },
+    { t: 'Division II', pro: true, coming: ['WPSL Pro · launching 2026-27'] },
+    { t: 'Pre-professional', coming: ['USL W League · 96 clubs', 'WPSL · 144 clubs'] },
+    { t: 'College & youth', coming: ['NCAA women\'s soccer · next', 'Youth clubs · directory layer'] }
+  ]
+};
+function screenPyramid() {
+  crumb.textContent = 'Tiers';
+  const count = g => CLUBS.filter(c => c.g === g).length;
+  view.innerHTML = `
+    ${sexToggle()}
+    <div class="kicker">The structure of American soccer</div>
+    <h2 class="disp">The Pyramid</h2>
+    <div class="tiers">${TIERS[sex].map((tier, i) => `
+      <div class="tier" style="width:${100 - i * (52 / TIERS[sex].length)}%">
+        <div class="tier-label">${tier.t}${tier.pro ? ' · pro' : ''}</div>
+        <div class="tier-leagues">
+          ${(tier.leagues || []).map(g => { const m = LEAGUES[g]; return `<button class="tierlg" data-lg="${g}">${m.img ? `<img src="${m.img}" alt="">` : `<span class="dot" style="background:${m.color}"></span>`}<b>${m.label}</b><span>${count(g)} clubs</span></button>`; }).join('')}
+          ${(tier.extra || []).map(g => { const m = LEAGUES[g]; return `<button class="tierlg dimmed" data-lg="${g}">${m.img ? `<img src="${m.img}" alt="">` : ''}<b>${m.label}</b><span>${count(g)} clubs</span></button>`; }).join('')}
+          ${(tier.coming || []).map(txt => `<span class="tierlg coming"><b>${txt}</b></span>`).join('')}
+        </div>
+        ${tier.note ? `<div class="tier-note">${tier.note}</div>` : ''}
+      </div>`).join('')}
+    </div>
+    <p class="note">Tiers are organizational, not sporting — US soccer has no promotion and relegation between most levels. The pathway runs through players, not clubs: youth to college to the amateur leagues to the pro game. Tap a league to see it on the map.</p>`;
+  wireSexToggle();
+  view.querySelector('.tiers').addEventListener('click', e => {
+    const b = e.target.closest('.tierlg[data-lg]'); if (!b) return;
+    leagueFilter = new Set([b.dataset.lg]);
+    location.hash = '#/map';
+  });
+}
+
 /* ---- router ---- */
 function route() {
   const h = location.hash || '#/map';
@@ -580,7 +705,8 @@ function route() {
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active',
     a.dataset.tab === (['state', 'region', 'club', 'player'].includes(parts[0]) ? 'map' : parts[0])));
   view.scrollTop = 0;
-  if (parts[0] === 'table') screenTable();
+  if (parts[0] === 'tiers') screenPyramid();
+  else if (parts[0] === 'table') screenTable();
   else if (parts[0] === 'matches') screenMatches();
   else if (parts[0] === 'about') screenAbout();
   else if (parts[0] === 'state') screenState(parts[1]);

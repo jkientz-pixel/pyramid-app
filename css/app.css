@@ -61,7 +61,8 @@ h2{margin:4px 0 2px;font-size:1.35rem}
 svg.usmap{width:100%;height:auto;display:block;touch-action:manipulation}
 .states path{fill:#F1F4EE;stroke:#9AA795;stroke-width:1;cursor:pointer;transition:fill .15s}
 .states path:hover{fill:#E4EADF}
-.states path.dim{opacity:.35;pointer-events:none}
+.states path.dim{opacity:.35}
+.states path.dim:hover{opacity:.6;fill:#E4EADF}
 .statelabels text{fill:#7C8878;font-size:10px;letter-spacing:.08em;text-anchor:middle;pointer-events:none;font-family:-apple-system,"Segoe UI",Roboto,sans-serif}
 .pin{cursor:pointer}
 .pin:hover{stroke:var(--ink);stroke-width:2}
@@ -181,3 +182,30 @@ a.lgchip{text-decoration:none}
 .match a.side:hover{color:var(--accent)}
 .res-opp a.opp-link{color:inherit;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:2px}
 .res-opp a.opp-link:hover{color:var(--accent)}
+.pphoto{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--line);background:#EFF2EC;flex:none}
+.careerway{list-style:none;margin:8px 0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--raise)}
+.careerway li{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:.85rem}
+.careerway li:last-child{border-bottom:none}
+.cw-years{width:6.2em;flex:none;color:var(--ink-dim);font-size:.74rem;font-variant-numeric:tabular-nums}
+.cw-club{flex:1;min-width:0}
+.cw-club a{color:var(--accent);text-decoration:none}
+.cw-stat{color:var(--ink-dim);font-size:.76rem;font-variant-numeric:tabular-nums}
+.searchwrap{position:relative;margin-bottom:10px}
+#q{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--raise);color:var(--ink);font:inherit;font-size:.9rem}
+#q:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.qres{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--raise);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 40px rgba(30,40,32,.18);z-index:50;max-height:320px;overflow-y:auto}
+.qrow{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:.86rem}
+.qrow:last-child{border-bottom:none}
+.qrow i{display:block;font-style:normal;color:var(--ink-dim);font-size:.72rem}
+.qrow.qnone{color:var(--ink-dim)}
+image.pin{cursor:pointer}
+.tiers{display:flex;flex-direction:column;align-items:center;gap:8px;margin:14px 0}
+.tier{background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:240px}
+.tier-label{color:var(--ink-dim);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;text-align:center;margin-bottom:7px}
+.tier-leagues{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+.tierlg{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--ground);border-radius:999px;padding:6px 12px;font:inherit;font-size:.78rem;cursor:pointer;color:var(--ink)}
+.tierlg img{width:16px;height:16px;object-fit:contain}
+.tierlg span{color:var(--ink-dim);font-size:.68rem}
+.tierlg.coming{cursor:default;opacity:.55}
+.tierlg.dimmed{opacity:.55}
+.tier-note{color:var(--ink-dim);font-size:.66rem;text-align:center;margin-top:6px}
