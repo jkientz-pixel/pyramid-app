@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260725e';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260725e';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260725e';
+import { PROJ, USMAP } from './usmap.js?v=20260725g';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260725g';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260725g';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -411,7 +411,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260725e')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260725g')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -538,11 +538,20 @@ function statLine(pos, sd, c) {
 function squadFor(c) {
   const real = ROSTERS[c.n];
   if (!real) return genSquad(c);
-  return real.map((rp, i) => ({
-    ...statLine(rp.pos, pseed(rp.name), c),
-    num: rp.num || i + 1, name: rp.name, pos: rp.pos,
-    nat: rp.nat ? rp.nat.toUpperCase() : null, wiki: rp.wiki, real: true, age: null
-  }));
+  return real.map((rp, i) => {
+    const base = statLine(rp.pos, pseed(rp.name), c);
+    let st = base, rs = false;
+    if (rp.st) {
+      rs = true;
+      const apps = Math.max(1, Math.round(rp.st.min / 90));
+      st = { apps, goals: rp.st.g, assists: rp.st.a, saves: rp.st.sv || 0, cs: 0,
+        yc: null, rc: 0, mins: rp.st.min, xg: rp.st.xg, kp: rp.st.kp,
+        pvr: Math.round((rp.st.g * 4 + rp.st.a * 3 + apps * 0.6 + (rp.st.sv || 0) * 0.06) * (c.r / 1800) * 10) / 10,
+        form: null };
+    }
+    return { ...st, num: rp.num || i + 1, name: rp.name, pos: rp.pos,
+      nat: rp.nat ? rp.nat.toUpperCase() : null, wiki: rp.wiki, real: true, rs, age: null };
+  });
 }
 function staffFor(c) {
   const real = COACHES[c.n];
@@ -583,21 +592,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260725e')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260725g')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260725e')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260725g')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260725e')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260725g')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -614,7 +623,9 @@ function careerRow(step) {
 }
 const PRO = new Set(['mls', 'uslc', 'usl1', 'mnp', 'nwsl', 'uslw']);
 function verifyBadge(c) {
-  if (ROSTERS[c.n]) return '<span class="badge v">Roster: live from Wikipedia, refreshed every 2 days · stats demo</span>';
+  const ro = ROSTERS[c.n];
+  if (ro && ro.some(p => p.st)) return '<span class="badge v">Real 2026 stats · American Soccer Analysis · roster via Wikipedia/ASA</span>';
+  if (ro) return '<span class="badge v">Roster: live from Wikipedia, refreshed every 2 days · stats demo</span>';
   return PRO.has(c.g)
     ? '<span class="badge v">Stats: league match reports (demo)</span>'
     : '<span class="badge c">Stats: club-submitted, email-verified (demo)</span>';
@@ -753,7 +764,7 @@ async function screenPlayer(ci, pi) {
   const prof = pl.real ? ((await profilesDb())[pl.name] || {}) : {};
   if (crumb.textContent !== c.st && location.hash !== `#/player/${ci}/${pi}`) return;
   crumb.textContent = c.st;
-  const peers = allPlayers(c.x).filter(p => p.pos === pl.pos).sort((a, b) => b.pvr - a.pvr);
+  const peers = allPlayers(c.x).filter(p => p.pos === pl.pos && (!pl.rs || p.rs)).sort((a, b) => b.pvr - a.pvr);
   const rank = peers.findIndex(p => p.c === c && p.i === +pi) + 1;
   view.innerHTML = `
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/club/${ci}'">&larr; ${esc(c.n)}</button>
@@ -765,16 +776,16 @@ async function screenPlayer(ci, pi) {
     ${verifyBadge(c)}
     <div class="statgrid">
       <div class="stat"><b>${pl.pvr}</b><span>Value rating</span></div>
-      <div class="stat"><b>#${rank}</b><span>${pl.pos} · ${c.x === 'w' ? "women's" : "men's"} pool</span></div>
+      <div class="stat"><b>#${rank}</b><span>${pl.pos} · ${pl.rs ? 'pro pool (real stats)' : (c.x === 'w' ? "women's" : "men's") + ' pool'}</span></div>
       <div class="stat"><b>${pl.apps}</b><span>Appearances</span></div>
       ${pl.pos === 'GK'
-        ? `<div class="stat"><b>${pl.cs}</b><span>Clean sheets</span></div>
-           <div class="stat"><b>${pl.saves}</b><span>Saves</span></div>`
-        : `<div class="stat"><b>${pl.goals}</b><span>Goals</span></div>
-           <div class="stat"><b>${pl.assists}</b><span>Assists</span></div>`}
-      <div class="stat"><b>${pl.mins.toLocaleString()}</b><span>Minutes</span></div>
+        ? `<div class="stat"><b>${pl.rs ? pl.saves : pl.cs}</b><span>${pl.rs ? 'Saves (real)' : 'Clean sheets'}</span></div>
+           <div class="stat"><b>${pl.rs ? pl.mins.toLocaleString() : pl.saves}</b><span>${pl.rs ? 'Minutes (real)' : 'Saves'}</span></div>`
+        : `<div class="stat"><b>${pl.goals}</b><span>Goals${pl.rs ? ' (real)' : ''}</span></div>
+           <div class="stat"><b>${pl.assists}</b><span>Assists${pl.rs ? ' (real)' : ''}</span></div>`}
+      <div class="stat"><b>${pl.rs && pl.xg != null && pl.pos !== 'GK' ? pl.xg : pl.mins.toLocaleString()}</b><span>${pl.rs && pl.xg != null && pl.pos !== 'GK' ? 'xG (real)' : 'Minutes'}</span></div>
     </div>
-    <p class="note">Value rating weights goals, assists, minutes and keeper actions by the strength of the team's opposition (demo formula on demo stats). Cards: ${pl.yc} yellow${pl.rc ? ', 1 red' : ''}.</p>
+    <p class="note">Value rating weights goals, assists, minutes and keeper actions by the strength of the team's opposition (demo formula on demo stats). ${pl.yc == null ? '' : `Cards: ${pl.yc} yellow${pl.rc ? ', 1 red' : ''}.`}</p>
     ${favBtn('players', ci + '/' + pi)}
     ${(prof.career || prof.youth || prof.college) ? `<div class="kicker" style="margin-top:10px">Career pathway</div>
     <ul class="careerway">
@@ -952,7 +963,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260725e')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260725g')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
