@@ -50,6 +50,16 @@ function wireSexToggle() {
   });
 }
 
+function toggleLeague(k) {
+  const all = new Set(leaguesFor(sex));
+  if (leagueFilter.size === all.size) leagueFilter = new Set([k]);
+  else if (leagueFilter.has(k) && leagueFilter.size === 1) leagueFilter = all;
+  else {
+    leagueFilter.has(k) ? leagueFilter.delete(k) : leagueFilter.add(k);
+    if (!leagueFilter.size) leagueFilter = all;
+  }
+  route();
+}
 function leagueChips() {
   return `<div class="chips" id="lgchips">` + leaguesFor(sex).map(k => {
     const m = LEAGUES[k];
@@ -113,12 +123,7 @@ function wireMap(scopeStates) {
   const chips = view.querySelector('#lgchips');
   if (chips) chips.addEventListener('click', e => {
     const b = e.target.closest('.chip'); if (!b) return;
-    const k = b.dataset.lg;
-    leagueFilter.has(k) ? leagueFilter.delete(k) : leagueFilter.add(k);
-    b.setAttribute('aria-pressed', leagueFilter.has(k));
-    view.querySelectorAll('.pin').forEach(p => {
-      p.style.display = leagueFilter.has(CLUBS[p.dataset.idx].g) ? '' : 'none';
-    });
+    toggleLeague(b.dataset.lg);
   });
 }
 
@@ -218,8 +223,8 @@ function screenState(st) {
   if (!STATE_NAME[st]) return screenMap();
   crumb.textContent = st;
   const clubs = pool().filter(c => c.st === st);
-  const ranked = clubs.filter(c => c.r).sort((a, b) => b.r - a.r);
-  const concepts = clubs.filter(c => !c.r);
+  const ranked = visible(clubs).filter(c => c.r).sort((a, b) => b.r - a.r);
+  const concepts = visible(clubs).filter(c => !c.r);
   view.innerHTML = `
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/map'">&larr; Back</button>
     ${sexToggle()}
@@ -232,13 +237,6 @@ function screenState(st) {
   wireSexToggle();
   if (clubs.length) {
     wireMap([st]);
-    const chips = view.querySelector('#lgchips');
-    if (chips) chips.addEventListener('click', e => {
-      if (!e.target.closest('.chip')) return;
-      const r2 = clubs.filter(c => c.r && leagueFilter.has(c.g)).sort((a, b) => b.r - a.r);
-      const c2 = clubs.filter(c => !c.r && leagueFilter.has(c.g));
-      view.querySelector('#statelist').innerHTML = r2.map((c, i) => clubRow(c, i + 1)).join('') + c2.map(c => clubRow(c)).join('');
-    });
   }
 }
 
@@ -284,10 +282,7 @@ function screenTable() {
   });
   view.querySelector('#lgchips').addEventListener('click', e => {
     const b = e.target.closest('.chip'); if (!b) return;
-    const k = b.dataset.lg;
-    leagueFilter.has(k) ? leagueFilter.delete(k) : leagueFilter.add(k);
-    b.setAttribute('aria-pressed', leagueFilter.has(k));
-    view.querySelector('#tablelist').innerHTML = render();
+    toggleLeague(b.dataset.lg);
   });
 }
 
