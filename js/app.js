@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260725c';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260725c';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260725c';
+import { PROJ, USMAP } from './usmap.js?v=20260725d';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260725d';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260725d';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -411,7 +411,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260725c')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260725d')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -583,21 +583,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260725c')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260725d')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260725c')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260725d')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260725c')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260725d')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -812,8 +812,8 @@ const TIERS = {
   m: [
     { t: 'Division I', pro: true, leagues: ['mls'] },
     { t: 'Division II', pro: true, leagues: ['uslc'] },
-    { t: 'Division III', pro: true, leagues: ['usl1', 'mnp'], note: 'NISA: unsanctioned since Dec 2024', extra: ['nisa'] },
-    { t: 'National amateur', leagues: ['npsl', 'upsl'], coming: ['USL League Two · 158 clubs'] },
+    { t: 'Division III', pro: true, leagues: ['usl1', 'mnp'] },
+    { t: 'National amateur', leagues: ['npsl', 'upsl'], extra: ['nisa'], note: 'NISA: professional sanctioning not awarded — unsanctioned since Dec 2024', coming: ['USL League Two · 158 clubs'] },
     { t: 'Regional & emerging', leagues: ['loc'], coming: ['Regional leagues (EPSL, etc.)', 'State, city & rec leagues'] },
     { t: 'College & youth', leagues: ['ncaa1', 'ncaa2'], coming: ['D3 / NAIA · next', 'Youth clubs · directory layer'] }
   ],
@@ -952,7 +952,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260725c')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260725d')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
