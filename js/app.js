@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js';
+import { PROJ, USMAP } from './usmap.js?v=20260725c';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260725c';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260725c';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -143,7 +143,7 @@ function wireMap(scopeStates) {
   svg.addEventListener('pointerover', e => {
     const pin = e.target.closest('.pin'); if (!pin || !tip) return;
     const c2 = CLUBS[pin.dataset.idx]; if (!c2) return;
-    tip.innerHTML = `<b>${esc(c2.n)}</b><span>${LEAGUES[c2.g].label}${c2.r ? ' · ' + c2.r : ''}</span>`;
+    tip.innerHTML = `<b>${esc(c2.n)}</b><span>${LEAGUES[c2.g].label}${c2.r ? ' · ' + c2.r : ''}${c2.acc === 'a' ? ' · ~approx location' : ''}</span>`;
     tip.hidden = false;
   });
   svg.addEventListener('pointermove', e => {
@@ -411,7 +411,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260725c')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -583,21 +583,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260725c')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260725c')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260725c')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -835,21 +835,16 @@ function screenPyramid() {
       <div class="tier" style="width:${100 - i * (52 / TIERS[sex].length)}%">
         <div class="tier-label">${tier.t}${tier.pro ? ' · pro' : ''}</div>
         <div class="tier-leagues">
-          ${(tier.leagues || []).map(g => { const m = LEAGUES[g]; return `<button class="tierlg" data-lg="${g}">${m.img ? `<img src="${m.img}" alt="">` : `<span class="dot" style="background:${m.color}"></span>`}<b>${m.label}</b><span>${count(g)} clubs</span></button>`; }).join('')}
-          ${(tier.extra || []).map(g => { const m = LEAGUES[g]; return `<button class="tierlg dimmed" data-lg="${g}">${m.img ? `<img src="${m.img}" alt="">` : ''}<b>${m.label}</b><span>${count(g)} clubs</span></button>`; }).join('')}
+          ${(tier.leagues || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img src="${m.img}" alt="">` : `<span class="dot" style="background:${m.color}"></span>`}<b>${m.label}</b><span>${count(g)} clubs</span>`; return m.url ? `<a class="tierlg" href="${m.url}" target="_blank" rel="noopener">${inner}</a>` : `<span class="tierlg">${inner}</span>`; }).join('')}
+          ${(tier.extra || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img src="${m.img}" alt="">` : ''}<b>${m.label}</b><span>${count(g)} clubs</span>`; return m.url ? `<a class="tierlg dimmed" href="${m.url}" target="_blank" rel="noopener">${inner}</a>` : `<span class="tierlg dimmed">${inner}</span>`; }).join('')}
           ${(tier.coming || []).map(txt => `<span class="tierlg coming"><b>${txt}</b></span>`).join('')}
         </div>
         ${tier.note ? `<div class="tier-note">${tier.note}</div>` : ''}
       </div>`).join('')}
     </div>
     <a class="fa-card" href="#/cups"><b>&#127942; The Trophy Room</b><span>MLS Cup, Supporters' Shield, NWSL Championship, and the Open Cup — back to 1914.</span></a>
-    <p class="note">Tiers are organizational, not sporting — US soccer has no promotion and relegation between most levels. The pathway runs through players, not clubs: youth to college to the amateur leagues to the pro game. Tap a league to see it on the map.</p>`;
+    <p class="note">Tiers are organizational, not sporting — US soccer has no promotion and relegation between most levels. The pathway runs through players, not clubs: youth to college to the amateur leagues to the pro game. Tap a league to visit its official site.</p>`;
   wireSexToggle();
-  view.querySelector('.tiers').addEventListener('click', e => {
-    const b = e.target.closest('.tierlg[data-lg]'); if (!b) return;
-    leagueFilter = new Set([b.dataset.lg]);
-    location.hash = '#/map';
-  });
 }
 
 const FREE_AGENTS = [
@@ -957,7 +952,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260725c')).json(); }
   catch { _cups = {}; }
   return _cups;
 }

@@ -231,3 +231,5 @@ details.how b{color:var(--ink)}
 .maptip b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .maptip span{color:var(--ink-dim);font-size:.7rem}
 .watchlink{color:var(--accent);text-decoration:none;font-weight:600}
+a.tierlg{text-decoration:none;color:var(--ink)}
+a.tierlg:hover{border-color:var(--accent)}
