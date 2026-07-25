@@ -329,6 +329,7 @@ function screenTable() {
     ${leagueChips()}
     <details class="how"><summary>How are these numbers made?</summary>
       <p><b>Clubs.</b> Where we hold real results (NPSL: 346 matches in 2026), ratings are Elo: everyone starts at 1500, winners take points from losers — more for upsets, more for big margins (K=40, log goal-margin, +50 home edge). Where we hold real standings but not results (UPSL), ratings derive from points and goal difference. Everywhere else the rating is an illustrative placeholder and says so.</p>
+      <p><b>Across leagues.</b> Within a league, ratings are evidence. Between leagues, they're anchored: each tier lives in a band, and an amateur side can climb to the floor of the tier above — because Open Cup history shows the best amateurs really do beat lower-division pros — but can't leapfrog a division on league form alone. Cross-tier gaps get measured properly from inter-league cup matches as that data lands.</p>
       <p><b>Players.</b> The value rating weights production — goals ×4, assists ×3, appearances ×0.6, keeper clean sheets and saves — scaled by the strength of the club's opposition. Player stats are demo data until verified reporting is live; each profile's badge says which.</p>
     </details>
     <ul class="clublist" id="tablelist">${render()}</ul>
@@ -374,6 +375,21 @@ function oddsFor(h, a, homeAdv = 65) {
 }
 const moneyline = p => p >= 0.5 ? '-' + Math.round(100 * p / (1 - p)) : '+' + Math.round(100 * (1 - p) / p);
 
+const WATCH = {
+  mls: { label: 'MLS Season Pass · Apple TV', url: 'https://tv.apple.com/us/channel/mls-season-pass/tvs.sbd.7000' },
+  mnp: { label: 'MLS Next Pro · free on Apple TV', url: 'https://www.mlsnextpro.com/schedule' },
+  uslc: { label: 'USL Championship · broadcast guide', url: 'https://www.uslchampionship.com/watch' },
+  usl1: { label: 'USL League One · broadcast guide', url: 'https://www.uslleagueone.com/watch' },
+  nwsl: { label: 'NWSL · how to watch', url: 'https://www.nwslsoccer.com/how-to-watch' },
+  uslw: { label: 'USL Super League · Peacock', url: 'https://www.uslsuperleague.com' },
+  npsl: { label: 'NPSL · league YouTube', url: 'https://www.youtube.com/@NPSLSoccer' },
+  upsl: { label: 'UPSL · league YouTube', url: 'https://www.youtube.com/@UPSLsoccer' }
+};
+function watchRow(h, a) {
+  const w = WATCH[h.g];
+  if (!w) return '';
+  return `<div class="meta" style="margin-top:6px"><a class="watchlink" href="${w.url}" target="_blank" rel="noopener">&#9655; Watch: ${w.label}</a></div>`;
+}
 function matchCard(h, a, when) {
   const o = oddsFor(h, a);
   return `<div class="match">
@@ -388,9 +404,23 @@ function matchCard(h, a, when) {
     </div>
     <div class="prob"><i style="width:${(o.pH * 100).toFixed(0)}%;background:${LEAGUES[h.g].color}"></i><i style="width:${(o.pD * 100).toFixed(0)}%;background:var(--line)"></i><i style="flex:1;background:${LEAGUES[a.g].color};opacity:.55"></i></div>
     <div class="meta"><span>Elo ${h.r} v ${a.r}</span><span>home edge +65</span></div>
+    ${watchRow(h, a)}
   </div>`;
 }
 
+let _fixtures = null;
+async function fixturesDb() {
+  if (_fixtures) return _fixtures;
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json')).json(); }
+  catch { _fixtures = []; }
+  return _fixtures;
+}
+function fmtKick(iso) {
+  const d = new Date(iso);
+  const et = d.toLocaleString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  const loc = d.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  return et === loc ? et + ' ET' : et + ' ET · ' + loc + ' local';
+}
 function screenMatches() {
   crumb.textContent = 'Matches';
   const rated = pool().filter(c => c.r).sort((a, b) => b.r - a.r);
@@ -409,6 +439,7 @@ function screenMatches() {
   const opts = sel => rated.map(c => `<option value="${CLUBS.indexOf(c)}" ${c === sel ? 'selected' : ''}>${esc(c.n)} (${c.r})</option>`).join('');
   view.innerHTML = `
     ${sexToggle()}
+    <div id="realfx"></div>
     <div class="kicker">Any club v any club · demo odds</div>
     <h2 class="disp">Matchup Machine</h2>
     <div class="pickrow">
@@ -429,6 +460,20 @@ function screenMatches() {
   };
   view.querySelector('#pickH').addEventListener('change', redo);
   view.querySelector('#pickA').addEventListener('change', redo);
+  fixturesDb().then(fx => {
+    const box = view.querySelector('#realfx');
+    if (!box || !fx.length) return;
+    box.innerHTML = `<div class="kicker">Real fixtures · NPSL playoffs · live from the league</div>
+      <h2 class="disp">The Real Thing</h2>` + fx.map(f => {
+        const hi = clubIdxByName(f.t1), ai = clubIdxByName(f.t2);
+        const h = CLUBS[hi], a = CLUBS[ai];
+        const when = fmtKick(f.start);
+        if (!h || !a) return `<div class="match"><div class="mrow"><span class="side">${esc(f.t1)}</span><span class="vs">${f.round}</span><span class="side away">${esc(f.t2)}</span></div>
+          <div class="meta"><span>${when}</span><span>${esc(f.venue || 'Venue TBD')}</span></div>
+          <p class="note" style="margin:6px 0 0">Pairing set once the semifinals finish.</p></div>`;
+        return matchCard(h, a, f.round.toUpperCase()) .replace('<div class="meta"><span>Elo', `<div class="meta"><span>${when} · ${esc(f.venue || '')}</span><span></span></div><div class="meta"><span>Elo`);
+      }).join('') + `<p class="note">Times shown in Eastern and your local time. Odds from real-results Elo.</p>`;
+  });
 }
 
 function worldLadder(c) {
@@ -542,6 +587,13 @@ async function mlsHistory() {
   catch { _mlshist = {}; }
   return _mlshist;
 }
+let _legends = null;
+async function legendsDb() {
+  if (_legends) return _legends;
+  try { _legends = await (await fetch('data/legends.json')).json(); }
+  catch { _legends = {}; }
+  return _legends;
+}
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
@@ -572,6 +624,7 @@ async function screenClub(idx) {
   const c = CLUBS[+idx];
   if (!c) return screenMap();
   const hist = c.g === 'mls' ? (await mlsHistory()) : null;
+  const hasLegends = c.g === 'mls' && !!((await legendsDb())[c.n] || []).length;
   crumb.textContent = c.st;
   const m = LEAGUES[c.g];
   const peers = CLUBS.filter(o => o.g === c.g && o.r).sort((a, b) => b.r - a.r);
@@ -644,6 +697,7 @@ async function screenClub(idx) {
         `<li><span class="cw-years">${r.yr}</span><span class="cw-club">${r.w}-${r.d}-${r.l} · ${r.pts} pts</span><span class="cw-stat">${ord(r.pos)} of ${r.of}</span></li>`).join('')}</ul></div>
       <p class="note">Overall league finish by points, from Wikipedia season records back to the club's first season${rows.some(r => +r.yr < 2000) ? ' (shootout-era seasons scored as modern 3-1-0)' : ''}.</p>`;
     })()}
+    ${hasLegends ? `<a class="fa-card" href="#/legends/${idx}"><b>&#127942; All-Time Players</b><span>Every player who wore the shirt — the club's history in people.</span></a>` : ''}
     ${(() => {
       const kids = AFFIL[c.n] || [];
       const parent = Object.entries(AFFIL).find(([, v]) => v.some(a => a.split(' · ')[0] === c.n));
@@ -661,8 +715,10 @@ async function screenClub(idx) {
     <div class="kicker">Follow</div>
     <div class="linkrow">
       ${c.url ? `<a href="${c.url}" target="_blank" rel="noopener"><b>Official site</b></a>` : `<a href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Search for website</a>`}
+      ${c.si ? `<a href="${c.si}" target="_blank" rel="noopener">Instagram</a>` : ''}
+      ${c.sx ? `<a href="${c.sx}" target="_blank" rel="noopener">X</a>` : ''}
     </div>
-    <p class="note">Club socials and tickets appear here once the club claims its page — links always go exactly where they say.</p>
+    <p class="note">${(c.si || c.sx) ? 'Official accounts from Wikidata — links go exactly where they say.' : 'Club socials and tickets appear here once the club claims its page — links always go exactly where they say.'}</p>
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim club: ' + c.n)}">Run this club? Claim this page</a>
     <p class="note">Claimed clubs manage their crest, links, roster and schedule.</p>`;
   wireFav();
@@ -733,7 +789,9 @@ async function screenPlayer(ci, pi) {
       ? `Nationality: <b>${pl.nat || 'unlisted'}</b>. No national-team record listed.`
       : `Demo player — international records shown only for real rosters.`}</p>`}
     ${(prof.honours && prof.honours.length) ? `<div class="kicker" style="margin-top:10px">Honours</div>
-    <ul class="honours">${prof.honours.map(h2 => `<li><b>${esc(h2.t)}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
+    <ul class="honours">${prof.honours.map(h2 => `<li><b>${esc(h2.t)}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>`
+    : (pl.real && pl.wiki ? `<div class="kicker" style="margin-top:10px">Honours</div>
+    <p class="note">Full honours and records on <a href="${pl.wiki}#Honours" target="_blank" rel="noopener" style="color:var(--accent)">the player's Wikipedia page</a> — structured list lands with the next profile refresh.</p>` : '')}
     <div class="kicker" style="margin-top:10px">Links</div>
     <div class="linkrow">
       ${prof.site ? `<a href="${prof.site}" target="_blank" rel="noopener"><b>Official site</b></a>` : ''}
@@ -784,6 +842,7 @@ function screenPyramid() {
         ${tier.note ? `<div class="tier-note">${tier.note}</div>` : ''}
       </div>`).join('')}
     </div>
+    <a class="fa-card" href="#/cups"><b>&#127942; The Trophy Room</b><span>MLS Cup, Supporters' Shield, NWSL Championship, and the Open Cup — back to 1914.</span></a>
     <p class="note">Tiers are organizational, not sporting — US soccer has no promotion and relegation between most levels. The pathway runs through players, not clubs: youth to college to the amateur leagues to the pro game. Tap a league to see it on the map.</p>`;
   wireSexToggle();
   view.querySelector('.tiers').addEventListener('click', e => {
@@ -805,8 +864,9 @@ function screenFreeAgents() {
     <div class="kicker">Get seen by ${CLUBS.length.toLocaleString()} clubs</div>
     <h2 class="disp">Free Agents</h2>
     <p class="note" style="font-size:.88rem">Players without a club list themselves here: position, region, level sought, film. Clubs browse free and reach out directly — Rank XI never sits in the middle of a deal. Listings are self-reported; players with match history in our data carry a verified badge.</p>
+    <a class="fa-card" href="#/freeagent/sample"><b>See a complete profile &rarr;</b><span>Film, physicals, verified history, awards, references — the full page a listing buys.</span></a>
     <ul class="clublist">${FREE_AGENTS.map(f => `
-      <li><a href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Contact free agent: ' + f.name)}">
+      <li><a href="#/freeagent/sample">
         <img class="crest imgcrest" src="${AVATAR}" alt="">
         <span class="cl-name"><b>${f.name}</b><span>${f.pos} · ${f.age} · ${f.region} · last: ${f.last}</span></span>
         <span class="cl-rt" style="font-size:.7rem;color:var(--ink-dim)">${f.seeks}${f.video ? ' · film' : ''}</span></a></li>`).join('')}</ul>
@@ -856,6 +916,117 @@ function screenFollowing() {
     ${(f.clubs.length || f.players.length) ? '<p class="note">To unfollow, open the page and tap the star again.</p>' : ''}`;
 }
 
+let legendSort = 'apps';
+async function screenLegends(ci) {
+  const c = CLUBS[+ci]; if (!c) return screenMap();
+  crumb.textContent = c.st;
+  const all = (await legendsDb())[c.n];
+  if (!all || !all.length) { location.hash = '#/club/' + ci; return; }
+  const topApps = all[0];
+  const topGoals = [...all].sort((a, b) => b.goals - a.goals)[0];
+  const sorted = legendSort === 'apps' ? all : [...all].sort((a, b) => b.goals - a.goals);
+  view.innerHTML = `
+    <button class="backbtn" onclick="location.hash='#/club/${ci}'">&larr; ${esc(c.n)}</button>
+    <div class="clubhead">${crestHtml(c)}
+      <div><h2 class="disp" style="margin:0">All-Time Players</h2>
+      <span class="sub">${esc(c.n)} · ${all.length} players who wore the shirt</span></div>
+    </div>
+    <div class="statgrid" style="grid-template-columns:1fr 1fr">
+      <div class="stat"><b>${esc(topApps.n)}</b><span>Most appearances · ${topApps.apps}</span></div>
+      <div class="stat"><b>${esc(topGoals.n)}</b><span>Most goals · ${topGoals.goals}</span></div>
+    </div>
+    <div class="chips seg" id="lsort">
+      <button class="chip solid" data-ls="apps" aria-pressed="${legendSort === 'apps'}">By appearances</button>
+      <button class="chip solid" data-ls="goals" aria-pressed="${legendSort === 'goals'}">By goals</button>
+    </div>
+    <ul class="clublist">${sorted.slice(0, 100).map((pl, i) => `
+      <li><a href="${pl.wiki || '#/legends/' + ci}" ${pl.wiki ? 'target="_blank" rel="noopener"' : ''}>
+        <span class="rk">${i < 3 ? ['&#129351;', '&#129352;', '&#129353;'][i] : i + 1}</span>
+        <span class="cl-name"><b>${esc(pl.n)}</b><span>${pl.pos}${pl.yrs ? ' · ' + pl.yrs : ''}</span></span>
+        <span class="cl-rt">${legendSort === 'apps' ? pl.apps + ' apps' : pl.goals + ' gls'}</span></a></li>`).join('')}
+    </ul>
+    ${all.length > 100 ? `<p class="note">Showing the top 100 of ${all.length}.</p>` : ''}
+    <p class="note">All-time records from Wikipedia (CC BY-SA) — league appearances and goals. Tap a player for their full story.</p>`;
+  const seg = view.querySelector('#lsort');
+  seg.addEventListener('click', e => {
+    const b = e.target.closest('[data-ls]'); if (!b || b.dataset.ls === legendSort) return;
+    legendSort = b.dataset.ls; screenLegends(ci);
+  });
+}
+
+let _cups = null;
+async function cupsDb() {
+  if (_cups) return _cups;
+  try { _cups = await (await fetch('data/cups.json')).json(); }
+  catch { _cups = {}; }
+  return _cups;
+}
+async function screenCups() {
+  crumb.textContent = 'Trophies';
+  const cups = await cupsDb();
+  const keys = Object.keys(cups);
+  const linkClub = nm => {
+    const i = clubIdxByName(nm);
+    return i >= 0 ? `<a href="#/club/${i}">${esc(nm)}</a>` : esc(nm);
+  };
+  view.innerHTML = `
+    <div class="kicker">Professional & open competitions</div>
+    <h2 class="disp">The Trophy Room</h2>
+    ${!keys.length ? '<p class="note">Tournament histories are loading into the dataset.</p>' : ''}
+    ${keys.map(k => { const cup = cups[k]; return `
+      <details class="how" ${k === 'opencup' ? 'open' : ''}><summary>${cup.label} · ${cup.finals.length} editions${cup.kind === 'open' ? ' · open to the whole pyramid' : ''}</summary>
+      <ul class="careerway" style="max-height:320px;overflow-y:auto">${cup.finals.map(f =>
+        `<li><span class="cw-years">${f.y}</span><span class="cw-club">${linkClub(f.w)}</span><span class="cw-stat">${f.s ? f.s + ' v ' : 'def. '}${f.ru ? esc(f.ru) : ''}</span></li>`).join('')}</ul></details>`; }).join('')}
+    <p class="note">The U.S. Open Cup is the pyramid's connective tissue — the one competition where any tier can play any other. Its results are what let cross-league ratings be measured instead of assumed. Histories from Wikipedia (CC BY-SA).</p>`;
+}
+
+function screenFASample() {
+  crumb.textContent = 'Free agent';
+  view.innerHTML = `
+    <button class="backbtn" onclick="location.hash='#/freeagents'">&larr; Free Agents</button>
+    <span class="badge c">Sample profile — this is what a listed free agent looks like</span>
+    <div class="clubhead">
+      <img class="pphoto" src="${AVATAR}" alt="">
+      <div><h2 class="disp" style="margin:0">Jordan Alvarez</h2>
+      <span class="sub">FW · 23 · Santa Ana, CA · open to relocate</span></div>
+    </div>
+    <div class="statgrid">
+      <div class="stat"><b>5'11"</b><span>Height</span></div>
+      <div class="stat"><b>165 lb</b><span>Weight</span></div>
+      <div class="stat"><b>Right</b><span>Preferred foot</span></div>
+      <div class="stat"><b>FW / RW</b><span>Positions</span></div>
+      <div class="stat"><b>USL2 / NPSL</b><span>Level seeking</span></div>
+      <div class="stat"><b>Now</b><span>Available</span></div>
+    </div>
+    <div class="kicker">Highlight reel</div>
+    <a class="fa-card" href="#/freeagent/sample"><b>&#9654; 2026 Highlights · 4:12</b><span>Your film, front and center — the first thing a coach taps.</span></a>
+    <div class="kicker" style="margin-top:12px">Verified history</div>
+    <ul class="careerway">
+      <li><span class="cw-years">2025–26</span><span class="cw-club">La Máquina FC · UPSL Premier</span><span class="cw-stat">22 apps · 9 gls &#10003;</span></li>
+      <li><span class="cw-years">2023–25</span><span class="cw-club">Orange Coast College</span><span class="cw-stat">31 apps · 14 gls</span></li>
+      <li><span class="cw-years">2019–23</span><span class="cw-club">Santa Ana United (youth)</span><span class="cw-stat"></span></li>
+    </ul>
+    <p class="note">&#10003; = seasons verified against league data already in Rank XI — coaches trust numbers they can check.</p>
+    <div class="kicker">Awards</div>
+    <ul class="honours">
+      <li><b>UPSL SoCal Golden Boot</b><span>2026 Spring</span></li>
+      <li><b>All-Conference First Team (OEC)</b><span>2024</span></li>
+    </ul>
+    <div class="kicker">References</div>
+    <ul class="careerway">
+      <li><span class="cw-years">Coach</span><span class="cw-club">"Best pressing forward I've had in ten years. Motor never stops." — M. Reyes, La Máquina FC</span><span class="cw-stat"></span></li>
+      <li><span class="cw-years">College</span><span class="cw-club">"Coachable, professional, trains like it's a final." — D. Whitman, OCC</span><span class="cw-stat"></span></li>
+    </ul>
+    <div class="kicker">Contact & socials</div>
+    <div class="linkrow">
+      <a href="#/freeagent/sample"><b>Message via Rank XI</b></a>
+      <a href="#/freeagent/sample">Instagram</a>
+      <a href="#/freeagent/sample">Hudl</a>
+    </div>
+    <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Free agent listing request')}">Get your page — $25 per season</a>
+    <p class="note">Every element above is included: film slot, physicals, verified season history, awards, coach references, direct contact. Clubs browse free.</p>`;
+}
+
 /* ---- router ---- */
 function route() {
   const h = location.hash || '#/map';
@@ -867,6 +1038,9 @@ function route() {
   else if (parts[0] === 'freeagents') screenFreeAgents();
   else if (parts[0] === 'pricing') screenPricing();
   else if (parts[0] === 'following') screenFollowing();
+  else if (parts[0] === 'legends') screenLegends(parts[1]);
+  else if (parts[0] === 'cups') screenCups();
+  else if (parts[0] === 'freeagent') screenFASample();
   else if (parts[0] === 'table') screenTable();
   else if (parts[0] === 'matches') screenMatches();
   else if (parts[0] === 'about') screenAbout();

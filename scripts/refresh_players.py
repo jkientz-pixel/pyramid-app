@@ -74,7 +74,7 @@ def parse_player(text):
         u = ow.group(1).strip()
         p['site'] = u if u.startswith('http') else 'https://' + u
     hon = []
-    hm = re.search(r'==\s*Honours\s*==(.*?)(?:\n==[^=]|\Z)', text, re.S | re.I)
+    hm = re.search(r'==+\s*Honou?rs[^=\n]*==+(.*?)(?:\n==[^=]|\Z)', text, re.S | re.I)
     if hm:
         for line in hm.group(1).split('\n'):
             if not line.lstrip().startswith('*'): continue
