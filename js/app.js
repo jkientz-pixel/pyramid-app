@@ -128,7 +128,7 @@ function wireMap(scopeStates) {
 }
 
 function wireSearch() {
-  const q = view.querySelector('#q'), res = view.querySelector('#qres');
+  const q = document.querySelector('#q'), res = document.querySelector('#qres');
   if (!q) return;
   q.addEventListener('input', () => {
     const term = q.value.trim().toLowerCase();
@@ -175,7 +175,6 @@ function screenMap() {
   const clubs = pool();
   view.innerHTML = `
     ${sexToggle()}
-    <div class="searchwrap"><input id="q" type="search" placeholder="Search clubs and players" autocomplete="off" aria-label="Search clubs and players"><div id="qres" class="qres" hidden></div></div>
     ${levelChips()}
     <div class="kicker">National map · ${visible(clubs).length} of ${clubs.length} clubs</div>
     <div class="chips" id="regionchips">${['all', ...Object.keys(REGIONS)].map(r =>
@@ -194,7 +193,6 @@ function screenMap() {
   wireSexToggle();
   wireLevelChips();
   wireMap(null);
-  wireSearch();
   view.querySelector('#regionchips').addEventListener('click', e => {
     const b = e.target.closest('[data-region]'); if (!b) return;
     location.hash = b.dataset.region === 'all' ? '#/map' : `#/region/${b.dataset.region}`;
@@ -268,7 +266,7 @@ function screenTable() {
     <ul class="clublist" id="tablelist">${render()}</ul>
     <p class="note">${tableMode === 'players'
       ? 'Player value ratings weight production by opposition strength — demo stats until verified reporting is live.'
-      : "Ratings are illustrative until the results pipeline is live. Men's and women's tables are ranked separately."}</p>`;
+      : "NPSL ratings come from real 2026 results (346 matches, Elo). UPSL ratings derive from real league standings. Other leagues remain illustrative until their results feeds land. Men's and women's ranked separately."}</p>`;
   wireSexToggle();
   view.querySelector('#modeseg').addEventListener('click', e => {
     const b = e.target.closest('[data-mode]'); if (!b || b.dataset.mode === tableMode) return;
@@ -524,7 +522,7 @@ function screenClub(idx) {
     ${favBtn('clubs', String(CLUBS.indexOf(c)))}
     ${(HONOURS[c.n] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[c.n] || []).map(h2 => `<li><b>${h2.t}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
-      <div class="stat"><b>${c.r}</b><span>Rating (demo)</span></div>
+      <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : 'Rating (demo)'}</span></div>
       <div class="stat"><b>#${rank}</b><span>${m.label}</span></div>
       <div class="stat"><b>#${natl.indexOf(c) + 1}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
     </div>
@@ -587,6 +585,7 @@ function screenAbout() {
     <ul class="lglist">${ROADMAP.map(r =>
       `<li><a href="${r.url}" target="_blank" rel="noopener"><span class="dot" style="background:var(--ink-dim);width:12px;height:12px;border-radius:50%;opacity:.4"></span><b>${r.label}</b><span>~${r.teams} teams · ${r.sex === 'w' ? "women's" : "men's"}</span></a></li>`).join('')}</ul>
     <p class="note">NISA is currently unsanctioned by U.S. Soccer (Dec 2024); its clubs are shown for completeness. UPSL layer holds the clubs mapped so far — the full league is 400+ clubs.</p>
+    <p class="fine" style="font-size:.75rem">Data: Wikipedia (CC BY-SA — rosters, profiles, photos, crests), league sites and public feeds (NPSL/Squadi, UPSL), OpenStreetMap Nominatim geocoding. Club and league marks belong to their owners.</p>
     <p class="fine" style="font-size:.75rem">Concept by Jeremy Kientz · 2026</p>
   </div>`;
 }
@@ -712,3 +711,4 @@ function route() {
 }
 addEventListener('hashchange', route);
 route();
+wireSearch();

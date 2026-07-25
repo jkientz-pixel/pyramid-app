@@ -209,3 +209,4 @@ image.pin{cursor:pointer}
 .tierlg.coming{cursor:default;opacity:.55}
 .tierlg.dimmed{opacity:.55}
 .tier-note{color:var(--ink-dim);font-size:.66rem;text-align:center;margin-top:6px}
+.searchwrap.global{margin:10px 16px 0;flex:none}
