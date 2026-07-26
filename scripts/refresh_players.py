@@ -28,8 +28,13 @@ LINK = re.compile(r'\[\[([^\]|]+)(?:\|([^\]]+))?\]\]')
 def linktext(v):
     if not v: return None
     m = LINK.search(v)
-    if m: return (m.group(2) or m.group(1)).strip()
-    return re.sub(r'\{\{[^}]*\}\}', '', v).strip() or None
+    if m:
+        out = (m.group(2) or m.group(1)).strip()
+    else:
+        out = re.sub(r'\{\{[^}]*\}\}', '', v).strip()
+    if not out or any(ch in out for ch in '|={}<>'):
+        return None
+    return out[:60]
 
 def parse_player(text):
     p = {}
