@@ -54,7 +54,7 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
     </div>
     <div class="stats">
       <span><b data-stat="clubs">1,303</b>clubs mapped</span>
-      <span><b data-stat="statlines">2,968</b>real player stat lines</span>
+      <span><b data-stat="statlines">2,748</b>real player stat lines</span>
       <span><b data-stat="leagues">12</b>leagues today, more coming</span>
     </div>
   </div>
@@ -63,12 +63,12 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
 <section class="feat">
   <div><b>The map is the front door</b><p>Tap any state for its clubs, filter by league or region, men's and women's game ranked separately.</p></div>
   <div><b>Odds &amp; the Matchup Machine</b><p>Any club against any club: predicted score, three-way odds, and how a US side stacks up against Europe — hypothetically.</p></div>
-  <div><b>Players, pathways, honours</b><p>Real MLS rosters refreshed from Wikipedia every two days, trophy cabinets, second-team pathways, and player pages built for the climb.</p></div>
+  <div><b>Players, pathways, honours</b><p>Real MLS and USL Super League rosters refreshed from Wikipedia every two days, trophy cabinets, second-team pathways, and player pages built for the climb.</p></div>
 </section>
 <footer>Concept by Jeremy Kientz · ratings and stats are illustrative where marked · club and league marks belong to their owners</footer>
 <script type="module">
-import { CLUBS, LEAGUES } from './js/data.js?v=20260726k';
-import { ROSTERS } from './js/rosters.js?v=20260726k';
+import { CLUBS, LEAGUES } from './js/data.js?v=20260726l';
+import { ROSTERS } from './js/rosters.js?v=20260726l';
 const counts = {
   clubs: CLUBS.length,
   statlines: Object.values(ROSTERS).flat().filter(p => p.st).length,

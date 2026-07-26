@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260726k';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726k';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726k';
+import { PROJ, USMAP } from './usmap.js?v=20260726l';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726l';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726l';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -466,7 +466,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726k')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726l')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -687,21 +687,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726k')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726l')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260726k')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260726l')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260726k')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260726l')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -1107,7 +1107,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260726k')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260726l')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
