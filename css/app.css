@@ -233,3 +233,5 @@ details.how b{color:var(--ink)}
 .watchlink{color:var(--accent);text-decoration:none;font-weight:600}
 a.tierlg{text-decoration:none;color:var(--ink)}
 a.tierlg:hover{border-color:var(--accent)}
+.chipgrp{flex-basis:100%;color:var(--ink-dim);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;margin-top:4px}
+.morebtn{width:100%;padding:12px;border:1px dashed var(--line);border-radius:12px;background:var(--raise);color:var(--accent);font:inherit;font-size:.85rem;font-weight:600;cursor:pointer;margin-top:8px}

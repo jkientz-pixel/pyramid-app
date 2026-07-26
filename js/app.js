@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260726a';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726a';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726a';
+import { PROJ, USMAP } from './usmap.js?v=20260726b';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726b';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726b';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -61,12 +61,19 @@ function toggleLeague(k) {
   route();
 }
 function leagueChips() {
-  return `<div class="chips" id="lgchips">` + leaguesFor(sex).map(k => {
+  const groups = [['Professional', LEVELS.pro], ['Amateur', LEVELS.amateur], ['College', LEVELS.college]];
+  const chip = k => {
     const m = LEAGUES[k];
     return `<button class="chip" data-lg="${k}" aria-pressed="${leagueFilter.has(k)}">` +
-      (m.hollow ? `<span class="dot" style="border:1.5px solid ${m.color};background:transparent"></span>` : `<span class="dot" style="background:${m.color}"></span>`) +
-      `${m.label}</button>`;
-  }).join('') + `</div>`;
+      `<span class="dot" style="background:${m.color}"></span>${m.label}</button>`;
+  };
+  let html = `<div class="chips" id="lgchips">`;
+  for (const [label, lgs] of groups) {
+    const mine = leaguesFor(sex).filter(k => lgs.includes(k));
+    if (!mine.length) continue;
+    html += `<span class="chipgrp">${label}</span>` + mine.map(chip).join('');
+  }
+  return html + `</div>`;
 }
 
 function clubRow(c, rank) {
@@ -172,17 +179,48 @@ function wireMap(scopeStates) {
     e.preventDefault();
     zoom(e.deltaY > 0 ? 1.25 : 1 / 1.25);
   }, { passive: false });
-  let pd = null;
-  svg.addEventListener('pointerdown', e => { pd = { x: e.clientX, y: e.clientY, vb: getVB() }; });
-  svg.addEventListener('pointermove', e => {
-    if (!pd) return;
-    const dx = e.clientX - pd.x, dy = e.clientY - pd.y;
-    if (Math.abs(dx) + Math.abs(dy) > 6) dragged = true;
-    if (!dragged) return;
-    const r = svg.getBoundingClientRect();
-    setVB([pd.vb[0] - dx * pd.vb[2] / r.width, pd.vb[1] - dy * pd.vb[3] / r.height, pd.vb[2], pd.vb[3]]);
+  const ptrs = new Map();
+  let gest = null;
+  svg.addEventListener('pointerdown', e => {
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const pts = [...ptrs.values()];
+    if (pts.length === 1) gest = { mode: 'pan', x: e.clientX, y: e.clientY, vb: getVB() };
+    else if (pts.length === 2) {
+      const dx = pts[0].x - pts[1].x, dy = pts[0].y - pts[1].y;
+      gest = { mode: 'pinch', d0: Math.hypot(dx, dy) || 1,
+        mx: (pts[0].x + pts[1].x) / 2, my: (pts[0].y + pts[1].y) / 2, vb: getVB() };
+    }
   });
-  addEventListener('pointerup', () => { pd = null; });
+  svg.addEventListener('pointermove', e => {
+    if (!ptrs.has(e.pointerId) || !gest) return;
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const pts = [...ptrs.values()];
+    const r = svg.getBoundingClientRect();
+    if (gest.mode === 'pinch' && pts.length >= 2) {
+      dragged = true;
+      const dx = pts[0].x - pts[1].x, dy = pts[0].y - pts[1].y;
+      let scale = gest.d0 / (Math.hypot(dx, dy) || 1);
+      let nw = gest.vb[2] * scale;
+      if (nw > homeVB[2]) scale = homeVB[2] / gest.vb[2];
+      if (nw < homeVB[2] / 24) scale = (homeVB[2] / 24) / gest.vb[2];
+      nw = gest.vb[2] * scale;
+      const nh = gest.vb[3] * scale;
+      const fx = (gest.mx - r.left) / r.width, fy = (gest.my - r.top) / r.height;
+      setVB([gest.vb[0] + gest.vb[2] * fx - nw * fx, gest.vb[1] + gest.vb[3] * fy - nh * fy, nw, nh]);
+    } else if (gest.mode === 'pan' && pts.length === 1) {
+      const dx = e.clientX - gest.x, dy = e.clientY - gest.y;
+      if (Math.abs(dx) + Math.abs(dy) > 6) dragged = true;
+      if (!dragged) return;
+      setVB([gest.vb[0] - dx * gest.vb[2] / r.width, gest.vb[1] - dy * gest.vb[3] / r.height, gest.vb[2], gest.vb[3]]);
+    }
+  });
+  const endPtr = e => {
+    ptrs.delete(e.pointerId);
+    if (ptrs.size === 1) { const p1 = [...ptrs.values()][0]; gest = { mode: 'pan', x: p1.x, y: p1.y, vb: getVB() }; }
+    else if (!ptrs.size) gest = null;
+  };
+  svg.addEventListener('pointerup', endPtr);
+  svg.addEventListener('pointercancel', endPtr);
   const chips = view.querySelector('#lgchips');
   if (chips) chips.addEventListener('click', e => {
     const b = e.target.closest('.chip'); if (!b) return;
@@ -310,12 +348,17 @@ function playerRow(p, rank) {
 }
 function screenTable() {
   crumb.textContent = 'Table';
-  const renderClubs = () => pool().filter(c => c.r && leagueFilter.has(c.g)).sort((a, b) => b.r - a.r)
-    .slice(0, 40).map((c, i) => clubRow(c, i + 1)).join('');
-  const renderPlayers = () => allPlayers(sex)
+  const poolClubs = () => pool().filter(c => c.r && leagueFilter.has(c.g)).sort((a, b) => b.r - a.r);
+  const poolPlayers = () => allPlayers(sex)
     .filter(p => leagueFilter.has(p.c.g) && (posFilter === 'all' || p.pos === posFilter))
-    .sort((a, b) => b.pvr - a.pvr).slice(0, 40).map((p, i) => playerRow(p, i + 1)).join('');
-  const render = () => tableMode === 'clubs' ? renderClubs() : renderPlayers();
+    .sort((a, b) => b.pvr - a.pvr);
+  const render = () => {
+    const full = tableMode === 'clubs' ? poolClubs() : poolPlayers();
+    const rows = full.slice(0, tableLimit).map((x, i) =>
+      tableMode === 'clubs' ? clubRow(x, i + 1) : playerRow(x, i + 1)).join('');
+    const rest = full.length - Math.min(tableLimit, full.length);
+    return rows + (rest > 0 ? `<li><button class="morebtn" id="morebtn">Show more &middot; ${rest.toLocaleString()} remaining</button></li>` : '');
+  };
   view.innerHTML = `
     ${sexToggle()}
     <div class="kicker">Cross-league · demo ratings</div>
@@ -349,7 +392,13 @@ function screenTable() {
   });
   view.querySelector('#lgchips').addEventListener('click', e => {
     const b = e.target.closest('.chip'); if (!b) return;
+    tableLimit = 40;
     toggleLeague(b.dataset.lg);
+  });
+  view.querySelector('#tablelist').addEventListener('click', e => {
+    if (!e.target.closest('#morebtn')) return;
+    tableLimit += 100;
+    view.querySelector('#tablelist').innerHTML = render();
   });
 }
 
@@ -411,7 +460,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726a')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726b')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -421,7 +470,7 @@ function fmtKick(iso) {
   const loc = d.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
   return et === loc ? et + ' ET' : et + ' ET · ' + loc + ' local';
 }
-function screenMatches() {
+function screenMatches(preH) {
   crumb.textContent = 'Matches';
   const rated = pool().filter(c => c.r).sort((a, b) => b.r - a.r);
   const groups = leaguesFor(sex).filter(k => !LEAGUES[k].hollow && k !== 'mnp');
@@ -443,11 +492,11 @@ function screenMatches() {
     <div class="kicker">Any club v any club · demo odds</div>
     <h2 class="disp">Matchup Machine</h2>
     <div class="pickrow">
-      <select id="pickH" aria-label="Home club">${opts(rated[0])}</select>
+      <select id="pickH" aria-label="Home club">${opts(CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0])}</select>
       <span class="vs">V</span>
       <select id="pickA" aria-label="Away club">${opts(rated[1])}</select>
     </div>
-    <div id="pickout">${matchCard(rated[0], rated[1], 'HYPOTHETICAL')}</div>
+    <div id="pickout">${matchCard(CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0], rated[1], 'HYPOTHETICAL')}</div>
     <div class="kicker" style="margin-top:18px">Demo fixtures · generated from geography</div>
     <h2 class="disp">This Weekend</h2>
     ${fixtures.map(([h, a], i) => matchCard(h, a, `SAT ${i % 2 ? '5:00' : '7:30'} PM`)).join('')}
@@ -592,21 +641,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726a')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726b')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260726a')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260726b')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260726a')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260726b')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -723,6 +772,7 @@ async function screenClub(idx) {
         kids.map(k => `<li><span>Second team</span><b>${linkify(k)}</b></li>`).join('') +
         `</ul><p class="note">The route a player climbs: second team to first team, tier to tier.</p>`;
     })()}
+    ${c.r ? `<a class="fa-card" href="#/matches/${idx}"><b>&#9876; Matchup Machine</b><span>Play ${esc(c.n)} against any club in the country &mdash; odds and score, hypothetical or real.</span></a>` : ''}
     <div class="kicker">Follow</div>
     <div class="linkrow">
       ${c.url ? `<a href="${c.url}" target="_blank" rel="noopener"><b>Official site</b></a>` : `<a href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Search for website</a>`}
@@ -819,7 +869,7 @@ async function screenPlayer(ci, pi) {
   wireFav();
 }
 
-let tableMode = 'clubs', posFilter = 'all';
+let tableMode = 'clubs', posFilter = 'all', tableLimit = 40;
 const TIERS = {
   m: [
     { t: 'Division I', pro: true, leagues: ['mls'] },
@@ -964,7 +1014,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260726a')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260726b')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -1049,7 +1099,7 @@ function route() {
   else if (parts[0] === 'cups') screenCups();
   else if (parts[0] === 'freeagent') screenFASample();
   else if (parts[0] === 'table') screenTable();
-  else if (parts[0] === 'matches') screenMatches();
+  else if (parts[0] === 'matches') screenMatches(parts[1]);
   else if (parts[0] === 'about') screenAbout();
   else if (parts[0] === 'state') screenState(parts[1]);
   else if (parts[0] === 'region') screenRegion(parts[1]);
