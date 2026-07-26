@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260726c';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726c';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726c';
+import { PROJ, USMAP } from './usmap.js?v=20260726d';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726d';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726d';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -460,7 +460,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726c')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726d')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -633,6 +633,37 @@ function allPlayers(sx) {
   CLUBS.forEach(c => { if (c.x !== sx || !c.r) return; squadFor(c).forEach((pl, i) => out.push({ ...pl, c, i })); });
   return _pcache[sx] = out;
 }
+function rankChart(rows, color) {
+  const data = [...rows].sort((a, b) => a.yr - b.yr);
+  if (data.length < 3) return '';
+  const W = 320, H = 130, padL = 26, padR = 12, padT = 10, padB = 20;
+  const maxPos = Math.max(...data.map(r => r.of));
+  const x = i => padL + (W - padL - padR) * (i / (data.length - 1));
+  const y = pos => padT + (H - padT - padB) * ((pos - 1) / Math.max(1, maxPos - 1));
+  const pts = data.map((r, i) => [x(i), y(r.pos)]);
+  const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('');
+  const area = line + `L${pts[pts.length - 1][0].toFixed(1)} ${H - padB}L${pts[0][0].toFixed(1)} ${H - padB}Z`;
+  const last = pts[pts.length - 1];
+  const midYr = data[Math.floor(data.length / 2)].yr;
+  const bands = data.map((r, i) => {
+    const bx = i ? (pts[i - 1][0] + pts[i][0]) / 2 : padL;
+    const bw = (i < data.length - 1 ? (pts[i][0] + pts[i + 1][0]) / 2 : W - padR) - bx;
+    return `<rect x="${bx.toFixed(1)}" y="0" width="${bw.toFixed(1)}" height="${H}" fill="transparent" data-ci="${i}"><title>${r.yr} · ${r.w}-${r.d}-${r.l} · finished ${ord(r.pos)} of ${r.of}</title></rect>`;
+  }).join('');
+  return `<div class="rankchart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="League finish by season, 1 at top">
+    <line x1="${padL}" y1="${padT}" x2="${W - padR}" y2="${padT}" stroke="var(--line)" stroke-dasharray="2 4"/>
+    <line x1="${padL}" y1="${H - padB}" x2="${W - padR}" y2="${H - padB}" stroke="var(--line)" stroke-dasharray="2 4"/>
+    <text x="${padL - 5}" y="${padT + 4}" class="ax" text-anchor="end">1</text>
+    <text x="${padL - 5}" y="${H - padB + 4}" class="ax" text-anchor="end">${maxPos}</text>
+    <text x="${padL}" y="${H - 5}" class="ax">${data[0].yr}</text>
+    <text x="${(W + padL - padR) / 2}" y="${H - 5}" class="ax" text-anchor="middle">${midYr}</text>
+    <text x="${W - padR}" y="${H - 5}" class="ax" text-anchor="end">${data[data.length - 1].yr}</text>
+    <path d="${area}" fill="${color}" fill-opacity=".12"/>
+    <path d="${line}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="4" fill="${color}" stroke="var(--raise)" stroke-width="2"/>
+    ${bands}
+  </svg></div>`;
+}
 function ord(n) {
   const v = n % 100;
   if (v >= 11 && v <= 13) return n + 'th';
@@ -641,21 +672,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726c')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726d')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260726c')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260726d')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260726c')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260726d')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -752,7 +783,8 @@ async function screenClub(idx) {
       }
       if (!rows.length) return '';
       rows.sort((a, b) => b.yr - a.yr);
-      return `<div class="kicker" style="margin-top:14px">Season by season · since ${rows[rows.length - 1].yr}</div>
+      return `<div class="kicker" style="margin-top:14px">League finish by season · since ${rows[rows.length - 1].yr}</div>
+      ${rankChart(rows, LEAGUES[c.g].color)}
       <div class="histwrap"><ul class="careerway">${rows.map(r =>
         `<li><span class="cw-years">${r.yr}</span><span class="cw-club">${r.w}-${r.d}-${r.l} · ${r.pts} pts</span><span class="cw-stat">${ord(r.pos)} of ${r.of}</span></li>`).join('')}</ul></div>
       <p class="note">Overall league finish by points, from Wikipedia season records back to the club's first season${rows.some(r => +r.yr < 2000) ? ' (shootout-era seasons scored as modern 3-1-0)' : ''}.</p>`;
@@ -1016,7 +1048,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260726c')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260726d')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
