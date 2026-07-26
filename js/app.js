@@ -282,7 +282,7 @@ function screenMap() {
   view.innerHTML = `
     ${sexToggle()}
     ${levelChips()}
-    <div class="kicker">National map · ${visible(clubs).length} of ${clubs.length} clubs</div>
+    <div class="kicker">National map · ${visible(clubs).length} of ${clubs.length} ${sex === 'w' ? "women's" : "men's"} clubs</div>
     <div class="chips" id="regionchips">${['all', ...Object.keys(REGIONS)].map(r =>
       `<button class="chip solid" data-region="${r}" aria-pressed="${r === 'all'}">${r === 'all' ? 'All USA' : REGION_LABEL[r]}</button>`).join('')}</div>
     ${renderMapSvg(visible(clubs))}
