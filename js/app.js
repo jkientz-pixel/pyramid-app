@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260726d';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726d';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726d';
+import { PROJ, USMAP } from './usmap.js?v=20260726e';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726e';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726e';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -460,7 +460,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726d')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726e')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -672,21 +672,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726d')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726e')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260726d')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260726e')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260726d')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260726e')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -744,7 +744,7 @@ async function screenClub(idx) {
       ${m.url ? `<a class="lgchip" href="${m.url}" target="_blank" rel="noopener" style="background:${m.color}">${m.img ? `<img class="lgimg" src="${m.img}" alt="">` : ''}${m.label} &nearr;</a>` : `<span class="lgchip" style="background:${m.color}">${m.label}</span>`}
       <span class="sub" style="margin-left:8px">${STATE_NAME[c.st] || c.st}</span></div>
     </div>
-    ${favBtn('clubs', String(CLUBS.indexOf(c)))}
+    <div class="btnrow">${favBtn('clubs', String(CLUBS.indexOf(c)))}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}</div>
     ${(HONOURS[c.n] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[c.n] || []).map(h2 => `<li><b>${h2.t}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
       <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : 'Rating (demo)'}</span></div>
@@ -804,7 +804,6 @@ async function screenClub(idx) {
         kids.map(k => `<li><span>Second team</span><b>${linkify(k)}</b></li>`).join('') +
         `</ul><p class="note">The route a player climbs: second team to first team, tier to tier.</p>`;
     })()}
-    ${c.r ? `<button class="fa-card predictbtn" data-predict="${idx}" style="width:100%;text-align:left;font:inherit;cursor:pointer"><b>&#9876; Predict Result</b><span>Play ${esc(c.n)} against any club &mdash; search an opponent, see the odds.</span></button>` : ''}
     <div class="kicker">Follow</div>
     <div class="linkrow">
       ${c.url ? `<a href="${c.url}" target="_blank" rel="noopener"><b>Official site</b></a>` : `<a href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Search for website</a>`}
@@ -815,7 +814,7 @@ async function screenClub(idx) {
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim club: ' + c.n)}">Run this club? Claim this page</a>
     <p class="note">Claimed clubs manage their crest, links, roster and schedule.</p>`;
   wireFav();
-  const pb = view.querySelector('.predictbtn');
+  const pb = view.querySelector('.predictbtn2');
   if (pb) pb.addEventListener('click', () => openPredict(pb.dataset.predict));
 }
 
@@ -1048,7 +1047,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260726d')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260726e')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
