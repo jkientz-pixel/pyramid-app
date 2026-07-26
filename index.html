@@ -46,16 +46,16 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
 <section class="hero">
   <div>
     <h1 class="disp">Every club in American soccer.<br>One map. One table.</h1>
-    <p class="sub">MLS to the grassroots, men's and women's — 1,303 real clubs mapped, ranked on one scale, with real pro rosters and stats, club honours, player pages and the pathway between every level. The national table American soccer never had.</p>
+    <p class="sub">MLS to the grassroots, men's and women's — <span data-stat="clubs">1,303</span> real clubs mapped, ranked on one scale, with real pro rosters and stats, club honours, player pages and the pathway between every level. The national table American soccer never had.</p>
     <div class="cta-row">
       <a class="primary" href="app.html">Open the app</a>
       <a class="ghost" href="app.html#/table">See the national table</a>
       <a class="ghost" href="mailto:jkientz@gmail.com?subject=Subscribe%3A%20Rank%20XI%20updates">Get launch updates</a>
     </div>
     <div class="stats">
-      <span><b>1,303</b>clubs mapped</span>
-      <span><b>2,730</b>real player stat lines</span>
-      <span><b>12</b>leagues today, more coming</span>
+      <span><b data-stat="clubs">1,303</b>clubs mapped</span>
+      <span><b data-stat="statlines">2,622</b>real player stat lines</span>
+      <span><b data-stat="leagues">12</b>leagues today, more coming</span>
     </div>
   </div>
   <div class="phone-wrap"><div class="bezel"><iframe src="app.html" title="Rank XI app demo" loading="lazy"></iframe></div></div>
@@ -66,5 +66,18 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
   <div><b>Players, pathways, honours</b><p>Real MLS rosters refreshed from Wikipedia every two days, trophy cabinets, second-team pathways, and player pages built for the climb.</p></div>
 </section>
 <footer>Concept by Jeremy Kientz · ratings and stats are illustrative where marked · club and league marks belong to their owners</footer>
+<script type="module">
+import { CLUBS, LEAGUES } from './js/data.js?v=20260726i';
+import { ROSTERS } from './js/rosters.js?v=20260726i';
+const counts = {
+  clubs: CLUBS.length,
+  statlines: Object.values(ROSTERS).flat().filter(p => p.st).length,
+  leagues: Object.keys(LEAGUES).length
+};
+for (const el of document.querySelectorAll('[data-stat]')) {
+  const value = counts[el.dataset.stat];
+  if (value) el.textContent = value.toLocaleString('en-US');
+}
+</script>
 </body>
 </html>
