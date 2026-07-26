@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260726e';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726e';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726e';
+import { PROJ, USMAP } from './usmap.js?v=20260726f';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726f';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726f';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -460,7 +460,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726e')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726f')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -672,21 +672,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726e')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726f')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260726e')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260726f')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260726e')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260726f')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -841,6 +841,24 @@ function screenAbout() {
   </div>`;
 }
 
+function playerLadder(pl, c) {
+  if (!pl.rs) return '';
+  const peers = allPlayers(c.x).filter(p => p.pos === pl.pos && p.rs).sort((a, b) => b.pvr - a.pvr);
+  if (peers.length < 5) return '';
+  const top = peers[0], med = peers[Math.floor(peers.length / 2)];
+  const rows = [
+    { n: "Elite Europe (Ballon d'Or tier)", v: Math.round(top.pvr * 1.6), ref: true },
+    { n: 'Top-5 European league starter', v: Math.round(top.pvr * 1.05), ref: true },
+    { n: `${top.name} — best US ${pl.pos} (real)`, v: top.pvr, ref: true },
+    { n: 'European second-tier starter', v: Math.round(top.pvr * 0.55), ref: true },
+    { n: `US pro median ${pl.pos} (real)`, v: med.pvr, ref: true },
+    { n: pl.name, v: pl.pvr, ref: false }
+  ].sort((a, b) => b.v - a.v);
+  return `<div class="kicker" style="margin-top:12px">Position context &middot; domestic real, world hypothetical</div>
+    <ul class="ladder">${rows.map(r =>
+      `<li class="${r.ref ? '' : 'me'}"><span class="ln">${esc(r.n)}</span><span class="lr">${r.v}</span></li>`).join('')}</ul>
+    <p class="note">Domestic anchors are real 2026 value ratings. European tiers are transparent projections (multiples of the US pool's best) &mdash; a conversation, not a measurement.</p>`;
+}
 async function screenPlayer(ci, pi) {
   const c = CLUBS[+ci]; if (!c || !c.r) return screenMap();
   const sq = squadFor(c); const pl = sq[+pi]; if (!pl) return screenClub(ci);
@@ -869,7 +887,9 @@ async function screenPlayer(ci, pi) {
       <div class="stat"><b>${pl.rs && pl.xg != null && pl.pos !== 'GK' ? pl.xg : pl.mins.toLocaleString()}</b><span>${pl.rs && pl.xg != null && pl.pos !== 'GK' ? 'xG (real)' : 'Minutes'}</span></div>
     </div>
     <p class="note">Value rating weights goals, assists, minutes and keeper actions by the strength of the team's opposition (demo formula on demo stats). ${pl.yc == null ? '' : `Cards: ${pl.yc} yellow${pl.rc ? ', 1 red' : ''}.`}</p>
+    ${pl.rs && rank ? `<p class="pheadline">${ord(rank)}-best ${({GK:'goalkeeper',DF:'defender',MF:'midfielder',FW:'forward'})[pl.pos]} in the nation <span>real 2026 stats · pro pool</span></p>` : ''}
     ${favBtn('players', ci + '/' + pi)}
+    ${playerLadder(pl, c)}
     ${(prof.career || prof.youth || prof.college) ? `<div class="kicker" style="margin-top:10px">Career pathway</div>
     <ul class="careerway">
       ${(prof.youth || []).map(y => `<li><span class="cw-years">youth</span><span class="cw-club">${esc(y)}</span><span class="cw-stat"></span></li>`).join('')}
@@ -1047,7 +1067,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260726e')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260726f')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
