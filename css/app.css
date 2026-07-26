@@ -260,7 +260,7 @@ a.tierlg:hover{border-color:var(--accent)}
 [data-theme="dark"]{
   --ground:#0C1512; --ground2:#111E19; --raise:#15221D; --line:#22332C;
   --ink:#F2F4EF; --ink-dim:#9DABA3; --accent:#E8A33D;
-  --map-fill:#15221D; --map-stroke:#3A4A42; --map-hover:#1B2C25; --map-label:#8FA396; --bar:rgba(12,21,18,.92);
+  --map-fill:#15221D; --map-stroke:#C8D4CC; --map-hover:#1E3128; --map-label:#B9C6BD; --bar:rgba(12,21,18,.92);
 }
 [data-theme="dark"] body{background:#07100C}
 [data-theme="dark"] .ladder li.me{background:#2A2416;color:var(--ink)}

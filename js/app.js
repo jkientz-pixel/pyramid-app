@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260726g';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726g';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726g';
+import { PROJ, USMAP } from './usmap.js?v=20260726h';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726h';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726h';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -466,7 +466,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726g')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726h')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -678,21 +678,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726g')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726h')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260726g')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260726h')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260726g')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260726h')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -1010,6 +1010,9 @@ function screenPricing() {
     <div class="pricecard"><b>Founding Free Agent listing · Free now, $25/season later</b>
       <p>Not "exposure" — proof and delivery: a <b>verified badge</b> backed by league data we already hold, your film front and center, <b>alerts sent to clubs in your region and level</b>, and a receipt: how many clubs viewed you. Founding listings are free while the market proves itself; the price turns on only when players are getting contacted.</p>
       <a class="claim" href="#/freeagent/sample">See a complete player listing</a></div>
+    <div class="pricecard paid"><b>Free Agent Pro · $50/season</b>
+      <p>Everything in the listing, plus <b>you make the first move</b>: send direct intro requests to clubs from inside Rank XI — your verified profile and film attached — with <b>5 intros a month</b> and priority placement in club searches. Privacy holds both ways: no emails or numbers exposed until both sides accept the intro.</p>
+      <a class="claim" href="#/freeagent/sample">See how intros work</a></div>
     <div class="pricecard paid"><b>Club Recruiting · Free browse for all clubs · Pro tools $99/season</b>
       <p>Browsing free agents costs nothing, ever. The paid tier is speed: <b>saved-search alerts</b> ("verified GK within 50 miles"), <b>unlimited direct contact</b>, <b>shortlists</b>, and <b>promoted tryout listings</b>. Fill your roster in a week, not a month.</p>
       <a class="claim" href="#/clubtools/sample">See the club recruiting tools</a></div>
@@ -1082,7 +1085,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260726g')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260726h')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -1141,6 +1144,12 @@ function screenFASample() {
     <ul class="careerway">
       <li><span class="cw-years">Coach</span><span class="cw-club">"Best pressing forward I've had in ten years. Motor never stops." — M. Reyes, La Máquina FC</span><span class="cw-stat"></span></li>
       <li><span class="cw-years">College</span><span class="cw-club">"Coachable, professional, trains like it's a final." — D. Whitman, OCC</span><span class="cw-stat"></span></li>
+    </ul>
+    <div class="kicker">Intro requests <span class="badge c" style="margin-left:6px">Pro</span></div>
+    <ul class="careerway">
+      <li><span class="cw-years">Sent 7/22</span><span class="cw-club">&rarr; Orange County SC &middot; "Available for trial, film attached"</span><span class="cw-stat" style="color:var(--accent)">Accepted &#10003;</span></li>
+      <li><span class="cw-years">Sent 7/24</span><span class="cw-club">&rarr; La M&aacute;quina FC</span><span class="cw-stat">Pending</span></li>
+      <li><span class="cw-years">3 left</span><span class="cw-club">this month &middot; contact details stay private until a club accepts</span><span class="cw-stat"></span></li>
     </ul>
     <div class="kicker">Contact & socials</div>
     <div class="linkrow">
@@ -1218,6 +1227,10 @@ function screenClubTools() {
       <div class="stat"><b>12</b><span>New matches this week</span></div>
       <div class="stat"><b>241</b><span>Tryout page views</span></div>
     </div>
+    <div class="kicker">Intro requests from players &middot; free for every club</div>
+    <ul class="clublist">
+      <li><a href="#/freeagent/sample"><img class="crest imgcrest" src="${AVATAR}" alt=""><span class="cl-name"><b>Jordan Alvarez wants a trial</b><span>FW &middot; verified UPSL history &#10003; &middot; film attached</span></span><span class="cl-rt" style="font-size:.7rem;color:var(--accent)">Accept &middot; Pass</span></a></li>
+    </ul>
     <div class="kicker">Saved searches · alerts on</div>
     <ul class="careerway">
       <li><span class="cw-years">&#128276; ON</span><span class="cw-club">Verified GK · within 50 mi · UPSL level+</span><span class="cw-stat">2 new</span></li>
@@ -1275,13 +1288,11 @@ function route() {
   else if (parts[0] === 'player') screenPlayer(parts[1], parts[2]);
   else screenMap();
 }
-const savedTheme = localStorage.getItem('pyr-theme');
-if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+document.documentElement.dataset.theme = localStorage.getItem('pyr-theme') || 'dark';
 document.getElementById('themebtn')?.addEventListener('click', () => {
-  const cur = document.documentElement.dataset.theme === 'dark' ? '' : 'dark';
-  if (cur) document.documentElement.dataset.theme = cur;
-  else delete document.documentElement.dataset.theme;
-  localStorage.setItem('pyr-theme', cur);
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('pyr-theme', next);
 });
 addEventListener('hashchange', route);
 route();
