@@ -12,3 +12,4 @@ wn_*
 wm_*
 wraw_*
 npsl_geo.json
+__pycache__/
