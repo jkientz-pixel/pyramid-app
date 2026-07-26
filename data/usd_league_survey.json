@@ -1,0 +1,703 @@
+{
+ "parsed": [
+  {
+   "name": "Akron Premier League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "American Premier League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 0,
+   "divs": 1
+  },
+  {
+   "name": "American Premier Soccer League",
+   "type": "Open",
+   "region": "Regional",
+   "clubs": 76,
+   "divs": 10
+  },
+  {
+   "name": "Arizona Premier League",
+   "type": "Open",
+   "region": "Southwest",
+   "clubs": 4,
+   "divs": 1
+  },
+  {
+   "name": "Arkansas Central Soccer Assocation",
+   "type": "Open",
+   "region": "Southeast",
+   "clubs": 1,
+   "divs": 1
+  },
+  {
+   "name": "Atlanta District Amateur Soccer League",
+   "type": "Open",
+   "region": "Southeast",
+   "clubs": 12,
+   "divs": 1
+  },
+  {
+   "name": "Austin Men’s Soccer Association",
+   "type": "Open",
+   "region": "Southwest",
+   "clubs": 55,
+   "divs": 6
+  },
+  {
+   "name": "Bay State Soccer League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 38,
+   "divs": 4
+  },
+  {
+   "name": "Beaches Adult Soccer League",
+   "type": "Open",
+   "region": "Southeast",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "Blossomland Soccer League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 0,
+   "divs": 1
+  },
+  {
+   "name": "Boston Premier League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "Buffalo & District Soccer League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 68,
+   "divs": 8
+  },
+  {
+   "name": "California Soccer League",
+   "type": "Open",
+   "region": "West",
+   "clubs": 0,
+   "divs": 1
+  },
+  {
+   "name": "Cape Cod Soccer League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 8,
+   "divs": 1
+  },
+  {
+   "name": "CASA Select",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 35,
+   "divs": 10
+  },
+  {
+   "name": "Cascadia Premier League",
+   "type": "Open",
+   "region": "Regional",
+   "clubs": 32,
+   "divs": 5
+  },
+  {
+   "name": "Cascadia Premier League Women's",
+   "type": "Women",
+   "region": "Regional",
+   "clubs": 12,
+   "divs": 3
+  },
+  {
+   "name": "Central California Soccer League",
+   "type": "Open",
+   "region": "West",
+   "clubs": 4,
+   "divs": 1
+  },
+  {
+   "name": "C Central Illinois Soccer League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 9,
+   "divs": 1
+  },
+  {
+   "name": "Central League - SCASA",
+   "type": "Open",
+   "region": "Southeast",
+   "clubs": 0,
+   "divs": 5
+  },
+  {
+   "name": "Central Virginia Soccer Association",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 15,
+   "divs": 2
+  },
+  {
+   "name": "Charlotte Premier Soccer League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 0,
+   "divs": 1
+  },
+  {
+   "name": "Cobb Adult Soccer League",
+   "type": "Open",
+   "region": "Southeast",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "Colorado Premier League",
+   "type": "Open",
+   "region": "West",
+   "clubs": 21,
+   "divs": 2
+  },
+  {
+   "name": "Commonwealth Soccer League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "Cosmopolitan League",
+   "type": "Open",
+   "region": "Regional",
+   "clubs": 47,
+   "divs": 4
+  },
+  {
+   "name": "DC Premier League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 32,
+   "divs": 3
+  },
+  {
+   "name": "Enchantment Premier League",
+   "type": "Open",
+   "region": "Southwest",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "Evergreen Premier League",
+   "type": "Open",
+   "region": "Pacific",
+   "clubs": 15,
+   "divs": 2
+  },
+  {
+   "name": "Florida Suncoast Soccer League",
+   "type": "Open",
+   "region": "Southeast",
+   "clubs": 14,
+   "divs": 3
+  },
+  {
+   "name": "Gainbridge Super League",
+   "type": "Women",
+   "region": "National",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "Garden State Soccer League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 35,
+   "divs": 2
+  },
+  {
+   "name": "Greater Chicago Soccer League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 25,
+   "divs": 3
+  },
+  {
+   "name": "Greater Memphis Soccer Association",
+   "type": "Open",
+   "region": "Southeast",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "Greater Pittsburgh Soccer League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 37,
+   "divs": 4
+  },
+  {
+   "name": "Greater Seattle Soccer League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "Gulf Coast Premier League",
+   "type": "Open",
+   "region": "Regional",
+   "clubs": 12,
+   "divs": 3
+  },
+  {
+   "name": "Houston Football Association",
+   "type": "Open",
+   "region": "Southwest",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "Huntsville Adult Soccer League",
+   "type": "Open",
+   "region": "North Alabama",
+   "clubs": 28,
+   "divs": 5
+  },
+  {
+   "name": "Idaho Falls Adult Soccer League",
+   "type": "Open",
+   "region": "Northwest",
+   "clubs": 0,
+   "divs": 1
+  },
+  {
+   "name": "Long Island Soccer Football League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 22,
+   "divs": 3
+  },
+  {
+   "name": "Major Island Soccer Org",
+   "type": "Open",
+   "region": "West",
+   "clubs": 20,
+   "divs": 3
+  },
+  {
+   "name": "Major League Soccer",
+   "type": "Open",
+   "region": "National",
+   "clubs": 30,
+   "divs": 2
+  },
+  {
+   "name": "Maryland Major Soccer League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 14,
+   "divs": 2
+  },
+  {
+   "name": "Maryland Super Soccer League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 26,
+   "divs": 5
+  },
+  {
+   "name": "Metrolina Adult Soccer League",
+   "type": "Open",
+   "region": "Southeast",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "Metroplex Premier League",
+   "type": "Open",
+   "region": "Southwest",
+   "clubs": 23,
+   "divs": 2
+  },
+  {
+   "name": "Michigan Premier Soccer League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 19,
+   "divs": 2
+  },
+  {
+   "name": "Michigan United Soccer League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 14,
+   "divs": 2
+  },
+  {
+   "name": "Midwest Premier League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 65,
+   "divs": 10
+  },
+  {
+   "name": "Milwaukee Premier League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 15,
+   "divs": 2
+  },
+  {
+   "name": "Minnesota Amateur Soccer League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 31,
+   "divs": 4
+  },
+  {
+   "name": "Mississippi Premier League",
+   "type": "Open",
+   "region": "Mississippi",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "MLS Next Pro",
+   "type": "Open",
+   "region": "National",
+   "clubs": 30,
+   "divs": 2
+  },
+  {
+   "name": "Montana Soccer League",
+   "type": "Open",
+   "region": "Northwest",
+   "clubs": 0,
+   "divs": 1
+  },
+  {
+   "name": "Mountain Premier League",
+   "type": "Open",
+   "region": "Regional",
+   "clubs": 14,
+   "divs": 2
+  },
+  {
+   "name": "National Independent Soccer Association Nations",
+   "type": "Open",
+   "region": "National",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "National Independent Soccer Association (NISA) Pro",
+   "type": "Open",
+   "region": "National",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "National Premier Soccer League",
+   "type": "Open",
+   "region": "National",
+   "clubs": 83,
+   "divs": 12
+  },
+  {
+   "name": "National Premier Soccer League - RL",
+   "type": "Open",
+   "region": "National",
+   "clubs": 13,
+   "divs": 3
+  },
+  {
+   "name": "Nebraska Mens Soccer League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 5,
+   "divs": 1
+  },
+  {
+   "name": "Nevada Premier League",
+   "type": "Open",
+   "region": "West",
+   "clubs": 12,
+   "divs": 2
+  },
+  {
+   "name": "North Carolina Soccer League",
+   "type": "Open",
+   "region": "Southeast",
+   "clubs": 11,
+   "divs": 1
+  },
+  {
+   "name": "Northern Ohio Soccer League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 28,
+   "divs": 5
+  },
+  {
+   "name": "N Northern Virginia Adult Soccer Association",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "Northern Virginia Soccer League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 10,
+   "divs": 1
+  },
+  {
+   "name": "Northern Wisconsin Soccer League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 12,
+   "divs": 2
+  },
+  {
+   "name": "Ocean State Soccer League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 7,
+   "divs": 1
+  },
+  {
+   "name": "Ohio Valley Premier League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 26,
+   "divs": 2
+  },
+  {
+   "name": "Pacific Premier League",
+   "type": "Open",
+   "region": "Pacific",
+   "clubs": 8,
+   "divs": 1
+  },
+  {
+   "name": "Premier Futbol League",
+   "type": "Open",
+   "region": "Southeast",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "R Regional Adult Soccer League",
+   "type": "?",
+   "region": "?",
+   "clubs": null,
+   "divs": null
+  },
+  {
+   "name": "Rochester District Soccer League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 20,
+   "divs": 3
+  },
+  {
+   "name": "San Diego Premier League",
+   "type": "Open",
+   "region": "Pacific",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "San Francisco Soccer Football League",
+   "type": "Open",
+   "region": "Pacific",
+   "clubs": 28,
+   "divs": 3
+  },
+  {
+   "name": "Seattle Afrikan Premier League",
+   "type": "Open",
+   "region": "Pacific",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "SoCal Premier League",
+   "type": "Open",
+   "region": "Pacific",
+   "clubs": 18,
+   "divs": 4
+  },
+  {
+   "name": "Soccer Premier League",
+   "type": "Open",
+   "region": "Southeast",
+   "clubs": 16,
+   "divs": 2
+  },
+  {
+   "name": "Southern Idaho Soccer League",
+   "type": "Open",
+   "region": "Northwest",
+   "clubs": 5,
+   "divs": 1
+  },
+  {
+   "name": "Southwest Premier League",
+   "type": "Open",
+   "region": "Regional",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "The League for Clubs",
+   "type": "Open",
+   "region": "National",
+   "clubs": 61,
+   "divs": 8
+  },
+  {
+   "name": "The Lightning League",
+   "type": "Open",
+   "region": "Northern California",
+   "clubs": 14,
+   "divs": 1
+  },
+  {
+   "name": "The Select League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 14,
+   "divs": 1
+  },
+  {
+   "name": "Triangle Adult Soccer League",
+   "type": "Open",
+   "region": "Southeast",
+   "clubs": 12,
+   "divs": 2
+  },
+  {
+   "name": "United Premier Soccer League Division 1",
+   "type": "Open",
+   "region": "National",
+   "clubs": 346,
+   "divs": 40
+  },
+  {
+   "name": "United Premier Soccer League Division 2",
+   "type": "Open",
+   "region": "National",
+   "clubs": 46,
+   "divs": 5
+  },
+  {
+   "name": "United Premier Soccer League Premier",
+   "type": "Open",
+   "region": "National",
+   "clubs": 415,
+   "divs": 40
+  },
+  {
+   "name": "United Soccer League of Pennsylvania",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 6,
+   "divs": 2
+  },
+  {
+   "name": "United Women's Soccer",
+   "type": "Women",
+   "region": "National",
+   "clubs": 36,
+   "divs": 6
+  },
+  {
+   "name": "USL Championship",
+   "type": "Open",
+   "region": "National",
+   "clubs": 32,
+   "divs": 2
+  },
+  {
+   "name": "USL League One",
+   "type": "Open",
+   "region": "National",
+   "clubs": 19,
+   "divs": 1
+  },
+  {
+   "name": "USL League Two",
+   "type": "Open",
+   "region": "National",
+   "clubs": 169,
+   "divs": 20
+  },
+  {
+   "name": "USL W-League",
+   "type": "Women",
+   "region": "National",
+   "clubs": 96,
+   "divs": 16
+  },
+  {
+   "name": "Utah Soccer Association",
+   "type": "Open",
+   "region": "West",
+   "clubs": 0,
+   "divs": 3
+  },
+  {
+   "name": "Volt League",
+   "type": "Open",
+   "region": "Southwest",
+   "clubs": 18,
+   "divs": 2
+  },
+  {
+   "name": "Washington Premier League",
+   "type": "Open",
+   "region": "Northeast",
+   "clubs": 0,
+   "divs": 0
+  },
+  {
+   "name": "Wisconsin Primary Amateur Soccer League",
+   "type": "Open",
+   "region": "Midwest",
+   "clubs": 10,
+   "divs": 1
+  },
+  {
+   "name": "Women's Premier Soccer League",
+   "type": "Women",
+   "region": "National",
+   "clubs": 143,
+   "divs": 25
+  },
+  {
+   "name": "Women's Premier Soccer League Division 2",
+   "type": "Women",
+   "region": "National",
+   "clubs": 51,
+   "divs": 8
+  }
+ ],
+ "analysis": {
+  "overlap": 12,
+  "new": 87,
+  "empty": 26,
+  "clubs_total": 1565
+ }
+}
