@@ -260,7 +260,7 @@ a.tierlg:hover{border-color:var(--accent)}
 [data-theme="dark"]{
   --ground:#0C1512; --ground2:#111E19; --raise:#15221D; --line:#22332C;
   --ink:#F2F4EF; --ink-dim:#9DABA3; --accent:#E8A33D;
-  --map-fill:#15221D; --map-stroke:#C8D4CC; --map-hover:#1E3128; --map-label:#B9C6BD; --bar:rgba(12,21,18,.92);
+  --map-fill:#1E2E26; --map-stroke:#E8EFEA; --map-hover:#273B30; --map-label:#D5DFD8; --bar:rgba(12,21,18,.92);
 }
 [data-theme="dark"] body{background:#07100C}
 [data-theme="dark"] .ladder li.me{background:#2A2416;color:var(--ink)}
@@ -271,3 +271,6 @@ a.tierlg:hover{border-color:var(--accent)}
 [data-theme="dark"] .fa-card{background:var(--raise)}
 [data-theme="dark"] .pheadline{color:var(--accent)}
 .themebtn{border:1px solid var(--line);background:var(--raise);color:var(--ink);border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:.9rem;line-height:1}
+
+[data-theme="dark"] .mapbox{background:#0A120F;border-color:#2E3E36}
+[data-theme="dark"] .states path{stroke-width:1.2}
