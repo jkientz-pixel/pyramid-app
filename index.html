@@ -54,7 +54,7 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
     </div>
     <div class="stats">
       <span><b data-stat="clubs">1,303</b>clubs mapped</span>
-      <span><b data-stat="statlines">2,622</b>real player stat lines</span>
+      <span><b data-stat="statlines">2,968</b>real player stat lines</span>
       <span><b data-stat="leagues">12</b>leagues today, more coming</span>
     </div>
   </div>
@@ -67,8 +67,8 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
 </section>
 <footer>Concept by Jeremy Kientz · ratings and stats are illustrative where marked · club and league marks belong to their owners</footer>
 <script type="module">
-import { CLUBS, LEAGUES } from './js/data.js?v=20260726i';
-import { ROSTERS } from './js/rosters.js?v=20260726i';
+import { CLUBS, LEAGUES } from './js/data.js?v=20260726k';
+import { ROSTERS } from './js/rosters.js?v=20260726k';
 const counts = {
   clubs: CLUBS.length,
   statlines: Object.values(ROSTERS).flat().filter(p => p.st).length,

@@ -9,7 +9,10 @@ import json, re, urllib.request, time, os, sys, unicodedata
 
 B = 'https://app.americansocceranalysis.com/api/v1'
 UA = {'User-Agent': 'RankXI/0.1 (jkientz@gmail.com; ASA integration)'}
-LEAGUES = {'mls': 'mls', 'uslc': 'uslc', 'usl1': 'usl1', 'mnp': 'mlsnp', 'nwsl': 'nwsl'}
+# league key -> (ASA slug, season name). USL Super League runs fall-spring, so its
+# season is named '2025-26' on ASA while the calendar-year leagues use '2026'.
+LEAGUES = {'mls': ('mls', '2026'), 'uslc': ('uslc', '2026'), 'usl1': ('usl1', '2026'),
+           'mnp': ('mlsnp', '2026'), 'nwsl': ('nwsl', '2026'), 'uslw': ('usls', '2025-26')}
 
 def get(path):
     for _ in range(3):
@@ -41,11 +44,21 @@ def main():
     POSMAP = {'GK': 'GK', 'CB': 'DF', 'FB': 'DF', 'DF': 'DF', 'DM': 'MF', 'CM': 'MF',
               'AM': 'MF', 'MF': 'MF', 'W': 'FW', 'ST': 'FW', 'FW': 'FW'}
     total_stats = 0
-    for g, asa in LEAGUES.items():
+    dup_names = {n for n in {c['n'] for c in clubs}
+                 if len({c2['g'] for c2 in clubs if c2['n'] == n}) > 1}
+    # migrate legacy plain-key entries for duplicated names to the men's/NWSL club
+    # that originally produced them (uslw entries are always written league-qualified)
+    for n in dup_names:
+        owner = next((c for c in clubs if c['n'] == n and c['g'] in ('mls', 'uslc', 'usl1', 'mnp', 'nwsl')), None)
+        if not owner: continue
+        for store in (rosters, coaches, honours):
+            if n in store:
+                store[owner['g'] + ':' + n] = store.pop(n)
+    for g, (asa, season) in LEAGUES.items():
         teams = get(f'/{asa}/teams'); time.sleep(1)
         players = get(f'/{asa}/players'); time.sleep(1)
-        px = get(f'/{asa}/players/xgoals?season_name=2026'); time.sleep(1)
-        gx = get(f'/{asa}/goalkeepers/xgoals?season_name=2026') or []; time.sleep(1)
+        px = get(f'/{asa}/players/xgoals?season_name={season}'); time.sleep(1)
+        gx = get(f'/{asa}/goalkeepers/xgoals?season_name={season}') or []; time.sleep(1)
         if not teams or not players or not px:
             print(f'{g}: ASA fetch failed', file=sys.stderr); continue
         tname = {t['team_id']: t['team_name'] for t in teams}
@@ -59,7 +72,9 @@ def main():
             if not nm: continue
             st = {'min': row['minutes_played'], 'g': row.get('goals') or 0,
                   'a': row.get('primary_assists') or 0,
-                  'xg': round(row.get('xgoals') or 0, 1), 'kp': row.get('key_passes') or 0}
+                  'xg': round(row.get('xgoals') or 0, 1), 'kp': row.get('key_passes') or 0,
+                  'sh': row.get('shots') or 0, 'sot': row.get('shots_on_target') or 0,
+                  'xa': round(row.get('xassists') or 0, 1)}
             pos = POSMAP.get((row.get('general_position') or '').upper(), 'MF')
             by_team.setdefault(tid, {})[nm] = (pos, st)
         for row in gx:
@@ -68,7 +83,8 @@ def main():
             nm = pname.get(pid)
             if not tid or not nm or not row.get('minutes_played'): continue
             st = {'min': row['minutes_played'], 'g': 0, 'a': 0,
-                  'xg': 0, 'kp': 0, 'sv': row.get('saves') or 0}
+                  'xg': 0, 'kp': 0, 'sv': row.get('saves') or 0,
+                  'gc': row.get('goals_conceded') or 0, 'sf': row.get('shots_faced') or 0}
             by_team.setdefault(tid, {})[nm] = ('GK', st)
         applied_clubs = 0
         for tid, plist in by_team.items():
@@ -81,7 +97,10 @@ def main():
                         if k2.startswith(g + ':') and (norm(tname.get(tid, ''))[:7] in k2 or k2.split(':')[1][:7] in norm(tname.get(tid, '')))]
                 club = cand[0] if len(cand) == 1 else None
             if not club: continue
-            existing = rosters.get(club['n'])
+            # clubs sharing a name across leagues (e.g. Lexington SC in USLC and USLS)
+            # get league-qualified roster keys so the two squads never collide
+            rkey = club['g'] + ':' + club['n'] if club['n'] in dup_names else club['n']
+            existing = rosters.get(rkey)
             if existing:
                 nmap = {deacc(p['name']).lower(): p for p in existing}
                 for nm, (pos, st) in plist.items():
@@ -92,7 +111,7 @@ def main():
                 for nm, (pos, st) in sorted(plist.items(), key=lambda kv: -kv[1][1]['min']):
                     roster.append({'num': None, 'pos': pos, 'name': nm, 'nat': None,
                                    'wiki': None, 'st': st})
-                rosters[club['n']] = roster
+                rosters[rkey] = roster
             applied_clubs += 1
             total_stats += len(plist)
         print(f'{g}: real stats for {applied_clubs} clubs')

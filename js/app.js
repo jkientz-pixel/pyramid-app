@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260726i';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726i';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726i';
+import { PROJ, USMAP } from './usmap.js?v=20260726k';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726k';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726k';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -466,7 +466,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726i')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726k')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -590,8 +590,16 @@ function statLine(pos, sd, c) {
     yc: sd % 6, rc: (sd % 17) === 0 ? 1 : 0, mins: apps * (62 + sd % 29),
     form: ((62 + (sd * 3) % 33) / 10).toFixed(1) };
 }
+// clubs sharing a name across leagues (e.g. Lexington SC in USLC and USL Super League)
+// use league-qualified keys in ROSTERS/COACHES/HONOURS so the squads never collide
+const DUP_NAMES = (() => {
+  const seen = new Set(), dup = new Set();
+  for (const c of CLUBS) { if (seen.has(c.n)) dup.add(c.n); seen.add(c.n); }
+  return dup;
+})();
+const rosterKey = c => DUP_NAMES.has(c.n) ? c.g + ':' + c.n : c.n;
 function squadFor(c) {
-  const real = ROSTERS[c.n];
+  const real = ROSTERS[rosterKey(c)];
   if (!real) return [];
   return real.map((rp, i) => {
     const base = statLine(rp.pos, pseed(rp.name), c);
@@ -601,6 +609,7 @@ function squadFor(c) {
       const apps = Math.max(1, Math.round(rp.st.min / 90));
       st = { apps, goals: rp.st.g, assists: rp.st.a, saves: rp.st.sv || 0, cs: 0,
         yc: null, rc: 0, mins: rp.st.min, xg: rp.st.xg, kp: rp.st.kp,
+        sh: rp.st.sh, sot: rp.st.sot, xa: rp.st.xa, gc: rp.st.gc, sf: rp.st.sf,
         pvr: Math.round((rp.st.g * 4 + rp.st.a * 3 + apps * 0.6 + (rp.st.sv || 0) * 0.06) * (c.r / 1800) * 10) / 10,
         form: null };
     }
@@ -609,7 +618,7 @@ function squadFor(c) {
   });
 }
 function staffFor(c) {
-  const real = COACHES[c.n];
+  const real = COACHES[rosterKey(c)];
   if (real) return [{ tag: 'HC', name: real.name, role: real.role, age: '' }];
   const g = genStaff(c);
   return [{ tag: 'HC', name: g.hc.name, role: 'Head Coach', age: g.hc.age },
@@ -678,21 +687,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726i')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726k')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260726i')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260726k')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260726i')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260726k')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -709,8 +718,8 @@ function careerRow(step) {
 }
 const PRO = new Set(['mls', 'uslc', 'usl1', 'mnp', 'nwsl', 'uslw']);
 function verifyBadge(c) {
-  const ro = ROSTERS[c.n];
-  if (ro && ro.some(p => p.st)) return '<span class="badge v">Real 2026 stats · American Soccer Analysis · roster via Wikipedia/ASA</span>';
+  const ro = ROSTERS[rosterKey(c)];
+  if (ro && ro.some(p => p.st)) return `<span class="badge v">Real ${c.g === 'uslw' ? '2025-26' : '2026'} stats · American Soccer Analysis · roster via Wikipedia/ASA</span>`;
   if (ro) return '<span class="badge v">Roster: live from Wikipedia, refreshed every 2 days · stats demo</span>';
   return PRO.has(c.g)
     ? '<span class="badge v">Stats: league match reports (demo)</span>'
@@ -751,7 +760,7 @@ async function screenClub(idx) {
       <span class="sub" style="margin-left:8px">${STATE_NAME[c.st] || c.st}</span></div>
     </div>
     <div class="btnrow">${favBtn('clubs', String(CLUBS.indexOf(c)))}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}</div>
-    ${(HONOURS[c.n] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[c.n] || []).map(h2 => `<li><b>${h2.t}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
+    ${(HONOURS[rosterKey(c)] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[rosterKey(c)] || []).map(h2 => `<li><b>${h2.t}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
       <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : 'Rating (demo)'}</span></div>
       <div class="stat"><b>#${rank}</b><span>${m.label}</span></div>
@@ -894,11 +903,24 @@ async function screenPlayer(ci, pi) {
       <div class="stat"><b>#${rank}</b><span>${pl.pos} · ${pl.rs ? 'pro pool (real stats)' : (c.x === 'w' ? "women's" : "men's") + ' pool'}</span></div>
       <div class="stat"><b>${pl.apps}</b><span>Appearances</span></div>
       ${pl.pos === 'GK'
-        ? `<div class="stat"><b>${pl.rs ? pl.saves : pl.cs}</b><span>${pl.rs ? 'Saves (real)' : 'Clean sheets'}</span></div>
-           <div class="stat"><b>${pl.rs ? pl.mins.toLocaleString() : pl.saves}</b><span>${pl.rs ? 'Minutes (real)' : 'Saves'}</span></div>`
-        : `<div class="stat"><b>${pl.goals}</b><span>Goals${pl.rs ? ' (real)' : ''}</span></div>
-           <div class="stat"><b>${pl.assists}</b><span>Assists${pl.rs ? ' (real)' : ''}</span></div>`}
-      <div class="stat"><b>${pl.rs && pl.xg != null && pl.pos !== 'GK' ? pl.xg : pl.mins.toLocaleString()}</b><span>${pl.rs && pl.xg != null && pl.pos !== 'GK' ? 'xG (real)' : 'Minutes'}</span></div>
+        ? (pl.rs
+          ? `<div class="stat"><b>${pl.saves}</b><span>Saves (real)</span></div>
+             ${pl.gc != null ? `<div class="stat"><b>${pl.gc}</b><span>Goals conceded</span></div>` : ''}
+             ${pl.gc != null && pl.saves + pl.gc > 0 ? `<div class="stat"><b>${Math.round(100 * pl.saves / (pl.saves + pl.gc))}%</b><span>Save rate</span></div>` : ''}
+             <div class="stat"><b>${pl.mins.toLocaleString()}</b><span>Minutes (real)</span></div>`
+          : `<div class="stat"><b>${pl.cs}</b><span>Clean sheets</span></div>
+             <div class="stat"><b>${pl.saves}</b><span>Saves</span></div>
+             <div class="stat"><b>${pl.mins.toLocaleString()}</b><span>Minutes</span></div>`)
+        : (pl.rs
+          ? `<div class="stat"><b>${pl.goals}</b><span>Goals (real)</span></div>
+             <div class="stat"><b>${pl.assists}</b><span>Assists (real)</span></div>
+             ${pl.xg != null ? `<div class="stat"><b>${pl.xg}</b><span>xG (real)</span></div>` : ''}
+             ${pl.sh != null ? `<div class="stat"><b>${pl.sh}</b><span>Shots · ${pl.sot || 0} on target</span></div>` : ''}
+             ${pl.xa != null ? `<div class="stat"><b>${pl.xa}</b><span>xA (real)</span></div>` : ''}
+             ${pl.kp != null ? `<div class="stat"><b>${pl.kp}</b><span>Key passes</span></div>` : ''}`
+          : `<div class="stat"><b>${pl.goals}</b><span>Goals</span></div>
+             <div class="stat"><b>${pl.assists}</b><span>Assists</span></div>
+             <div class="stat"><b>${pl.mins.toLocaleString()}</b><span>Minutes</span></div>`)}
     </div>
     <p class="note">Value rating weights goals, assists, minutes and keeper actions by the strength of the team's opposition (demo formula on demo stats). ${pl.yc == null ? '' : `Cards: ${pl.yc} yellow${pl.rc ? ', 1 red' : ''}.`}</p>
     ${pl.rs && rank ? `<p class="pheadline">${ord(rank)}-best ${({GK:'goalkeeper',DF:'defender',MF:'midfielder',FW:'forward'})[pl.pos]} in the nation <span>real 2026 stats · pro pool</span></p>` : ''}
@@ -1085,7 +1107,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260726i')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260726k')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
