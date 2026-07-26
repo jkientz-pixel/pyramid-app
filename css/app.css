@@ -1,6 +1,7 @@
 :root{
   --ground:#FAFBF8; --ground2:#EFF2EC; --raise:#FFFFFF; --line:#DCE2D8;
   --ink:#16211B; --ink-dim:#61705F; --accent:#C77F1E;
+  --map-fill:#F1F4EE; --map-stroke:#9AA795; --map-hover:#E4EADF; --map-label:#7C8878; --bar:rgba(255,255,255,.92);
   --mls:#4D8FD1; --uslc:#D9534F; --usl1:#E07B54; --mnp:#2FA69E;
   --nisa:#DD9426; --wom:#9B7ED9; --loc:#4FA35B;
 }
@@ -37,7 +38,7 @@ body{background:#E8ECE5;color:var(--ink);font:15px/1.5 -apple-system,"Segoe UI",
 .brand{font-size:1.25rem;font-weight:700}
 .sub{color:var(--ink-dim);font-size:.72rem;text-transform:uppercase;letter-spacing:.14em}
 main{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:14px 16px 76px}
-.tabbar{position:absolute;bottom:0;left:0;right:0;display:flex;background:rgba(255,255,255,.92);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);backdrop-filter:blur(10px);z-index:30}
+.tabbar{position:absolute;bottom:0;left:0;right:0;display:flex;background:var(--bar);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);backdrop-filter:blur(10px);z-index:30}
 .tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 7px;color:var(--ink-dim);text-decoration:none;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase}
 .tabbar a svg{width:22px;height:22px}
 .tabbar a.active{color:var(--accent)}
@@ -59,11 +60,11 @@ h2{margin:4px 0 2px;font-size:1.35rem}
 /* map: light ground, ink boundaries */
 .mapbox{background:var(--raise);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 svg.usmap{width:100%;height:auto;display:block;touch-action:manipulation}
-.states path{fill:#F1F4EE;stroke:#9AA795;stroke-width:1;cursor:pointer;transition:fill .15s}
-.states path:hover{fill:#E4EADF}
+.states path{fill:var(--map-fill);stroke:var(--map-stroke);stroke-width:1;cursor:pointer;transition:fill .15s}
+.states path:hover{fill:var(--map-hover)}
 .states path.dim{opacity:.35}
 .states path.dim:hover{opacity:.6;fill:#E4EADF}
-.statelabels text{fill:#7C8878;font-size:10px;letter-spacing:.08em;text-anchor:middle;pointer-events:none;font-family:-apple-system,"Segoe UI",Roboto,sans-serif}
+.statelabels text{fill:var(--map-label);font-size:10px;letter-spacing:.08em;text-anchor:middle;pointer-events:none;font-family:-apple-system,"Segoe UI",Roboto,sans-serif}
 .pin{cursor:pointer}
 .pin:hover{stroke:var(--ink);stroke-width:2}
 
@@ -252,3 +253,21 @@ a.tierlg:hover{border-color:var(--accent)}
 .predictbtn2{border:none;background:var(--accent);color:#fff;border-radius:999px;padding:8px 16px;font:inherit;font-size:.78rem;font-weight:700;cursor:pointer;margin:6px 0}
 .pheadline{font-family:"Avenir Next Condensed","Arial Narrow",Impact,sans-serif;text-transform:uppercase;font-size:1.15rem;font-weight:700;color:var(--accent);margin:6px 0 2px}
 .pheadline span{display:block;font-family:-apple-system,"Segoe UI",Roboto,sans-serif;text-transform:none;font-weight:400;font-size:.7rem;color:var(--ink-dim);letter-spacing:0}
+.reportlink{display:inline-block;color:var(--ink-dim);font-size:.74rem;text-decoration:none;margin-top:10px;border-bottom:1px dotted var(--line)}
+.reportlink:hover{color:var(--accent)}
+
+/* dark theme */
+[data-theme="dark"]{
+  --ground:#0C1512; --ground2:#111E19; --raise:#15221D; --line:#22332C;
+  --ink:#F2F4EF; --ink-dim:#9DABA3; --accent:#E8A33D;
+  --map-fill:#15221D; --map-stroke:#3A4A42; --map-hover:#1B2C25; --map-label:#8FA396; --bar:rgba(12,21,18,.92);
+}
+[data-theme="dark"] body{background:#07100C}
+[data-theme="dark"] .ladder li.me{background:#2A2416;color:var(--ink)}
+[data-theme="dark"] .results li.uw{background:#15291A}
+[data-theme="dark"] .results li.bl{background:#2E1815}
+[data-theme="dark"] .badge.v{background:#15291A;color:#7FC98B;border-color:#2C4A33}
+[data-theme="dark"] .badge.c{background:#2A2416;color:#D9B15C;border-color:#4A3E20}
+[data-theme="dark"] .fa-card{background:var(--raise)}
+[data-theme="dark"] .pheadline{color:var(--accent)}
+.themebtn{border:1px solid var(--line);background:var(--raise);color:var(--ink);border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:.9rem;line-height:1}

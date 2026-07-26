@@ -9,8 +9,13 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta property="og:title" content="Rank XI — every US soccer club, one map">
+<meta property="og:description" content="1,300 clubs from MLS to the grassroots — real ratings, real stats, predictions with receipts.">
+<meta property="og:image" content="https://jkientz-pixel.github.io/pyramid-app/og.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
-<link rel="stylesheet" href="css/app.css?v=20260726f">
+<link rel="stylesheet" href="css/app.css?v=20260726g">
 </head>
 <body>
 <div class="stage">
@@ -28,7 +33,7 @@
     <div class="screen">
       <header class="appbar">
         <span class="disp brand">Rank XI</span>
-        <span class="sub" id="crumb">USA</span>
+        <span style="display:flex;gap:8px;align-items:center"><button class="themebtn" id="themebtn" aria-label="Toggle dark mode">&#9681;</button><span class="sub" id="crumb">USA</span></span>
       </header>
       <div class="searchwrap global"><input id="q" type="search" placeholder="Search clubs and players" autocomplete="off" aria-label="Search clubs and players"><div id="qres" class="qres" hidden></div></div>
       <main id="view" tabindex="-1"></main>
@@ -43,6 +48,6 @@
     </div>
   </div>
 </div>
-<script type="module" src="js/app.js?v=20260726f"></script>
+<script type="module" src="js/app.js?v=20260726g"></script>
 </body>
 </html>

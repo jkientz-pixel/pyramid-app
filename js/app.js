@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260726f';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726f';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726f';
+import { PROJ, USMAP } from './usmap.js?v=20260726g';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726g';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726g';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -26,6 +26,11 @@ const dist2 = (a, b) => (a.la - b.la) ** 2 + (a.lo - b.lo) ** 2;
 const pool = () => CLUBS.filter(c => c.x === sex);
 const visible = clubs => clubs.filter(c => leagueFilter.has(c.g));
 
+function reportLink(kind, what) {
+  const subj = encodeURIComponent(`RankXI ${kind}: ${what}`);
+  const body = encodeURIComponent(`Page: ${location.hash}\nWhat's wrong / your suggestion:\n\n`);
+  return `<a class="reportlink" href="mailto:jkientz@gmail.com?subject=${subj}&body=${body}">&#9873; See an error? Send us a note</a>`;
+}
 function crestHtml(c) {
   if (c.img) return `<img class="crest imgcrest" src="${c.img}" alt="${esc(c.n)} crest" loading="lazy">`;
   return `<span class="crest" style="background:${LEAGUES[c.g].color}">${initials(c.n)}</span>`;
@@ -372,6 +377,7 @@ function screenTable() {
     ${leagueChips()}
     <details class="how"><summary>How are these numbers made?</summary>
       <p><b>Clubs.</b> Where we hold real results (NPSL: 346 matches in 2026), ratings are Elo: everyone starts at 1500, winners take points from losers — more for upsets, more for big margins (K=40, log goal-margin, +50 home edge). Where we hold real standings but not results (UPSL), ratings derive from points and goal difference. Everywhere else the rating is an illustrative placeholder and says so.</p>
+      <p><b>Calibration — the receipts.</b> Backtested walk-forward on 310 real NPSL matches: our probabilities beat naive baselines by ~20% (Brier 0.535 vs 0.667 uniform), and they're honest — teams we called 60&ndash;69% favorites won 70% of the time; 80&ndash;89% favorites won 86%. Calibration re-runs as every league's results land.</p>
       <p><b>Across leagues.</b> Within a league, ratings are evidence. Between leagues, they're anchored: each tier lives in a band, and an amateur side can climb to the floor of the tier above — because Open Cup history shows the best amateurs really do beat lower-division pros — but can't leapfrog a division on league form alone. Cross-tier gaps get measured properly from inter-league cup matches as that data lands.</p>
       <p><b>Players.</b> The value rating weights production — goals ×4, assists ×3, appearances ×0.6, keeper clean sheets and saves — scaled by the strength of the club's opposition. Player stats are demo data until verified reporting is live; each profile's badge says which.</p>
     </details>
@@ -460,7 +466,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726f')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726g')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -586,7 +592,7 @@ function statLine(pos, sd, c) {
 }
 function squadFor(c) {
   const real = ROSTERS[c.n];
-  if (!real) return genSquad(c);
+  if (!real) return [];
   return real.map((rp, i) => {
     const base = statLine(rp.pos, pseed(rp.name), c);
     let st = base, rs = false;
@@ -672,21 +678,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726f')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726g')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260726f')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260726g')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260726f')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260726g')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -751,7 +757,7 @@ async function screenClub(idx) {
       <div class="stat"><b>#${rank}</b><span>${m.label}</span></div>
       <div class="stat"><b>#${natl.indexOf(c) + 1}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
     </div>
-    <div class="kicker">Upcoming · demo fixtures</div>
+    ${c.rr ? `<div class="kicker">Upcoming · demo fixtures</div>
     ${opps.slice(5, 7).map((o, i) => matchCard(i === 0 ? c : o, i === 0 ? o : c, i === 0 ? 'SAT JUL 26' : 'SAT AUG 2')).join('') || '<p class="note">No nearby opponents in the dataset yet.</p>'}
     <div class="kicker" style="margin-top:14px">Results · demo</div>
     <ul class="results">${history.map(h =>
@@ -765,14 +771,13 @@ async function screenClub(idx) {
       ? "From real results: Elo over this season's matches — everyone starts at 1500, winners take points from losers, weighted by upset size and goal margin, with a +50 home edge."
       : c.rr === 2
       ? 'From real league standings: points and goal difference set the rating band until a full results feed lands.'
-      : "Illustrative placeholder until this league's results feed is connected — the number demonstrates the product, not the club."}</p></details>
-    <div class="kicker" style="margin-top:14px">Squad · demo roster</div>
-    ${verifyBadge(c)}
+      : "Illustrative placeholder until this league's results feed is connected — the number demonstrates the product, not the club."}</p></details>` : `<div class="kicker">Matches</div><p class="note">Match history and fixtures appear when this league's results feed is connected — no invented games on real organizations.</p>`}
+    ${squadFor(c).length ? `<div class="kicker" style="margin-top:14px">Squad</div>${verifyBadge(c)}
     <ul class="squad staff">${staffFor(c).map(st2 =>
       `<li><span class="sq-num">${st2.tag}</span><span class="sq-name">${st2.name}</span><span class="sq-pos">${st2.role}</span><span class="sq-age">${st2.age}</span><span class="sq-form"></span></li>`).join('')}</ul>
     <ul class="squad">${squadFor(c).map((pl, pi) =>
       `<li><a href="#/player/${CLUBS.indexOf(c)}/${pi}"><span class="sq-num">${pl.num}</span><span class="sq-name">${pl.name}</span><span class="sq-pos">${pl.pos}</span><span class="sq-age">${pl.real ? (pl.nat || '') : ''}</span><span class="sq-ga">${pl.pos === 'GK' ? pl.cs + ' CS' : pl.goals + 'g ' + pl.assists + 'a'}</span><span class="sq-form">${pl.pvr}</span></a></li>`).join('')}</ul>
-    <p class="note">Placeholder players — real rosters come from claimed clubs and league feeds.</p>
+    ` : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p><a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim club: ' + c.n)}" style="margin-top:6px">Run this club? Add your roster</a>`}
     ${worldLadder(c)}` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
     ${(() => {
       if (!hist) return '';
@@ -812,7 +817,8 @@ async function screenClub(idx) {
     </div>
     <p class="note">${(c.si || c.sx) ? 'Official accounts from Wikidata — links go exactly where they say.' : 'Club socials and tickets appear here once the club claims its page — links always go exactly where they say.'}</p>
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim club: ' + c.n)}">Run this club? Claim this page</a>
-    <p class="note">Claimed clubs manage their crest, links, roster and schedule.</p>`;
+    <p class="note">Claimed clubs manage their crest, links, roster and schedule.</p>
+    ${reportLink('Fix', c.n)}`;
   wireFav();
   const pb = view.querySelector('.predictbtn2');
   if (pb) pb.addEventListener('click', () => openPredict(pb.dataset.predict));
@@ -832,10 +838,18 @@ function screenAbout() {
     <div class="kicker" style="margin-top:14px">The leagues</div>
     <ul class="lglist">${Object.entries(LEAGUES).filter(([k, m]) => m.url).map(([k, m]) =>
       `<li><a href="${m.url}" target="_blank" rel="noopener">${m.img ? `<img src="${m.img}" alt="" loading="lazy">` : `<span class="dot" style="background:${m.color};width:12px;height:12px;border-radius:50%"></span>`}<b>${m.label}</b><span>${m.url.replace('https://', '').replace('www.', '')}</span></a></li>`).join('')}</ul>
+    <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Subscribe: Rank XI updates')}&body=${encodeURIComponent('Sign me up. I am a (player / club / coach / fan):\nState:\n')}">Get launch updates &mdash; join the list</a>
+    <div class="kicker" style="margin-top:14px">Help us get it right</div>
+    <div class="linkrow">
+      <a href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('RankXI Fix: ')}&body=${encodeURIComponent('Page or club:\nWhat is wrong:\n')}"><b>Report an error</b></a>
+      <a href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('RankXI Suggest: league or team')}&body=${encodeURIComponent('League or team name:\nLevel and region:\nWebsite if known:\n')}">Suggest a league or team</a>
+    </div>
+    <p class="note">Reports route straight into the fix queue — most data corrections ship within a couple of days.</p>
     <div class="kicker" style="margin-top:14px">Coming layers</div>
     <ul class="lglist">${ROADMAP.map(r =>
       `<li><a href="${r.url}" target="_blank" rel="noopener"><span class="dot" style="background:var(--ink-dim);width:12px;height:12px;border-radius:50%;opacity:.4"></span><b>${r.label}</b><span>~${r.teams} teams · ${r.sex === 'w' ? "women's" : "men's"}</span></a></li>`).join('')}</ul>
     <p class="note">NISA is currently unsanctioned by U.S. Soccer (Dec 2024); its clubs are shown for completeness. UPSL layer holds the clubs mapped so far — the full league is 400+ clubs.</p>
+    <p class="fine" style="font-size:.75rem">Data last refreshed: July 26, 2026 &middot; rosters auto-refresh every 2 days &middot; <a href="#/legal" style="color:var(--accent)">Terms &amp; Privacy</a></p>
     <p class="fine" style="font-size:.75rem">Data: Wikipedia (CC BY-SA — rosters, profiles, photos, crests), league sites and public feeds (NPSL/Squadi, UPSL), OpenStreetMap Nominatim geocoding. Club and league marks belong to their owners.</p>
     <p class="fine" style="font-size:.75rem">Concept by Jeremy Kientz · 2026</p>
   </div>`;
@@ -918,7 +932,8 @@ async function screenPlayer(ci, pi) {
     ${(prof.ig || prof.x || prof.site) ? '' : '<p class="note">Socials appear when listed on the player\'s Wikipedia article or once the player claims the profile — no guessed links.</p>'}
     <div class="fifaid"><span>FIFA Connect ID</span><b>USA-${String(1000 + (clubSeed(c) * 7) % 9000)}-${String(10000 + (clubSeed(c) * 31 + +pi * 977) % 90000)}</b><i>demo format — real IDs come from US Soccer registration data</i></div>
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Player profile: ' + pl.name + ' (' + c.n + ')')}">Is this you? Claim your profile</a>
-    <p class="note">Claimed player profiles add film links, verified stats history, and recruiting visibility.</p>`;
+    <p class="note">Claimed player profiles add film links, verified stats history, and recruiting visibility.</p>
+    ${reportLink('Fix', pl.name)}`;
   wireFav();
 }
 
@@ -988,24 +1003,24 @@ function screenFreeAgents() {
 function screenPricing() {
   crumb.textContent = 'Pricing';
   view.innerHTML = `
-    <div class="kicker">What's free, what's paid</div>
+    <div class="kicker">What's free, what's paid — and why</div>
     <h2 class="disp">Rank XI Pricing</h2>
     <div class="pricecard"><b>The app · Free, always</b>
-      <p>The map, the tables, every club and player page, matchups and odds. Rankings stay free — that's the whole point.</p></div>
-    <div class="pricecard paid"><b>Free Agent listing · $25 per season</b>
-      <p>No club? Get listed: position, region, film, level sought — searchable by every club on the map. Flat fee, no commissions, your deal is yours.</p>
-      <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Free agent listing request')}">Reserve a founding listing</a></div>
-    <div class="pricecard paid"><b>Claimed player profile · $30 per year</b>
-      <p>Verify your page: photo, film links, socials, corrected stats history, and recruiting visibility to clubs browsing your region and level.</p>
+      <p>Map, tables, every club and player page, predictions, history. Rankings stay free — that's the point.</p></div>
+    <div class="pricecard"><b>Founding Free Agent listing · Free now, $25/season later</b>
+      <p>Not "exposure" — proof and delivery: a <b>verified badge</b> backed by league data we already hold, your film front and center, <b>alerts sent to clubs in your region and level</b>, and a receipt: how many clubs viewed you. Founding listings are free while the market proves itself; the price turns on only when players are getting contacted.</p>
+      <a class="claim" href="#/freeagent/sample">See a complete player listing</a></div>
+    <div class="pricecard paid"><b>Club Recruiting · Free browse for all clubs · Pro tools $99/season</b>
+      <p>Browsing free agents costs nothing, ever. The paid tier is speed: <b>saved-search alerts</b> ("verified GK within 50 miles"), <b>unlimited direct contact</b>, <b>shortlists</b>, and <b>promoted tryout listings</b>. Fill your roster in a week, not a month.</p>
+      <a class="claim" href="#/clubtools/sample">See the club recruiting tools</a></div>
+    <div class="pricecard paid"><b>Claimed player profile · $30/year</b>
+      <p>Verify your page: photo, film, socials, corrected history — and recruiting visibility.</p>
       <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim my player profile')}">Claim yours</a></div>
-    <div class="pricecard paid"><b>Youth club directory placement · $99 per year</b>
-      <p>Coming: your youth club on the national map with a pathway line to the pros above you — the picture every parent asks for.</p>
+    <div class="pricecard paid"><b>Youth club directory placement · $99/year</b>
+      <p>Coming: your youth club on the national map with a pathway line to the pros above you.</p>
       <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Youth club directory interest')}">Join the waitlist</a></div>
-    <div class="pricecard"><b>Clubs · Free</b>
-      <p>Claiming your club page, managing crest/links/roster, and browsing free agents costs nothing. Clubs are the product's heart, not its wallet.</p></div>
-    <p class="note">Founding-member pricing — payments open with accounts. Reserving costs nothing and locks the rate.</p>`;
+    <p class="note">Honesty policy: paid tiers switch on only after the marketplace demonstrably works — players getting contacted, clubs filling spots. Reserving is free and locks founding rates. No commissions, ever: your deals are yours.</p>`;
 }
-
 function screenFollowing() {
   crumb.textContent = 'Following';
   const f = favs();
@@ -1067,7 +1082,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260726f')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260726g')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -1192,6 +1207,49 @@ function openPredict(ci) {
   addEventListener('hashchange', close, { once: true });
 }
 
+function screenClubTools() {
+  crumb.textContent = 'Club tools';
+  view.innerHTML = `
+    <button class="backbtn" onclick="location.hash='#/pricing'">&larr; Pricing</button>
+    <span class="badge c">Sample dashboard — what Club Recruiting Pro looks like</span>
+    <h2 class="disp">Riverheim FC — Recruiting</h2>
+    <div class="statgrid">
+      <div class="stat"><b>3</b><span>Open roster spots</span></div>
+      <div class="stat"><b>12</b><span>New matches this week</span></div>
+      <div class="stat"><b>241</b><span>Tryout page views</span></div>
+    </div>
+    <div class="kicker">Saved searches · alerts on</div>
+    <ul class="careerway">
+      <li><span class="cw-years">&#128276; ON</span><span class="cw-club">Verified GK · within 50 mi · UPSL level+</span><span class="cw-stat">2 new</span></li>
+      <li><span class="cw-years">&#128276; ON</span><span class="cw-club">FW · college experience · open to relocate</span><span class="cw-stat">7 new</span></li>
+      <li><span class="cw-years">&#128277; off</span><span class="cw-club">DF · left-footed · SoCal</span><span class="cw-stat"></span></li>
+    </ul>
+    <div class="kicker">Shortlist</div>
+    <ul class="clublist">
+      <li><a href="#/freeagent/sample"><img class="crest imgcrest" src="${AVATAR}" alt=""><span class="cl-name"><b>Jordan Alvarez</b><span>FW · 23 · verified UPSL history &#10003;</span></span><span class="cl-rt" style="font-size:.7rem;color:var(--accent)">Contacted</span></a></li>
+      <li><a href="#/freeagent/sample"><img class="crest imgcrest" src="${AVATAR}" alt=""><span class="cl-name"><b>Sample: T. Nguyen</b><span>GK · 25 · NPSL history &#10003;</span></span><span class="cl-rt" style="font-size:.7rem;color:var(--ink-dim)">New</span></a></li>
+    </ul>
+    <div class="kicker">Your tryout listing</div>
+    <div class="pricecard"><b>Open tryout · Aug 15 · 6 PM</b><p>Promoted to every free agent within 75 miles — 241 views, 19 RSVPs so far.</p></div>
+    <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Club Recruiting Pro — founding interest')}">Reserve founding club pricing — $99/season</a>
+    <p class="note">Everything above is included: alerts, unlimited contact, shortlists, promoted tryouts. Browsing free agents stays free for every club, forever.</p>`;
+}
+
+function screenLegal() {
+  crumb.textContent = 'Legal';
+  view.innerHTML = `<div class="about">
+    <div class="kicker">The plain-language version</div>
+    <h2 class="disp">Terms &amp; Privacy</h2>
+    <p><b>What this is.</b> Rank XI is an independent guide to American soccer. It is not affiliated with, endorsed by, or sponsored by any league, club, or federation shown.</p>
+    <p><b>Data &amp; accuracy.</b> Club, roster, and historical data come from public sources (Wikipedia under CC BY-SA, league websites and public feeds, American Soccer Analysis, OpenStreetMap). Ratings label their basis — real results, real standings, or illustrative. We correct errors fast: email jkientz@gmail.com.</p>
+    <p><b>Marks &amp; takedowns.</b> Club and league names and crests belong to their owners and appear for identification. If you own a mark or a page and want it corrected or removed, one email does it: jkientz@gmail.com.</p>
+    <p><b>Privacy.</b> No accounts, no tracking cookies, no analytics identifiers. Your favorites live in your browser's local storage and never leave your device. Email us and we see your email — that's it.</p>
+    <p><b>Predictions.</b> Probabilities are statistical estimates for entertainment and analysis. They are not betting advice, and Rank XI takes no wagers and no commissions on anything.</p>
+    <p><b>Free agents &amp; claims.</b> Listings are self-reported by players; verified badges mark only what we can check against league data. Clubs contact players directly — Rank XI is never party to any deal.</p>
+    <p class="fine" style="font-size:.75rem">Independent project by Jeremy Kientz &middot; 2026. This summary is the policy; a formal version lands with accounts.</p>
+  </div>`;
+}
+
 /* ---- router ---- */
 function route() {
   const h = location.hash || '#/map';
@@ -1206,6 +1264,8 @@ function route() {
   else if (parts[0] === 'legends') screenLegends(parts[1]);
   else if (parts[0] === 'cups') screenCups();
   else if (parts[0] === 'freeagent') screenFASample();
+  else if (parts[0] === 'clubtools') screenClubTools();
+  else if (parts[0] === 'legal') screenLegal();
   else if (parts[0] === 'table') screenTable();
   else if (parts[0] === 'matches') screenMatches(parts[1]);
   else if (parts[0] === 'about') screenAbout();
@@ -1215,6 +1275,14 @@ function route() {
   else if (parts[0] === 'player') screenPlayer(parts[1], parts[2]);
   else screenMap();
 }
+const savedTheme = localStorage.getItem('pyr-theme');
+if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+document.getElementById('themebtn')?.addEventListener('click', () => {
+  const cur = document.documentElement.dataset.theme === 'dark' ? '' : 'dark';
+  if (cur) document.documentElement.dataset.theme = cur;
+  else delete document.documentElement.dataset.theme;
+  localStorage.setItem('pyr-theme', cur);
+});
 addEventListener('hashchange', route);
 route();
 wireSearch();
