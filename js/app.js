@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260726b';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726b';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726b';
+import { PROJ, USMAP } from './usmap.js?v=20260726c';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726c';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726c';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -460,7 +460,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726b')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726c')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -641,21 +641,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726b')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726c')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260726b')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260726c')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260726b')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260726c')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -772,7 +772,7 @@ async function screenClub(idx) {
         kids.map(k => `<li><span>Second team</span><b>${linkify(k)}</b></li>`).join('') +
         `</ul><p class="note">The route a player climbs: second team to first team, tier to tier.</p>`;
     })()}
-    ${c.r ? `<a class="fa-card" href="#/matches/${idx}"><b>&#9876; Matchup Machine</b><span>Play ${esc(c.n)} against any club in the country &mdash; odds and score, hypothetical or real.</span></a>` : ''}
+    ${c.r ? `<button class="fa-card predictbtn" data-predict="${idx}" style="width:100%;text-align:left;font:inherit;cursor:pointer"><b>&#9876; Predict Result</b><span>Play ${esc(c.n)} against any club &mdash; search an opponent, see the odds.</span></button>` : ''}
     <div class="kicker">Follow</div>
     <div class="linkrow">
       ${c.url ? `<a href="${c.url}" target="_blank" rel="noopener"><b>Official site</b></a>` : `<a href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Search for website</a>`}
@@ -783,6 +783,8 @@ async function screenClub(idx) {
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim club: ' + c.n)}">Run this club? Claim this page</a>
     <p class="note">Claimed clubs manage their crest, links, roster and schedule.</p>`;
   wireFav();
+  const pb = view.querySelector('.predictbtn');
+  if (pb) pb.addEventListener('click', () => openPredict(pb.dataset.predict));
 }
 
 function screenAbout() {
@@ -1014,7 +1016,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260726b')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260726c')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -1082,6 +1084,61 @@ function screenFASample() {
     </div>
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Free agent listing request')}">Get your page — $25 per season</a>
     <p class="note">Every element above is included: film slot, physicals, verified season history, awards, coach references, direct contact. Clubs browse free.</p>`;
+}
+
+function openPredict(ci) {
+  const home = CLUBS[+ci];
+  if (!home || !home.r) return;
+  document.querySelector('.sheet')?.remove();
+  let lvl = 'all';
+  const sheet = document.createElement('div');
+  sheet.className = 'sheet';
+  sheet.innerHTML = `<div class="sheet-panel">
+    <div class="sheet-head"><b>Predict Result</b><button class="sheet-x" aria-label="Close">&times;</button></div>
+    <div class="sheet-sub">${crestHtml(home)}<span><b>${esc(home.n)}</b><i>vs. choose an opponent</i></span></div>
+    <div class="chips" id="predlvl">${['all', 'pro', 'amateur', 'college'].map(k =>
+      `<button class="chip solid" data-plvl="${k}" aria-pressed="${k === 'all'}">${k === 'all' ? 'All levels' : k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div>
+    <input id="predq" type="search" placeholder="Search opponent" autocomplete="off">
+    <div class="sheet-list" id="predlist"></div>
+    <div id="predout" hidden></div>
+  </div>`;
+  document.querySelector('.screen').appendChild(sheet);
+  const list = sheet.querySelector('#predlist'), q = sheet.querySelector('#predq'), out = sheet.querySelector('#predout');
+  const pool2 = () => {
+    const lvls = LEVELS[lvl];
+    let cands = CLUBS.map((c, i) => ({ c, i })).filter(o => o.c.r && o.c.x === home.x && o.i !== +ci);
+    if (lvls) cands = cands.filter(o => lvls.includes(o.c.g));
+    const term = q.value.trim().toLowerCase();
+    if (term) cands = cands.filter(o => o.c.n.toLowerCase().includes(term));
+    return cands.sort((a, b) => b.c.r - a.c.r).slice(0, 40);
+  };
+  const renderList = () => {
+    list.innerHTML = pool2().map(o =>
+      `<a class="qrow" data-opp="${o.i}" href="javascript:void(0)">${crestHtml(o.c)}<span><b>${esc(o.c.n)}</b><i>${LEAGUES[o.c.g].label} · ${o.c.st} · ${o.c.r}</i></span></a>`).join('') || '<div class="qrow qnone">No matches</div>';
+  };
+  renderList();
+  q.addEventListener('input', renderList);
+  sheet.querySelector('#predlvl').addEventListener('click', e => {
+    const b = e.target.closest('[data-plvl]'); if (!b) return;
+    lvl = b.dataset.plvl;
+    sheet.querySelectorAll('#predlvl .chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.plvl === lvl));
+    out.hidden = true; list.hidden = false; q.parentElement && (q.hidden = false);
+    renderList();
+  });
+  list.addEventListener('click', e => {
+    const a = e.target.closest('[data-opp]'); if (!a) return;
+    const opp = CLUBS[+a.dataset.opp];
+    out.innerHTML = matchCard(home, opp, 'HYPOTHETICAL') +
+      `<button class="morebtn" id="predagain">Choose a different opponent</button>`;
+    out.hidden = false; list.hidden = true; q.hidden = true;
+    out.querySelector('#predagain').addEventListener('click', () => {
+      out.hidden = true; list.hidden = false; q.hidden = false; q.focus();
+    });
+  });
+  const close = () => sheet.remove();
+  sheet.querySelector('.sheet-x').addEventListener('click', close);
+  sheet.addEventListener('click', e => { if (e.target === sheet) close(); });
+  addEventListener('hashchange', close, { once: true });
 }
 
 /* ---- router ---- */
