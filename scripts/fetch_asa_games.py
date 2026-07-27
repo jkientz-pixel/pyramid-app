@@ -3,8 +3,14 @@
 results-only Elo walk per league (same K / home-edge / margin model as the NPSL
 walk in compute_elo.py), and emit data/wire_asa.json for The Wire screen.
 
-The club ratings displayed in the app are NOT touched — the walk exists to
-publish per-match rating swings and pre-match expectations with each result."""
+The same walk now also PRODUCES the club ratings for USLC/USL1/MLSNP/NWSL/USLS
+(rr=1): final Elo is anchored to each league's band center so the cross-league
+pyramid holds, but within a league the order is pure results.
+
+MLS is the exception by design: its displayed ranking stays standings-derived
+(rr=2) because the league table is the official record everyone can check —
+the results-Elo lands in a secondary field (re) shown smaller with a
+disclaimer. UPSL stays standings-derived: no match-level feed exists for it."""
 import json, re, urllib.request, time, os, sys, math, unicodedata
 
 B = 'https://app.americansocceranalysis.com/api/v1'
@@ -12,6 +18,10 @@ UA = {'User-Agent': 'RankXI/0.1 (jkientz@gmail.com; results wire)'}
 # app league key -> (ASA slug, season name); USLS runs fall-spring
 LEAGUES = {'mls': ('mls', '2026'), 'uslc': ('uslc', '2026'), 'usl1': ('usl1', '2026'),
            'mnp': ('mlsnp', '2026'), 'nwsl': ('nwsl', '2026'), 'uslw': ('usls', '2025-26')}
+# band center each league's Elo is anchored to (display r = elo - 1500 + anchor).
+# Values are the pre-switch league means, so the pyramid's tier bands carry over.
+ANCHOR = {'mls': 1886, 'uslc': 1763, 'usl1': 1709, 'mnp': 1662, 'nwsl': 1886, 'uslw': 1818}
+MIN_GAMES = 3
 
 def get(path):
     for _ in range(3):
@@ -34,8 +44,8 @@ def main():
     for c in clubs:
         club_by_norm.setdefault(c['g'] + ':' + norm(c['n']), c)
 
-    def resolve(g, asa_name):
-        """Map an ASA team name to our club's display name so wire rows link."""
+    def resolve_club(g, asa_name):
+        """Map an ASA team name to our club object (or None)."""
         club = club_by_norm.get(g + ':' + norm(asa_name))
         if not club:
             club = club_by_norm.get(g + ':' + BRIDGE.get(norm(asa_name), ''))
@@ -43,6 +53,11 @@ def main():
             cand = [c2 for k2, c2 in club_by_norm.items()
                     if k2.startswith(g + ':') and (norm(asa_name)[:7] in k2 or k2.split(':')[1][:7] in norm(asa_name))]
             club = cand[0] if len(cand) == 1 else None
+        return club
+
+    def resolve(g, asa_name):
+        """Display name for wire rows: our club name when matched, ASA name otherwise."""
+        club = resolve_club(g, asa_name)
         return club['n'] if club else asa_name
 
     wire = []
@@ -75,8 +90,27 @@ def main():
             played[h] = played.get(h, 0) + 1; played[a] = played.get(a, 0) + 1
             n += 1
         print(f'{g}: {n} rated results')
+        # apply ratings from this walk — MLS keeps its standings rating (official
+        # record) and carries the results-Elo as a secondary 're' field instead
+        applied = 0
+        for t, r in elo.items():
+            if played.get(t, 0) < MIN_GAMES: continue
+            club = resolve_club(g, tname[t])
+            if not club: continue
+            disp = max(1400, min(2080, round(r - 1500 + ANCHOR[g])))
+            if g == 'mls':
+                club['re'] = disp
+            else:
+                club['r'] = disp; club['rr'] = 1; club.pop('re', None)
+            applied += 1
+        print(f'{g}: {"secondary results-Elo (re)" if g == "mls" else "results-Elo ratings"} on {applied} clubs')
     json.dump(wire, open(os.path.join(root, 'data', 'wire_asa.json'), 'w'), separators=(',', ':'))
     print(f'wrote data/wire_asa.json: {len(wire)} rows')
+    out = cur[:cur.index('export const CLUBS=')] + 'export const CLUBS=' + \
+        json.dumps(clubs, ensure_ascii=False, separators=(',', ':')) + ';\n' + \
+        cur[cur.index('export const REGIONS='):]
+    open(os.path.join(root, 'js', 'data.js'), 'w').write(out)
+    print('wrote js/data.js')
 
 if __name__ == '__main__':
     main()
