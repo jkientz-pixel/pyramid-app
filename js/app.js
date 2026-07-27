@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260726l';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726l';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726l';
+import { PROJ, USMAP } from './usmap.js?v=20260726m';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726m';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726m';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -295,6 +295,7 @@ function screenMap() {
         f.players.map(id => { const parts2 = id.split('/'); const c2 = CLUBS[+parts2[0]]; if (!c2) return '';
           const p2 = squadFor(c2)[+parts2[1]]; return p2 ? `<a class="chip" href="#/player/${id}" style="text-decoration:none">&#9733; ${p2.name}</a>` : ''; }).join('') + `</div>`;
     })()}
+    <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>Upsets, rating swings, golden-boot races &mdash; generated live from real results.</span></a>
     <a class="fa-card" href="#/freeagents"><b>&#9733; Free Agents</b><span>No club right now? Get seen by every club on this map.</span></a>
     <p class="note">Tap a state to zoom in. Tap a pin for the club. Pinch, scroll, or use +/&minus; to zoom further.</p>`;
   wireSexToggle();
@@ -466,9 +467,16 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726l')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726m')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
+}
+let _wireFeed = null;
+async function wireDb() {
+  if (_wireFeed) return _wireFeed;
+  try { _wireFeed = await (await fetch('data/wire_npsl.json?v=20260726m')).json(); }
+  catch { _wireFeed = []; }
+  return _wireFeed;
 }
 function fmtKick(iso) {
   const d = new Date(iso);
@@ -494,6 +502,7 @@ function screenMatches(preH) {
   const opts = sel => rated.map(c => `<option value="${CLUBS.indexOf(c)}" ${c === sel ? 'selected' : ''}>${esc(c.n)} (${c.r})</option>`).join('');
   view.innerHTML = `
     ${sexToggle()}
+    <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>This week's results, upsets and rating swings &mdash; generated from real data.</span></a>
     <div id="realfx"></div>
     <div class="kicker">Any club v any club · demo odds</div>
     <h2 class="disp">Matchup Machine</h2>
@@ -687,21 +696,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726l')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726m')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260726l')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260726m')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260726l')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260726m')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -1107,7 +1116,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260726l')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260726m')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -1286,6 +1295,84 @@ function screenLegal() {
 }
 
 /* ---- router ---- */
+/* ---- The Wire: feed generated from our own results + stats, never stale ---- */
+const fmtWireDay = d => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+let wireLg = 'all', wireLimit = 20;
+function wireResultRow(w) {
+  const hi = clubIdxByName(w.t1), ai = clubIdxByName(w.t2);
+  const upset = w.gp >= 3 && ((w.s1 > w.s2 && w.ph <= 0.35) || (w.s2 > w.s1 && w.ph >= 0.65));
+  const side = (i2, n2, cls) => i2 >= 0
+    ? `<a class="side ${cls}" href="#/club/${i2}">${esc(n2)}</a>`
+    : `<span class="side ${cls}">${esc(n2)}</span>`;
+  return `<div class="match">
+    <div class="mrow">${side(hi, w.t1, '')}<span class="vs">${w.s1}&ndash;${w.s2}</span>${side(ai, w.t2, 'away')}</div>
+    <div class="meta"><span>${fmtWireDay(w.d)} · NPSL</span><span>${upset ? '<b class="wup">UPSET</b> · ' : ''}Elo swing &plusmn;${Math.abs(w.dr)} · home ${Math.round(w.ph * 100)}% pre-match</span></div>
+  </div>`;
+}
+function wireLeaders(lgs) {
+  const players = allPlayers(sex).filter(p => p.rs);
+  const items = [];
+  for (const lg of lgs) {
+    const lp = players.filter(p => p.c.g === lg);
+    if (!lp.length) continue;
+    const L = LEAGUES[lg].label;
+    const link = p => `#/player/${CLUBS.indexOf(p.c)}/${p.i}`;
+    const sc = [...lp].sort((a, b) => b.goals - a.goals || (b.xg || 0) - (a.xg || 0))[0];
+    if (sc && sc.goals > 1) items.push({ tag: 'Golden Boot', href: link(sc),
+      head: `${sc.name} — ${sc.goals} goals`, sub: `${L} scoring leader · xG ${sc.xg ?? '—'} · ${sc.c.n}` });
+    const as = [...lp].sort((a, b) => b.assists - a.assists || (b.xa || 0) - (a.xa || 0))[0];
+    if (as && as.assists > 1) items.push({ tag: 'Playmaker', href: link(as),
+      head: `${as.name} — ${as.assists} assists`, sub: `${L} assist leader${as.kp != null ? ' · ' + as.kp + ' key passes' : ''} · ${as.c.n}` });
+    const gk = lp.filter(p => p.pos === 'GK' && p.gc != null && p.mins >= 900 && p.saves + p.gc > 0)
+      .sort((a, b) => b.saves / (b.saves + b.gc) - a.saves / (a.saves + a.gc))[0];
+    if (gk) items.push({ tag: 'The Wall', href: link(gk),
+      head: `${gk.name} — ${Math.round(100 * gk.saves / (gk.saves + gk.gc))}% save rate`,
+      sub: `${L} keeper leader · ${gk.saves} saves, ${gk.gc} conceded · ${gk.c.n}` });
+  }
+  return items;
+}
+async function screenWire() {
+  crumb.textContent = 'The Wire';
+  const lgs = (sex === 'w' ? ['nwsl', 'uslw'] : ['mls', 'uslc', 'usl1', 'mnp', 'npsl']).filter(g => LEAGUES[g]);
+  if (wireLg !== 'all' && !lgs.includes(wireLg)) wireLg = 'all';
+  const active = wireLg === 'all' ? lgs : [wireLg];
+  const leaders = wireLeaders(active).map(it => `
+    <a class="match wirelink" href="${it.href}">
+      <div class="mrow"><span class="side">${esc(it.head)}</span><span class="vs wtag">${it.tag.toUpperCase()}</span></div>
+      <div class="meta"><span>${esc(it.sub)}</span><span></span></div></a>`).join('');
+  view.innerHTML = `
+    ${sexToggle()}
+    <div class="kicker">Generated live from real results and real stats</div>
+    <h2 class="disp">The Wire</h2>
+    <div class="chips" id="wirechips">${['all', ...lgs].map(g =>
+      `<button class="chip solid" data-wlg="${g}" aria-pressed="${wireLg === g}">${g === 'all' ? 'All leagues' : LEAGUES[g].label}</button>`).join('')}</div>
+    ${leaders ? `<div class="kicker" style="margin-top:12px">The leaders · real stats</div>` + leaders
+      : (sex === 'm' && (wireLg === 'all' || wireLg === 'npsl') ? '' : '<p class="note" style="margin-top:10px">No real-stat leagues in this filter yet.</p>')}
+    <div id="wireresults"></div>
+    <p class="note">No aggregation, no editors: every item is computed from the results and stat lines already in Rank XI, so the wire is exactly as fresh as the data. Rating swings are the actual Elo changes each match caused. More leagues join as their feeds land.</p>`;
+  wireSexToggle();
+  view.querySelector('#wirechips').addEventListener('click', e => {
+    const b = e.target.closest('[data-wlg]'); if (!b) return;
+    wireLg = b.dataset.wlg; wireLimit = 20; screenWire();
+  });
+  const box = view.querySelector('#wireresults');
+  if (sex === 'm' && (wireLg === 'all' || wireLg === 'npsl')) {
+    const rows = (await wireDb()).slice().reverse();
+    if (!box || location.hash !== '#/wire') return;
+    const upcoming = await fixturesDb();
+    box.innerHTML =
+      (upcoming.length ? `<div class="kicker" style="margin-top:12px">Coming up · NPSL playoffs</div>` +
+        upcoming.map(f => `<div class="match"><div class="mrow"><span class="side">${esc(f.t1)}</span><span class="vs">${esc(f.round)}</span><span class="side away">${esc(f.t2)}</span></div>
+        <div class="meta"><span>${fmtKick(f.start)}</span><span>${esc(f.venue || '')}</span></div></div>`).join('') : '') +
+      `<div class="kicker" style="margin-top:12px">The results wire · NPSL · ${rows.length} rated matches</div>` +
+      rows.slice(0, wireLimit).map(wireResultRow).join('') +
+      (rows.length > wireLimit ? `<button class="chip solid" id="wiremore" style="margin-top:8px">Show more</button>` : '');
+    box.querySelector('#wiremore')?.addEventListener('click', () => { wireLimit += 30; screenWire(); });
+  } else if (sex === 'w' && box) {
+    box.innerHTML = `<p class="note" style="margin-top:10px">The women's results wire lands when NWSL and USL Super League match feeds are wired — the leaders above are already live from real stats.</p>`;
+  }
+}
+
 function route() {
   const h = location.hash || '#/map';
   const parts = h.slice(2).split('/');
@@ -1303,6 +1390,7 @@ function route() {
   else if (parts[0] === 'legal') screenLegal();
   else if (parts[0] === 'table') screenTable();
   else if (parts[0] === 'matches') screenMatches(parts[1]);
+  else if (parts[0] === 'wire') screenWire();
   else if (parts[0] === 'about') screenAbout();
   else if (parts[0] === 'state') screenState(parts[1]);
   else if (parts[0] === 'region') screenRegion(parts[1]);

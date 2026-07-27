@@ -274,3 +274,9 @@ a.tierlg:hover{border-color:var(--accent)}
 
 [data-theme="dark"] .mapbox{background:#0A120F;border-color:#2E3E36}
 [data-theme="dark"] .states path{stroke-width:1.2}
+
+/* The Wire */
+.wtag{color:var(--accent);font-size:.62rem;font-weight:700;letter-spacing:.09em;white-space:nowrap}
+.wup{color:var(--accent);font-weight:700}
+a.wirelink{display:block;text-decoration:none;color:inherit}
+a.wirelink:hover .side{color:var(--accent)}

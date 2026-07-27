@@ -9,26 +9,24 @@ def norm(n):
 
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    npsl = json.load(open(os.path.join(root, 'data', 'npsl.json')))
-    team_name = {t['id']: t['name'] for t in npsl['teams']}
+    # source of record: npsl_matches_2026.json (scrape_npsl.py output, team names
+    # inline). The legacy npsl.json events feed went stale and no longer parses.
+    matches = json.load(open(os.path.join(root, 'data', 'npsl_matches_2026.json')))
+    team_name = {}
 
     events = []
-    for e in npsl['events']:
-        if e.get('status') != 'publish': continue
-        teams = e.get('teams') or []
-        score = e.get('score') or []
-        if len(teams) != 2 or len(score) < 2: continue
-        try:
-            hg, ag = int(score[0]), int(score[1])
-        except (ValueError, TypeError):
-            continue
-        if not e.get('date', '').startswith('2026'): continue
-        events.append((e['date'], teams[0], teams[1], hg, ag))
+    for m in matches:
+        if m.get('status') != 'ENDED': continue
+        if not isinstance(m.get('s1'), int) or not isinstance(m.get('s2'), int): continue
+        if not str(m.get('start', '')).startswith('2026'): continue
+        events.append((m['start'], m['t1'], m['t2'], m['s1'], m['s2']))
+        team_name[m['t1']] = m['t1']; team_name[m['t2']] = m['t2']
     events.sort()
     print(f'NPSL 2026 completed matches with scores: {len(events)}', file=sys.stderr)
 
     elo = {}
     played = {}
+    wire = []
     K = 40
     for date, h, a, hg, ag in events:
         rh, ra = elo.get(h, 1500), elo.get(a, 1500)
@@ -36,8 +34,18 @@ def main():
         sh = 1.0 if hg > ag else 0.0 if hg < ag else 0.5
         margin = math.log(abs(hg - ag) + 1) or 1
         delta = K * margin * (sh - eh)
+        # wire feed row: pre-match ratings (+100 display band), the rating change
+        # this match caused, and the pre-match home expectation for upset tagging
+        if team_name.get(h) and team_name.get(a):
+            wire.append({'d': date[:10], 't1': team_name[h], 't2': team_name[a],
+                         's1': hg, 's2': ag, 'r1': round(rh + 100), 'r2': round(ra + 100),
+                         'dr': round(delta), 'ph': round(eh, 2),
+                         'gp': min(played.get(h, 0), played.get(a, 0))})
         elo[h] = rh + delta; elo[a] = ra - delta
         played[h] = played.get(h, 0) + 1; played[a] = played.get(a, 0) + 1
+    json.dump(wire, open(os.path.join(root, 'data', 'wire_npsl.json'), 'w'),
+              separators=(',', ':'))
+    print(f'wire feed: {len(wire)} rated results -> data/wire_npsl.json', file=sys.stderr)
 
     rated = {norm(team_name[t]): round(elo[t] + 100)  # +100 shifts NPSL band vs demo base
              for t in elo if played.get(t, 0) >= 3 and t in team_name}
