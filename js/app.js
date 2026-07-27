@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260726m';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726m';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726m';
+import { PROJ, USMAP } from './usmap.js?v=20260726n';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726n';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726n';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -467,15 +467,18 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726m')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726n')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
 let _wireFeed = null;
 async function wireDb() {
   if (_wireFeed) return _wireFeed;
-  try { _wireFeed = await (await fetch('data/wire_npsl.json?v=20260726m')).json(); }
-  catch { _wireFeed = []; }
+  const grab = u => fetch(u).then(r => r.json()).catch(() => []);
+  const [npsl, asa] = await Promise.all([
+    grab('data/wire_npsl.json?v=20260726n'), grab('data/wire_asa.json?v=20260726n')]);
+  _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
+    .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
 }
 function fmtKick(iso) {
@@ -696,21 +699,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726m')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726n')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260726m')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260726n')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260726m')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260726n')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -1116,7 +1119,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260726m')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260726n')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -1306,7 +1309,7 @@ function wireResultRow(w) {
     : `<span class="side ${cls}">${esc(n2)}</span>`;
   return `<div class="match">
     <div class="mrow">${side(hi, w.t1, '')}<span class="vs">${w.s1}&ndash;${w.s2}</span>${side(ai, w.t2, 'away')}</div>
-    <div class="meta"><span>${fmtWireDay(w.d)} · NPSL</span><span>${upset ? '<b class="wup">UPSET</b> · ' : ''}Elo swing &plusmn;${Math.abs(w.dr)} · home ${Math.round(w.ph * 100)}% pre-match</span></div>
+    <div class="meta"><span>${fmtWireDay(w.d)} · ${LEAGUES[w.lg] ? LEAGUES[w.lg].label : 'NPSL'}</span><span>${upset ? '<b class="wup">UPSET</b> · ' : ''}Elo swing &plusmn;${Math.abs(w.dr)} · home ${Math.round(w.ph * 100)}% pre-match</span></div>
   </div>`;
 }
 function wireLeaders(lgs) {
@@ -1349,28 +1352,26 @@ async function screenWire() {
     ${leaders ? `<div class="kicker" style="margin-top:12px">The leaders · real stats</div>` + leaders
       : (sex === 'm' && (wireLg === 'all' || wireLg === 'npsl') ? '' : '<p class="note" style="margin-top:10px">No real-stat leagues in this filter yet.</p>')}
     <div id="wireresults"></div>
-    <p class="note">No aggregation, no editors: every item is computed from the results and stat lines already in Rank XI, so the wire is exactly as fresh as the data. Rating swings are the actual Elo changes each match caused. More leagues join as their feeds land.</p>`;
+    <p class="note">No aggregation, no editors: every item is computed from the results and stat lines already in Rank XI, so the wire is exactly as fresh as the data. Rating swings and pre-match odds come from a results-only Elo walk per league, published for transparency &mdash; where a league's displayed club ratings are standings-derived (MLS, UPSL), those are unchanged.</p>`;
   wireSexToggle();
   view.querySelector('#wirechips').addEventListener('click', e => {
     const b = e.target.closest('[data-wlg]'); if (!b) return;
     wireLg = b.dataset.wlg; wireLimit = 20; screenWire();
   });
   const box = view.querySelector('#wireresults');
-  if (sex === 'm' && (wireLg === 'all' || wireLg === 'npsl')) {
-    const rows = (await wireDb()).slice().reverse();
-    if (!box || location.hash !== '#/wire') return;
-    const upcoming = await fixturesDb();
-    box.innerHTML =
-      (upcoming.length ? `<div class="kicker" style="margin-top:12px">Coming up · NPSL playoffs</div>` +
-        upcoming.map(f => `<div class="match"><div class="mrow"><span class="side">${esc(f.t1)}</span><span class="vs">${esc(f.round)}</span><span class="side away">${esc(f.t2)}</span></div>
-        <div class="meta"><span>${fmtKick(f.start)}</span><span>${esc(f.venue || '')}</span></div></div>`).join('') : '') +
-      `<div class="kicker" style="margin-top:12px">The results wire · NPSL · ${rows.length} rated matches</div>` +
+  const activeSet = new Set(active);
+  const rows = (await wireDb()).filter(w => activeSet.has(w.lg)).reverse();
+  if (!box || !location.hash.startsWith('#/wire')) return;
+  const upcoming = activeSet.has('npsl') ? await fixturesDb() : [];
+  box.innerHTML =
+    (upcoming.length ? `<div class="kicker" style="margin-top:12px">Coming up · NPSL playoffs</div>` +
+      upcoming.map(f => `<div class="match"><div class="mrow"><span class="side">${esc(f.t1)}</span><span class="vs">${esc(f.round)}</span><span class="side away">${esc(f.t2)}</span></div>
+      <div class="meta"><span>${fmtKick(f.start)}</span><span>${esc(f.venue || '')}</span></div></div>`).join('') : '') +
+    (rows.length ? `<div class="kicker" style="margin-top:12px">The results wire · ${rows.length.toLocaleString()} rated matches</div>` +
       rows.slice(0, wireLimit).map(wireResultRow).join('') +
-      (rows.length > wireLimit ? `<button class="chip solid" id="wiremore" style="margin-top:8px">Show more</button>` : '');
-    box.querySelector('#wiremore')?.addEventListener('click', () => { wireLimit += 30; screenWire(); });
-  } else if (sex === 'w' && box) {
-    box.innerHTML = `<p class="note" style="margin-top:10px">The women's results wire lands when NWSL and USL Super League match feeds are wired — the leaders above are already live from real stats.</p>`;
-  }
+      (rows.length > wireLimit ? `<button class="chip solid" id="wiremore" style="margin-top:8px">Show more</button>` : '')
+    : '<p class="note" style="margin-top:10px">No match results in this filter yet.</p>');
+  box.querySelector('#wiremore')?.addEventListener('click', () => { wireLimit += 30; screenWire(); });
 }
 
 function route() {
