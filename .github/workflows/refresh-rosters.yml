@@ -15,9 +15,10 @@ jobs:
           python-version: '3.12'
       - run: python scripts/refresh_rosters.py
       - run: python scripts/fetch_asa.py
+      - run: python scripts/fetch_asa_games.py
       - name: Commit if changed
         run: |
           git config user.name "roster-bot"
           git config user.email "actions@github.com"
-          git add js/rosters.js js/data.js
+          git add js/rosters.js js/data.js data/wire_asa.json
           git diff --cached --quiet || (git commit -m "chore: scheduled roster refresh" && git push)
