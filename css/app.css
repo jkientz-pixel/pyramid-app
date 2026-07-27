@@ -212,8 +212,9 @@ image.pin{cursor:pointer}
 .tier-note{color:var(--ink-dim);font-size:.66rem;text-align:center;margin-top:6px}
 .searchwrap.global{margin:10px 16px 0;flex:none}
 .mapbox{position:relative}
-.mapctl{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:6px}
-.mapctl button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--raise);color:var(--ink);font-size:1.05rem;cursor:pointer;box-shadow:0 2px 8px rgba(30,40,32,.12)}
+.mapctl{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:8px;z-index:5}
+.mapctl button{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--raise);color:var(--ink);font-size:1.3rem;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(30,40,32,.18);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.mapctl button:active{transform:scale(.92);background:var(--accent);color:var(--ground);border-color:var(--accent)}
 svg.usmap{cursor:grab;touch-action:none}
 details.how{border:1px solid var(--line);border-radius:12px;background:var(--raise);padding:9px 13px;margin:10px 0;font-size:.84rem}
 details.how summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:.8rem}

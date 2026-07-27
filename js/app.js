@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260727a';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260727a';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260727a';
+import { PROJ, USMAP } from './usmap.js?v=20260727b';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260727b';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260727b';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -204,7 +204,8 @@ function wireMap(scopeStates) {
     if (gest.mode === 'pinch' && pts.length >= 2) {
       dragged = true;
       const dx = pts[0].x - pts[1].x, dy = pts[0].y - pts[1].y;
-      let scale = gest.d0 / (Math.hypot(dx, dy) || 1);
+      /* exponent < 1 dampens pinch so a full-screen spread ≈ 2x, not 4x+ */
+      let scale = Math.pow(gest.d0 / (Math.hypot(dx, dy) || 1), 0.55);
       let nw = gest.vb[2] * scale;
       if (nw > homeVB[2]) scale = homeVB[2] / gest.vb[2];
       if (nw < homeVB[2] / 24) scale = (homeVB[2] / 24) / gest.vb[2];
@@ -474,7 +475,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260727a')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260727b')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -483,7 +484,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260727a'), grab('data/wire_asa.json?v=20260727a')]);
+    grab('data/wire_npsl.json?v=20260727b'), grab('data/wire_asa.json?v=20260727b')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -706,21 +707,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260727a')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260727b')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260727a')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260727b')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260727a')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260727b')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -1129,7 +1130,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260727a')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260727b')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
