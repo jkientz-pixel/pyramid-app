@@ -45,17 +45,30 @@ def run(matches, K=40, home_adv=50):
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 matches = json.load(open(os.path.join(root, 'data', 'npsl_matches_2026.json')))
 matches.sort(key=lambda m: m['start'])
-best = None
-for K in (24, 32, 40, 56):
-    for ha in (30, 50, 80):
-        b, bb, fb, n, _ = run(matches, K, ha)
-        if best is None or b < best[0]: best = (b, K, ha)
-b, bb, fb, n, buckets = run(matches, best[1], best[2])
+
+# tiered engine (backtested 2026-07-27): amateur K=64/+30, pro K=32/+65
+print('=== AMATEUR TIER (NPSL, K=64 home+30) ===')
+b, bb, fb, n, buckets = run(matches, 64, 30)
 print(f'predictions scored: {n} matches (walk-forward, both teams previously seen)')
 print(f'Brier (ours): {b:.4f} | uniform baseline: {bb:.4f} | home-freq baseline: {fb:.4f}')
-print(f'best params: K={best[1]}, home_adv=+{best[2]}')
 print('calibration (predicted home-win % -> actual):')
 for k in sorted(buckets):
     hits, tot = buckets[k]
     if tot >= 5:
         print(f'  {k*10}-{k*10+9}% predicted -> {100*hits/tot:.0f}% actual ({tot} matches)')
+
+asa_path = os.path.join(root, 'data', 'wire_asa.json')
+if os.path.exists(asa_path):
+    asa = json.load(open(asa_path))
+    asa.sort(key=lambda m: m['d'])
+    by_lg = {}
+    for m in asa: by_lg.setdefault(m['lg'], []).append(m)
+    print()
+    print('=== PRO TIER (ASA leagues, K=32 home+65) ===')
+    tb = tn = 0
+    for lg2, ms in sorted(by_lg.items()):
+        b2, _, _, n2, _ = run(ms, 32, 65)
+        tb += b2 * n2; tn += n2
+        print(f'  {lg2:5s} Brier {b2:.4f} over {n2} scored')
+    print(f'  pro weighted Brier: {tb/tn:.4f} over {tn} (uniform baseline 0.667)')
+    print(f'ALL-TIER weighted Brier: {(b*n + tb)/(n+tn):.4f} over {n+tn} matches')

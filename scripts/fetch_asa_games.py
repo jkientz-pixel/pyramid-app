@@ -61,7 +61,7 @@ def main():
         return club['n'] if club else asa_name
 
     wire = []
-    K = 40
+    K = 32  # backtested 2026-07-27: pro parity-league optimum (was 40)
     for g, (asa, season) in LEAGUES.items():
         teams = get(f'/{asa}/teams'); time.sleep(1)
         games = get(f'/{asa}/games?season_name={season}'); time.sleep(1)
@@ -78,7 +78,7 @@ def main():
             if h not in tname or a not in tname: continue
             hg, ag = x['home_score'], x['away_score']
             rh, ra = elo.get(h, 1500), elo.get(a, 1500)
-            eh = 1 / (1 + 10 ** ((ra - (rh + 50)) / 400))
+            eh = 1 / (1 + 10 ** ((ra - (rh + 65)) / 400))  # +65 home edge, backtested
             sh = 1.0 if hg > ag else 0.0 if hg < ag else 0.5
             margin = math.log(abs(hg - ag) + 1) or 1
             delta = K * margin * (sh - eh)

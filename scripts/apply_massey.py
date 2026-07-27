@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+"""Match Massey Ratings college soccer power ratings (data/massey_d1.json /
+massey_d2.json, scraped from masseyratings.com) to NCAA clubs in js/data.js
+and apply scaled ratings with rr=3 (external results model). Unmatched or
+ambiguous names are left demo and logged."""
+import json, re, os, sys, unicodedata
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def deacc(x): return unicodedata.normalize('NFKD', x).encode('ascii', 'ignore').decode()
+EXPAND = {'u': 'university', 'cs': 'california state', 'col': 'college', 'univ': 'university', 'so': 'southern',
+          'no': 'northern', 'e': 'eastern', 'w': 'western', 'n': 'north', 's': 'south',
+          'intl': 'international', 'coll': 'college', 'inst': 'institute'}
+STOP = {'university', 'college', 'of', 'the', 'at', 'in', 'a&m', 'am', 'state'}
+
+def toks(s, keep_state=True):
+    s = deacc(s).lower().replace('&', ' and ')
+    out = set()
+    for w in re.findall(r"[a-z0-9']+", s):
+        w = w.strip("'")
+        for ww in EXPAND.get(w, w).split():
+            out.add(ww)
+    return out
+
+ALIAS = {
+    'nc state': 'north carolina state', 'ucla': 'california los angeles bruins',
+    'smu': 'southern methodist', 'ucf': 'central florida', 'unc': 'north carolina',
+    'fiu': 'florida international', 'vcu': 'virginia commonwealth',
+    'uic': 'illinois chicago', 'umbc': 'maryland baltimore county',
+    'utrgv': 'texas rio grande valley', 'fgcu': 'florida gulf coast',
+    'liu': 'long island', 'penn': 'pennsylvania', 'pitt': 'pittsburgh',
+    'uconn': 'connecticut', 'umass': 'massachusetts', 'ualbany': 'albany',
+    'missouri kc': 'missouri kansas city', 'utsa': 'texas san antonio',
+    'fl': 'florida', 'georgia st': 'georgia state',
+    'virginia tech': 'virginia polytechnic', 'cal poly': 'california polytechnic',
+    'cal baptist': 'california baptist', 'loy marymount': 'loyola marymount',
+    'wisconsin': 'wisconsin madison', 'penn st': 'pennsylvania state',
+    'georgetown': 'georgetown hoyas', 'missouri kc': 'missouri kansas city kangaroos',
+    'unc greensboro': 'north carolina greensboro', 'ga southern': 'georgia southern',
+    'unc wilmington': 'north carolina wilmington', 'unc asheville': 'north carolina asheville',
+    'james madison': 'james madison dukes', 'boston u': 'boston university terriers',
+    'miami': 'miami hurricanes', 'indiana': 'indiana bloomington hoosiers',
+    'unlv': 'nevada las vegas', 'il chicago': 'illinois chicago',
+    'col charleston': 'college of charleston cougars', 'american univ': 'american university eagles',
+    "st mary's ca": 'saint marys college of california',
+}
+
+def pre(s):
+    x = re.sub(r'[\u2013\u2014\u2010/,\-]', ' ', s)
+    x = deacc(x).lower().strip()
+    x = re.sub(r'\s+', ' ', x)
+    x = ALIAS.get(x, x)
+    x = re.sub(r'\bst$', 'state', x)          # trailing "St" = State
+    x = re.sub(r'^st\.?\s', 'saint ', x)      # leading "St." = Saint
+    x = re.sub(r'\bfl\b', 'florida', x)
+    x = re.sub(r'\bso\b', 'southern', x)
+    x = re.sub(r'\buc\b', 'california', x)
+    return x
+
+STATE_SUFFIX = {'nj', 'ca', 'ny', 'md', 'pa', 'oh', 'il', 'wv', 'va', 'tn'}
+def sig(s):
+    """distinctive tokens: drop generic institution words"""
+    t = toks(pre(s)) - {'university', 'college', 'of', 'the', 'at', 'in'}
+    return (t - STATE_SUFFIX) or t
+
+def main(band_d1=(1500, 1755), band_d2=(1430, 1650)):
+    dpath = os.path.join(ROOT, 'js', 'data.js')
+    cur = open(dpath).read()
+    clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', cur, re.S).group(1))
+
+    for div, fname, band in [('ncaa1', 'massey_d1.json', band_d1), ('ncaa2', 'massey_d2.json', band_d2)]:
+        path = os.path.join(ROOT, 'data', fname)
+        if not os.path.exists(path):
+            print(f'{div}: {fname} missing, skipped', file=sys.stderr); continue
+        rows = [r for r in json.load(open(path))
+                if isinstance(r, dict) and isinstance(r.get('rat'), (int, float)) and 0 < r['rat'] < 20]
+        if not rows:
+            print(f'{div}: no usable rows', file=sys.stderr); continue
+        rats = sorted(r['rat'] for r in rows)
+        lo_r, hi_r = rats[int(.02 * len(rats))], rats[int(.98 * len(rats)) - 1]
+        span = (hi_r - lo_r) or 1
+        pool = [c for c in clubs if c['g'] == div]
+        matched = amb = 0
+        unmatched = []
+        for m in rows:
+            mt = sig(m['team'])
+            if not mt: continue
+            cands = [c for c in pool if mt <= sig(c['n'])]
+            if len(cands) != 1:
+                # fallback: allow one missing token (e.g. 'u' quirks) if unique superset-ish
+                cands = [c for c in pool if len(mt & sig(c['n'])) >= max(1, len(mt) - 1) and len(mt & sig(c['n'])) >= 1 and mt and (len(mt & sig(c['n'])) / len(mt)) >= 0.75]
+            if len(cands) == 1:
+                c = cands[0]
+                frac = max(0.0, min(1.0, (m['rat'] - lo_r) / span))
+                c['r'] = int(band[0] + frac * (band[1] - band[0]))
+                c['rr'] = 3
+                matched += 1
+            elif len(cands) > 1:
+                amb += 1
+            else:
+                unmatched.append(m['team'])
+        print(f'{div}: matched {matched}/{len(rows)} massey rows to {len(pool)} clubs '
+              f'({amb} ambiguous)', file=sys.stderr)
+        if unmatched[:12]:
+            print(f'  unmatched sample: {unmatched[:12]}', file=sys.stderr)
+
+    cur = re.sub(r'export const CLUBS=\[.*?\];',
+                 lambda m: 'export const CLUBS=' + json.dumps(clubs, ensure_ascii=False, separators=(',', ':')) + ';',
+                 cur, count=1, flags=re.S)
+    open(dpath, 'w').write(cur)
+    from collections import Counter
+    print('rr now:', Counter(c.get('rr', 0) for c in clubs), file=sys.stderr)
+
+if __name__ == '__main__':
+    main()

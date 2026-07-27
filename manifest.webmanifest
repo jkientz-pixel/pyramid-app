@@ -1,0 +1,14 @@
+{
+  "name": "Rank XI — US Soccer Rankings",
+  "short_name": "Rank XI",
+  "description": "Every US soccer club on one map — cross-league rankings from MLS to the grassroots, real ratings where the results exist.",
+  "start_url": "/app.html#/map",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0C1512",
+  "theme_color": "#0C1512",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

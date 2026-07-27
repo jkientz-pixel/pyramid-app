@@ -27,10 +27,10 @@ def main():
     elo = {}
     played = {}
     wire = []
-    K = 40
+    K = 64  # backtested 2026-07-27: amateur tier optimum (was 40)
     for date, h, a, hg, ag in events:
         rh, ra = elo.get(h, 1500), elo.get(a, 1500)
-        eh = 1 / (1 + 10 ** ((ra - (rh + 50)) / 400))
+        eh = 1 / (1 + 10 ** ((ra - (rh + 30)) / 400))  # +30 home edge, backtested
         sh = 1.0 if hg > ag else 0.0 if hg < ag else 0.5
         margin = math.log(abs(hg - ag) + 1) or 1
         delta = K * margin * (sh - eh)

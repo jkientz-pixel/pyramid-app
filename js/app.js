@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260726o';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260726o';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260726o';
+import { PROJ, USMAP } from './usmap.js?v=20260727a';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260727a';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260727a';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -258,7 +258,7 @@ function wireSearch() {
 const LEVELS = {
   all: null,
   pro: ['mls', 'uslc', 'usl1', 'mnp', 'nisa', 'nwsl', 'uslw'],
-  amateur: ['npsl', 'upsl', 'loc'],
+  amateur: ['npsl', 'upsl', 'usl2', 'loc', 'uslwl', 'wpsl', 'uws'],
   college: ['ncaa1', 'ncaa2']
 };
 let level = 'all';
@@ -377,8 +377,8 @@ function screenTable() {
       `<button class="chip solid" data-pos="${pp}" aria-pressed="${posFilter === pp}">${pp === 'all' ? 'All positions' : pp}</button>`).join('')}</div>
     ${leagueChips()}
     <details class="how"><summary>How are these numbers made?</summary>
-      <p><b>Clubs.</b> Where we hold real results — USL Championship, USL League One, MLS Next Pro, NWSL, USL Super League (via American Soccer Analysis) and NPSL (league match reports), 1,470+ matches — ratings are Elo: everyone starts at 1500, winners take points from losers, more for upsets and big margins (K=40, log goal-margin, +50 home edge), each league anchored to its tier band. MLS ranks by the official league table, with an experimental results-Elo published on each club page. Where we hold standings but not results (UPSL), ratings derive from points and goal difference. Everywhere else the rating is an illustrative placeholder and says so.</p>
-      <p><b>Calibration — the receipts.</b> Backtested walk-forward on 310 real NPSL matches: our probabilities beat naive baselines by ~20% (Brier 0.535 vs 0.667 uniform), and they're honest — teams we called 60&ndash;69% favorites won 70% of the time; 80&ndash;89% favorites won 86%. Calibration re-runs as every league's results land.</p>
+      <p><b>Clubs.</b> Where we hold real results — USL Championship, USL League One, MLS Next Pro, NWSL, USL Super League (via American Soccer Analysis) and NPSL (league match reports), 1,470+ matches — ratings are Elo: everyone starts at 1500, winners take points from losers, more for upsets and big margins (log goal-margin; tier-tuned K and home edge — K=64/+30 amateur, K=32/+65 pro, set by backtest, not taste), each league anchored to its tier band. MLS ranks by the official league table, with an experimental results-Elo published on each club page. Where we hold standings but not results (UPSL), ratings derive from points and goal difference. Everywhere else the rating is an illustrative placeholder and says so.</p>
+      <p><b>Calibration — the receipts.</b> Backtested walk-forward on 1,377 real 2026 matches (310 NPSL + 1,067 pro): weighted Brier 0.600 vs 0.667 uniform. On NPSL the tuned engine scores 0.531 and the buckets are honest — teams we called 40&ndash;49% won 52%, 50&ndash;59% won 67%, 60&ndash;69% won 69%, 70&ndash;79% won 71%, 80&ndash;89% won 86%. Pro parity leagues carry a thinner edge (that's real, we publish it anyway). Calibration re-runs as every league's results land.</p>
       <p><b>Across leagues.</b> Within a league, ratings are evidence. Between leagues, they're anchored: each tier lives in a band, and an amateur side can climb to the floor of the tier above — because Open Cup history shows the best amateurs really do beat lower-division pros — but can't leapfrog a division on league form alone. Cross-tier gaps get measured properly from inter-league cup matches as that data lands.</p>
       <p><b>Players.</b> The value rating weights production — goals ×4, assists ×3, appearances ×0.6, keeper clean sheets and saves — scaled by the strength of the club's opposition. Player stats are demo data until verified reporting is live; each profile's badge says which.</p>
     </details>
@@ -416,10 +416,17 @@ function neighbors(c, count) {
 
 /* Elo gap -> Poisson expected goals -> scoreline + three-way odds */
 const FACT = [1, 1, 2, 6, 24, 120, 720, 5040];
-function oddsFor(h, a, homeAdv = 65) {
-  const d = h.r + homeAdv - a.r;
-  const lamH = 1.35 * Math.pow(10, d / 1000);
-  const lamA = 1.35 * Math.pow(10, -d / 1000);
+/* Tier-tuned engine — backtested 2026-07-27 on 1,377 real matches (310 NPSL
+   + 1,067 pro): amateur football wants a bigger K and smaller home edge than
+   pro parity leagues, so params split by tier instead of one-size-fits-all. */
+const AMATEUR_TIER = new Set(['npsl', 'upsl', 'usl2', 'loc', 'uslwl', 'wpsl', 'uws', 'nisa', 'ncaa1', 'ncaa2']);
+function oddsFor(h, a, homeAdv) {
+  const amateur = AMATEUR_TIER.has(h.g) && AMATEUR_TIER.has(a.g);
+  const ha = homeAdv != null ? homeAdv : (amateur ? 30 : 65);
+  const lam0 = amateur ? 1.45 : 1.35;
+  const d = h.r + ha - a.r;
+  const lamH = lam0 * Math.pow(10, d / 1000);
+  const lamA = lam0 * Math.pow(10, -d / 1000);
   const pois = (l, k) => Math.exp(-l) * Math.pow(l, k) / FACT[k];
   let pH = 0, pD = 0, pA = 0, best = [1, 1], bestP = 0;
   for (let i = 0; i <= 7; i++) for (let j = 0; j <= 7; j++) {
@@ -427,7 +434,7 @@ function oddsFor(h, a, homeAdv = 65) {
     if (i > j) pH += p; else if (i === j) pD += p; else pA += p;
     if (p > bestP) { bestP = p; best = [i, j]; }
   }
-  return { pH, pD, pA, score: best };
+  return { pH, pD, pA, score: best, ha };
 }
 const moneyline = p => p >= 0.5 ? '-' + Math.round(100 * p / (1 - p)) : '+' + Math.round(100 * (1 - p) / p);
 
@@ -459,7 +466,7 @@ function matchCard(h, a, when) {
       <div class="odds"><b>${(o.pA * 100).toFixed(0)}%</b><span>${esc(initials(a.n))} win · ${moneyline(o.pA)}</span></div>
     </div>
     <div class="prob"><i style="width:${(o.pH * 100).toFixed(0)}%;background:${LEAGUES[h.g].color}"></i><i style="width:${(o.pD * 100).toFixed(0)}%;background:var(--line)"></i><i style="flex:1;background:${LEAGUES[a.g].color};opacity:.55"></i></div>
-    <div class="meta"><span>Elo ${h.r} v ${a.r}</span><span>home edge +65</span></div>
+    <div class="meta"><span>Elo ${h.r} v ${a.r}</span><span>home edge +${o.ha}</span></div>
     ${watchRow(h, a)}
   </div>`;
 }
@@ -467,7 +474,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260726o')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260727a')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -476,7 +483,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260726o'), grab('data/wire_asa.json?v=20260726o')]);
+    grab('data/wire_npsl.json?v=20260727a'), grab('data/wire_asa.json?v=20260727a')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -518,7 +525,7 @@ function screenMatches(preH) {
     <div class="kicker" style="margin-top:18px">Demo fixtures · generated from geography</div>
     <h2 class="disp">This Weekend</h2>
     ${fixtures.map(([h, a], i) => matchCard(h, a, `SAT ${i % 2 ? '5:00' : '7:30'} PM`)).join('')}
-    <p class="note">Odds from Elo gap via Poisson expected goals, home edge +65. Demo ratings — production uses live results. Predictions, not betting advice.</p>`;
+    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Demo ratings — production uses live results. Predictions, not betting advice.</p>`;
   wireSexToggle();
   const redo = () => {
     const h = CLUBS[+view.querySelector('#pickH').value];
@@ -699,21 +706,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260726o')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260727a')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260726o')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260727a')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260726o')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260727a')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -774,7 +781,7 @@ async function screenClub(idx) {
     <div class="btnrow">${favBtn('clubs', String(CLUBS.indexOf(c)))}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}</div>
     ${(HONOURS[rosterKey(c)] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[rosterKey(c)] || []).map(h2 => `<li><b>${h2.t}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
-      <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : 'Rating (demo)'}</span></div>
+      <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : 'Rating (demo)'}</span></div>
       <div class="stat"><b>#${rank}</b><span>${m.label}</span></div>
       <div class="stat"><b>#${natl.indexOf(c) + 1}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
     </div>
@@ -790,9 +797,11 @@ async function screenClub(idx) {
        <span class="res-delta">${h.date} · ${h.delta} Elo</span></li>`).join('')}</ul>
     <p class="note">Green rows are wins as the underdog; red rows are losses as the favorite — form versus expectation, the number a straight table hides.</p>
     <details class="how"><summary>How is this club's rating made?</summary><p>${c.rr === 1
-      ? "From real results: Elo over this season's matches — everyone starts at 1500, winners take points from losers, weighted by upset size and goal margin, with a +50 home edge."
+      ? "From real results: Elo over this season's matches — everyone starts at 1500, winners take points from losers, weighted by upset size and goal margin, with a backtested tier-tuned home edge (+30 amateur, +65 pro)."
       : c.rr === 2
-      ? 'From real league standings: points and goal difference set the rating band.' + (c.re ? ' The smaller results-only Elo is experimental — same match-by-match walk we use everywhere else, shown for transparency but not used for ranks.' : '')
+      ? 'From real league standings: points and goal difference set the rating band.'
+      : c.rr === 3
+      ? 'From Massey Ratings — an independent results-based power rating for college soccer — rescaled onto our Elo bands. Preseason values until fall results land; refreshed as the season runs.' + (c.re ? ' The smaller results-only Elo is experimental — same match-by-match walk we use everywhere else, shown for transparency but not used for ranks.' : '')
       : "Illustrative placeholder until this league's results feed is connected — the number demonstrates the product, not the club."}</p></details>` : `<div class="kicker">Matches</div><p class="note">Match history and fixtures appear when this league's results feed is connected — no invented games on real organizations.</p>`}
     ${squadFor(c).length ? `<div class="kicker" style="margin-top:14px">Squad</div>${verifyBadge(c)}
     <ul class="squad staff">${staffFor(c).map(st2 =>
@@ -978,14 +987,14 @@ const TIERS = {
     { t: 'Division I', pro: true, leagues: ['mls'] },
     { t: 'Division II', pro: true, leagues: ['uslc'] },
     { t: 'Division III', pro: true, leagues: ['usl1', 'mnp'], extra: ['nisa'], note: 'NISA: professional sanctioning not awarded — unsanctioned since Dec 2024' },
-    { t: 'National amateur', leagues: ['npsl', 'upsl'], coming: ['USL League Two · 158 clubs'] },
+    { t: 'National amateur', leagues: ['npsl', 'usl2', 'upsl'] },
     { t: 'Regional & emerging', leagues: ['loc'], coming: ['Regional leagues (EPSL, etc.)', 'State, city & rec leagues'] },
     { t: 'College & youth', leagues: ['ncaa1', 'ncaa2'], coming: ['D3 / NAIA · next', 'Youth clubs · directory layer'] }
   ],
   w: [
     { t: 'Division I', pro: true, leagues: ['nwsl', 'uslw'] },
     { t: 'Division II', pro: true, coming: ['WPSL Pro · launching 2026-27'] },
-    { t: 'Pre-professional', coming: ['USL W League · 96 clubs', 'WPSL · 144 clubs'] },
+    { t: 'National amateur', leagues: ['uslwl', 'wpsl', 'uws'] },
     { t: 'College & youth', coming: ['NCAA women\'s soccer · next', 'Youth clubs · directory layer'] }
   ]
 };
@@ -1120,7 +1129,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260726o')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260727a')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
