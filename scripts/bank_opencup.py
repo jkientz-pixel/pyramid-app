@@ -121,10 +121,9 @@ def parse_box(body, year, comp, rnd):
         winner = 1 if g1 > g2 else 2
     elif pens:
         winner = 1 if pens[0] > pens[1] else 2
-    elif w1 != w2:
-        winner = 1 if w1 else 2
     else:
-        winner = 0  # draw with no resolution recorded
+        winner = 0  # drawn at 90' with no shootout recorded (bold in these
+                    # articles marks the lower-division side, not the winner)
     date = re.sub(r'\[\[|\]\]', '', f.get('date', '')).strip()
     rec = {'year': year, 'comp': comp, 'round': rnd, 'date': date,
            't1': t1, 'l1': l1, 't2': t2, 'l2': l2,

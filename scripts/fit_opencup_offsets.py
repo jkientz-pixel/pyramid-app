@@ -29,14 +29,17 @@ def canon(tag, unmapped):
     return 'regional'
 
 def outcome_90(m):
-    """Home result at 90 minutes: 1 / 0.5 / 0, or None to skip."""
-    if m['winner'] == 0:
-        return None
-    if m.get('aet') or m.get('pens'):
-        return 0.5
+    """Home credit: 90' win 1.0, ET win 0.75, pens win 0.6, drawn/unknown 0.5.
+    ET and shootout wins are real evidence, discounted rather than ignored."""
     g1, g2 = m['score']
+    if m.get('pens'):
+        if g1 == g2:
+            return 0.6 if m['pens'][0] > m['pens'][1] else 0.4
+        return (0.75 if g1 > g2 else 0.25) if m.get('aet') else (1.0 if g1 > g2 else 0.0)
     if g1 == g2:
         return 0.5
+    if m.get('aet'):
+        return 0.75 if g1 > g2 else 0.25
     return 1.0 if g1 > g2 else 0.0
 
 def fit(matches, leagues, anchor='mls', iters=20000, lr=8.0):
