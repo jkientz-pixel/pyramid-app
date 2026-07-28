@@ -3,6 +3,7 @@
 CDN, WPSL webflow CDN) captured in data/*_site_assets.json / wpsl_cards_all.json.
 Matches strictly to clubs, resizes to 96px via sips, sets img (and url when the
 league site links out to the club's own site)."""
+from _datajs import load_clubs, write_clubs
 import json, re, os, sys, subprocess, unicodedata, urllib.request, time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -68,10 +69,7 @@ def main():
         print(f'{g}: crests so far {got}', file=sys.stderr)
     try: os.remove(os.path.join(ROOT, 'crests', '_raw_tmp'))
     except OSError: pass
-    cur = re.sub(r'export const CLUBS=\[.*?\];',
-                 lambda m: 'export const CLUBS=' + json.dumps(clubs, ensure_ascii=False, separators=(',', ':')) + ';',
-                 cur, count=1, flags=re.S)
-    open(dpath, 'w').write(cur)
+    write_clubs(clubs, cur)
     print(f'done: {got} crests, {skipped_amb} ambiguous skipped', file=sys.stderr)
     print('with img now:', sum(1 for c in clubs if c.get('img')), '/', len(clubs), file=sys.stderr)
 

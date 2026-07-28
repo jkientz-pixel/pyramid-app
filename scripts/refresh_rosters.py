@@ -118,6 +118,96 @@ def parse_coach(text):
             return {'name': plain, 'role': role}
     return None
 
+YEAR_RE = re.compile(r'(?:19|20)\d\d(?:[–-]\d\d)?(?![\d-])')
+SKIP_RE = re.compile(r'runners?[-\s]?up|second place|third place|finalist', re.I)
+ATTR_RE = re.compile(r'^\s*(?:style|colspan|rowspan|align|width|scope|class)\s*=\s*"[^"]*"\s*', re.I)
+
+
+def _strip_refs(cell):
+    cell = re.sub(r'<ref[^>]*/>', '', cell)
+    cell = re.sub(r'<ref.*?</ref>', '', cell, flags=re.S)
+    cell = re.sub(r'\{\{[^{}]*\}\}', '', cell)
+    while True:
+        stripped = ATTR_RE.sub('', cell)
+        if stripped == cell:
+            break
+        cell = stripped
+    return cell.lstrip('|! ').strip()
+
+
+def _clean_comp(cell):
+    """Competition name from a wikitext cell: link label wins, markup dropped."""
+    cell = _strip_refs(cell)
+    m = LINK_RE.search(cell.replace(BOLD3, ''))
+    name = (m.group(2) or m.group(1)) if m else cell
+    name = re.sub(r"'''|''|\[\[|\]\]", '', name).strip()
+    # "[[MLS Western Conference|Western Conference]] (Playoffs)" keeps its qualifier
+    tail = cell.split(']]')[-1].strip(" '|") if ']]' in cell else ''
+    if tail.startswith('(') and len(name) + len(tail) < 58:
+        name = name + ' ' + tail
+    return re.sub(r'\s+', ' ', name).strip()
+
+
+def _years(cell):
+    out = []
+    for y in YEAR_RE.findall(_strip_refs(cell)):
+        if y not in out:
+            out.append(y)
+    return out
+
+
+def _honours_from_table(text):
+    """Many clubs (Seattle, LA Galaxy, ...) list honours in a wikitable with
+    Competition | Titles | Seasons columns — the bullet parser sees none of it."""
+    out = []
+    for block in re.findall(r'\{\|.*?\n\|\}', text, re.S):
+        for row in re.split(r'\n\|-+', block):
+            cells = [c for c in re.split(r'\n[!|]', row) if c.strip()]
+            if len(cells) < 2:
+                continue
+            comp = _clean_comp(cells[0])
+            if not comp or len(comp) > 58 or len(comp) < 3 or YEAR_RE.fullmatch(comp):
+                continue
+            if SKIP_RE.search(row):
+                continue
+            years = []
+            for c in cells[1:]:
+                for y in _years(c):
+                    if y not in years:
+                        years.append(y)
+            if years:
+                out.append({'t': comp, 'y': years[:12]})
+    return out[:8]
+
+
+def _honours_from_bullets(text):
+    """Bullet form: '* Competition' with '** Winners (n): years' beneath.
+    Taking the first wikilink on every bullet made the YEAR the trophy name on
+    12 clubs (CF Montreal, Atlanta United, ...); anchor years to the parent."""
+    out, cur = [], None
+    for line in text.split('\n'):
+        st = line.lstrip()
+        if not st.startswith('*'):
+            continue
+        depth = len(st) - len(st.lstrip('*'))
+        if SKIP_RE.search(line):
+            if depth == 1:
+                cur = None
+            continue
+        comp = _clean_comp(st.lstrip('*'))
+        if comp and YEAR_RE.fullmatch(comp):
+            comp = ''
+        if depth == 1:
+            cur = {'t': comp, 'y': []} if (comp and 2 < len(comp) < 58) else None
+            if cur:
+                out.append(cur)
+        if cur:
+            for y in _years(line):
+                if y not in cur['y']:
+                    cur['y'].append(y)
+    return [h for h in out if h['y'] and not YEAR_RE.fullmatch(h['t'])][:8]
+
+
 def parse_honours(title):
     try:
         secs = api({'action': 'parse', 'page': title, 'prop': 'sections', 'redirects': 1, 'format': 'json'})
@@ -126,20 +216,10 @@ def parse_honours(title):
         if not idx:
             return []
         text = wikitext(title, idx)
-        out = []
-        for line in text.split('\n'):
-            if not line.lstrip().startswith('*'):
-                continue
-            lm = LINK_RE.search(line.replace(BOLD3, ''))
-            if not lm:
-                continue
-            comp = (lm.group(2) or lm.group(1)).strip()
-            years = re.findall(r'(?:19|20)\d\d(?:–\d\d)?', line)
-            if comp and years and len(comp) < 60:
-                out.append({'t': comp, 'y': years[:12]})
-        return out[:8]
+        return _honours_from_table(text) or _honours_from_bullets(text)
     except Exception:
         return []
+
 
 def womens_section_text(title):
     """For articles shared between a men's and a women's team (e.g. Lexington SC),

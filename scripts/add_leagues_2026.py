@@ -3,6 +3,7 @@
 Teams+cities from main league articles; 2026 standings (rr=2 ratings)
 from season/group-table templates where published. Geocodes via
 Nominatim with an on-disk cache. Merges into js/data.js."""
+from _datajs import load_clubs, write_clubs
 import json, re, os, sys, time, urllib.request, urllib.parse, unicodedata
 from bs4 import BeautifulSoup
 
@@ -195,9 +196,7 @@ def main():
     leagues = json.loads(re.search(r'export const LEAGUES=(\{.*?\});', cur, re.S).group(1))
     for g, d in LEAGUE_DEFS.items():
         if g not in leagues: leagues[g] = d
-    cur = re.sub(r'export const CLUBS=\[.*?\];', lambda m: 'export const CLUBS=' + json.dumps(clubs, ensure_ascii=False, separators=(',', ':')) + ';', cur, count=1, flags=re.S)
-    cur = re.sub(r'export const LEAGUES=\{.*?\};', lambda m: 'export const LEAGUES=' + json.dumps(leagues, ensure_ascii=False, separators=(',', ':')) + ';', cur, count=1, flags=re.S)
-    open(dpath, 'w').write(cur)
+    write_clubs(clubs, cur)
     print(f'data.js: now {len(clubs)} clubs', file=sys.stderr)
 
 if __name__ == '__main__':

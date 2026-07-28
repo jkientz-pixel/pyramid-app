@@ -2,6 +2,7 @@
 """Second-pass standings matcher: fuzzy-joins season standings rows to
 clubs still unrated in usl2/uslwl/wpsl/uws (exact-norm join happened at
 ingest). Token-overlap >= 60% on distinctive tokens, unique best match."""
+from _datajs import load_clubs, write_clubs
 import json, re, os, sys, unicodedata
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from add_leagues_2026 import wikitext, standings_rows, SOURCES
@@ -45,10 +46,7 @@ def main():
                 c['r'] = int(max(1420, min(1780, val))); c['rr'] = 2
                 hit += 1
         print(f"{g}: fuzzy-rated {hit} of {len(pool)} unrated (standings rows: {len(rows)})", file=sys.stderr)
-    cur = re.sub(r'export const CLUBS=\[.*?\];',
-                 lambda m: 'export const CLUBS=' + json.dumps(clubs, ensure_ascii=False, separators=(',', ':')) + ';',
-                 cur, count=1, flags=re.S)
-    open(dpath, 'w').write(cur)
+    write_clubs(clubs, cur)
     from collections import Counter
     print('rr now:', Counter(c.get('rr', 0) for c in clubs), file=sys.stderr)
 

@@ -3,6 +3,7 @@
 massey_d2.json, scraped from masseyratings.com) to NCAA clubs in js/data.js
 and apply scaled ratings with rr=3 (external results model). Unmatched or
 ambiguous names are left demo and logged."""
+from _datajs import load_clubs, write_clubs
 import json, re, os, sys, unicodedata
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -104,10 +105,7 @@ def main(band_d1=(1500, 1755), band_d2=(1430, 1650)):
         if unmatched[:12]:
             print(f'  unmatched sample: {unmatched[:12]}', file=sys.stderr)
 
-    cur = re.sub(r'export const CLUBS=\[.*?\];',
-                 lambda m: 'export const CLUBS=' + json.dumps(clubs, ensure_ascii=False, separators=(',', ':')) + ';',
-                 cur, count=1, flags=re.S)
-    open(dpath, 'w').write(cur)
+    write_clubs(clubs, cur)
     from collections import Counter
     print('rr now:', Counter(c.get('rr', 0) for c in clubs), file=sys.stderr)
 

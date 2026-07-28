@@ -13,3 +13,5 @@ wm_*
 wraw_*
 npsl_geo.json
 __pycache__/
+js/*.js.bak
+js/*.js.tmp

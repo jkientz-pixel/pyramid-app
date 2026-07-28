@@ -78,7 +78,8 @@ def main():
         rec = {}
         u = cv(ent, 'P856')
         tw = cv(ent, 'P2002'); ig = cv(ent, 'P2003')
-        if u: rec['url'] = u; n_url += 1
+        # Wikidata P856 is publicly editable: only http(s) may reach an href
+        if u and re.match(r'https?://', u, re.I): rec['url'] = u; n_url += 1
         if tw: rec['sx'] = 'https://x.com/' + tw
         if ig: rec['si'] = 'https://www.instagram.com/' + ig
         if tw or ig: n_soc += 1
