@@ -2,7 +2,7 @@
    Keeps the app installable + resilient offline without ever serving
    stale data when the network is up. Bump VERSION with each deploy
    (use scripts/bump_version.py — it moves every file's token together). */
-const VERSION = 'rankxi-v20260728h';
+const VERSION = 'rankxi-v20260728i';
 /* Crests are content-addressed by filename and never change, so they live in a
    cache that survives deploys. Without this, every deploy re-downloaded ~7 MB. */
 const ASSETS = 'rankxi-assets-v1';
