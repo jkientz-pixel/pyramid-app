@@ -1,12 +1,12 @@
-import { PROJ, USMAP } from './usmap.js?v=20260728g';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260728g';
+import { PROJ, USMAP } from './usmap.js?v=20260728h';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260728h';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260728g')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260728h')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
@@ -395,7 +395,7 @@ function screenTable() {
     <details class="how"><summary>How are these numbers made?</summary>
       <p><b>Clubs.</b> Where we hold real results — USL Championship, USL League One, MLS Next Pro, NWSL, USL Super League (via American Soccer Analysis) and NPSL (league match reports), 1,470+ matches — ratings are Elo: everyone starts at 1500, winners take points from losers, more for upsets and big margins (log goal-margin; tier-tuned K and home edge — K=64/+30 amateur, K=32/+65 pro, set by backtest, not taste), each league anchored to its tier band. MLS ranks by the official league table, with an experimental results-Elo published on each club page. Where we hold standings but not results (UPSL), ratings derive from points and goal difference. Everywhere else the rating is an illustrative placeholder and says so.</p>
       <p><b>Calibration — the receipts.</b> Backtested walk-forward on 1,377 real 2026 matches (310 NPSL + 1,067 pro): weighted Brier 0.600 vs 0.667 uniform. On NPSL the tuned engine scores 0.531 and the buckets are honest — teams we called 40&ndash;49% won 52%, 50&ndash;59% won 67%, 60&ndash;69% won 69%, 70&ndash;79% won 71%, 80&ndash;89% won 86%. Pro parity leagues carry a thinner edge (that's real, we publish it anyway). Calibration re-runs as every league's results land.</p>
-      <p><b>Across leagues.</b> Within a league, ratings are evidence. Between leagues, they're anchored: each tier lives in a band, and an amateur side can climb to the floor of the tier above — because Open Cup history shows the best amateurs really do beat lower-division pros — but can't leapfrog a division on league form alone. Cross-tier gaps get measured properly from inter-league cup matches as that data lands.</p>
+      <p><b>Across leagues.</b> Within a league, ratings are evidence. Between leagues, they're measured: league anchors come from ~600 cross-league U.S. Open Cup results across the last five editions (extra-time wins weighted 0.75, shootout wins 0.6, home edge fitted at +31 Elo). On top of that anchor, a club's own Cup results move its rating — beat a side from a higher tier and the points are yours, itemized on your club page. MLS ranks stay with the official league table.</p>
       <p><b>Players.</b> The value rating weights production — goals ×4, assists ×3, appearances ×0.6, keeper clean sheets and saves — scaled by the strength of the club's opposition. Player stats are demo data until verified reporting is live; each profile's badge says which.</p>
     </details>
     <ul class="clublist" id="tablelist">${render()}</ul>
@@ -490,7 +490,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260728g')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260728h')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -499,7 +499,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260728g'), grab('data/wire_asa.json?v=20260728g')]);
+    grab('data/wire_npsl.json?v=20260728h'), grab('data/wire_asa.json?v=20260728h')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -731,21 +731,28 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260728g')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260728h')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
+}
+let _cuprec = null;
+async function cupDb() {
+  if (_cuprec) return _cuprec;
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260728h')).json(); }
+  catch { _cuprec = {}; }
+  return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260728g')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260728h')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260728g')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260728h')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -778,6 +785,7 @@ async function screenClub(ref) {
   if (c.h && c.dup != null) { location.replace('#/club/' + (CLUBS[c.dup] ? CLUBS[c.dup].id : c.dup)); return; }
   const hist = c.g === 'mls' ? (await mlsHistory()) : null;
   const hasLegends = c.g === 'mls' && !!((await legendsDb())[c.n] || []).length;
+  const cupRec = (await cupDb())[c.id] || [];
   crumb.textContent = c.st;
   const m = LEAGUES[c.g];
   const peers = CLUBS.filter(o => o.g === c.g && o.r && !o.h).sort((a, b) => b.r - a.r);
@@ -809,10 +817,16 @@ async function screenClub(ref) {
     <div class="btnrow">${favBtn('clubs', c.id)}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.url ? `<a class="hdrlink" href="${safeHref(c.url)}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${safeHref(c.si)}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${safeHref(c.sx)}" target="_blank" rel="noopener">X</a>` : ''}</div>
     ${(HONOURS[rosterKey(c)] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[rosterKey(c)] || []).map(h2 => `<li><b>${esc(h2.t)}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
-      <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : 'Rating (demo)'}</span></div>
+      <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : 'Rating (demo)'}${c.pv ? ' · provisional' : ''}</span></div>
       <div class="stat"><b>#${rank}</b><span>${m.label}</span></div>
       <div class="stat"><b>#${natl.indexOf(c) + 1}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
     </div>
+    ${cupRec.length ? `<div class="kicker" style="margin-top:10px">U.S. Open Cup &middot; real results, last 5 editions</div>
+    <div class="histwrap"><ul class="careerway">${cupRec.slice().reverse().map(e => {
+      const wl = e.gf > e.ga ? 'W' : e.gf < e.ga ? 'L' : (e.pens ? (e.pens[0] > e.pens[1] ? 'W' : 'L') + ' pens' : 'D');
+      return `<li><span class="cw-years">${e.y}</span><span class="cw-club">${e.ha === 'H' ? 'v' : 'at'} ${esc(e.opp)} &middot; ${e.gf}&ndash;${e.ga}${e.aet ? ' aet' : ''}${e.pens ? ` (${e.pens[0]}&ndash;${e.pens[1]}p)` : ''}</span><span class="cw-stat">${wl}${e.d ? ` &middot; ${e.d > 0 ? '+' : ''}${e.d}` : ''}</span></li>`;
+    }).join('')}</ul></div>
+    <p class="note">${c.g === 'mls' ? 'Shown for the record — MLS ranks by the official league table, so Cup results never move an MLS rating here.' : 'These matches move the rating. Cross-tier cup results are where the levels actually meet; extra-time and shootout wins count at reduced weight.'}${c.pv ? " Marked provisional: most of this club's cup movement came against opponents outside our database, valued at league average." : ''}</p>` : ''}
     ${c.re ? `<p class="note" style="margin:2px 0 10px;font-size:.78rem">Results-only Elo: <b>${c.re}</b> · experimental — computed from every 2026 match and published for transparency; the headline rating and ranks above stay with the official league table.</p>` : ''}
     ${c.rr ? `<div class="kicker">Upcoming · demo fixtures</div>
     ${opps.slice(5, 7).map((o, i) => matchCard(i === 0 ? c : o, i === 0 ? o : c, i === 0 ? 'SAT JUL 26' : 'SAT AUG 2')).join('') || '<p class="note">No nearby opponents in the dataset yet.</p>'}
@@ -902,7 +916,7 @@ function screenAbout() {
     <details class="how"><summary>Why would a club use this?</summary><p>Because nowhere else puts your club in national context. A rank next to every level of American soccer is a recruiting tool — "#356 in the country" means something to a player choosing where to sign. And for clubs whose whole web presence is an Instagram, a claimed page here is a free, permanent home: crest, roster, schedule, links.</p></details>
     <details class="how"><summary>What does a player get?</summary><p>A record that travels: real stats where league data exists, a page you can link anywhere, and the pathway between levels made visible. Players without a club can list on the free-agent board — clubs browse free, and verified badges mark only what we can actually check.</p></details>
     <details class="how"><summary>Why would a league share its data?</summary><p>Standings are already public — the choice isn't privacy, it's accuracy. Leagues that work with us get their clubs shown correctly and refreshed automatically, with crests, watch links, and traffic routed back to the league's own site. The alternative is being represented by whatever we can piece together from public pages.</p></details>
-    <details class="how"><summary>Could an amateur club really rank next to MLS?</summary><p>No — and if the table ever implies it, that's a bug, not a hot take. Every tier lives inside a band, and the amateur ceiling sits below the professional floor. The bands are calibrated by the matches where levels actually meet — Open Cup qualifying, the National Amateur Cup. The only way up is the honest one: beat clubs above you in a real match, and the rating follows.</p></details>
+    <details class="how"><summary>Could an amateur club really rank next to MLS?</summary><p>Only by earning it. Every league is anchored to the level it demonstrates where the levels actually meet — we measured ~600 cross-league U.S. Open Cup results from the last five editions to set the gaps. A club that beats professional sides in the Cup climbs match by match, and every rating point gained is listed on the club's page next to the result that caused it. No club reaches the MLS band on league form alone — the only way up is the honest one: beat clubs above you in a real match.</p></details>
     <details class="how"><summary>How is this free? Will it stay free?</summary><p>The rankings cost almost nothing to serve and they will stay free — they're the point of the site, not the product. Paid extras are optional recruiting tools for clubs and players, listed plainly at <a href="#/pricing" style="color:var(--accent)">Pricing</a>. Nothing behind the map or the table will ever move behind a paywall.</p></details>
     <details class="how"><summary>Are players ranked too?</summary><p>Professionals are — position rankings built from real published stats, and only players with real stats rank against each other. Amateur players are never auto-ranked: a national number attached to your name should be something you opted into. Verified, claimed profiles will enter the ranked pool by choice — get ranked, get seen — and that pool grows as clubs and players claim their pages.</p></details>
     <div class="kicker" style="margin-top:14px">Coming layers</div>
@@ -1162,7 +1176,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260728g')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260728h')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
