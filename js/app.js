@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260728b';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260728b';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260728b';
+import { PROJ, USMAP } from './usmap.js?v=20260728c';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260728c';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260728c';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -480,7 +480,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260728b')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260728c')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -489,7 +489,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260728b'), grab('data/wire_asa.json?v=20260728b')]);
+    grab('data/wire_npsl.json?v=20260728c'), grab('data/wire_asa.json?v=20260728c')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -721,21 +721,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260728b')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260728c')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260728b')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260728c')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260728b')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260728c')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -888,6 +888,13 @@ function screenAbout() {
       <a href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('RankXI Suggest: league or team')}&body=${encodeURIComponent('League or team name:\nLevel and region:\nWebsite if known:\n')}">Suggest a league or team</a>
     </div>
     <p class="note">Reports route straight into the fix queue — most data corrections ship within a couple of days.</p>
+    <div class="kicker" style="margin-top:14px">Fair questions</div>
+    <details class="how"><summary>Why would a club use this?</summary><p>Because nowhere else puts your club in national context. A rank next to every level of American soccer is a recruiting tool — "#356 in the country" means something to a player choosing where to sign. And for clubs whose whole web presence is an Instagram, a claimed page here is a free, permanent home: crest, roster, schedule, links.</p></details>
+    <details class="how"><summary>What does a player get?</summary><p>A record that travels: real stats where league data exists, a page you can link anywhere, and the pathway between levels made visible. Players without a club can list on the free-agent board — clubs browse free, and verified badges mark only what we can actually check.</p></details>
+    <details class="how"><summary>Why would a league share its data?</summary><p>Standings are already public — the choice isn't privacy, it's accuracy. Leagues that work with us get their clubs shown correctly and refreshed automatically, with crests, watch links, and traffic routed back to the league's own site. The alternative is being represented by whatever we can piece together from public pages.</p></details>
+    <details class="how"><summary>Could an amateur club really rank next to MLS?</summary><p>No — and if the table ever implies it, that's a bug, not a hot take. Every tier lives inside a band, and the amateur ceiling sits below the professional floor. The bands are calibrated by the matches where levels actually meet — Open Cup qualifying, the National Amateur Cup. The only way up is the honest one: beat clubs above you in a real match, and the rating follows.</p></details>
+    <details class="how"><summary>How is this free? Will it stay free?</summary><p>The rankings cost almost nothing to serve and they will stay free — they're the point of the site, not the product. Paid extras are optional recruiting tools for clubs and players, listed plainly at <a href="#/pricing" style="color:var(--accent)">Pricing</a>. Nothing behind the map or the table will ever move behind a paywall.</p></details>
+    <details class="how"><summary>Are players ranked too?</summary><p>Professionals are — position rankings built from real published stats, and only players with real stats rank against each other. Amateur players are never auto-ranked: a national number attached to your name should be something you opted into. Verified, claimed profiles will enter the ranked pool by choice — get ranked, get seen — and that pool grows as clubs and players claim their pages.</p></details>
     <div class="kicker" style="margin-top:14px">Coming layers</div>
     <ul class="lglist">${ROADMAP.map(r =>
       `<li><a href="${r.url}" target="_blank" rel="noopener"><span class="dot" style="background:var(--ink-dim);width:12px;height:12px;border-radius:50%;opacity:.4"></span><b>${r.label}</b><span>~${r.teams} teams · ${r.sex === 'w' ? "women's" : "men's"}</span></a></li>`).join('')}</ul>
@@ -1145,7 +1152,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260728b')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260728c')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
