@@ -1,9 +1,10 @@
-import { PROJ, USMAP } from './usmap.js?v=20260727b';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260727b';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260727b';
+import { PROJ, USMAP } from './usmap.js?v=20260728a';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260728a';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260728a';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
+const PROV_NAME = { QC:'Quebec', ON:'Ontario', BC:'British Columbia' };
 const REGION_LABEL = { northwest:'Northwest', southwest:'Southwest', midwest:'Midwest', south:'South', southeast:'Southeast', northeast:'Northeast' };
 const STATE_NAME = { AL:'Alabama',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',DC:'Washington DC',FL:'Florida',GA:'Georgia',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming' };
 
@@ -23,7 +24,7 @@ const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&
 const initials = n => n.split(/\s+/).filter(w => /^[A-Za-z]/.test(w)).slice(0, 2).map(w => w[0].toUpperCase()).join('') || 'FC';
 const gsearch = (n, extra) => `https://www.google.com/search?q=${encodeURIComponent(n + ' soccer ' + extra)}`;
 const dist2 = (a, b) => (a.la - b.la) ** 2 + (a.lo - b.lo) ** 2;
-const pool = () => CLUBS.filter(c => c.x === sex);
+const pool = () => CLUBS.filter(c => c.x === sex && !c.h);
 const visible = clubs => clubs.filter(c => leagueFilter.has(c.g));
 
 function reportLink(kind, what) {
@@ -240,7 +241,7 @@ function wireSearch() {
   q.addEventListener('input', () => {
     const term = q.value.trim().toLowerCase();
     if (term.length < 2) { res.hidden = true; return; }
-    const clubs = CLUBS.map((c, i) => ({ c, i }))
+    const clubs = CLUBS.map((c, i) => ({ c, i })).filter(o => !o.c.h)
       .filter(o => o.c.n.toLowerCase().includes(term)).slice(0, 7);
     const players = allPlayers('m').concat(allPlayers('w'))
       .filter(p => p.real && p.name.toLowerCase().includes(term)).slice(0, 5);
@@ -411,7 +412,7 @@ function screenTable() {
 }
 
 function neighbors(c, count) {
-  return CLUBS.filter(o => o !== c && o.g === c.g && o.r)
+  return CLUBS.filter(o => o !== c && o.g === c.g && o.r && !o.h)
     .sort((a, b) => dist2(a, c) - dist2(b, c)).slice(0, count);
 }
 
@@ -475,7 +476,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260727b')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260728a')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -484,7 +485,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260727b'), grab('data/wire_asa.json?v=20260727b')]);
+    grab('data/wire_npsl.json?v=20260728a'), grab('data/wire_asa.json?v=20260728a')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -665,7 +666,7 @@ let _pcache = {};
 function allPlayers(sx) {
   if (_pcache[sx]) return _pcache[sx];
   const out = [];
-  CLUBS.forEach(c => { if (c.x !== sx || !c.r) return; squadFor(c).forEach((pl, i) => out.push({ ...pl, c, i })); });
+  CLUBS.forEach(c => { if (c.x !== sx || !c.r || c.h) return; squadFor(c).forEach((pl, i) => out.push({ ...pl, c, i })); });
   return _pcache[sx] = out;
 }
 function rankChart(rows, color) {
@@ -707,21 +708,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260727b')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260728a')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260727b')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260728a')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260727b')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260728a')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -749,13 +750,14 @@ function verifyBadge(c) {
 async function screenClub(idx) {
   const c = CLUBS[+idx];
   if (!c) return screenMap();
+  if (c.h && c.dup != null) { location.replace('#/club/' + c.dup); return; }
   const hist = c.g === 'mls' ? (await mlsHistory()) : null;
   const hasLegends = c.g === 'mls' && !!((await legendsDb())[c.n] || []).length;
   crumb.textContent = c.st;
   const m = LEAGUES[c.g];
-  const peers = CLUBS.filter(o => o.g === c.g && o.r).sort((a, b) => b.r - a.r);
+  const peers = CLUBS.filter(o => o.g === c.g && o.r && !o.h).sort((a, b) => b.r - a.r);
   const rank = c.r ? peers.indexOf(c) + 1 : null;
-  const natl = CLUBS.filter(o => o.x === c.x && o.r).sort((a, b) => b.r - a.r);
+  const natl = CLUBS.filter(o => o.x === c.x && o.r && !o.h).sort((a, b) => b.r - a.r);
   const opps = neighbors(c, 7);
   let seed = 0; for (const ch of c.n) seed = (seed * 31 + ch.charCodeAt(0)) % 233;
   const PAST = ['JUL 19', 'JUL 12', 'JUL 5', 'JUN 28', 'JUN 21', 'JUN 14', 'JUN 7', 'MAY 31'];
@@ -777,9 +779,9 @@ async function screenClub(idx) {
     <div class="clubhead">${crestHtml(c)}
       <div><h2 class="disp" style="margin:0">${esc(c.n)}</h2>
       ${m.url ? `<a class="lgchip" href="${m.url}" target="_blank" rel="noopener" style="background:${m.color}">${m.img ? `<img class="lgimg" src="${m.img}" alt="">` : ''}${m.label} &nearr;</a>` : `<span class="lgchip" style="background:${m.color}">${m.label}</span>`}
-      <span class="sub" style="margin-left:8px">${STATE_NAME[c.st] || c.st}</span></div>
+      <span class="sub" style="margin-left:8px">${c.ct ? `${esc(c.ct)}, ${c.st}` : (STATE_NAME[c.st] || PROV_NAME[c.st] || c.st)}</span></div>
     </div>
-    <div class="btnrow">${favBtn('clubs', String(CLUBS.indexOf(c)))}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}</div>
+    <div class="btnrow">${favBtn('clubs', String(CLUBS.indexOf(c)))}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.url ? `<a class="hdrlink" href="${c.url}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${c.si}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${c.sx}" target="_blank" rel="noopener">X</a>` : ''}</div>
     ${(HONOURS[rosterKey(c)] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[rosterKey(c)] || []).map(h2 => `<li><b>${h2.t}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
       <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : 'Rating (demo)'}</span></div>
@@ -841,13 +843,7 @@ async function screenClub(idx) {
         kids.map(k => `<li><span>Second team</span><b>${linkify(k)}</b></li>`).join('') +
         `</ul><p class="note">The route a player climbs: second team to first team, tier to tier.</p>`;
     })()}
-    <div class="kicker">Follow</div>
-    <div class="linkrow">
-      ${c.url ? `<a href="${c.url}" target="_blank" rel="noopener"><b>Official site</b></a>` : `<a href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Search for website</a>`}
-      ${c.si ? `<a href="${c.si}" target="_blank" rel="noopener">Instagram</a>` : ''}
-      ${c.sx ? `<a href="${c.sx}" target="_blank" rel="noopener">X</a>` : ''}
-    </div>
-    <p class="note">${(c.si || c.sx) ? 'Official accounts from Wikidata — links go exactly where they say.' : 'Club socials and tickets appear here once the club claims its page — links always go exactly where they say.'}</p>
+    <p class="note">${(c.si || c.sx || c.url) ? 'Official site and social links above come from Wikidata and league sources — they go exactly where they say.' : 'Club website and socials appear at the top once the club claims its page — links always go exactly where they say.'}</p>
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim club: ' + c.n)}">Run this club? Claim this page</a>
     <p class="note">Claimed clubs manage their crest, links, roster and schedule.</p>
     ${reportLink('Fix', c.n)}`;
@@ -1001,7 +997,7 @@ const TIERS = {
 };
 function screenPyramid() {
   crumb.textContent = 'Tiers';
-  const count = g => CLUBS.filter(c => c.g === g).length;
+  const count = g => CLUBS.filter(c => c.g === g && !c.h).length;
   view.innerHTML = `
     ${sexToggle()}
     <div class="kicker">The structure of American soccer</div>
@@ -1130,7 +1126,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260727b')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260728a')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -1226,7 +1222,7 @@ function openPredict(ci) {
   const list = sheet.querySelector('#predlist'), q = sheet.querySelector('#predq'), out = sheet.querySelector('#predout');
   const pool2 = () => {
     const lvls = LEVELS[lvl];
-    let cands = CLUBS.map((c, i) => ({ c, i })).filter(o => o.c.r && o.c.x === home.x && o.i !== +ci);
+    let cands = CLUBS.map((c, i) => ({ c, i })).filter(o => o.c.r && o.c.x === home.x && o.i !== +ci && !o.c.h);
     if (lvls) cands = cands.filter(o => lvls.includes(o.c.g));
     const term = q.value.trim().toLowerCase();
     if (term) cands = cands.filter(o => o.c.n.toLowerCase().includes(term));
