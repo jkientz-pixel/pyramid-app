@@ -1,7 +1,7 @@
 /* Rank XI service worker — network-first with cache fallback.
    Keeps the app installable + resilient offline without ever serving
    stale data when the network is up. Bump VERSION with each deploy. */
-const VERSION = 'rankxi-v20260728a';
+const VERSION = 'rankxi-v20260728b';
 const SHELL = ['/app.html', '/index.html', '/manifest.webmanifest', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', e => {

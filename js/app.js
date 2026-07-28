@@ -1,6 +1,6 @@
-import { PROJ, USMAP } from './usmap.js?v=20260728a';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260728a';
-import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260728a';
+import { PROJ, USMAP } from './usmap.js?v=20260728b';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260728b';
+import { ROSTERS, COACHES, HONOURS } from './rosters.js?v=20260728b';
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
@@ -21,6 +21,10 @@ function XY(lat, lon) {
 }
 
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+const CLUB_BY_ID = new Map(CLUBS.map((c, i) => [c.id, i]));
+/* accepts a slug or a legacy numeric index; -1 when neither resolves */
+const clubIdx = ref => CLUB_BY_ID.has(ref) ? CLUB_BY_ID.get(ref) : (/^\d+$/.test(String(ref)) && CLUBS[+ref] ? +ref : -1);
+const clubHref = i => '#/club/' + (CLUBS[i] ? CLUBS[i].id : i);
 const initials = n => n.split(/\s+/).filter(w => /^[A-Za-z]/.test(w)).slice(0, 2).map(w => w[0].toUpperCase()).join('') || 'FC';
 const gsearch = (n, extra) => `https://www.google.com/search?q=${encodeURIComponent(n + ' soccer ' + extra)}`;
 const dist2 = (a, b) => (a.la - b.la) ** 2 + (a.lo - b.lo) ** 2;
@@ -84,7 +88,7 @@ function leagueChips() {
 
 function clubRow(c, rank) {
   const idx = CLUBS.indexOf(c);
-  return `<li><a href="#/club/${idx}">` +
+  return `<li><a href="${clubHref(idx)}">` +
     (rank !== undefined ? `<span class="rk">${rank}</span>` : '') +
     crestHtml(c) +
     `<span class="cl-name"><b>${esc(c.n)}</b><span>${LEAGUES[c.g].label} · ${c.st}</span></span>` +
@@ -133,7 +137,7 @@ function wireMap(scopeStates) {
   svg.addEventListener('click', e => {
     if (dragged) { dragged = false; return; }
     const pin = e.target.closest('.pin');
-    if (pin) { location.hash = `#/club/${pin.dataset.idx}`; return; }
+    if (pin) { location.hash = clubHref(+pin.dataset.idx); return; }
     const st = e.target.closest('.states path');
     if (st) location.hash = `#/state/${st.dataset.st}`;
   });
@@ -247,8 +251,8 @@ function wireSearch() {
       .filter(p => p.real && p.name.toLowerCase().includes(term)).slice(0, 5);
     if (!clubs.length && !players.length) { res.innerHTML = '<div class="qrow qnone">No matches</div>'; res.hidden = false; return; }
     res.innerHTML =
-      clubs.map(o => `<a class="qrow" href="#/club/${o.i}">${crestHtml(o.c)}<span><b>${esc(o.c.n)}</b><i>${LEAGUES[o.c.g].label} · ${o.c.st}</i></span></a>`).join('') +
-      players.map(p => `<a class="qrow" href="#/player/${CLUBS.indexOf(p.c)}/${p.i}"><img class="crest imgcrest" src="${AVATAR}" alt=""><span><b>${p.name}</b><i>${p.pos} · ${esc(p.c.n)}</i></span></a>`).join('');
+      clubs.map(o => `<a class="qrow" href="${clubHref(o.i)}">${crestHtml(o.c)}<span><b>${esc(o.c.n)}</b><i>${LEAGUES[o.c.g].label} · ${o.c.st}</i></span></a>`).join('') +
+      players.map(p => `<a class="qrow" href="#/player/${p.c.id}/${p.i}"><img class="crest imgcrest" src="${AVATAR}" alt=""><span><b>${p.name}</b><i>${p.pos} · ${esc(p.c.n)}</i></span></a>`).join('');
     res.hidden = false;
   });
   res.addEventListener('click', () => { res.hidden = true; q.value = ''; });
@@ -293,8 +297,8 @@ function screenMap() {
       const f = favs();
       if (!f.clubs.length && !f.players.length) return '';
       return `<div class="kicker" style="margin-top:10px">Following</div><div class="chips">` +
-        f.clubs.map(i => CLUBS[+i] ? `<a class="chip" href="#/club/${i}" style="text-decoration:none">&#9733; ${esc(CLUBS[+i].n)}</a>` : '').join('') +
-        f.players.map(id => { const parts2 = id.split('/'); const c2 = CLUBS[+parts2[0]]; if (!c2) return '';
+        f.clubs.map(fid => { const i2 = clubIdx(fid); return i2 >= 0 ? `<a class="chip" href="${clubHref(i2)}" style="text-decoration:none">&#9733; ${esc(CLUBS[i2].n)}</a>` : ''; }).join('') +
+        f.players.map(id => { const parts2 = id.split('/'); const c2 = CLUBS[clubIdx(parts2[0])]; if (!c2) return '';
           const p2 = squadFor(c2)[+parts2[1]]; return p2 ? `<a class="chip" href="#/player/${id}" style="text-decoration:none">&#9733; ${p2.name}</a>` : ''; }).join('') + `</div>`;
     })()}
     <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>Upsets, rating swings, golden-boot races &mdash; generated live from real results.</span></a>
@@ -349,7 +353,7 @@ function screenState(st) {
 }
 
 function playerRow(p, rank) {
-  return `<li><a href="#/player/${CLUBS.indexOf(p.c)}/${p.i}">
+  return `<li><a href="#/player/${p.c.id}/${p.i}">
     <span class="rk">${rank}</span>${crestHtml(p.c)}
     <span class="cl-name"><b>${p.name}</b><span>${p.pos} · ${esc(p.c.n)}</span></span>
     <span class="cl-rt">${p.pvr}</span></a></li>`;
@@ -458,7 +462,7 @@ function watchRow(h, a) {
 function matchCard(h, a, when) {
   const o = oddsFor(h, a);
   return `<div class="match">
-    <div class="mrow"><a class="side" href="#/club/${CLUBS.indexOf(h)}">${esc(h.n)}</a><span class="vs">${when || 'NEUTRAL'}</span><a class="side away" href="#/club/${CLUBS.indexOf(a)}">${esc(a.n)}</a></div>
+    <div class="mrow"><a class="side" href="#/club/${h.id}">${esc(h.n)}</a><span class="vs">${when || 'NEUTRAL'}</span><a class="side away" href="#/club/${a.id}">${esc(a.n)}</a></div>
     <div class="meta"><span>${LEAGUES[h.g].label}${h.g !== a.g ? ' v ' + LEAGUES[a.g].label : ''}</span><span>${h.st}${h.st !== a.st ? ' · ' + a.st : ''}</span></div>
     <div class="scoreline">${o.score[0]}–${o.score[1]}</div>
     <div class="meta" style="justify-content:center;margin-top:0"><span>most likely score</span></div>
@@ -476,7 +480,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260728a')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260728b')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -485,7 +489,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260728a'), grab('data/wire_asa.json?v=20260728a')]);
+    grab('data/wire_npsl.json?v=20260728b'), grab('data/wire_asa.json?v=20260728b')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -645,7 +649,16 @@ function staffFor(c) {
   return [{ tag: 'HC', name: g.hc.name, role: 'Head Coach', age: g.hc.age },
           { tag: 'AC', name: g.ac.name, role: 'Assistant', age: g.ac.age }];
 }
-const favs = () => { try { return JSON.parse(localStorage.getItem('pyr-favs')) || { clubs: [], players: [] }; } catch { return { clubs: [], players: [] }; } };
+const favs = () => { try {
+  const raw = localStorage.getItem('pyr-favs');
+  const f = JSON.parse(raw) || { clubs: [], players: [] };
+  /* migrate pre-slug favorites saved as array indexes */
+  f.clubs = (f.clubs || []).map(x => /^\d+$/.test(x) && CLUBS[+x] ? CLUBS[+x].id : x);
+  f.players = (f.players || []).map(x => { const s2 = String(x).split('/'); return /^\d+$/.test(s2[0]) && CLUBS[+s2[0]] ? CLUBS[+s2[0]].id + '/' + s2[1] : x; });
+  const migrated = JSON.stringify(f);
+  if (raw && migrated !== raw) localStorage.setItem('pyr-favs', migrated);
+  return f;
+} catch { return { clubs: [], players: [] }; } };
 function favToggle(type, id) {
   const f = favs(); const arr = f[type]; const i = arr.indexOf(id);
   if (i >= 0) arr.splice(i, 1); else arr.push(id);
@@ -708,21 +721,21 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260728a')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260728b')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260728a')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260728b')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260728a')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260728b')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -733,7 +746,7 @@ function clubIdxByName(nm) {
 }
 function careerRow(step) {
   const idx = clubIdxByName(step.club);
-  const nm = idx >= 0 ? `<a href="#/club/${idx}">${esc(step.club)}</a>` : esc(step.club);
+  const nm = idx >= 0 ? `<a href="${clubHref(idx)}">${esc(step.club)}</a>` : esc(step.club);
   const stat = step.apps ? `${step.apps} apps${step.goals ? ' · ' + step.goals + ' gls' : ''}` : '';
   return `<li><span class="cw-years">${esc(step.years || '')}</span><span class="cw-club">${nm}</span><span class="cw-stat">${stat}</span></li>`;
 }
@@ -747,10 +760,12 @@ function verifyBadge(c) {
     : '<span class="badge c">Stats: club-submitted, email-verified (demo)</span>';
 }
 
-async function screenClub(idx) {
-  const c = CLUBS[+idx];
-  if (!c) return screenMap();
-  if (c.h && c.dup != null) { location.replace('#/club/' + c.dup); return; }
+async function screenClub(ref) {
+  const idx = clubIdx(String(ref));
+  if (idx < 0) return screenMap();
+  const c = CLUBS[idx];
+  if (String(ref) !== c.id) { location.replace('#/club/' + c.id); return; }
+  if (c.h && c.dup != null) { location.replace('#/club/' + (CLUBS[c.dup] ? CLUBS[c.dup].id : c.dup)); return; }
   const hist = c.g === 'mls' ? (await mlsHistory()) : null;
   const hasLegends = c.g === 'mls' && !!((await legendsDb())[c.n] || []).length;
   crumb.textContent = c.st;
@@ -781,7 +796,7 @@ async function screenClub(idx) {
       ${m.url ? `<a class="lgchip" href="${m.url}" target="_blank" rel="noopener" style="background:${m.color}">${m.img ? `<img class="lgimg" src="${m.img}" alt="">` : ''}${m.label} &nearr;</a>` : `<span class="lgchip" style="background:${m.color}">${m.label}</span>`}
       <span class="sub" style="margin-left:8px">${c.ct ? `${esc(c.ct)}, ${c.st}` : (STATE_NAME[c.st] || PROV_NAME[c.st] || c.st)}</span></div>
     </div>
-    <div class="btnrow">${favBtn('clubs', String(CLUBS.indexOf(c)))}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.url ? `<a class="hdrlink" href="${c.url}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${c.si}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${c.sx}" target="_blank" rel="noopener">X</a>` : ''}</div>
+    <div class="btnrow">${favBtn('clubs', c.id)}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.url ? `<a class="hdrlink" href="${c.url}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${c.si}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${c.sx}" target="_blank" rel="noopener">X</a>` : ''}</div>
     ${(HONOURS[rosterKey(c)] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[rosterKey(c)] || []).map(h2 => `<li><b>${h2.t}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
       <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : 'Rating (demo)'}</span></div>
@@ -794,7 +809,7 @@ async function screenClub(idx) {
     <div class="kicker" style="margin-top:14px">Results · demo</div>
     <ul class="results">${history.map(h =>
       `<li class="${h.uw ? 'uw' : ''}${h.bl ? 'bl' : ''}"><span class="wl ${h.wl}">${h.wl}</span>
-       <span class="res-opp">${h.score} ${h.home ? 'v' : '@'} <a class="opp-link" href="#/club/${CLUBS.indexOf(h.o)}">${esc(h.o.n)}</a>
+       <span class="res-opp">${h.score} ${h.home ? 'v' : '@'} <a class="opp-link" href="#/club/${h.o.id}">${esc(h.o.n)}</a>
        ${h.uw ? '<span class="res-tag tag-uw">upset win — ' + (h.pWin * 100).toFixed(0) + '% to win</span>' : ''}
        ${h.bl ? '<span class="res-tag tag-bl">bad loss — ' + (h.pWin * 100).toFixed(0) + '% to win</span>' : ''}</span>
        <span class="res-delta">${h.date} · ${h.delta} Elo</span></li>`).join('')}</ul>
@@ -810,7 +825,7 @@ async function screenClub(idx) {
     <ul class="squad staff">${staffFor(c).map(st2 =>
       `<li><span class="sq-num">${st2.tag}</span><span class="sq-name">${st2.name}</span><span class="sq-pos">${st2.role}</span><span class="sq-age">${st2.age}</span><span class="sq-form"></span></li>`).join('')}</ul>
     <ul class="squad">${squadFor(c).map((pl, pi) =>
-      `<li><a href="#/player/${CLUBS.indexOf(c)}/${pi}"><span class="sq-num">${pl.num}</span><span class="sq-name">${pl.name}</span><span class="sq-pos">${pl.pos}</span><span class="sq-age">${pl.real ? (pl.nat || '') : ''}</span><span class="sq-ga">${pl.pos === 'GK' ? pl.cs + ' CS' : pl.goals + 'g ' + pl.assists + 'a'}</span><span class="sq-form">${pl.pvr}</span></a></li>`).join('')}</ul>
+      `<li><a href="#/player/${c.id}/${pi}"><span class="sq-num">${pl.num}</span><span class="sq-name">${pl.name}</span><span class="sq-pos">${pl.pos}</span><span class="sq-age">${pl.real ? (pl.nat || '') : ''}</span><span class="sq-ga">${pl.pos === 'GK' ? pl.cs + ' CS' : pl.goals + 'g ' + pl.assists + 'a'}</span><span class="sq-form">${pl.pvr}</span></a></li>`).join('')}</ul>
     ` : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p><a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim club: ' + c.n)}" style="margin-top:6px">Run this club? Add your roster</a>`}
     ${worldLadder(c)}` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
     ${(() => {
@@ -828,7 +843,7 @@ async function screenClub(idx) {
         `<li><span class="cw-years">${r.yr}</span><span class="cw-club">${r.w}-${r.d}-${r.l} · ${r.pts} pts</span><span class="cw-stat">${ord(r.pos)} of ${r.of}</span></li>`).join('')}</ul></div>
       <p class="note">Overall league finish by points, from Wikipedia season records back to the club's first season${rows.some(r => +r.yr < 2000) ? ' (shootout-era seasons scored as modern 3-1-0)' : ''}.</p>`;
     })()}
-    ${hasLegends ? `<a class="fa-card" href="#/legends/${idx}"><b>&#127942; All-Time Players</b><span>Every player who wore the shirt — the club's history in people.</span></a>` : ''}
+    ${hasLegends ? `<a class="fa-card" href="#/legends/${c.id}"><b>&#127942; All-Time Players</b><span>Every player who wore the shirt — the club's history in people.</span></a>` : ''}
     ${(() => {
       const kids = AFFIL[c.n] || [];
       const parent = Object.entries(AFFIL).find(([, v]) => v.some(a => a.split(' · ')[0] === c.n));
@@ -836,7 +851,7 @@ async function screenClub(idx) {
       const linkify = nm => {
         const base = nm.split(' · ')[0];
         const idx = CLUBS.findIndex(o => o.n === base);
-        return idx >= 0 ? `<a href="#/club/${idx}">${nm}</a>` : nm;
+        return idx >= 0 ? `<a href="${clubHref(idx)}">${nm}</a>` : nm;
       };
       return `<div class="kicker">Pathway</div><ul class="pathway">` +
         (parent ? `<li><span>Parent club</span><b>${linkify(parent[0])}</b></li>` : '') +
@@ -902,7 +917,10 @@ function playerLadder(pl, c) {
     <p class="note">Domestic anchors are real 2026 value ratings. European tiers are transparent projections (multiples of the US pool's best) &mdash; a conversation, not a measurement.</p>`;
 }
 async function screenPlayer(ci, pi) {
-  const c = CLUBS[+ci]; if (!c || !c.r) return screenMap();
+  const cidx = clubIdx(String(ci));
+  if (cidx < 0) return screenMap();
+  if (String(ci) !== CLUBS[cidx].id) { location.replace('#/player/' + CLUBS[cidx].id + '/' + pi); return; }
+  const c = CLUBS[cidx]; if (!c.r) return screenMap();
   const sq = squadFor(c); const pl = sq[+pi]; if (!pl) return screenClub(ci);
   const prof = pl.real ? ((await profilesDb())[pl.name] || {}) : {};
   if (crumb.textContent !== c.st && location.hash !== `#/player/${ci}/${pi}`) return;
@@ -1068,9 +1086,9 @@ function screenPricing() {
 function screenFollowing() {
   crumb.textContent = 'Following';
   const f = favs();
-  const clubRows = f.clubs.map(i => CLUBS[+i] ? clubRow(CLUBS[+i]) : '').join('');
+  const clubRows = f.clubs.map(fid => { const i2 = clubIdx(fid); return i2 >= 0 ? clubRow(CLUBS[i2]) : ''; }).join('');
   const playerRows = f.players.map(id => {
-    const [ci, pi] = id.split('/'); const c = CLUBS[+ci]; if (!c) return '';
+    const [ci, pi] = id.split('/'); const c = CLUBS[clubIdx(ci)]; if (!c) return '';
     const pl = squadFor(c)[+pi]; if (!pl) return '';
     return `<li><a href="#/player/${id}"><img class="crest imgcrest" src="${AVATAR}" alt="">
       <span class="cl-name"><b>${pl.name}</b><span>${pl.pos} · ${esc(c.n)}</span></span>
@@ -1087,7 +1105,8 @@ function screenFollowing() {
 
 let legendSort = 'apps';
 async function screenLegends(ci) {
-  const c = CLUBS[+ci]; if (!c) return screenMap();
+  const cidx = clubIdx(String(ci)); if (cidx < 0) return screenMap();
+  const c = CLUBS[cidx]; ci = c.id;
   crumb.textContent = c.st;
   const all = (await legendsDb())[c.n];
   if (!all || !all.length) { location.hash = '#/club/' + ci; return; }
@@ -1126,7 +1145,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260728a')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260728b')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
