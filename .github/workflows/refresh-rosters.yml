@@ -5,6 +5,7 @@ on:
   workflow_dispatch: {}
 permissions:
   contents: write
+  issues: write
 jobs:
   refresh:
     runs-on: ubuntu-latest
@@ -16,9 +17,29 @@ jobs:
       - run: python scripts/refresh_rosters.py
       - run: python scripts/fetch_asa.py
       - run: python scripts/fetch_asa_games.py
+      # a broken scrape must never silently publish stale or empty data:
+      # the gate diffs the fresh files against HEAD and fails on collapse
+      - name: Gate — refuse empty or shrunken data
+        run: python scripts/verify_refresh.py
       - name: Commit if changed
         run: |
           git config user.name "roster-bot"
           git config user.email "actions@github.com"
           git add js/rosters.js js/data.js data/wire_asa.json
           git diff --cached --quiet || (git commit -m "chore: scheduled roster refresh" && git push)
+      - name: Alert on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          gh label create scrape-failure -c B60205 -d "Scheduled data refresh failed" -R "${{ github.repository }}" 2>/dev/null || true
+          existing=$(gh issue list -R "${{ github.repository }}" --label scrape-failure --state open --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" -R "${{ github.repository }}" --body "Roster refresh failed again: $url"
+          else
+            gh issue create -R "${{ github.repository }}" \
+              --title "Roster refresh failed $(date -u +%F)" \
+              --label scrape-failure \
+              --body "The scheduled roster refresh failed. Run: $url — nothing was committed; the site keeps serving the last good data. Check scripts/refresh_rosters.py / fetch_asa.py / fetch_asa_games.py and the verify_refresh.py gate output in the run log."
+          fi
