@@ -2,7 +2,7 @@
    Keeps the app installable + resilient offline without ever serving
    stale data when the network is up. Bump VERSION with each deploy
    (use scripts/bump_version.py — it moves every file's token together). */
-const VERSION = 'rankxi-v20260728f';
+const VERSION = 'rankxi-v20260729a';
 /* Crests are content-addressed by filename and never change, so they live in a
    cache that survives deploys. Without this, every deploy re-downloaded ~7 MB. */
 const ASSETS = 'rankxi-assets-v1';
@@ -18,8 +18,10 @@ const SHELL = [
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(VERSION)
-      // one bad URL must not fail the whole install
-      .then(c => Promise.allSettled(SHELL.map(u => c.add(u))))
+      // one bad URL must not fail the whole install; cache:'no-cache' forces
+      // revalidation — SHELL urls carry no ?v= token, so the year-long
+      // Cache-Control on /js/* would otherwise precache a stale build
+      .then(c => Promise.allSettled(SHELL.map(u => c.add(new Request(u, { cache: 'no-cache' })))))
       .then(() => self.skipWaiting())
   );
 });

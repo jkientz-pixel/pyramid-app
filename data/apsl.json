@@ -1,0 +1,1178 @@
+{
+ "fetched": "2026-07-28",
+ "season": "2025/26",
+ "teams": [
+  {
+   "name": "Caribbean FCA",
+   "conf": "Constitution",
+   "tid": "165398",
+   "logo": "/mediacontent//2023/01/30/14/Carib logo_233585.png"
+  },
+  {
+   "name": "Glastonbury Celtic",
+   "conf": "Constitution",
+   "tid": "165416",
+   "logo": "/mediacontent//2025/02/20/17/u_Celtic_1740100402142_1_244922.jpg"
+  },
+  {
+   "name": "Hermandad Connecticut",
+   "conf": "Constitution",
+   "tid": "165419",
+   "logo": "/mediacontent//2025/01/05/13/u_0e48b279_436c_42bf_8295_c6e52ef9550c_1736112177435_1_244309.jpeg"
+  },
+  {
+   "name": "Southwest FC",
+   "conf": "Constitution",
+   "tid": "165601",
+   "logo": "/mediacontent//2026/05/22/09/doc_257CF5C6-C670-3563-1DA71AB491BCBFC7.jpg"
+  },
+  {
+   "name": "Feelsgood FC",
+   "conf": "Delaware River",
+   "tid": "165602",
+   "logo": "/mediacontent//2026/07/20/07/doc_FF80E18F-9652-8BEF-C9D204A692335E35.png"
+  },
+  {
+   "name": "Jersey Shore Boca",
+   "conf": "Delaware River",
+   "tid": "165426",
+   "logo": "/mediacontent//2024/08/22/12/boca_logo_243173.jpg"
+  },
+  {
+   "name": "Lighthouse 1893 SC",
+   "conf": "Delaware River",
+   "tid": "165430",
+   "logo": "/mediacontent//2025/07/14/16/u_Lighthouse_1752536482788_1_247163.png"
+  },
+  {
+   "name": "Medford Strikers",
+   "conf": "Delaware River",
+   "tid": "165433",
+   "logo": "/mediacontent//2025/07/02/19/u_strikers_logo1_1_1751511344938_1_246963.png"
+  },
+  {
+   "name": "Oaklyn United FC",
+   "conf": "Delaware River",
+   "tid": "165441",
+   "logo": "/mediacontent//2023/10/20/16/Oaklyn_light_239177.jpg"
+  },
+  {
+   "name": "Persepolis United FC",
+   "conf": "Delaware River",
+   "tid": "165603",
+   "logo": "/mediacontent//2026/07/17/08/doc_67C1B7EF-E4B3-D30B-B8FC2446D553CCA4.png"
+  },
+  {
+   "name": "Philadelphia Heritage SC",
+   "conf": "Delaware River",
+   "tid": "165445",
+   "logo": "/mediacontent//2022/08/20/15/krWybzcR_400x400_230174.jpeg"
+  },
+  {
+   "name": "Philadelphia Soccer Club",
+   "conf": "Delaware River",
+   "tid": "165447",
+   "logo": "/mediacontent//2023/08/14/20/output-onlinepngtools(29)_238764.png"
+  },
+  {
+   "name": "Real Central NJ Soccer",
+   "conf": "Delaware River",
+   "tid": "165453",
+   "logo": "/mediacontent//2022/08/20/15/143032720_238714007857483_1027119688519153835_n_230175.png"
+  },
+  {
+   "name": "Sewell Old Boys FC",
+   "conf": "Delaware River",
+   "tid": "165458",
+   "logo": "/mediacontent//2025/07/15/12/u_Sewell_1752608104421_1_247183.jpg"
+  },
+  {
+   "name": "Vidas United FC",
+   "conf": "Delaware River",
+   "tid": "165466",
+   "logo": "/mediacontent//2023/10/24/20/vidas_239197.jpg"
+  },
+  {
+   "name": "WC Predators",
+   "conf": "Delaware River",
+   "tid": "165469",
+   "logo": "/mediacontent//2024/07/31/10/wc_predators_80_243009.jpg"
+  },
+  {
+   "name": "Dorchester City FC",
+   "conf": "Mayflower",
+   "tid": "165608",
+   "logo": "/mediacontent//2026/04/23/08/doc_4D988DDF-E548-0AC6-25454FADE688CE48.jpg"
+  },
+  {
+   "name": "Falcons FC",
+   "conf": "Mayflower",
+   "tid": "165410",
+   "logo": "/mediacontent//2025/03/21/12/u_Falcons_FC_Logo1_1742587156174_1_245305.png"
+  },
+  {
+   "name": "Jaguars United FC",
+   "conf": "Mayflower",
+   "tid": "165611",
+   "logo": "/mediacontent//2024/07/24/10/Jaguars_242907.jpg"
+  },
+  {
+   "name": "New England Combine FC",
+   "conf": "Mayflower",
+   "tid": "165609",
+   "logo": "/mediacontent//2026/07/15/12/doc_092D3F3C-F148-87D1-2EBED9930F378668.png"
+  },
+  {
+   "name": "Praia Kapital",
+   "conf": "Mayflower",
+   "tid": "165448",
+   "logo": "/mediacontent//2024/08/13/10/Praia_Kapital_80_243106.jpg"
+  },
+  {
+   "name": "Scrub Nation",
+   "conf": "Mayflower",
+   "tid": "165457",
+   "logo": "/mediacontent//2025/08/21/10/u_Scrub_1755796096678_1_80271343_247647.jpg"
+  },
+  {
+   "name": "Soley Leve",
+   "conf": "Mayflower",
+   "tid": "166017",
+   "logo": "/mediacontent//2026/07/28/19/doc_B4A000C9-98BB-383D-EF99E93D07D8B0DF.png"
+  },
+  {
+   "name": "Somerville United FC",
+   "conf": "Mayflower",
+   "tid": "165459",
+   "logo": "/mediacontent//2025/12/07/15/u_SUFC_1765149552165_1_86361897_248603.png"
+  },
+  {
+   "name": "South Coast Union",
+   "conf": "Mayflower",
+   "tid": "165460",
+   "logo": "/mediacontent//2025/02/24/10/u_south_coast_union_logo__1__1740421275204_1_244950.png"
+  },
+  {
+   "name": "Strictly Nos FC",
+   "conf": "Mayflower",
+   "tid": "165610",
+   "logo": "/mediacontent//2024/04/02/20/Strictly Nos Logo_241035.png"
+  },
+  {
+   "name": "Central Park Rangers FC",
+   "conf": "Metropolitan",
+   "tid": "165400",
+   "logo": "/mediacontent//2024/09/03/09/cpr_Logo_243235.png"
+  },
+  {
+   "name": "Doxa FCW",
+   "conf": "Metropolitan",
+   "tid": "165408",
+   "logo": "/mediacontent//2022/09/29/14/Doxa_230155_230722.png"
+  },
+  {
+   "name": "FC Sandzak",
+   "conf": "Metropolitan",
+   "tid": "165604",
+   "logo": "/mediacontent//2022/08/06/14/47267414_741821752839659_1774510513376460800_n_229880.jpg"
+  },
+  {
+   "name": "Hoboken FC 1912",
+   "conf": "Metropolitan",
+   "tid": "165420",
+   "logo": "/mediacontent//2023/02/28/00/HCF_circle_-_white_231278_235098.png"
+  },
+  {
+   "name": "Lansdowne Yonkers FC",
+   "conf": "Metropolitan",
+   "tid": "165428",
+   "logo": "/mediacontent//2023/04/20/09/Lansdowne Yonkers FC_235666.png"
+  },
+  {
+   "name": "Leros SC",
+   "conf": "Metropolitan",
+   "tid": "165429",
+   "logo": "/mediacontent//2025/07/03/07/u_Leros_1751554635731_1_246975.jpg"
+  },
+  {
+   "name": "NY Athletic Club",
+   "conf": "Metropolitan",
+   "tid": "165437",
+   "logo": "/mediacontent//2022/08/17/15/nyac_230131.png"
+  },
+  {
+   "name": "NY Greek Americans",
+   "conf": "Metropolitan",
+   "tid": "165438",
+   "logo": "/mediacontent//2022/08/20/15/1385542_530758417002357_263896856_n_230170.jpeg"
+  },
+  {
+   "name": "NY Pancyprian Freedoms",
+   "conf": "Metropolitan",
+   "tid": "165440",
+   "logo": "/mediacontent//2022/08/12/03/NY_Pancyprian_Freedoms_logo_229973.png"
+  },
+  {
+   "name": "Richmond County FC",
+   "conf": "Metropolitan",
+   "tid": "165454",
+   "logo": "/mediacontent//2023/09/14/11/Richmond-NEW_239003.png"
+  },
+  {
+   "name": "SC Vistula Garfield",
+   "conf": "Metropolitan",
+   "tid": "165456",
+   "logo": "/mediacontent//2023/07/21/16/Vistula_237645.jpg"
+  },
+  {
+   "name": "Alianza FC",
+   "conf": "Mitten",
+   "tid": "165391",
+   "logo": "/mediacontent//2026/01/19/08/doc_66866FF6-A976-1E0A-06813AFA3165D241.png"
+  },
+  {
+   "name": "Drita SC",
+   "conf": "Mitten",
+   "tid": "165409",
+   "logo": "/mediacontent//2026/03/12/13/doc_E5A80AEA-B35E-F298-E5B0083D226EFAFC.jpg"
+  },
+  {
+   "name": "Grand Rapids SC",
+   "conf": "Mitten",
+   "tid": "166018",
+   "logo": "/mediacontent//2026/07/28/19/doc_B491D7E5-D3EE-5B80-2A193A0A4E109EEC.png"
+  },
+  {
+   "name": "Hoverla FC",
+   "conf": "Mitten",
+   "tid": "165421",
+   "logo": "/mediacontent//2026/02/24/20/doc_BDB455D3-9146-C4FA-9D8BD5FC15DDAC31.png"
+  },
+  {
+   "name": "Imlay City FC",
+   "conf": "Mitten",
+   "tid": "165422",
+   "logo": "/mediacontent//2026/02/03/07/doc_683AD540-FDD9-2A23-43A00D3EAEDA0368.jpg"
+  },
+  {
+   "name": "Inter Detroit",
+   "conf": "Mitten",
+   "tid": "165423",
+   "logo": "/mediacontent//2026/03/08/07/doc_0A77CD07-C6A5-0B9A-7EFCFA6BE29D3C4F.jpg"
+  },
+  {
+   "name": "Livonia City FC",
+   "conf": "Mitten",
+   "tid": "165431",
+   "logo": "/mediacontent//2026/02/05/13/doc_DDB51C50-9293-5EAB-6F471569061CBDE6.jpg"
+  },
+  {
+   "name": "Monroe United",
+   "conf": "Mitten",
+   "tid": "165434",
+   "logo": "/mediacontent//2026/03/09/12/doc_497D68F4-F9F2-A37B-4FB709E03DBCA6B6.png"
+  },
+  {
+   "name": "World Class FC",
+   "conf": "Mitten",
+   "tid": "165471",
+   "logo": "/mediacontent//2026/02/03/07/doc_6903B2DC-FB3E-67CB-5375B171549BE2C7.jpg"
+  },
+  {
+   "name": "Alliance SC",
+   "conf": "Terminus",
+   "tid": "165392",
+   "logo": "/mediacontent//2025/06/02/13/u_Alliance_1748897141192_1_246188.jpg"
+  },
+  {
+   "name": "Bel Calcio FC",
+   "conf": "Terminus",
+   "tid": "165396",
+   "logo": "/mediacontent//2024/07/10/09/Screenshot_2024_07_10_at_9_56_16_AM_242743.png"
+  },
+  {
+   "name": "Buckhead SC",
+   "conf": "Terminus",
+   "tid": "165397",
+   "logo": "/mediacontent//2025/09/09/17/u_Buckhead_SC_Logo_1757463223834_1_82306446_247806.png"
+  },
+  {
+   "name": "Georgia United FC",
+   "conf": "Terminus",
+   "tid": "165414",
+   "logo": "/mediacontent//2026/01/01/09/doc_C9614783-E0CB-59C1-B3C1F6752973C405.jpg"
+  },
+  {
+   "name": "Majestic SC",
+   "conf": "Terminus",
+   "tid": "165432",
+   "logo": "/mediacontent//2025/05/19/13/u_cropped_majestic_243302_1747687750678_1_246116.jpg"
+  },
+  {
+   "name": "Peachtree FC",
+   "conf": "Terminus",
+   "tid": "165442",
+   "logo": "/mediacontent//2026/02/19/12/doc_ACB74FFE-93FA-09B3-EB0AE0B406877323.png"
+  },
+  {
+   "name": "Prima FC",
+   "conf": "Terminus",
+   "tid": "165449",
+   "logo": "/mediacontent//2024/07/10/09/prima_242741.jpeg"
+  },
+  {
+   "name": "Terminus FC",
+   "conf": "Terminus",
+   "tid": "165461",
+   "logo": "/mediacontent//2025/07/15/12/u_Untitled_Background_Removed_1752608875644_1_247185.png"
+  },
+  {
+   "name": "AC Arlington FC",
+   "conf": "Trinity",
+   "tid": "165390",
+   "logo": "/mediacontent//2026/01/13/14/doc_3E42755C-C4CF-B5B0-ABB5039081FABB16.png"
+  },
+  {
+   "name": "Carrollton Old Boyz",
+   "conf": "Trinity",
+   "tid": "165399",
+   "logo": "/mediacontent//2026/02/03/07/doc_692B3AC6-CB01-1617-C024B6F3A543C8EB.jpg"
+  },
+  {
+   "name": "Foro SC",
+   "conf": "Trinity",
+   "tid": "165412",
+   "logo": "/mediacontent//2026/01/23/10/doc_3A0B0F56-AF3B-F17D-C9CA385579EE773F.jpg"
+  },
+  {
+   "name": "Texas Rage FC",
+   "conf": "Trinity",
+   "tid": "165463",
+   "logo": "/mediacontent//2026/04/30/19/doc_CDA706DC-DCC0-3044-187B58214A43F0BB.png"
+  },
+  {
+   "name": "KO Elites",
+   "conf": "Constitution",
+   "tid": "114826",
+   "logo": "/mediacontent//2022/08/20/15/81752260_614480686045826_2182093774371422208_n_230163.png"
+  },
+  {
+   "name": "Wildcat FC",
+   "conf": "Constitution",
+   "tid": "114851",
+   "logo": "/mediacontent//2025/01/15/14/u_Logo_1736979699693_1_244479.PNG"
+  },
+  {
+   "name": "Alloy Soccer Club",
+   "conf": "Delaware River",
+   "tid": "114808",
+   "logo": "/mediacontent//2023/07/17/07/Alloy_237562.jpg"
+  },
+  {
+   "name": "GAK",
+   "conf": "Delaware River",
+   "tid": "124946",
+   "logo": "/mediacontent//2025/08/29/13/u_GAK_1756497991011_1_81226896_247723.png"
+  },
+  {
+   "name": "Fitchburg FC",
+   "conf": "Mayflower",
+   "tid": "114815",
+   "logo": "/mediacontent//2024/07/24/15/F_F_C_2896_242912.jpg"
+  },
+  {
+   "name": "Invictus FC",
+   "conf": "Mayflower",
+   "tid": "118064",
+   "logo": "/mediacontent//2025/06/06/09/u_Invictus_1749228528014_1_246265.jpg"
+  },
+  {
+   "name": "Project Football",
+   "conf": "Mayflower",
+   "tid": "114838",
+   "logo": "/mediacontent//2024/12/11/10/PF_244117.jpg"
+  },
+  {
+   "name": "NY International FC",
+   "conf": "Metropolitan",
+   "tid": "115102",
+   "logo": "/mediacontent//2022/08/08/21/STAR_229908.jpeg"
+  },
+  {
+   "name": "Zum Schneider FC 03",
+   "conf": "Metropolitan",
+   "tid": "114852",
+   "logo": "/mediacontent//2022/08/08/18/Screenshot 2022-08-08 180027_229893.png"
+  },
+  {
+   "name": "Christos FC",
+   "conf": "Mid-Atlantic",
+   "tid": "114812",
+   "logo": "/mediacontent//2024/08/22/20/christos_243184.jpg"
+  },
+  {
+   "name": "Delmarva Thunder",
+   "conf": "Mid-Atlantic",
+   "tid": "118680",
+   "logo": "/mediacontent//2025/04/30/18/u_DT_Logo_1746062752994_1_245707.png"
+  },
+  {
+   "name": "Grove Soccer United",
+   "conf": "Mid-Atlantic",
+   "tid": "114817",
+   "logo": "/mediacontent//2022/08/26/11/Grover_logo_230306.jpg"
+  },
+  {
+   "name": "Nova FC",
+   "conf": "Mid-Atlantic",
+   "tid": "114829",
+   "logo": "/mediacontent//2023/08/24/20/Logo_238842.jpg"
+  },
+  {
+   "name": "PFA APSL",
+   "conf": "Mid-Atlantic",
+   "tid": "114834",
+   "logo": "/mediacontent//2026/04/23/12/u_2026_PFA_LOGO_1776971665158_1_94197013_250804.jpg"
+  },
+  {
+   "name": "PW Nova",
+   "conf": "Mid-Atlantic",
+   "tid": "114839",
+   "logo": "/mediacontent//2024/09/15/20/pink_Artboard_1shieldlion2___Copy_243341.png"
+  },
+  {
+   "name": "VA Marauders FC",
+   "conf": "Mid-Atlantic",
+   "tid": "114846",
+   "logo": "/mediacontent//2023/08/24/11/EPSL_Virginia_Marauders_Alt_look_238819.jpg"
+  },
+  {
+   "name": "Wave FC",
+   "conf": "Mid-Atlantic",
+   "tid": "114849",
+   "logo": "/mediacontent//2024/08/22/20/wave_243186.png"
+  },
+  {
+   "name": "Club Petrolero",
+   "conf": "Mid-Atlantic",
+   "tid": "140256",
+   "logo": "/mediacontent//2026/02/20/13/doc_E16B7253-A327-33ED-ABD6AC5FC11A2BA0.jpg"
+  },
+  {
+   "name": "Baltimore City Academy",
+   "conf": "Mid-Atlantic",
+   "tid": "144871",
+   "logo": "/mediacontent//2026/03/21/12/doc_B3266C53-ED7D-4243-BAC471A04DBAC852.jpg"
+  },
+  {
+   "name": "Baltimore City FC",
+   "conf": "Mid-Atlantic",
+   "tid": "140784",
+   "logo": "/mediacontent//2026/03/20/11/doc_7CBC2383-DDC1-AE93-85F40DDB943312C9.jpg"
+  },
+  {
+   "name": "Chiefs United",
+   "conf": "Mid-Atlantic",
+   "tid": "140359",
+   "logo": "/mediacontent//2026/02/21/13/doc_149C4800-0AB5-738E-2745B2EB0395CC8E.png"
+  },
+  {
+   "name": "DMV Rangers",
+   "conf": "Mid-Atlantic",
+   "tid": "143012",
+   "logo": "/mediacontent//2026/03/07/18/doc_F12F3327-CB59-397A-83B91CFCE7A137A3.jpg"
+  },
+  {
+   "name": "Germantown City FC",
+   "conf": "Mid-Atlantic",
+   "tid": "136127",
+   "logo": "/mediacontent//2026/01/22/13/doc_0BDF2E8F-DDA2-EFD1-52461F77E4DFA059.jpg"
+  },
+  {
+   "name": "Intra United SC",
+   "conf": "Mitten",
+   "tid": "141264",
+   "logo": "/mediacontent//2026/02/23/10/doc_7681681E-BC19-D528-6C7AEB53711D7C18.png"
+  },
+  {
+   "name": "SC Gwinnett",
+   "conf": "Terminus",
+   "tid": "119159",
+   "logo": "/mediacontent//2025/08/16/16/u_SC_GCO_Logo_1755388637823_1_80271343_247605.png"
+  },
+  {
+   "name": "Texas Coyotes",
+   "conf": "Trinity",
+   "tid": "142766",
+   "logo": "/mediacontent//2026/01/13/14/doc_3E42755C-C4CF-B5B0-ABB5039081FABB16.png"
+  }
+ ],
+ "standings": {
+  "acarlington": {
+   "name": "AC Arlington FC",
+   "mp": 8,
+   "w": 4,
+   "d": 1,
+   "l": 3,
+   "gf": 26,
+   "ga": 20
+  },
+  "alianza": {
+   "name": "Alianza FC",
+   "mp": 8,
+   "w": 5,
+   "d": 1,
+   "l": 2,
+   "gf": 24,
+   "ga": 16
+  },
+  "alliance": {
+   "name": "Alliance SC",
+   "mp": 16,
+   "w": 4,
+   "d": 1,
+   "l": 11,
+   "gf": 33,
+   "ga": 52
+  },
+  "alloysoccer": {
+   "name": "Alloy Soccer Club",
+   "mp": 22,
+   "w": 14,
+   "d": 3,
+   "l": 5,
+   "gf": 83,
+   "ga": 45
+  },
+  "baltimorecity": {
+   "name": "Baltimore City FC",
+   "mp": 8,
+   "w": 6,
+   "d": 2,
+   "l": 0,
+   "gf": 27,
+   "ga": 11
+  },
+  "baltimorecityacademy": {
+   "name": "Baltimore City Academy",
+   "mp": 8,
+   "w": 1,
+   "d": 0,
+   "l": 7,
+   "gf": 8,
+   "ga": 40
+  },
+  "belcalcio": {
+   "name": "Bel Calcio FC",
+   "mp": 16,
+   "w": 8,
+   "d": 1,
+   "l": 7,
+   "gf": 39,
+   "ga": 33
+  },
+  "buckhead": {
+   "name": "Buckhead SC",
+   "mp": 16,
+   "w": 6,
+   "d": 1,
+   "l": 9,
+   "gf": 40,
+   "ga": 36
+  },
+  "caribbeanfca": {
+   "name": "Caribbean FCA",
+   "mp": 12,
+   "w": 7,
+   "d": 3,
+   "l": 2,
+   "gf": 43,
+   "ga": 12
+  },
+  "carrolltonoldboyz": {
+   "name": "Carrollton Old Boyz",
+   "mp": 7,
+   "w": 4,
+   "d": 1,
+   "l": 2,
+   "gf": 22,
+   "ga": 15
+  },
+  "centralparkrangers": {
+   "name": "Central Park Rangers FC",
+   "mp": 22,
+   "w": 2,
+   "d": 3,
+   "l": 17,
+   "gf": 29,
+   "ga": 75
+  },
+  "chiefsunited": {
+   "name": "Chiefs United",
+   "mp": 8,
+   "w": 6,
+   "d": 1,
+   "l": 1,
+   "gf": 27,
+   "ga": 5
+  },
+  "christos": {
+   "name": "Christos FC",
+   "mp": 13,
+   "w": 7,
+   "d": 1,
+   "l": 5,
+   "gf": 38,
+   "ga": 21
+  },
+  "delmarvathunder": {
+   "name": "Delmarva Thunder",
+   "mp": 16,
+   "w": 6,
+   "d": 0,
+   "l": 10,
+   "gf": 28,
+   "ga": 56
+  },
+  "dmvrangers": {
+   "name": "DMV Rangers",
+   "mp": 8,
+   "w": 0,
+   "d": 0,
+   "l": 8,
+   "gf": 7,
+   "ga": 27
+  },
+  "doxafcw": {
+   "name": "Doxa FCW",
+   "mp": 22,
+   "w": 11,
+   "d": 4,
+   "l": 7,
+   "gf": 61,
+   "ga": 42
+  },
+  "drita": {
+   "name": "Drita SC",
+   "mp": 8,
+   "w": 8,
+   "d": 0,
+   "l": 0,
+   "gf": 36,
+   "ga": 10
+  },
+  "falcons": {
+   "name": "Falcons FC",
+   "mp": 14,
+   "w": 6,
+   "d": 3,
+   "l": 5,
+   "gf": 32,
+   "ga": 27
+  },
+  "fitchburg": {
+   "name": "Fitchburg FC",
+   "mp": 14,
+   "w": 2,
+   "d": 1,
+   "l": 11,
+   "gf": 16,
+   "ga": 59
+  },
+  "foro": {
+   "name": "Foro SC",
+   "mp": 7,
+   "w": 6,
+   "d": 1,
+   "l": 0,
+   "gf": 39,
+   "ga": 5
+  },
+  "gak": {
+   "name": "GAK",
+   "mp": 22,
+   "w": 4,
+   "d": 2,
+   "l": 16,
+   "gf": 25,
+   "ga": 90
+  },
+  "georgiaunited": {
+   "name": "Georgia United FC",
+   "mp": 16,
+   "w": 5,
+   "d": 1,
+   "l": 10,
+   "gf": 24,
+   "ga": 46
+  },
+  "germantowncity": {
+   "name": "Germantown City FC",
+   "mp": 8,
+   "w": 5,
+   "d": 0,
+   "l": 3,
+   "gf": 25,
+   "ga": 17
+  },
+  "glastonburyceltic": {
+   "name": "Glastonbury Celtic",
+   "mp": 12,
+   "w": 4,
+   "d": 0,
+   "l": 8,
+   "gf": 31,
+   "ga": 51
+  },
+  "grovesoccerunited": {
+   "name": "Grove Soccer United",
+   "mp": 16,
+   "w": 5,
+   "d": 1,
+   "l": 10,
+   "gf": 29,
+   "ga": 41
+  },
+  "gwinnett": {
+   "name": "SC Gwinnett",
+   "mp": 16,
+   "w": 0,
+   "d": 0,
+   "l": 16,
+   "gf": 8,
+   "ga": 125
+  },
+  "hermandadconnecticut": {
+   "name": "Hermandad Connecticut",
+   "mp": 12,
+   "w": 1,
+   "d": 1,
+   "l": 10,
+   "gf": 17,
+   "ga": 49
+  },
+  "hoboken1912": {
+   "name": "Hoboken FC 1912",
+   "mp": 22,
+   "w": 14,
+   "d": 3,
+   "l": 5,
+   "gf": 71,
+   "ga": 35
+  },
+  "hoverla": {
+   "name": "Hoverla FC",
+   "mp": 8,
+   "w": 2,
+   "d": 3,
+   "l": 3,
+   "gf": 7,
+   "ga": 10
+  },
+  "imlaycity": {
+   "name": "Imlay City FC",
+   "mp": 8,
+   "w": 0,
+   "d": 1,
+   "l": 7,
+   "gf": 9,
+   "ga": 34
+  },
+  "interdetroit": {
+   "name": "Inter Detroit",
+   "mp": 8,
+   "w": 7,
+   "d": 0,
+   "l": 1,
+   "gf": 25,
+   "ga": 8
+  },
+  "intraunited": {
+   "name": "Intra United SC",
+   "mp": 8,
+   "w": 0,
+   "d": 3,
+   "l": 5,
+   "gf": 17,
+   "ga": 28
+  },
+  "invictus": {
+   "name": "Invictus FC",
+   "mp": 14,
+   "w": 1,
+   "d": 2,
+   "l": 11,
+   "gf": 13,
+   "ga": 39
+  },
+  "jerseyshoreboca": {
+   "name": "Jersey Shore Boca",
+   "mp": 22,
+   "w": 6,
+   "d": 1,
+   "l": 15,
+   "gf": 31,
+   "ga": 61
+  },
+  "koelites": {
+   "name": "KO Elites",
+   "mp": 12,
+   "w": 11,
+   "d": 1,
+   "l": 0,
+   "gf": 57,
+   "ga": 17
+  },
+  "lansdowneyonkers": {
+   "name": "Lansdowne Yonkers FC",
+   "mp": 22,
+   "w": 17,
+   "d": 2,
+   "l": 3,
+   "gf": 60,
+   "ga": 20
+  },
+  "leros": {
+   "name": "Leros SC",
+   "mp": 22,
+   "w": 9,
+   "d": 4,
+   "l": 9,
+   "gf": 46,
+   "ga": 44
+  },
+  "lighthouse1893": {
+   "name": "Lighthouse 1893 SC",
+   "mp": 22,
+   "w": 6,
+   "d": 3,
+   "l": 13,
+   "gf": 33,
+   "ga": 58
+  },
+  "livoniacity": {
+   "name": "Livonia City FC",
+   "mp": 8,
+   "w": 1,
+   "d": 1,
+   "l": 6,
+   "gf": 25,
+   "ga": 31
+  },
+  "majestic": {
+   "name": "Majestic SC",
+   "mp": 16,
+   "w": 9,
+   "d": 4,
+   "l": 3,
+   "gf": 64,
+   "ga": 27
+  },
+  "medfordstrikers": {
+   "name": "Medford Strikers",
+   "mp": 22,
+   "w": 4,
+   "d": 3,
+   "l": 15,
+   "gf": 35,
+   "ga": 68
+  },
+  "monroeunited": {
+   "name": "Monroe United",
+   "mp": 8,
+   "w": 3,
+   "d": 1,
+   "l": 4,
+   "gf": 13,
+   "ga": 23
+  },
+  "nova": {
+   "name": "Nova FC",
+   "mp": 14,
+   "w": 14,
+   "d": 0,
+   "l": 0,
+   "gf": 75,
+   "ga": 13
+  },
+  "nyathletic": {
+   "name": "NY Athletic Club",
+   "mp": 22,
+   "w": 7,
+   "d": 0,
+   "l": 15,
+   "gf": 43,
+   "ga": 58
+  },
+  "nygreekamericans": {
+   "name": "NY Greek Americans",
+   "mp": 22,
+   "w": 17,
+   "d": 4,
+   "l": 1,
+   "gf": 77,
+   "ga": 24
+  },
+  "nyinternational": {
+   "name": "NY International FC",
+   "mp": 22,
+   "w": 5,
+   "d": 4,
+   "l": 13,
+   "gf": 33,
+   "ga": 64
+  },
+  "nypancyprianfreedoms": {
+   "name": "NY Pancyprian Freedoms",
+   "mp": 22,
+   "w": 15,
+   "d": 0,
+   "l": 7,
+   "gf": 53,
+   "ga": 28
+  },
+  "oaklynunited": {
+   "name": "Oaklyn United FC",
+   "mp": 22,
+   "w": 17,
+   "d": 0,
+   "l": 5,
+   "gf": 64,
+   "ga": 30
+  },
+  "peachtree": {
+   "name": "Peachtree FC",
+   "mp": 16,
+   "w": 9,
+   "d": 3,
+   "l": 4,
+   "gf": 66,
+   "ga": 29
+  },
+  "petrolero": {
+   "name": "Club Petrolero",
+   "mp": 8,
+   "w": 4,
+   "d": 3,
+   "l": 1,
+   "gf": 21,
+   "ga": 8
+  },
+  "pfaapsl": {
+   "name": "PFA APSL",
+   "mp": 14,
+   "w": 6,
+   "d": 0,
+   "l": 8,
+   "gf": 32,
+   "ga": 37
+  },
+  "philadelphiaheritage": {
+   "name": "Philadelphia Heritage SC",
+   "mp": 22,
+   "w": 9,
+   "d": 3,
+   "l": 10,
+   "gf": 43,
+   "ga": 39
+  },
+  "philadelphiasoccer": {
+   "name": "Philadelphia Soccer Club",
+   "mp": 22,
+   "w": 11,
+   "d": 5,
+   "l": 6,
+   "gf": 53,
+   "ga": 42
+  },
+  "praiakapital": {
+   "name": "Praia Kapital",
+   "mp": 14,
+   "w": 8,
+   "d": 3,
+   "l": 3,
+   "gf": 35,
+   "ga": 15
+  },
+  "prima": {
+   "name": "Prima FC",
+   "mp": 16,
+   "w": 12,
+   "d": 2,
+   "l": 2,
+   "gf": 67,
+   "ga": 16
+  },
+  "projectfootball": {
+   "name": "Project Football",
+   "mp": 14,
+   "w": 4,
+   "d": 4,
+   "l": 6,
+   "gf": 29,
+   "ga": 40
+  },
+  "pwnova": {
+   "name": "PW Nova",
+   "mp": 16,
+   "w": 4,
+   "d": 1,
+   "l": 11,
+   "gf": 17,
+   "ga": 63
+  },
+  "realcentralnjsoccer": {
+   "name": "Real Central NJ Soccer",
+   "mp": 22,
+   "w": 13,
+   "d": 2,
+   "l": 7,
+   "gf": 47,
+   "ga": 32
+  },
+  "richmondcounty": {
+   "name": "Richmond County FC",
+   "mp": 22,
+   "w": 6,
+   "d": 6,
+   "l": 10,
+   "gf": 45,
+   "ga": 63
+  },
+  "scrubnation": {
+   "name": "Scrub Nation",
+   "mp": 14,
+   "w": 10,
+   "d": 2,
+   "l": 2,
+   "gf": 45,
+   "ga": 12
+  },
+  "sewelloldboys": {
+   "name": "Sewell Old Boys FC",
+   "mp": 22,
+   "w": 7,
+   "d": 3,
+   "l": 12,
+   "gf": 37,
+   "ga": 55
+  },
+  "somervilleunited": {
+   "name": "Somerville United FC",
+   "mp": 14,
+   "w": 10,
+   "d": 2,
+   "l": 2,
+   "gf": 25,
+   "ga": 10
+  },
+  "southcoastunion": {
+   "name": "South Coast Union",
+   "mp": 14,
+   "w": 5,
+   "d": 3,
+   "l": 6,
+   "gf": 32,
+   "ga": 25
+  },
+  "terminus": {
+   "name": "Terminus FC",
+   "mp": 16,
+   "w": 12,
+   "d": 1,
+   "l": 3,
+   "gf": 53,
+   "ga": 30
+  },
+  "texascoyotes": {
+   "name": "Texas Coyotes",
+   "mp": 8,
+   "w": 1,
+   "d": 1,
+   "l": 6,
+   "gf": 13,
+   "ga": 44
+  },
+  "texasrage": {
+   "name": "Texas Rage FC",
+   "mp": 8,
+   "w": 1,
+   "d": 2,
+   "l": 5,
+   "gf": 13,
+   "ga": 29
+  },
+  "vamarauders": {
+   "name": "VA Marauders FC",
+   "mp": 16,
+   "w": 9,
+   "d": 1,
+   "l": 6,
+   "gf": 37,
+   "ga": 28
+  },
+  "vidasunited": {
+   "name": "Vidas United FC",
+   "mp": 22,
+   "w": 6,
+   "d": 3,
+   "l": 13,
+   "gf": 42,
+   "ga": 56
+  },
+  "vistulagarfield": {
+   "name": "SC Vistula Garfield",
+   "mp": 22,
+   "w": 7,
+   "d": 2,
+   "l": 13,
+   "gf": 44,
+   "ga": 63
+  },
+  "wave": {
+   "name": "Wave FC",
+   "mp": 15,
+   "w": 6,
+   "d": 0,
+   "l": 9,
+   "gf": 31,
+   "ga": 35
+  },
+  "wcpredators": {
+   "name": "WC Predators",
+   "mp": 22,
+   "w": 20,
+   "d": 2,
+   "l": 0,
+   "gf": 104,
+   "ga": 21
+  },
+  "wildcat": {
+   "name": "Wildcat FC",
+   "mp": 12,
+   "w": 3,
+   "d": 3,
+   "l": 6,
+   "gf": 22,
+   "ga": 41
+  },
+  "worldclass": {
+   "name": "World Class FC",
+   "mp": 8,
+   "w": 5,
+   "d": 0,
+   "l": 3,
+   "gf": 19,
+   "ga": 15
+  },
+  "zumschneider03": {
+   "name": "Zum Schneider FC 03",
+   "mp": 22,
+   "w": 5,
+   "d": 2,
+   "l": 15,
+   "gf": 30,
+   "ga": 76
+  }
+ }
+}

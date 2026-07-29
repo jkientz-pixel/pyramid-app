@@ -1,0 +1,83 @@
+{
+ "fitted": "2026-07-28",
+ "model": "bradley-terry elo-scale, 90-min results, draws 0.5, MLS anchored 0",
+ "modern": {
+  "years": [
+   2022,
+   2023,
+   2024,
+   2025,
+   2026
+  ],
+  "n": 602,
+  "home_adv": 31.5,
+  "offsets": {
+   "mls": 0.0,
+   "mnp": -362.5,
+   "nisa": -387.3,
+   "npsl": -518.1,
+   "regional": -532.0,
+   "upsl": -536.1,
+   "usl1": -289.5,
+   "usl2": -509.1,
+   "uslc": -194.5
+  },
+  "pair_counts": {
+   "mls|mnp": 2,
+   "mls|nisa": 4,
+   "mls|npsl": 1,
+   "mls|regional": 1,
+   "mls|usl1": 23,
+   "mls|uslc": 77,
+   "mnp|nisa": 2,
+   "mnp|npsl": 5,
+   "mnp|regional": 6,
+   "mnp|upsl": 10,
+   "mnp|usl1": 6,
+   "mnp|usl2": 6,
+   "mnp|uslc": 13,
+   "nisa|npsl": 5,
+   "nisa|regional": 3,
+   "nisa|upsl": 1,
+   "nisa|usl1": 4,
+   "nisa|usl2": 7,
+   "nisa|uslc": 18,
+   "npsl|regional": 12,
+   "npsl|upsl": 9,
+   "npsl|usl1": 12,
+   "npsl|usl2": 10,
+   "npsl|uslc": 19,
+   "regional|upsl": 210,
+   "regional|usl1": 11,
+   "regional|usl2": 13,
+   "regional|uslc": 15,
+   "upsl|usl1": 13,
+   "upsl|usl2": 3,
+   "upsl|uslc": 7,
+   "usl1|usl2": 24,
+   "usl1|uslc": 41,
+   "usl2|uslc": 9
+  }
+ },
+ "historical": {
+  "years": [
+   2016,
+   2017,
+   2018,
+   2019
+  ],
+  "n": 281,
+  "home_adv": 65.2,
+  "offsets": {
+   "mls": 0.0,
+   "nasl-era": -111.2,
+   "npsl": -400.8,
+   "regional": -348.8,
+   "upsl": -795.7,
+   "usl-d23-era": -173.5,
+   "usl1": -247.2,
+   "usl2": -378.8,
+   "uslc": -109.2
+  }
+ }
+}

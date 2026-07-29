@@ -3,8 +3,14 @@
 set -e
 cd "$(dirname "$0")"
 
+# stamp one fresh cache-bust token across app.html/index.html/app.js/sw.js —
+# replaces the manual ?v= sed ritual; preflight still verifies consistency
+NEWV=$(python3 scripts/bump_version.py | tail -1 | awk '{print $NF}')
+
 python3 scripts/preflight.py
 
+git diff --quiet app.html index.html js/app.js sw.js || \
+  git commit -m "chore: cache-bust v${NEWV}" -- app.html index.html js/app.js sw.js
 git push
 
 # Ship a staged tree, not the repo root. `wrangler pages deploy .` uploaded the
@@ -17,6 +23,8 @@ cp -R app.html index.html npsl-rankings.html upsl-rankings.html \
       manifest.webmanifest sw.js robots.txt sitemap.xml _headers \
       js css crests \
       icon-192.png icon-512.png apple-touch-icon.png og.png "$STAGE/"
+# local editor/backup droppings must not reach production
+find "$STAGE/js" "$STAGE/css" \( -name '*.bak' -o -name '*.tmp' \) -delete
 
 # only the data files app.js actually fetches
 mkdir -p "$STAGE/data"
