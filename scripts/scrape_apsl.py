@@ -163,10 +163,14 @@ def fetch_crest(team, sl):
     path = os.path.join(ROOT, fn)
     if os.path.exists(path): return fn
     try:
-        blob = get(BASE + team['logo'] if team['logo'].startswith('/') else team['logo'])
-        if not blob or len(blob) > 400_000: return None
-        open(path, 'wb').write(blob)
-        return fn
+        blob = get(BASE + urllib.parse.quote(team['logo']) if team['logo'].startswith('/') else team['logo'])
+        if not blob: return None
+        tmp = os.path.join(ROOT, 'crests', '_raw_tmp')
+        open(tmp, 'wb').write(blob)
+        import subprocess
+        subprocess.run(['sips', '-s', 'format', 'png', '-Z', '128', tmp, '--out', path], capture_output=True)
+        os.remove(tmp)
+        return fn if os.path.exists(path) and os.path.getsize(path) > 500 else None
     except Exception:
         return None
 
