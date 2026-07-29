@@ -1,12 +1,12 @@
-import { PROJ, USMAP } from './usmap.js?v=20260728i';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260728i';
+import { PROJ, USMAP } from './usmap.js?v=20260729a';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260729a';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260728i')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260729a')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
@@ -274,7 +274,7 @@ function wireSearch() {
 const LEVELS = {
   all: null,
   pro: ['mls', 'uslc', 'usl1', 'mnp', 'nisa', 'nwsl', 'uslw'],
-  amateur: ['npsl', 'upsl', 'usl2', 'loc', 'uslwl', 'wpsl', 'uws'],
+  amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'loc', 'uslwl', 'wpsl', 'uws'],
   college: ['ncaa1', 'ncaa2']
 };
 let level = 'all';
@@ -435,7 +435,7 @@ const FACT = [1, 1, 2, 6, 24, 120, 720, 5040];
 /* Tier-tuned engine — backtested 2026-07-27 on 1,377 real matches (310 NPSL
    + 1,067 pro): amateur football wants a bigger K and smaller home edge than
    pro parity leagues, so params split by tier instead of one-size-fits-all. */
-const AMATEUR_TIER = new Set(['npsl', 'upsl', 'usl2', 'loc', 'uslwl', 'wpsl', 'uws', 'nisa', 'ncaa1', 'ncaa2']);
+const AMATEUR_TIER = new Set(['npsl', 'upsl', 'usl2', 'apsl', 'loc', 'uslwl', 'wpsl', 'uws', 'nisa', 'ncaa1', 'ncaa2']);
 function oddsFor(h, a, homeAdv) {
   const amateur = AMATEUR_TIER.has(h.g) && AMATEUR_TIER.has(a.g);
   const ha = homeAdv != null ? homeAdv : (amateur ? 30 : 65);
@@ -490,7 +490,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260728i')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260729a')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -499,7 +499,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260728i'), grab('data/wire_asa.json?v=20260728i')]);
+    grab('data/wire_npsl.json?v=20260729a'), grab('data/wire_asa.json?v=20260729a')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -731,28 +731,28 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260728i')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260729a')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260728i')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260729a')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260728i')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260729a')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260728i')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260729a')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -1034,7 +1034,7 @@ const TIERS = {
     { t: 'Division II', pro: true, leagues: ['uslc'] },
     { t: 'Division III', pro: true, leagues: ['usl1', 'mnp'], extra: ['nisa'], note: 'NISA: professional sanctioning not awarded — unsanctioned since Dec 2024' },
     { t: 'National amateur', leagues: ['npsl', 'usl2', 'upsl'] },
-    { t: 'Regional & emerging', leagues: ['loc'], coming: ['Regional leagues (EPSL, etc.)', 'State, city & rec leagues'] },
+    { t: 'Regional & emerging', leagues: ['apsl', 'loc'], coming: ['More regional leagues', 'State, city & rec leagues'] },
     { t: 'College & youth', leagues: ['ncaa1', 'ncaa2'], coming: ['D3 / NAIA · next', 'Youth clubs · directory layer'] }
   ],
   w: [
@@ -1176,7 +1176,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260728i')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260729a')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
