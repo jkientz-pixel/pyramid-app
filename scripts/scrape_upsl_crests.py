@@ -1,42 +1,44 @@
 #!/usr/bin/env python3
-"""UPSL crest scraper. Cloudflare blocks plain HTTP and headless Chromium, so
-this drives a HEADFUL Chromium via Playwright (challenge clears in ~4s per
-host, cookie then persists for the session).
+"""UPSL crest scraper. Cloudflare blocks plain HTTP and headless Chromium, and
+challenges fresh browser contexts on rapid navigation — so this drives a
+HEADFUL persistent-profile Chromium (cf_clearance cookie survives reruns, the
+fingerprint looks like a real browser) with 2.5-5s jitter between pages.
 
 Per subsite (premier/division1/division2 .upsl.com): scroll /teams/ to load
-every card, cache links in data/upsl_team_links.json. Token-match link slugs
-to upsl clubs missing a crest (ambiguity-guarded). Visit each matched team
-page, read the .page__header--logo img, fetch its bytes with page.goto(...)
-.body() (browser session carries the CF cookie), sips-resize to 128px.
-Progress lands in js/data.js every 25 crests — rerunnable/resumable."""
+every card; links cached per-subsite in data/upsl_team_links.json so a partial
+crawl resumes. Token-match link slugs to upsl clubs missing a crest
+(ambiguity-guarded). Visit each matched team page, read .page__header--logo,
+fetch bytes with page.goto(src).body() (browser session carries CF cookies),
+sips-resize to 128px. Progress lands in js/data.js every 20 crests; 5
+consecutive Cloudflare walls abort the run (rerun resumes where it left off)."""
 from _datajs import load_clubs, write_clubs, ROOT
-import json, os, re, subprocess, sys, time, unicodedata
+import json, os, random, re, subprocess, sys, time, unicodedata
 
 SUBS = ['premier', 'division1', 'division2']
 LINKS_CACHE = os.path.join(ROOT, 'data', 'upsl_team_links.json')
+PROFILE = os.path.expanduser('~/.cache/rankxi-upsl-chrome')
 STOP = {'fc', 'sc', 'cf', 'afc', 'the', 'club', 'soccer', 'football', 'futbol', 'de'}
 
 def deacc(x): return unicodedata.normalize('NFKD', x).encode('ascii', 'ignore').decode()
 def slugify(n): return re.sub(r'[^a-z0-9]+', '-', deacc(n).lower()).strip('-')
 def toks(s): return set(re.findall(r'[a-z0-9]+', deacc(s).lower())) - STOP
+def pause(page): page.wait_for_timeout(random.uniform(2500, 5000))
 
-def cf_wait(page, tries=10):
-    for _ in range(tries):
+def cf_wait(page, seconds=60):
+    for _ in range(seconds // 3):
         if 'moment' not in (page.title() or '').lower():
             return True
         page.wait_for_timeout(3000)
     return False
 
-def collect_links(pw):
-    if os.path.exists(LINKS_CACHE):
-        return json.load(open(LINKS_CACHE))
-    b = pw.chromium.launch(headless=False)
-    p = b.new_page()
-    links = []
+def collect_links(p):
+    cache = json.load(open(LINKS_CACHE)) if os.path.exists(LINKS_CACHE) else {}
     for sub in SUBS:
+        if cache.get(sub):
+            continue
         p.goto(f'https://{sub}.upsl.com/teams/', timeout=60000)
         if not cf_wait(p):
-            print(f'  ! {sub}: stuck on Cloudflare, skipping'); continue
+            print(f'  ! {sub}: stuck on Cloudflare, will retry next run'); continue
         p.wait_for_timeout(2000)
         prev = 0
         for _ in range(40):
@@ -49,10 +51,10 @@ def collect_links(pw):
                                      'els=>[...new Set(els.map(e=>e.href))]')
         got = [u for u in got if '?' not in u and u.rstrip('/').split('/')[-1] != 'teams']
         print(f'  {sub}: {len(got)} team links')
-        links += got
-    b.close()
-    json.dump(links, open(LINKS_CACHE, 'w'), indent=0)
-    return links
+        cache[sub] = got
+        json.dump(cache, open(LINKS_CACHE, 'w'), indent=0)
+        pause(p)
+    return [u for links in cache.values() for u in links]
 
 def match_links(clubs, links):
     """club -> team-page URL via slug token match, ambiguity-guarded."""
@@ -86,20 +88,27 @@ def main():
     todo = [c for c in clubs if c['g'] == 'upsl' and not c.get('img')]
     print(f'{len(todo)} upsl clubs missing crests')
     with sync_playwright() as pw:
-        links = collect_links(pw)
+        ctx = pw.chromium.launch_persistent_context(PROFILE, headless=False)
+        p = ctx.pages[0] if ctx.pages else ctx.new_page()
+        links = collect_links(p)
         m = match_links(todo, links)
-        b = pw.chromium.launch(headless=False)
-        p = b.new_page()
-        got = miss = 0
+        got = miss = cf_streak = 0
         for c in todo:
             url = m.get(c['id'])
             if not url:
                 miss += 1; continue
             try:
                 p.goto(url, timeout=60000)
-                if not cf_wait(p): raise Exception('cloudflare stuck')
+                if not cf_wait(p):
+                    cf_streak += 1
+                    if cf_streak >= 5:
+                        print('  !! 5 consecutive Cloudflare walls — aborting; rerun to resume')
+                        break
+                    raise Exception('cloudflare stuck')
+                cf_streak = 0
                 src = p.eval_on_selector('.page__header--logo', 'e=>e.src')
                 if not src: raise Exception('no logo img')
+                pause(p)
                 r = p.goto(src, timeout=60000)
                 if not cf_wait(p): raise Exception('cloudflare stuck on img')
                 body = r.body()
@@ -114,14 +123,15 @@ def main():
                     raise Exception('sips produced nothing')
                 c['img'] = fn
                 got += 1
-                print(f"  + {c['n']}")
-                if got % 25 == 0:
+                print(f"  + {c['n']}  [{got}]")
+                if got % 20 == 0:
                     write_clubs(clubs)
                     print(f'  ... checkpoint: {got} written to data.js')
             except Exception as e:
                 miss += 1
                 print(f"  - {c['n']}: {e}")
-        b.close()
+            pause(p)
+        ctx.close()
     print(f'got {got}, missed/skipped {miss}')
     if got:
         write_clubs(clubs)
