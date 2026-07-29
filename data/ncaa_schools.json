@@ -1,0 +1,4682 @@
+[
+{
+"slug": "abilene-christian",
+"name": "Abilene Christian"
+},
+{
+"slug": "academy-of-art",
+"name": "Academy of Art"
+},
+{
+"slug": "adams-st",
+"name": "Adams St."
+},
+{
+"slug": "adelphi",
+"name": "Adelphi"
+},
+{
+"slug": "adrian",
+"name": "Adrian"
+},
+{
+"slug": "agnes-scott",
+"name": "Agnes Scott"
+},
+{
+"slug": "air-force",
+"name": "Air Force"
+},
+{
+"slug": "akron",
+"name": "Akron"
+},
+{
+"slug": "ala-huntsville",
+"name": "Alabama-Huntsville"
+},
+{
+"slug": "alabama",
+"name": "Alabama"
+},
+{
+"slug": "alabama-am",
+"name": "Alabama A&amp;M"
+},
+{
+"slug": "alabama-st",
+"name": "Alabama St."
+},
+{
+"slug": "alas-anchorage",
+"name": "Alas. Anchorage"
+},
+{
+"slug": "alas-fairbanks",
+"name": "Alas. Fairbanks"
+},
+{
+"slug": "albany-ny",
+"name": "Albany (NY)"
+},
+{
+"slug": "albany-st-ga",
+"name": "Albany St. (GA)"
+},
+{
+"slug": "albertus-magnus",
+"name": "Albertus Magnus"
+},
+{
+"slug": "albion",
+"name": "Albion"
+},
+{
+"slug": "albright",
+"name": "Albright"
+},
+{
+"slug": "alcorn",
+"name": "Alcorn St."
+},
+{
+"slug": "alderson-broaddus",
+"name": "Alderson Broaddus"
+},
+{
+"slug": "alfred",
+"name": "Alfred"
+},
+{
+"slug": "alfred-st",
+"name": "Alfred State"
+},
+{
+"slug": "allegheny",
+"name": "Allegheny"
+},
+{
+"slug": "allen",
+"name": "Allen"
+},
+{
+"slug": "alma",
+"name": "Alma"
+},
+{
+"slug": "alvernia",
+"name": "Alvernia"
+},
+{
+"slug": "alverno",
+"name": "Alverno"
+},
+{
+"slug": "am-corpus-chris",
+"name": "Texas-Am-Corpus"
+},
+{
+"slug": "american",
+"name": "American"
+},
+{
+"slug": "american-intl",
+"name": "American Int&#039;l"
+},
+{
+"slug": "american-pr",
+"name": "American (PR)"
+},
+{
+"slug": "amherst",
+"name": "Amherst"
+},
+{
+"slug": "anderson-in",
+"name": "Anderson (IN)"
+},
+{
+"slug": "anderson-sc",
+"name": "Anderson (SC)"
+},
+{
+"slug": "angelo-st",
+"name": "Angelo St."
+},
+{
+"slug": "anna-maria",
+"name": "Anna Maria"
+},
+{
+"slug": "appalachian-st",
+"name": "Appalachian St."
+},
+{
+"slug": "arcadia",
+"name": "Arcadia"
+},
+{
+"slug": "arizona",
+"name": "Arizona"
+},
+{
+"slug": "arizona-st",
+"name": "Arizona St."
+},
+{
+"slug": "ark-fort-smith",
+"name": "Ark. - Fort Smith"
+},
+{
+"slug": "ark-monticello",
+"name": "Ark.-Monticello"
+},
+{
+"slug": "ark-pine-bluff",
+"name": "Ark.-Pine Bluff"
+},
+{
+"slug": "arkansas",
+"name": "Arkansas"
+},
+{
+"slug": "arkansas-st",
+"name": "Arkansas St."
+},
+{
+"slug": "arkansas-tech",
+"name": "Arkansas Tech"
+},
+{
+"slug": "armstrong",
+"name": "Armstrong"
+},
+{
+"slug": "army",
+"name": "Army"
+},
+{
+"slug": "asbury",
+"name": "Asbury University"
+},
+{
+"slug": "ashland",
+"name": "Ashland"
+},
+{
+"slug": "assumption",
+"name": "Assumption"
+},
+{
+"slug": "aub-montgomery",
+"name": "Auburn-Montgomery"
+},
+{
+"slug": "auburn",
+"name": "Auburn"
+},
+{
+"slug": "augsburg",
+"name": "Augsburg"
+},
+{
+"slug": "augustana-il",
+"name": "Augustana (IL)"
+},
+{
+"slug": "augustana-sd",
+"name": "Augustana (SD)"
+},
+{
+"slug": "aurora",
+"name": "Aurora"
+},
+{
+"slug": "austin",
+"name": "Austin"
+},
+{
+"slug": "austin-peay",
+"name": "Austin Peay"
+},
+{
+"slug": "averett",
+"name": "Averett"
+},
+{
+"slug": "azusa-pacific",
+"name": "Azusa Pacific"
+},
+{
+"slug": "babson",
+"name": "Babson"
+},
+{
+"slug": "bakersfield",
+"name": "CSU Bakersfield"
+},
+{
+"slug": "baldwin-wallace",
+"name": "Baldwin Wallace"
+},
+{
+"slug": "ball-st",
+"name": "Ball St."
+},
+{
+"slug": "baptist-bible-pa",
+"name": "Clarks Summit University"
+},
+{
+"slug": "bard",
+"name": "Bard"
+},
+{
+"slug": "barry",
+"name": "Barry"
+},
+{
+"slug": "barton",
+"name": "Barton"
+},
+{
+"slug": "baruch",
+"name": "Baruch"
+},
+{
+"slug": "bates",
+"name": "Bates"
+},
+{
+"slug": "bay-path",
+"name": "Bay Path"
+},
+{
+"slug": "baylor",
+"name": "Baylor"
+},
+{
+"slug": "becker",
+"name": "Becker"
+},
+{
+"slug": "belhaven",
+"name": "Belhaven"
+},
+{
+"slug": "bellarmine",
+"name": "Bellarmine"
+},
+{
+"slug": "belmont",
+"name": "Belmont"
+},
+{
+"slug": "belmont-abbey",
+"name": "Belmont Abbey"
+},
+{
+"slug": "beloit",
+"name": "Beloit"
+},
+{
+"slug": "bemidji-st",
+"name": "Bemidji St."
+},
+{
+"slug": "benedict",
+"name": "Benedict"
+},
+{
+"slug": "benedictine-il",
+"name": "Benedictine (IL)"
+},
+{
+"slug": "bentley",
+"name": "Bentley"
+},
+{
+"slug": "berea",
+"name": "Berea College"
+},
+{
+"slug": "berry",
+"name": "Berry"
+},
+{
+"slug": "bethany-lutheran",
+"name": "Bethany Lutheran"
+},
+{
+"slug": "bethany-wv",
+"name": "Bethany (WV)"
+},
+{
+"slug": "bethel-mn",
+"name": "Bethel (MN)"
+},
+{
+"slug": "bethune-cookman",
+"name": "Bethune-Cookman"
+},
+{
+"slug": "binghamton",
+"name": "Binghamton"
+},
+{
+"slug": "biola",
+"name": "Biola"
+},
+{
+"slug": "birmingham-so",
+"name": "Birmingham-So."
+},
+{
+"slug": "black-hills-st",
+"name": "Black Hills St."
+},
+{
+"slug": "blackburn",
+"name": "Blackburn"
+},
+{
+"slug": "bloomfield",
+"name": "Bloomfield"
+},
+{
+"slug": "bloomsburg",
+"name": "Bloomsburg"
+},
+{
+"slug": "bluefield-st",
+"name": "Bluefield St."
+},
+{
+"slug": "bluffton",
+"name": "Bluffton"
+},
+{
+"slug": "boise-st",
+"name": "Boise St."
+},
+{
+"slug": "boston-college",
+"name": "Boston College"
+},
+{
+"slug": "boston-u",
+"name": "Boston U."
+},
+{
+"slug": "bowdoin",
+"name": "Bowdoin"
+},
+{
+"slug": "bowie-st",
+"name": "Bowie St."
+},
+{
+"slug": "bowling-green",
+"name": "Bowling Green"
+},
+{
+"slug": "bradley",
+"name": "Bradley"
+},
+{
+"slug": "brandeis",
+"name": "Brandeis"
+},
+{
+"slug": "brevard",
+"name": "Brevard"
+},
+{
+"slug": "bridgeport",
+"name": "Bridgeport"
+},
+{
+"slug": "bridgewater-st",
+"name": "Bridgewater St."
+},
+{
+"slug": "bridgewater-va",
+"name": "Bridgewater (VA)"
+},
+{
+"slug": "brooklyn",
+"name": "Brooklyn"
+},
+{
+"slug": "brown",
+"name": "Brown"
+},
+{
+"slug": "bryant",
+"name": "Bryant"
+},
+{
+"slug": "bryn-athyn",
+"name": "Bryn Athyn"
+},
+{
+"slug": "bryn-mawr",
+"name": "Bryn Mawr"
+},
+{
+"slug": "bucknell",
+"name": "Bucknell"
+},
+{
+"slug": "buena-vista",
+"name": "Buena Vista"
+},
+{
+"slug": "buffalo",
+"name": "Buffalo"
+},
+{
+"slug": "buffalo-st",
+"name": "Buffalo St."
+},
+{
+"slug": "butler",
+"name": "Butler"
+},
+{
+"slug": "byu",
+"name": "BYU"
+},
+{
+"slug": "byu-hawaii",
+"name": "BYU-Hawaii"
+},
+{
+"slug": "cabrini",
+"name": "Cabrini"
+},
+{
+"slug": "cairn",
+"name": "Cairn"
+},
+{
+"slug": "cal-lutheran",
+"name": "Cal Lutheran"
+},
+{
+"slug": "cal-poly",
+"name": "Cal Poly"
+},
+{
+"slug": "cal-poly-pomona",
+"name": "Cal Poly Pomona"
+},
+{
+"slug": "cal-st-dom-hills",
+"name": "Cal St. Dom. Hills"
+},
+{
+"slug": "cal-st-east-bay",
+"name": "Cal St. East Bay"
+},
+{
+"slug": "cal-st-fullerton",
+"name": "Cal St. Fullerton"
+},
+{
+"slug": "cal-st-la",
+"name": "Cal State LA"
+},
+{
+"slug": "cal-st-monterey-bay",
+"name": "Cal St. Monterey Bay"
+},
+{
+"slug": "cal-st-northridge",
+"name": "Cal St. Northridge"
+},
+{
+"slug": "cal-st-san-bdino",
+"name": "Cal St. San B&#039;dino"
+},
+{
+"slug": "cal-st-san-marcos",
+"name": "Cal State-San Marcos"
+},
+{
+"slug": "cal-st-stanislaus",
+"name": "Cal St. Stanislaus"
+},
+{
+"slug": "caldwell",
+"name": "Caldwell"
+},
+{
+"slug": "california",
+"name": "California"
+},
+{
+"slug": "california-baptist",
+"name": "Cal Baptist"
+},
+{
+"slug": "california-pa",
+"name": "California (PA)"
+},
+{
+"slug": "caltech",
+"name": "Caltech"
+},
+{
+"slug": "calvin",
+"name": "Calvin"
+},
+{
+"slug": "cameron",
+"name": "Cameron"
+},
+{
+"slug": "campbell",
+"name": "Campbell"
+},
+{
+"slug": "canisius",
+"name": "Canisius"
+},
+{
+"slug": "capital",
+"name": "Capital"
+},
+{
+"slug": "carleton",
+"name": "Carleton"
+},
+{
+"slug": "carnegie-mellon",
+"name": "Carnegie Mellon"
+},
+{
+"slug": "carroll-wi",
+"name": "Carroll (WI)"
+},
+{
+"slug": "carson-newman",
+"name": "Carson-Newman"
+},
+{
+"slug": "carthage",
+"name": "Carthage"
+},
+{
+"slug": "case",
+"name": "Case Western Reserve"
+},
+{
+"slug": "castleton",
+"name": "Castleton"
+},
+{
+"slug": "catawba",
+"name": "Catawba"
+},
+{
+"slug": "catholic",
+"name": "Catholic"
+},
+{
+"slug": "cazenovia",
+"name": "Cazenovia"
+},
+{
+"slug": "ccny",
+"name": "CCNY"
+},
+{
+"slug": "cedar-crest",
+"name": "Cedar Crest"
+},
+{
+"slug": "cedarville",
+"name": "Cedarville"
+},
+{
+"slug": "centenary-la",
+"name": "Centenary (LA)"
+},
+{
+"slug": "centenary-nj",
+"name": "Centenary (NJ)"
+},
+{
+"slug": "central-ark",
+"name": "Central Ark."
+},
+{
+"slug": "central-conn-st",
+"name": "Central Conn. St."
+},
+{
+"slug": "central-ia",
+"name": "Central (IA)"
+},
+{
+"slug": "central-mich",
+"name": "Central Mich."
+},
+{
+"slug": "central-mo",
+"name": "Central Mo."
+},
+{
+"slug": "central-okla",
+"name": "Central Okla."
+},
+{
+"slug": "central-st-oh",
+"name": "Central St. (OH)"
+},
+{
+"slug": "central-wash",
+"name": "Central Wash."
+},
+{
+"slug": "centre",
+"name": "Centre"
+},
+{
+"slug": "chadron-st",
+"name": "Chadron St."
+},
+{
+"slug": "chaminade",
+"name": "Chaminade"
+},
+{
+"slug": "chapman",
+"name": "Chapman"
+},
+{
+"slug": "charleston-so",
+"name": "Charleston So."
+},
+{
+"slug": "charleston-wv",
+"name": "Charleston (WV)"
+},
+{
+"slug": "charlotte",
+"name": "Charlotte"
+},
+{
+"slug": "chatham",
+"name": "Chatham"
+},
+{
+"slug": "chattanooga",
+"name": "Tenn-Chattanooga"
+},
+{
+"slug": "chestnut-hill",
+"name": "Chestnut Hill"
+},
+{
+"slug": "cheyney",
+"name": "Cheyney"
+},
+{
+"slug": "chicago",
+"name": "Chicago"
+},
+{
+"slug": "chicago-st",
+"name": "Chicago St."
+},
+{
+"slug": "chico-st",
+"name": "Chico State"
+},
+{
+"slug": "chowan",
+"name": "Chowan"
+},
+{
+"slug": "chris-newport",
+"name": "Chris. Newport"
+},
+{
+"slug": "christian-bros",
+"name": "Christian Bros."
+},
+{
+"slug": "cincinnati",
+"name": "Cincinnati"
+},
+{
+"slug": "citadel",
+"name": "Citadel"
+},
+{
+"slug": "city-tech",
+"name": "New-York-City-Tech"
+},
+{
+"slug": "claflin",
+"name": "Claflin"
+},
+{
+"slug": "claremont-m-s",
+"name": "Claremont-M-S"
+},
+{
+"slug": "clarion",
+"name": "Clarion"
+},
+{
+"slug": "clark-atlanta",
+"name": "Clark Atlanta"
+},
+{
+"slug": "clark-ma",
+"name": "Clark (MA)"
+},
+{
+"slug": "clarke",
+"name": "Clarke"
+},
+{
+"slug": "clarkson",
+"name": "Clarkson"
+},
+{
+"slug": "clayton-st",
+"name": "Clayton St."
+},
+{
+"slug": "clemson",
+"name": "Clemson"
+},
+{
+"slug": "cleveland-st",
+"name": "Cleveland St."
+},
+{
+"slug": "coast-guard",
+"name": "Coast Guard"
+},
+{
+"slug": "coastal-caro",
+"name": "Coastal Caro."
+},
+{
+"slug": "cobleskill-st",
+"name": "Suny-Cobleskill"
+},
+{
+"slug": "coe",
+"name": "Coe"
+},
+{
+"slug": "coker",
+"name": "Coker"
+},
+{
+"slug": "col-of-charleston",
+"name": "Col. of Charleston"
+},
+{
+"slug": "colby",
+"name": "Colby"
+},
+{
+"slug": "colby-sawyer",
+"name": "Colby-Sawyer"
+},
+{
+"slug": "colgate",
+"name": "Colgate"
+},
+{
+"slug": "colo-christian",
+"name": "Colo. Christian"
+},
+{
+"slug": "colorado",
+"name": "Colorado"
+},
+{
+"slug": "colorado-col",
+"name": "Colorado Col."
+},
+{
+"slug": "colorado-mesa",
+"name": "Colorado Mesa"
+},
+{
+"slug": "colorado-mines",
+"name": "Colorado School of Mines"
+},
+{
+"slug": "colorado-st",
+"name": "Colorado St."
+},
+{
+"slug": "colorado-st-pueblo",
+"name": "Colorado St.-Pueblo"
+},
+{
+"slug": "columbia",
+"name": "Columbia"
+},
+{
+"slug": "columbus-st",
+"name": "Columbus St."
+},
+{
+"slug": "concord",
+"name": "Concord"
+},
+{
+"slug": "concordia-chicago",
+"name": "Concordia Chicago"
+},
+{
+"slug": "concordia-irvine",
+"name": "Concordia University Irvine"
+},
+{
+"slug": "concordia-mhead",
+"name": "Concordia-M&#039;head"
+},
+{
+"slug": "concordia-ny",
+"name": "Concordia (NY)"
+},
+{
+"slug": "concordia-or",
+"name": "Concordia University-Portland"
+},
+{
+"slug": "concordia-st-paul",
+"name": "Concordia-St. Paul"
+},
+{
+"slug": "concordia-tx",
+"name": "Concordia (TX)"
+},
+{
+"slug": "concordia-wi",
+"name": "Concordia (Wis.)"
+},
+{
+"slug": "connecticut-col",
+"name": "Connecticut Col."
+},
+{
+"slug": "converse",
+"name": "Converse"
+},
+{
+"slug": "coppin-st",
+"name": "Coppin St."
+},
+{
+"slug": "cornell",
+"name": "Cornell"
+},
+{
+"slug": "cornell-college",
+"name": "Cornell College"
+},
+{
+"slug": "covenant",
+"name": "Covenant"
+},
+{
+"slug": "creighton",
+"name": "Creighton"
+},
+{
+"slug": "crown-mn",
+"name": "Crown (MN)"
+},
+{
+"slug": "curry",
+"name": "Curry"
+},
+{
+"slug": "daemen",
+"name": "Daemen"
+},
+{
+"slug": "dallas",
+"name": "Dallas"
+},
+{
+"slug": "dallas-baptist",
+"name": "Dallas Baptist"
+},
+{
+"slug": "daniel-webster",
+"name": "Daniel Webster"
+},
+{
+"slug": "dartmouth",
+"name": "Dartmouth"
+},
+{
+"slug": "davenport",
+"name": "Davenport"
+},
+{
+"slug": "davidson",
+"name": "Davidson"
+},
+{
+"slug": "davis-elkins",
+"name": "Davis &amp; Elkins"
+},
+{
+"slug": "dayton",
+"name": "Dayton"
+},
+{
+"slug": "dean-college",
+"name": "Dean College"
+},
+{
+"slug": "delaware",
+"name": "Delaware"
+},
+{
+"slug": "delaware-st",
+"name": "Delaware St."
+},
+{
+"slug": "delaware-valley",
+"name": "Delaware Valley"
+},
+{
+"slug": "delta-st",
+"name": "Delta St."
+},
+{
+"slug": "denison",
+"name": "Denison"
+},
+{
+"slug": "denver",
+"name": "Denver"
+},
+{
+"slug": "depaul",
+"name": "DePaul"
+},
+{
+"slug": "depauw",
+"name": "DePauw"
+},
+{
+"slug": "desales",
+"name": "DeSales"
+},
+{
+"slug": "detroit",
+"name": "Detroit"
+},
+{
+"slug": "dickinson",
+"name": "Dickinson"
+},
+{
+"slug": "dist-columbia",
+"name": "Dist. Columbia"
+},
+{
+"slug": "dominican-ca",
+"name": "Dominican (Cal.)"
+},
+{
+"slug": "dominican-il",
+"name": "Dominican (IL)"
+},
+{
+"slug": "dominican-ny",
+"name": "Dominican (NY)"
+},
+{
+"slug": "dowling",
+"name": "Dowling"
+},
+{
+"slug": "drake",
+"name": "Drake"
+},
+{
+"slug": "drew",
+"name": "Drew"
+},
+{
+"slug": "drexel",
+"name": "Drexel"
+},
+{
+"slug": "drury",
+"name": "Drury"
+},
+{
+"slug": "dubuque",
+"name": "Dubuque"
+},
+{
+"slug": "duke",
+"name": "Duke"
+},
+{
+"slug": "duquesne",
+"name": "Duquesne"
+},
+{
+"slug": "dyouville",
+"name": "D&#039;Youville"
+},
+{
+"slug": "earlham",
+"name": "Earlham"
+},
+{
+"slug": "east-carolina",
+"name": "East Carolina"
+},
+{
+"slug": "east-central",
+"name": "East Central"
+},
+{
+"slug": "east-mennonite",
+"name": "East. Mennonite"
+},
+{
+"slug": "east-stroudsburg",
+"name": "East Stroudsburg"
+},
+{
+"slug": "east-tenn-st",
+"name": "East Tenn. St."
+},
+{
+"slug": "east-tex-am",
+"name": "East Tex. A&amp;M"
+},
+{
+"slug": "east-tex-baptist",
+"name": "East Tex. Baptist"
+},
+{
+"slug": "eastern",
+"name": "Eastern"
+},
+{
+"slug": "eastern-conn-st",
+"name": "Eastern Conn. St."
+},
+{
+"slug": "eastern-ill",
+"name": "Eastern Ill."
+},
+{
+"slug": "eastern-ky",
+"name": "Eastern Ky."
+},
+{
+"slug": "eastern-mich",
+"name": "Eastern Mich."
+},
+{
+"slug": "eastern-nm",
+"name": "Eastern N.M."
+},
+{
+"slug": "eastern-ore",
+"name": "Eastern Ore."
+},
+{
+"slug": "eastern-wash",
+"name": "Eastern Wash."
+},
+{
+"slug": "eckerd",
+"name": "Eckerd"
+},
+{
+"slug": "edgewood",
+"name": "Edgewood"
+},
+{
+"slug": "edinboro",
+"name": "Edinboro"
+},
+{
+"slug": "edward-waters",
+"name": "Edward Waters"
+},
+{
+"slug": "elizabeth-city-st",
+"name": "Elizabeth City St."
+},
+{
+"slug": "elizabethtown",
+"name": "Elizabethtown"
+},
+{
+"slug": "elmhurst",
+"name": "Elmhurst"
+},
+{
+"slug": "elmira",
+"name": "Elmira"
+},
+{
+"slug": "elms",
+"name": "Elms"
+},
+{
+"slug": "elon",
+"name": "Elon"
+},
+{
+"slug": "embry-riddle-fl",
+"name": "Embry-Riddle University"
+},
+{
+"slug": "emerson",
+"name": "Emerson"
+},
+{
+"slug": "emmanuel-ga",
+"name": "Emmanuel (Ga.)"
+},
+{
+"slug": "emmanuel-ma",
+"name": "Emmanuel (Mass.)"
+},
+{
+"slug": "emory",
+"name": "Emory"
+},
+{
+"slug": "emory-henry",
+"name": "Emory &amp; Henry"
+},
+{
+"slug": "emporia-st",
+"name": "Emporia St."
+},
+{
+"slug": "endicott",
+"name": "Endicott"
+},
+{
+"slug": "erskine",
+"name": "Erskine"
+},
+{
+"slug": "eureka",
+"name": "Eureka"
+},
+{
+"slug": "evansville",
+"name": "Evansville"
+},
+{
+"slug": "evergreen-st",
+"name": "Evergreen St."
+},
+{
+"slug": "fairfield",
+"name": "Fairfield"
+},
+{
+"slug": "fairmont-st",
+"name": "Fairmont St."
+},
+{
+"slug": "farmingdale-st",
+"name": "Farmingdale St."
+},
+{
+"slug": "fayetteville-st",
+"name": "Fayetteville St."
+},
+{
+"slug": "fdu",
+"name": "FDU"
+},
+{
+"slug": "fdu-florham",
+"name": "FDU-Florham"
+},
+{
+"slug": "felician",
+"name": "Felician"
+},
+{
+"slug": "ferris-st",
+"name": "Ferris St."
+},
+{
+"slug": "ferrum",
+"name": "Ferrum"
+},
+{
+"slug": "fgcu",
+"name": "FGCU"
+},
+{
+"slug": "findlay",
+"name": "Findlay"
+},
+{
+"slug": "finlandia",
+"name": "Finlandia"
+},
+{
+"slug": "fisk",
+"name": "Fisk"
+},
+{
+"slug": "fitchburg-st",
+"name": "Fitchburg St."
+},
+{
+"slug": "fiu",
+"name": "FIU"
+},
+{
+"slug": "fla-atlantic",
+"name": "Florida Atlantic"
+},
+{
+"slug": "fla-southern",
+"name": "Fla. Southern"
+},
+{
+"slug": "flagler",
+"name": "Flagler"
+},
+{
+"slug": "florida",
+"name": "Florida"
+},
+{
+"slug": "florida-am",
+"name": "Florida A&amp;M"
+},
+{
+"slug": "florida-st",
+"name": "Florida St."
+},
+{
+"slug": "florida-tech",
+"name": "Florida Tech"
+},
+{
+"slug": "fontbonne",
+"name": "Fontbonne"
+},
+{
+"slug": "fordham",
+"name": "Fordham"
+},
+{
+"slug": "fort-hays-st",
+"name": "Fort Hays St."
+},
+{
+"slug": "fort-lewis",
+"name": "Fort Lewis"
+},
+{
+"slug": "fort-valley-st",
+"name": "Fort Valley St."
+},
+{
+"slug": "framingham-st",
+"name": "Framingham St."
+},
+{
+"slug": "francis-marion",
+"name": "Francis Marion"
+},
+{
+"slug": "franciscan",
+"name": "Franciscan"
+},
+{
+"slug": "frank-marsh",
+"name": "Frank. &amp; Marsh."
+},
+{
+"slug": "franklin",
+"name": "Franklin"
+},
+{
+"slug": "franklin-pierce",
+"name": "Franklin Pierce"
+},
+{
+"slug": "fredonia-st",
+"name": "Fredonia"
+},
+{
+"slug": "fresno-pacific",
+"name": "Fresno Pacific"
+},
+{
+"slug": "fresno-st",
+"name": "Fresno St."
+},
+{
+"slug": "frostburg-st",
+"name": "Frostburg St."
+},
+{
+"slug": "furman",
+"name": "Furman"
+},
+{
+"slug": "ga-southern",
+"name": "Georgia Southern"
+},
+{
+"slug": "ga-southwestern",
+"name": "Ga. Southwestern"
+},
+{
+"slug": "gallaudet",
+"name": "Gallaudet"
+},
+{
+"slug": "gannon",
+"name": "Gannon"
+},
+{
+"slug": "gardner-webb",
+"name": "Gardner-Webb"
+},
+{
+"slug": "geneva",
+"name": "Geneva"
+},
+{
+"slug": "george-fox",
+"name": "George Fox"
+},
+{
+"slug": "george-mason",
+"name": "George Mason"
+},
+{
+"slug": "george-washington",
+"name": "George Washington"
+},
+{
+"slug": "georgetown",
+"name": "Georgetown"
+},
+{
+"slug": "georgia",
+"name": "Georgia"
+},
+{
+"slug": "georgia-college",
+"name": "Georgia College"
+},
+{
+"slug": "georgia-st",
+"name": "Georgia St."
+},
+{
+"slug": "georgia-tech",
+"name": "Georgia Tech"
+},
+{
+"slug": "georgian-court",
+"name": "Georgian Court"
+},
+{
+"slug": "gettysburg",
+"name": "Gettysburg"
+},
+{
+"slug": "glenville-st",
+"name": "Glenville St."
+},
+{
+"slug": "goldey-beacom",
+"name": "Goldey-Beacom"
+},
+{
+"slug": "gonzaga",
+"name": "Gonzaga"
+},
+{
+"slug": "gordon",
+"name": "Gordon"
+},
+{
+"slug": "goucher",
+"name": "Goucher"
+},
+{
+"slug": "grambling",
+"name": "Grambling"
+},
+{
+"slug": "grand-canyon",
+"name": "Grand Canyon"
+},
+{
+"slug": "grand-valley-st",
+"name": "Grand Valley St."
+},
+{
+"slug": "green-bay",
+"name": "Green Bay"
+},
+{
+"slug": "green-mountain",
+"name": "Green Mountain"
+},
+{
+"slug": "greensboro",
+"name": "Greensboro"
+},
+{
+"slug": "greenville",
+"name": "Greenville"
+},
+{
+"slug": "grinnell",
+"name": "Grinnell"
+},
+{
+"slug": "grove-city",
+"name": "Grove City"
+},
+{
+"slug": "gru-augusta",
+"name": "Augusta University"
+},
+{
+"slug": "guilford",
+"name": "Guilford"
+},
+{
+"slug": "gust-adolphus",
+"name": "Gust. Adolphus"
+},
+{
+"slug": "gwynedd-mercy",
+"name": "Gwynedd-Mercy"
+},
+{
+"slug": "hamilton",
+"name": "Hamilton"
+},
+{
+"slug": "hamline",
+"name": "Hamline"
+},
+{
+"slug": "hampden-sydney",
+"name": "Hampden-Sydney"
+},
+{
+"slug": "hampton",
+"name": "Hampton"
+},
+{
+"slug": "hanover",
+"name": "Hanover"
+},
+{
+"slug": "hardin-simmons",
+"name": "Hardin-Simmons"
+},
+{
+"slug": "harding",
+"name": "Harding"
+},
+{
+"slug": "hartford",
+"name": "Hartford"
+},
+{
+"slug": "hartwick",
+"name": "Hartwick"
+},
+{
+"slug": "harvard",
+"name": "Harvard"
+},
+{
+"slug": "haverford",
+"name": "Haverford"
+},
+{
+"slug": "hawaii",
+"name": "Hawaii"
+},
+{
+"slug": "hawaii-hilo",
+"name": "Hawaii Hilo"
+},
+{
+"slug": "hawaii-pacific",
+"name": "Hawaii Pacific"
+},
+{
+"slug": "heidelberg",
+"name": "Heidelberg"
+},
+{
+"slug": "henderson-st",
+"name": "Henderson St."
+},
+{
+"slug": "hendrix",
+"name": "Hendrix"
+},
+{
+"slug": "high-point",
+"name": "High Point"
+},
+{
+"slug": "hilbert",
+"name": "Hilbert"
+},
+{
+"slug": "hillsdale",
+"name": "Hillsdale"
+},
+{
+"slug": "hiram",
+"name": "Hiram"
+},
+{
+"slug": "hobart",
+"name": "Hobart"
+},
+{
+"slug": "hofstra",
+"name": "Hofstra"
+},
+{
+"slug": "hollins",
+"name": "Hollins"
+},
+{
+"slug": "holy-cross",
+"name": "Holy Cross"
+},
+{
+"slug": "holy-family",
+"name": "Holy Family"
+},
+{
+"slug": "holy-names",
+"name": "Holy Names"
+},
+{
+"slug": "hood",
+"name": "Hood"
+},
+{
+"slug": "hope",
+"name": "Hope"
+},
+{
+"slug": "houghton",
+"name": "Houghton"
+},
+{
+"slug": "houston",
+"name": "Houston"
+},
+{
+"slug": "houston-christian",
+"name": "Houston Christian"
+},
+{
+"slug": "howard",
+"name": "Howard"
+},
+{
+"slug": "howard-payne",
+"name": "Howard Payne"
+},
+{
+"slug": "humboldt-st",
+"name": "Cal Poly Humboldt"
+},
+{
+"slug": "hunter",
+"name": "Hunter"
+},
+{
+"slug": "huntingdon",
+"name": "Huntingdon"
+},
+{
+"slug": "husson",
+"name": "Husson"
+},
+{
+"slug": "idaho",
+"name": "Idaho"
+},
+{
+"slug": "idaho-st",
+"name": "Idaho St."
+},
+{
+"slug": "iit",
+"name": "Illinois Tech"
+},
+{
+"slug": "ill-chicago",
+"name": "Ill.-Chicago"
+},
+{
+"slug": "ill-springfield",
+"name": "Ill.- Springfield"
+},
+{
+"slug": "ill-wesleyan",
+"name": "Ill. Wesleyan"
+},
+{
+"slug": "illinois",
+"name": "Illinois"
+},
+{
+"slug": "illinois-col",
+"name": "Illinois Col."
+},
+{
+"slug": "illinois-st",
+"name": "Illinois St."
+},
+{
+"slug": "immaculata",
+"name": "Immaculata"
+},
+{
+"slug": "incarnate-word",
+"name": "UIW"
+},
+{
+"slug": "indiana",
+"name": "Indiana"
+},
+{
+"slug": "indiana-pa",
+"name": "Indiana (PA)"
+},
+{
+"slug": "indiana-st",
+"name": "Indiana St."
+},
+{
+"slug": "indianapolis",
+"name": "Indianapolis"
+},
+{
+"slug": "iona",
+"name": "Iona"
+},
+{
+"slug": "iowa",
+"name": "Iowa"
+},
+{
+"slug": "iowa-st",
+"name": "Iowa St."
+},
+{
+"slug": "iowa-wesleyan",
+"name": "Iowa Wesleyan"
+},
+{
+"slug": "ipfw",
+"name": "Purdue University Fort Wayne"
+},
+{
+"slug": "ithaca",
+"name": "Ithaca"
+},
+{
+"slug": "iu-indy",
+"name": "IU Indy"
+},
+{
+"slug": "jackson-st",
+"name": "Jackson St."
+},
+{
+"slug": "jacksonville",
+"name": "Jacksonville"
+},
+{
+"slug": "jacksonville-st",
+"name": "Jacksonville St."
+},
+{
+"slug": "james-madison",
+"name": "James Madison"
+},
+{
+"slug": "jessup",
+"name": "Jessup University"
+},
+{
+"slug": "john-carroll",
+"name": "John Carroll"
+},
+{
+"slug": "john-jay",
+"name": "John Jay"
+},
+{
+"slug": "johns-hopkins",
+"name": "Johns Hopkins"
+},
+{
+"slug": "johnson-c-smith",
+"name": "Johnson C. Smith"
+},
+{
+"slug": "johnson-st",
+"name": "Johnson St."
+},
+{
+"slug": "johnson-wales-ri",
+"name": "Johnson &amp; Wales (RI)"
+},
+{
+"slug": "juniata",
+"name": "Juniata"
+},
+{
+"slug": "jwu-denver",
+"name": "Johnson &amp; Wales (Denver)"
+},
+{
+"slug": "kalamazoo",
+"name": "Kalamazoo"
+},
+{
+"slug": "kansas",
+"name": "Kansas"
+},
+{
+"slug": "kansas-st",
+"name": "Kansas St."
+},
+{
+"slug": "kean",
+"name": "Kean"
+},
+{
+"slug": "keene-st",
+"name": "Keene St."
+},
+{
+"slug": "kennesaw-st",
+"name": "Kennesaw St."
+},
+{
+"slug": "kent-st",
+"name": "Kent St."
+},
+{
+"slug": "kentucky",
+"name": "Kentucky"
+},
+{
+"slug": "kentucky-st",
+"name": "Kentucky St."
+},
+{
+"slug": "kenyon",
+"name": "Kenyon"
+},
+{
+"slug": "keuka",
+"name": "Keuka"
+},
+{
+"slug": "keystone",
+"name": "Keystone"
+},
+{
+"slug": "king-tn",
+"name": "King (TN)"
+},
+{
+"slug": "kings-pa",
+"name": "King&#039;s (PA)"
+},
+{
+"slug": "knox",
+"name": "Knox"
+},
+{
+"slug": "kutztown",
+"name": "Kutztown"
+},
+{
+"slug": "ky-wesleyan",
+"name": "Ky. Wesleyan"
+},
+{
+"slug": "la-lafayette",
+"name": "La.-Lafayette"
+},
+{
+"slug": "la-monroe",
+"name": "La.-Monroe"
+},
+{
+"slug": "la-roche",
+"name": "La Roche"
+},
+{
+"slug": "la-salle",
+"name": "La Salle"
+},
+{
+"slug": "la-sierra",
+"name": "La Sierra"
+},
+{
+"slug": "la-verne",
+"name": "La Verne"
+},
+{
+"slug": "lafayette",
+"name": "Lafayette"
+},
+{
+"slug": "lagrange",
+"name": "LaGrange"
+},
+{
+"slug": "lake-erie",
+"name": "Lake Erie"
+},
+{
+"slug": "lake-forest",
+"name": "Lake Forest"
+},
+{
+"slug": "lake-superior-st",
+"name": "Lake Superior St."
+},
+{
+"slug": "lakeland",
+"name": "Lakeland"
+},
+{
+"slug": "lamar",
+"name": "Lamar"
+},
+{
+"slug": "lambuth",
+"name": "Lambuth"
+},
+{
+"slug": "lancaster-bible",
+"name": "Lancaster Bible"
+},
+{
+"slug": "lander",
+"name": "Lander"
+},
+{
+"slug": "lane",
+"name": "Lane"
+},
+{
+"slug": "langston",
+"name": "Langston"
+},
+{
+"slug": "lasell",
+"name": "Lasell"
+},
+{
+"slug": "lawrence",
+"name": "Lawrence"
+},
+{
+"slug": "le-moyne",
+"name": "Le Moyne"
+},
+{
+"slug": "lebanon-valley",
+"name": "Lebanon Valley"
+},
+{
+"slug": "lee",
+"name": "Lee"
+},
+{
+"slug": "lees-mcrae",
+"name": "Lees-McRae"
+},
+{
+"slug": "lehigh",
+"name": "Lehigh"
+},
+{
+"slug": "lehman",
+"name": "Lehman"
+},
+{
+"slug": "lemoyne-owen",
+"name": "LeMoyne-Owen"
+},
+{
+"slug": "lenoir-rhyne",
+"name": "Lenoir-Rhyne"
+},
+{
+"slug": "lesley",
+"name": "Lesley"
+},
+{
+"slug": "letourneau",
+"name": "LeTourneau"
+},
+{
+"slug": "lewis",
+"name": "Lewis"
+},
+{
+"slug": "lewis-clark",
+"name": "Lewis &amp; Clark"
+},
+{
+"slug": "liberty",
+"name": "Liberty"
+},
+{
+"slug": "limestone",
+"name": "Limestone"
+},
+{
+"slug": "lincoln-christian",
+"name": "Lincoln Christian"
+},
+{
+"slug": "lincoln-memorial",
+"name": "Lincoln Memorial"
+},
+{
+"slug": "lincoln-mo",
+"name": "Lincoln (MO)"
+},
+{
+"slug": "lincoln-pa",
+"name": "Lincoln (PA)"
+},
+{
+"slug": "lindenwood-mo",
+"name": "Lindenwood"
+},
+{
+"slug": "linfield",
+"name": "Linfield"
+},
+{
+"slug": "lipscomb",
+"name": "Lipscomb"
+},
+{
+"slug": "liu-post",
+"name": "LIU Post"
+},
+{
+"slug": "livingstone",
+"name": "Livingstone"
+},
+{
+"slug": "lock-haven",
+"name": "Lock Haven"
+},
+{
+"slug": "long-beach-st",
+"name": "Long Beach St."
+},
+{
+"slug": "long-island",
+"name": "Long Island"
+},
+{
+"slug": "longwood",
+"name": "Longwood"
+},
+{
+"slug": "loras",
+"name": "Loras"
+},
+{
+"slug": "louisiana-col",
+"name": "Louisiana Col."
+},
+{
+"slug": "louisiana-tech",
+"name": "Louisiana Tech"
+},
+{
+"slug": "louisville",
+"name": "Louisville"
+},
+{
+"slug": "loyola-chicago",
+"name": "Loyola (IL)"
+},
+{
+"slug": "loyola-maryland",
+"name": "Loyola Maryland"
+},
+{
+"slug": "loyola-marymount",
+"name": "Loyola Marymount"
+},
+{
+"slug": "lsu",
+"name": "LSU"
+},
+{
+"slug": "lubbock-christian",
+"name": "Lubbock Christian"
+},
+{
+"slug": "luther",
+"name": "Luther"
+},
+{
+"slug": "lycoming",
+"name": "Lycoming"
+},
+{
+"slug": "lynchburg",
+"name": "Lynchburg"
+},
+{
+"slug": "lyndon-st",
+"name": "Lyndon St."
+},
+{
+"slug": "lynn",
+"name": "Lynn"
+},
+{
+"slug": "lyon",
+"name": "Lyon College"
+},
+{
+"slug": "macalester",
+"name": "Macalester"
+},
+{
+"slug": "macmurray",
+"name": "MacMurray"
+},
+{
+"slug": "maine",
+"name": "Maine"
+},
+{
+"slug": "maine-maritime",
+"name": "Maine Maritime"
+},
+{
+"slug": "malone",
+"name": "Malone"
+},
+{
+"slug": "manchester",
+"name": "Manchester"
+},
+{
+"slug": "manhattan",
+"name": "Manhattan"
+},
+{
+"slug": "manhattanville",
+"name": "Manhattanville"
+},
+{
+"slug": "mansfield",
+"name": "Mansfield"
+},
+{
+"slug": "maranatha-baptist",
+"name": "Maranatha Baptist"
+},
+{
+"slug": "marian-wi",
+"name": "Marian (WI)"
+},
+{
+"slug": "marietta",
+"name": "Marietta"
+},
+{
+"slug": "marist",
+"name": "Marist"
+},
+{
+"slug": "marquette",
+"name": "Marquette"
+},
+{
+"slug": "mars-hill",
+"name": "Mars Hill"
+},
+{
+"slug": "marshall",
+"name": "Marshall"
+},
+{
+"slug": "martin-luther",
+"name": "Martin Luther"
+},
+{
+"slug": "mary",
+"name": "Mary"
+},
+{
+"slug": "mary-baldwin",
+"name": "Mary Baldwin"
+},
+{
+"slug": "mary-hardin-baylor",
+"name": "Mary Hardin-Baylor"
+},
+{
+"slug": "mary-washington",
+"name": "Mary Washington"
+},
+{
+"slug": "maryland",
+"name": "Maryland"
+},
+{
+"slug": "marymount-va",
+"name": "Marymount (VA)"
+},
+{
+"slug": "maryville-mo",
+"name": "Maryville (MO)"
+},
+{
+"slug": "maryville-tn",
+"name": "Maryville (TN)"
+},
+{
+"slug": "marywood",
+"name": "Marywood"
+},
+{
+"slug": "mass-maritime",
+"name": "Mass. Maritime"
+},
+{
+"slug": "massachusetts",
+"name": "Mass-Amherst"
+},
+{
+"slug": "mcdaniel",
+"name": "McDaniel"
+},
+{
+"slug": "mckendree",
+"name": "McKendree"
+},
+{
+"slug": "mcla",
+"name": "Mass-Liberal-Arts"
+},
+{
+"slug": "mcmurry",
+"name": "McMurry"
+},
+{
+"slug": "mcneese-st",
+"name": "McNeese St."
+},
+{
+"slug": "me-farmington",
+"name": "Me.-Farmington"
+},
+{
+"slug": "me-presque-isle",
+"name": "Me.-Presque Isle"
+},
+{
+"slug": "medaille",
+"name": "Medaille"
+},
+{
+"slug": "medgar-evers",
+"name": "Medgar Evers"
+},
+{
+"slug": "memphis",
+"name": "Memphis"
+},
+{
+"slug": "menlo",
+"name": "Menlo"
+},
+{
+"slug": "merced",
+"name": "UC Merced"
+},
+{
+"slug": "mercer",
+"name": "Mercer"
+},
+{
+"slug": "merchant-marine",
+"name": "Merchant Marine"
+},
+{
+"slug": "mercy",
+"name": "Mercy"
+},
+{
+"slug": "mercyhurst",
+"name": "Mercyhurst"
+},
+{
+"slug": "meredith",
+"name": "Meredith"
+},
+{
+"slug": "merrimack",
+"name": "Merrimack"
+},
+{
+"slug": "messiah",
+"name": "Messiah"
+},
+{
+"slug": "methodist",
+"name": "Methodist"
+},
+{
+"slug": "metro-st",
+"name": "Metro St."
+},
+{
+"slug": "miami-fl",
+"name": "Miami (Fla.)"
+},
+{
+"slug": "miami-oh",
+"name": "Miami (OH)"
+},
+{
+"slug": "michigan",
+"name": "Michigan"
+},
+{
+"slug": "michigan-st",
+"name": "Michigan St."
+},
+{
+"slug": "michigan-tech",
+"name": "Michigan Tech"
+},
+{
+"slug": "middle-georgia-st",
+"name": "Middle Georgia State"
+},
+{
+"slug": "middle-tenn",
+"name": "Middle Tenn."
+},
+{
+"slug": "middlebury",
+"name": "Middlebury"
+},
+{
+"slug": "midwestern-st",
+"name": "MSU Texas"
+},
+{
+"slug": "miles",
+"name": "Miles"
+},
+{
+"slug": "millersville",
+"name": "Millersville"
+},
+{
+"slug": "millikin",
+"name": "Millikin"
+},
+{
+"slug": "mills",
+"name": "Mills"
+},
+{
+"slug": "millsaps",
+"name": "Millsaps"
+},
+{
+"slug": "milwaukee",
+"name": "Milwaukee"
+},
+{
+"slug": "minn-crookston",
+"name": "Minn.-Crookston"
+},
+{
+"slug": "minn-duluth",
+"name": "Minn. Duluth"
+},
+{
+"slug": "minn-morris",
+"name": "Minn.-Morris"
+},
+{
+"slug": "minn-st-mankato",
+"name": "Minn. St. Mankato"
+},
+{
+"slug": "minn-st-moorhead",
+"name": "Minn. St. Moorhead"
+},
+{
+"slug": "minnesota",
+"name": "Minnesota"
+},
+{
+"slug": "minot-st",
+"name": "Minot St."
+},
+{
+"slug": "misericordia",
+"name": "Misericordia"
+},
+{
+"slug": "mississippi-christ",
+"name": "Mississippi Christian"
+},
+{
+"slug": "mississippi-st",
+"name": "Mississippi St."
+},
+{
+"slug": "mississippi-val",
+"name": "Mississippi Val."
+},
+{
+"slug": "missouri",
+"name": "Missouri"
+},
+{
+"slug": "missouri-snt",
+"name": "Missouri S&amp;T"
+},
+{
+"slug": "missouri-st",
+"name": "Missouri St."
+},
+{
+"slug": "mit",
+"name": "MIT"
+},
+{
+"slug": "mitchell",
+"name": "Mitchell"
+},
+{
+"slug": "mo-southern-st",
+"name": "Mo. Southern St."
+},
+{
+"slug": "mo-st-louis",
+"name": "Mo.-St. Louis"
+},
+{
+"slug": "mo-western-st",
+"name": "Mo. Western St."
+},
+{
+"slug": "molloy",
+"name": "Molloy"
+},
+{
+"slug": "monmouth",
+"name": "Monmouth"
+},
+{
+"slug": "monmouth-il",
+"name": "Monmouth (IL)"
+},
+{
+"slug": "mont-st-billings",
+"name": "Mont. St. Billings"
+},
+{
+"slug": "montana",
+"name": "Montana"
+},
+{
+"slug": "montana-st",
+"name": "Montana St."
+},
+{
+"slug": "montclair-st",
+"name": "Montclair St."
+},
+{
+"slug": "montevallo",
+"name": "Montevallo"
+},
+{
+"slug": "moravian",
+"name": "Moravian"
+},
+{
+"slug": "morehead-st",
+"name": "Morehead St."
+},
+{
+"slug": "morehouse",
+"name": "Morehouse"
+},
+{
+"slug": "morgan-st",
+"name": "Morgan St."
+},
+{
+"slug": "morningside",
+"name": "Morningside"
+},
+{
+"slug": "morris-brown",
+"name": "Morris Brown"
+},
+{
+"slug": "mount-holyoke",
+"name": "Mount Holyoke"
+},
+{
+"slug": "mount-ida",
+"name": "Mount Ida"
+},
+{
+"slug": "mount-olive",
+"name": "Mount Olive"
+},
+{
+"slug": "mount-union",
+"name": "Mount Union"
+},
+{
+"slug": "msoe",
+"name": "Milwaukee Engr."
+},
+{
+"slug": "mt-aloysius",
+"name": "Mt. Aloysius"
+},
+{
+"slug": "mt-mary",
+"name": "Mt. Mary"
+},
+{
+"slug": "mt-st-joseph",
+"name": "Mount St. Joseph"
+},
+{
+"slug": "mt-st-mary-ny",
+"name": "Mt. St. Mary (NY)"
+},
+{
+"slug": "mt-st-marys",
+"name": "Mt. St. Mary&#039;s"
+},
+{
+"slug": "mt-st-vincent",
+"name": "Mt. St. Vincent"
+},
+{
+"slug": "muhlenberg",
+"name": "Muhlenberg"
+},
+{
+"slug": "murray-st",
+"name": "Murray St."
+},
+{
+"slug": "muskingum",
+"name": "Muskingum"
+},
+{
+"slug": "navy",
+"name": "Navy"
+},
+{
+"slug": "nazareth",
+"name": "Nazareth"
+},
+{
+"slug": "nc-at",
+"name": "North Carolina A&amp;T"
+},
+{
+"slug": "nc-central",
+"name": "North Carolina Central"
+},
+{
+"slug": "nc-wesleyan",
+"name": "North Carolina Wesleyan"
+},
+{
+"slug": "neb-kearney",
+"name": "Neb.-Kearney"
+},
+{
+"slug": "neb-omaha",
+"name": "Omaha"
+},
+{
+"slug": "neb-wesleyan",
+"name": "Neb. Wesleyan"
+},
+{
+"slug": "nebraska",
+"name": "Nebraska"
+},
+{
+"slug": "neumann",
+"name": "Neumann"
+},
+{
+"slug": "nevada",
+"name": "Nevada"
+},
+{
+"slug": "new-england-col",
+"name": "New England Col."
+},
+{
+"slug": "new-hampshire",
+"name": "New Hampshire"
+},
+{
+"slug": "new-haven",
+"name": "New Haven"
+},
+{
+"slug": "new-jersey-city",
+"name": "New Jersey City"
+},
+{
+"slug": "new-mexico",
+"name": "New Mexico"
+},
+{
+"slug": "new-mexico-st",
+"name": "New Mexico St."
+},
+{
+"slug": "new-orleans",
+"name": "New Orleans"
+},
+{
+"slug": "new-rochelle",
+"name": "New Rochelle"
+},
+{
+"slug": "new-york-u",
+"name": "New York U."
+},
+{
+"slug": "newberry",
+"name": "Newberry"
+},
+{
+"slug": "newbury",
+"name": "Newbury"
+},
+{
+"slug": "newman",
+"name": "Newman"
+},
+{
+"slug": "niagara",
+"name": "Niagara"
+},
+{
+"slug": "nicholls-st",
+"name": "Nicholls St."
+},
+{
+"slug": "nichols",
+"name": "Nichols"
+},
+{
+"slug": "njit",
+"name": "New-Jersey-Tech"
+},
+{
+"slug": "nm-highlands",
+"name": "New-Mexico-Highlands"
+},
+{
+"slug": "norfolk-st",
+"name": "Norfolk St."
+},
+{
+"slug": "north-ala",
+"name": "North Ala."
+},
+{
+"slug": "north-carolina",
+"name": "North Carolina"
+},
+{
+"slug": "north-carolina-st",
+"name": "North Carolina St."
+},
+{
+"slug": "north-central-il",
+"name": "North Central (IL)"
+},
+{
+"slug": "north-central-mn",
+"name": "North Central (MN)"
+},
+{
+"slug": "north-dakota",
+"name": "North Dakota"
+},
+{
+"slug": "north-dakota-st",
+"name": "North Dakota St."
+},
+{
+"slug": "north-florida",
+"name": "North Florida"
+},
+{
+"slug": "north-georgia",
+"name": "North Ga."
+},
+{
+"slug": "north-greenville",
+"name": "North Greenville"
+},
+{
+"slug": "north-park",
+"name": "North Park"
+},
+{
+"slug": "north-texas",
+"name": "North Texas"
+},
+{
+"slug": "northeastern",
+"name": "Northeastern"
+},
+{
+"slug": "northeastern-ill",
+"name": "Northeastern Ill."
+},
+{
+"slug": "northeastern-st",
+"name": "Northeastern St."
+},
+{
+"slug": "northern-ariz",
+"name": "Northern Ariz."
+},
+{
+"slug": "northern-colo",
+"name": "Northern Colo."
+},
+{
+"slug": "northern-ill",
+"name": "Northern Ill."
+},
+{
+"slug": "northern-ky",
+"name": "Northern Ky."
+},
+{
+"slug": "northern-mich",
+"name": "Northern Mich."
+},
+{
+"slug": "northern-st",
+"name": "Northern St."
+},
+{
+"slug": "northland",
+"name": "Northland"
+},
+{
+"slug": "northwest-mo-st",
+"name": "Northwest Mo. St."
+},
+{
+"slug": "northwest-nazarene",
+"name": "Northwest Nazarene"
+},
+{
+"slug": "northwestern",
+"name": "Northwestern"
+},
+{
+"slug": "northwestern-okla",
+"name": "Northwestern Oklahoma"
+},
+{
+"slug": "northwestern-st",
+"name": "Northwestern St."
+},
+{
+"slug": "northwestern-st-paul",
+"name": "Northwestern-St. Paul"
+},
+{
+"slug": "northwood-mi",
+"name": "Northwood (MI)"
+},
+{
+"slug": "norwich",
+"name": "Norwich"
+},
+{
+"slug": "notre-dame",
+"name": "Notre Dame"
+},
+{
+"slug": "notre-dame-de-namur",
+"name": "Notre Dame de Namur"
+},
+{
+"slug": "notre-dame-md",
+"name": "Notre Dame (MD)"
+},
+{
+"slug": "notre-dame-oh",
+"name": "Notre Dame (OH)"
+},
+{
+"slug": "nova-southeastern",
+"name": "Nova Southeastern"
+},
+{
+"slug": "nyack",
+"name": "Nyack"
+},
+{
+"slug": "nyit",
+"name": "New-York-Inst"
+},
+{
+"slug": "oakland",
+"name": "Oakland"
+},
+{
+"slug": "oakland-city",
+"name": "Oakland City"
+},
+{
+"slug": "oberlin",
+"name": "Oberlin"
+},
+{
+"slug": "occidental",
+"name": "Occidental"
+},
+{
+"slug": "oglethorpe",
+"name": "Oglethorpe"
+},
+{
+"slug": "ohio",
+"name": "Ohio"
+},
+{
+"slug": "ohio-dominican",
+"name": "Ohio Dominican"
+},
+{
+"slug": "ohio-northern",
+"name": "Ohio Northern"
+},
+{
+"slug": "ohio-st",
+"name": "Ohio St."
+},
+{
+"slug": "ohio-valley",
+"name": "Ohio Valley"
+},
+{
+"slug": "ohio-wesleyan",
+"name": "Ohio Wesleyan"
+},
+{
+"slug": "okla-baptist",
+"name": "Oklahoma Baptist University"
+},
+{
+"slug": "okla-christian",
+"name": "Oklahoma Christian"
+},
+{
+"slug": "okla-panhandle",
+"name": "Oklahoma Panhandle"
+},
+{
+"slug": "oklahoma",
+"name": "Oklahoma"
+},
+{
+"slug": "oklahoma-st",
+"name": "Oklahoma St."
+},
+{
+"slug": "old-dominion",
+"name": "Old Dominion"
+},
+{
+"slug": "old-westbury",
+"name": "Suny-Old-Westbury"
+},
+{
+"slug": "ole-miss",
+"name": "Mississippi"
+},
+{
+"slug": "olivet",
+"name": "Olivet"
+},
+{
+"slug": "oneonta-st",
+"name": "SUNY Oneonta"
+},
+{
+"slug": "oral-roberts",
+"name": "Oral Roberts"
+},
+{
+"slug": "oregon",
+"name": "Oregon"
+},
+{
+"slug": "oregon-st",
+"name": "Oregon State"
+},
+{
+"slug": "oswego-st",
+"name": "Suny-Oswego"
+},
+{
+"slug": "otterbein",
+"name": "Otterbein"
+},
+{
+"slug": "ouachita-baptist",
+"name": "Ouachita Baptist"
+},
+{
+"slug": "ozarks-ar",
+"name": "Ozarks (AR)"
+},
+{
+"slug": "pace",
+"name": "Pace"
+},
+{
+"slug": "pacific",
+"name": "Pacific"
+},
+{
+"slug": "pacific-lutheran",
+"name": "Pacific Lutheran"
+},
+{
+"slug": "pacific-or",
+"name": "Pacific (OR)"
+},
+{
+"slug": "paine",
+"name": "Paine"
+},
+{
+"slug": "palm-beach-atl",
+"name": "Palm Beach Atl."
+},
+{
+"slug": "penn",
+"name": "Penn"
+},
+{
+"slug": "penn-st",
+"name": "Penn State"
+},
+{
+"slug": "penn-st-abington",
+"name": "Penn St.-Abington"
+},
+{
+"slug": "penn-st-altoona",
+"name": "Penn St.-Altoona"
+},
+{
+"slug": "penn-st-behrend",
+"name": "Penn St.-Behrend"
+},
+{
+"slug": "penn-st-berks",
+"name": "Penn St.-Berks"
+},
+{
+"slug": "penn-st-brandywine",
+"name": "Penn St. Brandywine"
+},
+{
+"slug": "penn-st-harrisburg",
+"name": "Penn St.-Harrisburg"
+},
+{
+"slug": "penn-tech",
+"name": "Penn College"
+},
+{
+"slug": "pepperdine",
+"name": "Pepperdine"
+},
+{
+"slug": "pfeiffer",
+"name": "Pfeiffer"
+},
+{
+"slug": "philadelphia-u",
+"name": "Jefferson University"
+},
+{
+"slug": "piedmont",
+"name": "Piedmont"
+},
+{
+"slug": "pine-manor",
+"name": "Pine Manor"
+},
+{
+"slug": "pitt-bradford",
+"name": "Pitt.-Bradford"
+},
+{
+"slug": "pitt-greensburg",
+"name": "Pitt.-Greensburg"
+},
+{
+"slug": "pitt-johnstown",
+"name": "Pitt.-Johnstown"
+},
+{
+"slug": "pittsburg-st",
+"name": "Pittsburg State"
+},
+{
+"slug": "pittsburgh",
+"name": "Pittsburgh"
+},
+{
+"slug": "plattsburgh-st",
+"name": "Plattsburgh State"
+},
+{
+"slug": "plymouth-st",
+"name": "Plymouth St."
+},
+{
+"slug": "point-loma",
+"name": "Point Loma"
+},
+{
+"slug": "polytechnic-ny",
+"name": "Polytechnic (NY)"
+},
+{
+"slug": "pomona-pitzer",
+"name": "Pomona-Pitzer"
+},
+{
+"slug": "portland",
+"name": "Portland"
+},
+{
+"slug": "portland-st",
+"name": "Portland St."
+},
+{
+"slug": "post",
+"name": "Post"
+},
+{
+"slug": "pr-bayamon",
+"name": "P.R.-Bayamon"
+},
+{
+"slug": "pr-cayey",
+"name": "P.R.-Cayey"
+},
+{
+"slug": "pr-humacao",
+"name": "P.R.-Humacao"
+},
+{
+"slug": "pr-mayaguez",
+"name": "P.R.-Mayaguez"
+},
+{
+"slug": "pr-rio-piedras",
+"name": "P.R.-Rio Piedras"
+},
+{
+"slug": "prairie-view",
+"name": "Prairie View"
+},
+{
+"slug": "pratt-institute",
+"name": "Pratt Institute"
+},
+{
+"slug": "presbyterian",
+"name": "Presbyterian"
+},
+{
+"slug": "presentation",
+"name": "Presentation"
+},
+{
+"slug": "princeton",
+"name": "Princeton"
+},
+{
+"slug": "principia",
+"name": "Principia"
+},
+{
+"slug": "providence",
+"name": "Providence"
+},
+{
+"slug": "puget-sound",
+"name": "Puget Sound"
+},
+{
+"slug": "purchase-st",
+"name": "Purchase"
+},
+{
+"slug": "purdue",
+"name": "Purdue"
+},
+{
+"slug": "purdue-northwest",
+"name": "Purdue Northwest"
+},
+{
+"slug": "queens-nc",
+"name": "Queens (NC)"
+},
+{
+"slug": "queens-ny",
+"name": "Queens (NY)"
+},
+{
+"slug": "quincy",
+"name": "Quincy"
+},
+{
+"slug": "quinnipiac",
+"name": "Quinnipiac"
+},
+{
+"slug": "radford",
+"name": "Radford"
+},
+{
+"slug": "ramapo",
+"name": "Ramapo"
+},
+{
+"slug": "randolph",
+"name": "Randolph"
+},
+{
+"slug": "randolph-macon",
+"name": "Randolph-Macon"
+},
+{
+"slug": "redlands",
+"name": "Redlands"
+},
+{
+"slug": "regis-co",
+"name": "Regis (CO)"
+},
+{
+"slug": "regis-ma",
+"name": "Regis College"
+},
+{
+"slug": "reneau-university",
+"name": "Reneau University"
+},
+{
+"slug": "rensselaer",
+"name": "Rensselaer"
+},
+{
+"slug": "rhode-island",
+"name": "Rhode Island"
+},
+{
+"slug": "rhode-island-col",
+"name": "Rhode Island Col."
+},
+{
+"slug": "rhodes",
+"name": "Rhodes"
+},
+{
+"slug": "rice",
+"name": "Rice"
+},
+{
+"slug": "richard-stockton",
+"name": "Stockton"
+},
+{
+"slug": "richmond",
+"name": "Richmond"
+},
+{
+"slug": "rider",
+"name": "Rider"
+},
+{
+"slug": "ripon",
+"name": "Ripon"
+},
+{
+"slug": "rivier",
+"name": "Rivier"
+},
+{
+"slug": "roanoke",
+"name": "Roanoke"
+},
+{
+"slug": "robert-morris",
+"name": "Robert Morris"
+},
+{
+"slug": "roberts-wesleyan",
+"name": "Roberts Wesleyan"
+},
+{
+"slug": "rochester-inst",
+"name": "Rochester Inst."
+},
+{
+"slug": "rochester-ny",
+"name": "Rochester (NY)"
+},
+{
+"slug": "rockford",
+"name": "Rockford"
+},
+{
+"slug": "rockhurst",
+"name": "Rockhurst"
+},
+{
+"slug": "roger-williams",
+"name": "Roger Williams"
+},
+{
+"slug": "rogers-st",
+"name": "Rogers State"
+},
+{
+"slug": "rollins",
+"name": "Rollins"
+},
+{
+"slug": "roosevelt-university",
+"name": "Roosevelt University"
+},
+{
+"slug": "rose-hulman",
+"name": "Rose-Hulman"
+},
+{
+"slug": "rosemont",
+"name": "Rosemont"
+},
+{
+"slug": "rowan",
+"name": "Rowan"
+},
+{
+"slug": "rust",
+"name": "Rust"
+},
+{
+"slug": "rutgers",
+"name": "Rutgers"
+},
+{
+"slug": "rutgers-camden",
+"name": "Rutgers-Camden"
+},
+{
+"slug": "rutgers-newark",
+"name": "Rutgers-Newark"
+},
+{
+"slug": "sacramento-st",
+"name": "Sacramento St."
+},
+{
+"slug": "sacred-heart",
+"name": "Sacred Heart"
+},
+{
+"slug": "sage-colleges",
+"name": "Russell Sage College"
+},
+{
+"slug": "saginaw-valley",
+"name": "Saginaw Valley"
+},
+{
+"slug": "saint-johns-mn",
+"name": "St. John&#039;s (MN)"
+},
+{
+"slug": "saint-josephs",
+"name": "Saint Joseph&#039;s"
+},
+{
+"slug": "saint-leo",
+"name": "St. Leo"
+},
+{
+"slug": "saint-louis",
+"name": "St. Louis"
+},
+{
+"slug": "saint-martins",
+"name": "Saint-Martins"
+},
+{
+"slug": "saint-michaels",
+"name": "St. Michael&#039;s"
+},
+{
+"slug": "saint-rose",
+"name": "Saint Rose"
+},
+{
+"slug": "saint-vincent",
+"name": "St. Vincent"
+},
+{
+"slug": "salem",
+"name": "Salem"
+},
+{
+"slug": "salem-intl",
+"name": "Salem University"
+},
+{
+"slug": "salem-st",
+"name": "Salem St."
+},
+{
+"slug": "salisbury",
+"name": "Salisbury"
+},
+{
+"slug": "salve-regina",
+"name": "Salve Regina"
+},
+{
+"slug": "sam-houston-st",
+"name": "Sam Houston St."
+},
+{
+"slug": "samford",
+"name": "Samford"
+},
+{
+"slug": "san-diego",
+"name": "San Diego"
+},
+{
+"slug": "san-diego-st",
+"name": "San Diego St."
+},
+{
+"slug": "san-fran-st",
+"name": "San Fran. St."
+},
+{
+"slug": "san-francisco",
+"name": "San Francisco"
+},
+{
+"slug": "san-jose-st",
+"name": "San Jose St."
+},
+{
+"slug": "santa-clara",
+"name": "Santa Clara"
+},
+{
+"slug": "sarah-lawrence",
+"name": "Sarah Lawrence"
+},
+{
+"slug": "savannah-st",
+"name": "Savannah St."
+},
+{
+"slug": "sc-aiken",
+"name": "South-Carolina-Aiken"
+},
+{
+"slug": "scad",
+"name": "SCAD"
+},
+{
+"slug": "schreiner",
+"name": "Schreiner"
+},
+{
+"slug": "scranton",
+"name": "Scranton"
+},
+{
+"slug": "seattle",
+"name": "Seattle"
+},
+{
+"slug": "seattle-pacific",
+"name": "Seattle Pacific"
+},
+{
+"slug": "seton-hall",
+"name": "Seton Hall"
+},
+{
+"slug": "seton-hill",
+"name": "Seton Hill"
+},
+{
+"slug": "sewanee",
+"name": "Sewanee"
+},
+{
+"slug": "shaw",
+"name": "Shaw"
+},
+{
+"slug": "shenandoah",
+"name": "Shenandoah"
+},
+{
+"slug": "shepherd",
+"name": "Shepherd"
+},
+{
+"slug": "shippensburg",
+"name": "Shippensburg"
+},
+{
+"slug": "shorter",
+"name": "Shorter"
+},
+{
+"slug": "siena",
+"name": "Siena"
+},
+{
+"slug": "simmons",
+"name": "Simmons"
+},
+{
+"slug": "simon-fraser",
+"name": "Simon Fraser"
+},
+{
+"slug": "simpson",
+"name": "Simpson"
+},
+{
+"slug": "sioux-falls",
+"name": "Sioux Falls"
+},
+{
+"slug": "siu-edwardsville",
+"name": "SIUE"
+},
+{
+"slug": "skidmore",
+"name": "Skidmore"
+},
+{
+"slug": "slippery-rock",
+"name": "Slippery Rock"
+},
+{
+"slug": "smith",
+"name": "Smith"
+},
+{
+"slug": "smu",
+"name": "SMU"
+},
+{
+"slug": "sonoma-st",
+"name": "Sonoma St."
+},
+{
+"slug": "south-ala",
+"name": "South Ala."
+},
+{
+"slug": "south-carolina",
+"name": "South Carolina"
+},
+{
+"slug": "south-carolina-st",
+"name": "South Carolina St."
+},
+{
+"slug": "south-dakota",
+"name": "South Dakota"
+},
+{
+"slug": "south-dakota-mines",
+"name": "South Dakota Mines"
+},
+{
+"slug": "south-dakota-st",
+"name": "South Dakota St."
+},
+{
+"slug": "south-fla",
+"name": "South Fla."
+},
+{
+"slug": "southampton",
+"name": "Southampton"
+},
+{
+"slug": "southeast-mo-st",
+"name": "Southeast Mo. St."
+},
+{
+"slug": "southeastern-la",
+"name": "Southeastern La."
+},
+{
+"slug": "southeastern-okla",
+"name": "Southeastern Okla."
+},
+{
+"slug": "southern-ark",
+"name": "Southern Ark."
+},
+{
+"slug": "southern-california",
+"name": "Southern California"
+},
+{
+"slug": "southern-conn-st",
+"name": "Southern Conn. St."
+},
+{
+"slug": "southern-ill",
+"name": "Southern Ill."
+},
+{
+"slug": "southern-ind",
+"name": "Southern Ind."
+},
+{
+"slug": "southern-me",
+"name": "Southern Me."
+},
+{
+"slug": "southern-miss",
+"name": "Southern Miss."
+},
+{
+"slug": "southern-nazarene",
+"name": "Southern Nazarene"
+},
+{
+"slug": "southern-nh",
+"name": "Southern N.H."
+},
+{
+"slug": "southern-u",
+"name": "Southern U."
+},
+{
+"slug": "southern-utah",
+"name": "Southern Utah"
+},
+{
+"slug": "southern-va",
+"name": "Southern Virginia"
+},
+{
+"slug": "southern-vt",
+"name": "Southern Vt."
+},
+{
+"slug": "southern-wesleyan",
+"name": "Southern Wesleyan"
+},
+{
+"slug": "southwest-baptist",
+"name": "Southwest Baptist"
+},
+{
+"slug": "southwest-minn-st",
+"name": "Southwest Minn. St."
+},
+{
+"slug": "southwestern-okla",
+"name": "Southwestern Okla."
+},
+{
+"slug": "southwestern-tx",
+"name": "Southwestern (TX)"
+},
+{
+"slug": "spalding",
+"name": "Spalding"
+},
+{
+"slug": "spelman",
+"name": "Spelman"
+},
+{
+"slug": "spring-hill",
+"name": "Spring Hill"
+},
+{
+"slug": "springfield",
+"name": "Springfield"
+},
+{
+"slug": "st-andrews",
+"name": "St. Andrews"
+},
+{
+"slug": "st-anselm",
+"name": "St. Anselm"
+},
+{
+"slug": "st-augustines",
+"name": "St. Augustine&#039;s"
+},
+{
+"slug": "st-benedict",
+"name": "Saint Benedict"
+},
+{
+"slug": "st-bonaventure",
+"name": "St. Bonaventure"
+},
+{
+"slug": "st-catherine",
+"name": "St. Catherine"
+},
+{
+"slug": "st-cloud-st",
+"name": "St. Cloud State"
+},
+{
+"slug": "st-edwards",
+"name": "St. Edward&#039;s"
+},
+{
+"slug": "st-elizabeth",
+"name": "St. Elizabeth"
+},
+{
+"slug": "st-francis-il",
+"name": "St. Francis (IL)"
+},
+{
+"slug": "st-francis-ny",
+"name": "St. Francis Brooklyn"
+},
+{
+"slug": "st-francis-pa",
+"name": "St. Francis (PA)"
+},
+{
+"slug": "st-john-fisher",
+"name": "St. John Fisher"
+},
+{
+"slug": "st-johns-ny",
+"name": "St. John&#039;s (NY)"
+},
+{
+"slug": "st-joseph-ct",
+"name": "St. Joseph (CT)"
+},
+{
+"slug": "st-josephs-brkln",
+"name": "St. Joseph&#039;s (Brkln)"
+},
+{
+"slug": "st-josephs-in",
+"name": "St. Joseph&#039;s (IN)"
+},
+{
+"slug": "st-josephs-li",
+"name": "St. Joseph&#039;s (L.I.)"
+},
+{
+"slug": "st-josephs-me",
+"name": "St. Joseph&#039;s (Me.)"
+},
+{
+"slug": "st-lawrence",
+"name": "St. Lawrence"
+},
+{
+"slug": "st-marys-ca",
+"name": "Saint-Mary&#039;s (CA)"
+},
+{
+"slug": "st-marys-in",
+"name": "Saint-Mary&#039;s (IN)"
+},
+{
+"slug": "st-marys-md",
+"name": "Saint-Mary&#039;s (MD)"
+},
+{
+"slug": "st-marys-mn",
+"name": "Saint Mary&#039;s (Minn.)"
+},
+{
+"slug": "st-marys-tx",
+"name": "St. Mary&#039;s (TX)"
+},
+{
+"slug": "st-norbert",
+"name": "St. Norbert"
+},
+{
+"slug": "st-olaf",
+"name": "St. Olaf"
+},
+{
+"slug": "st-pauls",
+"name": "St. Paul&#039;s"
+},
+{
+"slug": "st-peters",
+"name": "Saint Peter&#039;s"
+},
+{
+"slug": "st-scholastica",
+"name": "St. Scholastica"
+},
+{
+"slug": "st-thomas-aquinas",
+"name": "St. Thomas Aquinas"
+},
+{
+"slug": "st-thomas-fl",
+"name": "St. Thomas (FL)"
+},
+{
+"slug": "st-thomas-mn",
+"name": "St. Thomas (MN)"
+},
+{
+"slug": "st-thomas-tx",
+"name": "St. Thomas Houston"
+},
+{
+"slug": "stanford",
+"name": "Stanford"
+},
+{
+"slug": "staten-island",
+"name": "Staten Island"
+},
+{
+"slug": "stephen-f-austin",
+"name": "Stephen F. Austin"
+},
+{
+"slug": "stephens",
+"name": "Stephens"
+},
+{
+"slug": "stetson",
+"name": "Stetson"
+},
+{
+"slug": "stevens",
+"name": "Stevens"
+},
+{
+"slug": "stevenson",
+"name": "Stevenson"
+},
+{
+"slug": "stillman",
+"name": "Stillman"
+},
+{
+"slug": "stonehill",
+"name": "Stonehill"
+},
+{
+"slug": "stony-brook",
+"name": "Stony Brook"
+},
+{
+"slug": "suffolk",
+"name": "Suffolk"
+},
+{
+"slug": "sul-ross-st",
+"name": "Sul Ross St."
+},
+{
+"slug": "suny-brockport",
+"name": "SUNY Brockport"
+},
+{
+"slug": "suny-canton",
+"name": "SUNY Canton"
+},
+{
+"slug": "suny-cortland",
+"name": "SUNY Cortland"
+},
+{
+"slug": "suny-delhi",
+"name": "SUNY Delhi"
+},
+{
+"slug": "suny-geneseo",
+"name": "SUNY Geneseo"
+},
+{
+"slug": "suny-maritime",
+"name": "SUNY Maritime"
+},
+{
+"slug": "suny-morrisville",
+"name": "State University of New York at Morrisville"
+},
+{
+"slug": "suny-new-paltz",
+"name": "SUNY New Paltz"
+},
+{
+"slug": "suny-potsdam",
+"name": "SUNY Potsdam"
+},
+{
+"slug": "sunyit",
+"name": "SUNY Poly"
+},
+{
+"slug": "susquehanna",
+"name": "Susquehanna"
+},
+{
+"slug": "swarthmore",
+"name": "Swarthmore"
+},
+{
+"slug": "sweet-briar",
+"name": "Sweet Briar"
+},
+{
+"slug": "syracuse",
+"name": "Syracuse"
+},
+{
+"slug": "tampa",
+"name": "Tampa"
+},
+{
+"slug": "tarleton-st",
+"name": "Tarleton St."
+},
+{
+"slug": "tcnj",
+"name": "TCNJ"
+},
+{
+"slug": "tcu",
+"name": "TCU"
+},
+{
+"slug": "temple",
+"name": "Temple"
+},
+{
+"slug": "tennessee",
+"name": "Tennessee"
+},
+{
+"slug": "tennessee-st",
+"name": "Tennessee St."
+},
+{
+"slug": "tennessee-tech",
+"name": "Tennessee Tech"
+},
+{
+"slug": "tex-am-intl",
+"name": "Tex. A&amp;M Int&#039;l"
+},
+{
+"slug": "tex-am-kingsville",
+"name": "Tex. A&amp;M-Kingsville"
+},
+{
+"slug": "tex-permian-basin",
+"name": "Texas of the Permian Basin"
+},
+{
+"slug": "texas",
+"name": "Texas"
+},
+{
+"slug": "texas-am",
+"name": "Texas A&amp;M"
+},
+{
+"slug": "texas-arlington",
+"name": "Texas at Arlington"
+},
+{
+"slug": "texas-dallas",
+"name": "Texas at Dallas"
+},
+{
+"slug": "texas-lutheran",
+"name": "Texas Lutheran"
+},
+{
+"slug": "texas-southern",
+"name": "Texas Southern"
+},
+{
+"slug": "texas-st",
+"name": "Texas St."
+},
+{
+"slug": "texas-tech",
+"name": "Texas Tech"
+},
+{
+"slug": "texas-tyler",
+"name": "Texas at Tyler"
+},
+{
+"slug": "texas-wesleyan",
+"name": "Texas Wesleyan"
+},
+{
+"slug": "texas-womans",
+"name": "Texas Woman&#039;s"
+},
+{
+"slug": "thiel",
+"name": "Thiel"
+},
+{
+"slug": "thomas-me",
+"name": "Thomas (ME)"
+},
+{
+"slug": "thomas-more",
+"name": "Thomas More"
+},
+{
+"slug": "tiffin",
+"name": "Tiffin"
+},
+{
+"slug": "toledo",
+"name": "Toledo"
+},
+{
+"slug": "towson",
+"name": "Towson"
+},
+{
+"slug": "transylvania",
+"name": "Transylvania"
+},
+{
+"slug": "trevecca-nazarene",
+"name": "Trevecca Nazarene"
+},
+{
+"slug": "trine",
+"name": "Trine"
+},
+{
+"slug": "trinity-ct",
+"name": "Trinity (CT)"
+},
+{
+"slug": "trinity-tx",
+"name": "Trinity (TX)"
+},
+{
+"slug": "trinity-washington",
+"name": "Trinity Washington"
+},
+{
+"slug": "troy",
+"name": "Troy"
+},
+{
+"slug": "truman",
+"name": "Truman"
+},
+{
+"slug": "tufts",
+"name": "Tufts"
+},
+{
+"slug": "tulane",
+"name": "Tulane"
+},
+{
+"slug": "tulsa",
+"name": "Tulsa"
+},
+{
+"slug": "tusculum",
+"name": "Tusculum"
+},
+{
+"slug": "tuskegee",
+"name": "Tuskegee"
+},
+{
+"slug": "u-new-england",
+"name": "New-England"
+},
+{
+"slug": "uab",
+"name": "UAB"
+},
+{
+"slug": "ualr",
+"name": "Little-Rock"
+},
+{
+"slug": "uc-colo-springs",
+"name": "Colo-Springs"
+},
+{
+"slug": "uc-davis",
+"name": "UC Davis"
+},
+{
+"slug": "uc-irvine",
+"name": "UC Irvine"
+},
+{
+"slug": "uc-riverside",
+"name": "UC Riverside"
+},
+{
+"slug": "uc-san-diego",
+"name": "UC San Diego"
+},
+{
+"slug": "uc-santa-barbara",
+"name": "UC Santa Barbara"
+},
+{
+"slug": "uc-santa-cruz",
+"name": "UC Santa Cruz"
+},
+{
+"slug": "ucf",
+"name": "UCF"
+},
+{
+"slug": "ucla",
+"name": "UCLA"
+},
+{
+"slug": "uconn",
+"name": "Connecticut"
+},
+{
+"slug": "umass-boston",
+"name": "Mass.-Boston"
+},
+{
+"slug": "umass-dartmouth",
+"name": "Mass.-Dartmouth"
+},
+{
+"slug": "umass-lowell",
+"name": "Mass.-Lowell"
+},
+{
+"slug": "umbc",
+"name": "Maryland-Baltimore-County"
+},
+{
+"slug": "umes",
+"name": "Md.-East. Shore"
+},
+{
+"slug": "umkc",
+"name": "Kansas City"
+},
+{
+"slug": "unc-asheville",
+"name": "UNC Asheville"
+},
+{
+"slug": "unc-greensboro",
+"name": "UNC Greensboro"
+},
+{
+"slug": "unc-pembroke",
+"name": "UNC Pembroke"
+},
+{
+"slug": "unc-wilmington",
+"name": "UNCW"
+},
+{
+"slug": "uni",
+"name": "Northern Iowa"
+},
+{
+"slug": "union-ny",
+"name": "Union (NY)"
+},
+{
+"slug": "union-tn",
+"name": "Union (Tenn.)"
+},
+{
+"slug": "unlv",
+"name": "UNLV"
+},
+{
+"slug": "upper-iowa",
+"name": "Upper Iowa"
+},
+{
+"slug": "urbana",
+"name": "Urbana University"
+},
+{
+"slug": "ursinus",
+"name": "Ursinus"
+},
+{
+"slug": "ursuline",
+"name": "Ursuline"
+},
+{
+"slug": "usc-beaufort",
+"name": "USC Beaufort"
+},
+{
+"slug": "usc-upstate",
+"name": "South-Carolina-Upstate"
+},
+{
+"slug": "ut-martin",
+"name": "Tenn-Martin"
+},
+{
+"slug": "utah",
+"name": "Utah"
+},
+{
+"slug": "utah-st",
+"name": "Utah St."
+},
+{
+"slug": "utah-tech",
+"name": "Utah Tech"
+},
+{
+"slug": "utah-valley",
+"name": "Utah Valley"
+},
+{
+"slug": "utep",
+"name": "Texas at El Paso"
+},
+{
+"slug": "utica",
+"name": "Utica"
+},
+{
+"slug": "utrgv",
+"name": "Texas Rio Grande Valley"
+},
+{
+"slug": "utsa",
+"name": "Texas at San Antonio"
+},
+{
+"slug": "uva-wise",
+"name": "Virginia-Wise"
+},
+{
+"slug": "va-wesleyan",
+"name": "Virg-Wesleyan"
+},
+{
+"slug": "valdosta-st",
+"name": "Valdosta St."
+},
+{
+"slug": "valley-forge-chrst",
+"name": "Valley Forge"
+},
+{
+"slug": "valparaiso",
+"name": "Valparaiso"
+},
+{
+"slug": "vanderbilt",
+"name": "Vanderbilt"
+},
+{
+"slug": "vassar",
+"name": "Vassar"
+},
+{
+"slug": "vcu",
+"name": "VCU"
+},
+{
+"slug": "vermont",
+"name": "Vermont"
+},
+{
+"slug": "villanova",
+"name": "Villanova"
+},
+{
+"slug": "virginia",
+"name": "Virginia"
+},
+{
+"slug": "virginia-st",
+"name": "Virginia St."
+},
+{
+"slug": "virginia-tech",
+"name": "Virginia Tech"
+},
+{
+"slug": "virginia-union",
+"name": "Virginia Union"
+},
+{
+"slug": "vmi",
+"name": "VMI"
+},
+{
+"slug": "wabash",
+"name": "Wabash"
+},
+{
+"slug": "wagner",
+"name": "Wagner"
+},
+{
+"slug": "wake-forest",
+"name": "Wake Forest"
+},
+{
+"slug": "walsh",
+"name": "Walsh"
+},
+{
+"slug": "warren-wilson-college",
+"name": "Warren Wilson College"
+},
+{
+"slug": "wartburg",
+"name": "Wartburg"
+},
+{
+"slug": "wash-jeff",
+"name": "Wash. &amp; Jeff."
+},
+{
+"slug": "wash-lee",
+"name": "Wash. &amp; Lee"
+},
+{
+"slug": "washburn",
+"name": "Washburn"
+},
+{
+"slug": "washington",
+"name": "Washington"
+},
+{
+"slug": "washington-adventist",
+"name": "Washington Adventist"
+},
+{
+"slug": "washington-col",
+"name": "Washington Col."
+},
+{
+"slug": "washington-st",
+"name": "Washington St."
+},
+{
+"slug": "washington-st-louis",
+"name": "Washington-St. Louis"
+},
+{
+"slug": "wayne-st-mi",
+"name": "Wayne St. (MI)"
+},
+{
+"slug": "wayne-st-ne",
+"name": "Wayne St. (NE)"
+},
+{
+"slug": "waynesburg",
+"name": "Waynesburg"
+},
+{
+"slug": "weber-st",
+"name": "Weber St."
+},
+{
+"slug": "webster",
+"name": "Webster"
+},
+{
+"slug": "wellesley",
+"name": "Wellesley"
+},
+{
+"slug": "wells",
+"name": "Wells"
+},
+{
+"slug": "wentworth",
+"name": "Wentworth Inst."
+},
+{
+"slug": "wesley",
+"name": "Wesley"
+},
+{
+"slug": "wesleyan-ct",
+"name": "Wesleyan (CT)"
+},
+{
+"slug": "wesleyan-ga",
+"name": "Wesleyan (GA)"
+},
+{
+"slug": "west-ala",
+"name": "West Ala."
+},
+{
+"slug": "west-chester",
+"name": "West Chester"
+},
+{
+"slug": "west-florida",
+"name": "West Fla."
+},
+{
+"slug": "west-ga",
+"name": "West Ga."
+},
+{
+"slug": "west-liberty",
+"name": "West Liberty"
+},
+{
+"slug": "west-tex-am",
+"name": "West Tex. A&amp;M"
+},
+{
+"slug": "west-va-tech",
+"name": "West Va. Tech"
+},
+{
+"slug": "west-va-wesleyan",
+"name": "West Va. Wesleyan"
+},
+{
+"slug": "west-virginia",
+"name": "West Virginia"
+},
+{
+"slug": "west-virginia-st",
+"name": "West Virginia St."
+},
+{
+"slug": "western-caro",
+"name": "Western Caro."
+},
+{
+"slug": "western-conn-st",
+"name": "Western Conn. St."
+},
+{
+"slug": "western-ill",
+"name": "Western Ill."
+},
+{
+"slug": "western-ky",
+"name": "Western Ky."
+},
+{
+"slug": "western-mich",
+"name": "Western Mich."
+},
+{
+"slug": "western-new-eng",
+"name": "Western New Eng."
+},
+{
+"slug": "western-nm",
+"name": "Western N.M."
+},
+{
+"slug": "western-ore",
+"name": "Western Ore."
+},
+{
+"slug": "western-st",
+"name": "Western Colo."
+},
+{
+"slug": "western-wash",
+"name": "Western Wash."
+},
+{
+"slug": "westfield-st",
+"name": "Westfield St."
+},
+{
+"slug": "westminster-mo",
+"name": "Westminster (MO)"
+},
+{
+"slug": "westminster-pa",
+"name": "Westminster (PA)"
+},
+{
+"slug": "westminster-ut",
+"name": "Westminster (UT)"
+},
+{
+"slug": "westmont-college",
+"name": "Westmont College"
+},
+{
+"slug": "wheaton-il",
+"name": "Wheaton (IL)"
+},
+{
+"slug": "wheaton-ma",
+"name": "Wheaton (MA)"
+},
+{
+"slug": "wheeling-jesuit",
+"name": "Wheeling Jesuit"
+},
+{
+"slug": "wheelock",
+"name": "Wheelock"
+},
+{
+"slug": "whitman",
+"name": "Whitman"
+},
+{
+"slug": "whittier",
+"name": "Whittier"
+},
+{
+"slug": "whitworth",
+"name": "Whitworth"
+},
+{
+"slug": "wichita-st",
+"name": "Wichita St."
+},
+{
+"slug": "widener",
+"name": "Widener"
+},
+{
+"slug": "wilkes",
+"name": "Wilkes"
+},
+{
+"slug": "willamette",
+"name": "Willamette"
+},
+{
+"slug": "william-jewell",
+"name": "William Jewell"
+},
+{
+"slug": "william-mary",
+"name": "William &amp; Mary"
+},
+{
+"slug": "william-peace",
+"name": "William Peace"
+},
+{
+"slug": "william-penn",
+"name": "William Penn"
+},
+{
+"slug": "william-smith",
+"name": "William Smith"
+},
+{
+"slug": "williams",
+"name": "Williams"
+},
+{
+"slug": "wilmington-de",
+"name": "Wilmington (DE)"
+},
+{
+"slug": "wilmington-oh",
+"name": "Wilmington (OH)"
+},
+{
+"slug": "wilson",
+"name": "Wilson"
+},
+{
+"slug": "wingate",
+"name": "Wingate"
+},
+{
+"slug": "winona-st",
+"name": "Winona St."
+},
+{
+"slug": "winston-salem",
+"name": "Winston-Salem"
+},
+{
+"slug": "winthrop",
+"name": "Winthrop"
+},
+{
+"slug": "wis-eau-claire",
+"name": "Wis.-Eau Claire"
+},
+{
+"slug": "wis-la-crosse",
+"name": "Wis.-La Crosse"
+},
+{
+"slug": "wis-lutheran",
+"name": "Wis. Lutheran"
+},
+{
+"slug": "wis-oshkosh",
+"name": "Wis.-Oshkosh"
+},
+{
+"slug": "wis-parkside",
+"name": "Wis.-Parkside"
+},
+{
+"slug": "wis-platteville",
+"name": "Wis.-Platteville"
+},
+{
+"slug": "wis-river-falls",
+"name": "Wis.-River Falls"
+},
+{
+"slug": "wis-stevens-point",
+"name": "Wis.-Stevens Point"
+},
+{
+"slug": "wis-stout",
+"name": "Wis.-Stout"
+},
+{
+"slug": "wis-superior",
+"name": "Wis.-Superior"
+},
+{
+"slug": "wis-whitewater",
+"name": "Wis.-Whitewater"
+},
+{
+"slug": "wisconsin",
+"name": "Wisconsin"
+},
+{
+"slug": "wittenberg",
+"name": "Wittenberg"
+},
+{
+"slug": "wm-paterson",
+"name": "William Paterson"
+},
+{
+"slug": "wofford",
+"name": "Wofford"
+},
+{
+"slug": "wooster",
+"name": "Wooster"
+},
+{
+"slug": "worcester-st",
+"name": "Worcester St."
+},
+{
+"slug": "wpi",
+"name": "WPI"
+},
+{
+"slug": "wright-st",
+"name": "Wright St."
+},
+{
+"slug": "wyoming",
+"name": "Wyoming"
+},
+{
+"slug": "xavier",
+"name": "Xavier"
+},
+{
+"slug": "yale",
+"name": "Yale"
+},
+{
+"slug": "yeshiva",
+"name": "Yeshiva"
+},
+{
+"slug": "york-ny",
+"name": "York (NY)"
+},
+{
+"slug": "york-pa",
+"name": "York (PA)"
+},
+{
+"slug": "young-harris",
+"name": "Young Harris"
+},
+{
+"slug": "youngstown-st",
+"name": "Youngstown St."
+}
+]
