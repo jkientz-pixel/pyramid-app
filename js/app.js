@@ -44,7 +44,8 @@ const visible = clubs => clubs.filter(c => leagueFilter.has(c.g));
 function reportLink(kind, what) {
   const subj = encodeURIComponent(`RankXI ${kind}: ${what}`);
   const body = encodeURIComponent(`Page: ${location.hash}\nWhat's wrong / your suggestion:\n\n`);
-  return `<a class="reportlink" href="mailto:jkientz@gmail.com?subject=${subj}&body=${body}">&#9873; See an error? Send us a note</a>`;
+  return `<a class="reportlink" href="mailto:jkientz@gmail.com?subject=${subj}&body=${body}">&#9873; See an error? Send us a note</a>
+    <a class="reportlink" href="#/legal">Corrections &amp; removal requests</a>`;
 }
 function crestHtml(c) {
   if (c.img) return `<img class="crest imgcrest" src="${c.img}" alt="${esc(c.n)} crest" loading="lazy">`;
@@ -1341,13 +1342,28 @@ function screenClubTools() {
 
 function screenLegal() {
   crumb.textContent = 'Legal';
+  /* NOTE: contact address swaps to the branded domain once the name is decided */
+  const NOTICE_MAIL = 'jkientz@gmail.com';
+  const rmClub = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankXI Removal: club / crest')}&body=${encodeURIComponent('Club:\nYour role (owner / club officer / league staff):\nWhat should come down (crest / the whole club page / something specific):\n')}`;
+  const rmPlayer = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankXI Removal: player')}&body=${encodeURIComponent('Player:\nClub:\nI am (the player / a parent or guardian / a club officer):\nWhat should come down (the whole profile / something specific):\n')}`;
+  const fixNotice = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankXI Notice: correction')}&body=${encodeURIComponent("Page or club:\nWhat's missing or incorrect:\nA source we can check (league page, match report):\n")}`;
   view.innerHTML = `<div class="about">
     <div class="kicker">The plain-language version</div>
-    <h2 class="disp">Terms &amp; Privacy</h2>
+    <h2 class="disp">Terms, Privacy &amp; Notices</h2>
     <p><b>What this is.</b> Rank XI is an independent guide to American soccer. It is not affiliated with, endorsed by, or sponsored by any league, club, or federation shown.</p>
-    <p><b>Data &amp; accuracy.</b> Club, roster, and historical data come from public sources (Wikipedia under CC BY-SA, league websites and public feeds, American Soccer Analysis, OpenStreetMap). Ratings label their basis — real results, real standings, or illustrative. We correct errors fast: email jkientz@gmail.com.</p>
-    <p><b>Marks &amp; takedowns.</b> Club and league names and crests belong to their owners and appear for identification. If you own a mark or a page and want it corrected or removed, one email does it: jkientz@gmail.com.</p>
-    <p><b>Privacy.</b> No accounts, no tracking cookies, no analytics identifiers. Your favorites live in your browser's local storage and never leave your device. Email us and we see your email — that's it.</p>
+    <p><b>Where the data comes from.</b> We gather club, roster, and historical data from what the leagues themselves publish — league websites and public feeds — plus Wikipedia (CC BY-SA), American Soccer Analysis, and OpenStreetMap. We organize that information; we don't control it at the source. If a league's published table is wrong, ours will be too until someone tells us. Ratings label their basis — real results, real standings, or illustrative.</p>
+    <div class="kicker" style="margin-top:14px">Removal requests</div>
+    <p>Club and league names and crests belong to their owners and appear here for identification only. If you'd rather your club, crest, or player info not appear on Rank XI, one email does it. We confirm the request actually comes from the club or the player — a reply from an official club account or league contact is enough — then take it down, usually within the week. Crests and images come down first.</p>
+    <div class="linkrow">
+      <a href="${rmClub}"><b>Remove my club or crest</b></a>
+      <a href="${rmPlayer}"><b>Remove my player info</b></a>
+    </div>
+    <div class="kicker" style="margin-top:14px">Corrections &amp; missing info</div>
+    <p>See something wrong, or something that should be here and isn't? File a notice. A person reads every one, and most data corrections ship within a couple of days. A link to a source we can check speeds it up.</p>
+    <div class="linkrow">
+      <a href="${fixNotice}"><b>File a correction notice</b></a>
+    </div>
+    <p style="margin-top:14px"><b>Privacy.</b> No accounts, no tracking cookies, no analytics identifiers. Your favorites live in your browser's local storage and never leave your device. Email us and we see your email — that's it.</p>
     <p><b>Predictions.</b> Probabilities are statistical estimates for entertainment and analysis. They are not betting advice, and Rank XI takes no wagers and no commissions on anything.</p>
     <p><b>Free agents &amp; claims.</b> Listings are self-reported by players; verified badges mark only what we can check against league data. Clubs contact players directly — Rank XI is never party to any deal.</p>
     <p class="fine" style="font-size:.75rem">Independent project by Jeremy Kientz &middot; 2026. This summary is the policy; a formal version lands with accounts.</p>
