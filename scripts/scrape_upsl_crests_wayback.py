@@ -13,7 +13,7 @@ clubs missing a crest (ambiguity-guarded), throttles Wayback ~1.3s/req with
 data/upsl_crest_progress.json records per-club status so reruns skip done and
 known-failed clubs."""
 from _datajs import load_clubs, write_clubs, ROOT
-import json, os, re, subprocess, sys, time, unicodedata, urllib.parse, urllib.request
+import gzip, json, os, re, subprocess, sys, time, unicodedata, urllib.parse, urllib.request
 
 SUBS = ['premier', 'division1', 'division2']
 IDX_CACHE = os.path.join(ROOT, 'data', 'upsl_wayback_index.json')
@@ -29,7 +29,12 @@ def wb_get(url, tries=5):
     for i in range(tries):
         try:
             req = urllib.request.Request(url, headers=UA)
-            return urllib.request.urlopen(req, timeout=60).read()
+            body = urllib.request.urlopen(req, timeout=60).read()
+            # id_ raw mode returns the original stored response body, which is
+            # often still gzip-compressed — decode by magic number
+            if body[:2] == b'\x1f\x8b':
+                body = gzip.decompress(body)
+            return body
         except Exception as e:
             code = getattr(e, 'code', None)
             if code in (429, 503) or 'timed out' in str(e) or 'refused' in str(e).lower():
