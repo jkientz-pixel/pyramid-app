@@ -1,0 +1,12 @@
+{
+  "name": "rank-xi",
+  "private": true,
+  "scripts": {
+    "test": "playwright test --grep-invert @stress",
+    "test:stress": "playwright test --grep @stress",
+    "serve": "python3 -m http.server 8080"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.0"
+  }
+}
