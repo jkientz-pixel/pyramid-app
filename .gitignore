@@ -15,3 +15,7 @@ npsl_geo.json
 __pycache__/
 js/*.js.bak
 js/*.js.tmp
+
+node_modules/
+test-results/
+playwright-report/
