@@ -3,9 +3,12 @@
    stale data when the network is up. Bump VERSION with each deploy
    (use scripts/bump_version.py — it moves every file's token together). */
 const VERSION = 'rankxi-v20260729c';
-/* Crests are content-addressed by filename and never change, so they live in a
-   cache that survives deploys. Without this, every deploy re-downloaded ~7 MB. */
-const ASSETS = 'rankxi-assets-v1';
+/* Crests live in a cache that survives deploys (re-downloading ~26 MB per
+   deploy is not acceptable). They are NOT strictly immutable — pixel-level
+   fixes (strip_crest_bg.py) change content under the same filename — so crest
+   URLs carry a ?cv= generation (CRESTV in app.js) and cache matches respect
+   the query. Bump this suffix only to nuke the whole asset cache. */
+const ASSETS = 'rankxi-assets-v2';
 /* The shell must include the code the app needs to boot, not just the HTML —
    precaching only the documents left an installed PWA blank offline. */
 const SHELL = [
@@ -40,9 +43,10 @@ self.addEventListener('fetch', e => {
   const isAsset = /\/crests\/|\.(png|jpg|jpeg|webp|svg|ico)$/i.test(new URL(e.request.url).pathname);
 
   if (isAsset) {
-    // cache-first: these never change under the same name
+    // cache-first, keyed by full URL: the ?cv= generation token is the only
+    // way changed pixels reach a browser that already cached the old file
     e.respondWith(
-      caches.match(e.request, { ignoreSearch: true }).then(hit => hit || fetch(e.request).then(res => {
+      caches.match(e.request).then(hit => hit || fetch(e.request).then(res => {
         if (res.ok) {
           const copy = res.clone();
           caches.open(ASSETS).then(c => c.put(e.request, copy));
