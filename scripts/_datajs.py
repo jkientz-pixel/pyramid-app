@@ -29,7 +29,10 @@ def write_clubs(clubs, src=None):
     if len(clubs) < len(before):
         sys.exit(f'FATAL: club count shrank {len(before)} -> {len(clubs)}; refusing to write')
     for i, (a, b) in enumerate(zip(before, clubs)):
-        if a['n'] != b['n']:
+        # identity = the id slug when both sides have one (display names may be
+        # legitimately corrected in place); names are the fallback identity
+        same = (a['id'] == b['id']) if a.get('id') and b.get('id') else (a['n'] == b['n'])
+        if not same:
             sys.exit(f'FATAL: club order changed at index {i}: {a["n"]!r} -> {b["n"]!r}. '
                      'Array position IS the legacy-URL map — append only, never sort/remove.')
     ids = [c.get('id') for c in clubs]
