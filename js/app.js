@@ -42,7 +42,7 @@ const pool = () => CLUBS.filter(c => c.x === sex && !c.h);
 const visible = clubs => clubs.filter(c => leagueFilter.has(c.g));
 
 function reportLink(kind, what) {
-  const subj = encodeURIComponent(`RankXI ${kind}: ${what}`);
+  const subj = encodeURIComponent(`RankedXI ${kind}: ${what}`);
   const body = encodeURIComponent(`Page: ${location.hash}\nWhat's wrong / your suggestion:\n\n`);
   return `<a class="reportlink" href="mailto:jkientz@gmail.com?subject=${subj}&body=${body}">&#9873; See an error? Send us a note</a>
     <a class="reportlink" href="#/legal">Corrections &amp; removal requests</a>`;
@@ -901,7 +901,7 @@ function screenAbout() {
   view.innerHTML = `<div class="about">
     <div class="kicker">Concept</div>
     <h2 class="disp">One pyramid, one table</h2>
-    <p>American soccer has no single place to see every club, how they rank, and how the levels connect. <b>Rank XI</b> maps all of it: MLS to the grassroots, with men's and women's tables ranked separately.</p>
+    <p>American soccer has no single place to see every club, how they rank, and how the levels connect. <b>Ranked XI</b> maps all of it: MLS to the grassroots, with men's and women's tables ranked separately.</p>
     <p><b>How rankings work.</b> League results feed a weekly Elo rating. Cup competitions — Open Cup qualifying, the National Amateur Cup — are where leagues actually meet, and those matches calibrate the cross-league scale. Every rating change is published with the match that caused it.</p>
     <p><b>World context.</b> Each club page projects the club onto a hypothetical global ladder against European reference sides — a conversation-starter, clearly labeled, never presented as measurement.</p>
     <p><b>What's real in this demo.</b> All ${CLUBS.length} clubs and locations come from the project dataset. Ratings, records and fixtures are illustrative until the results pipeline is live.</p>
@@ -910,11 +910,11 @@ function screenAbout() {
     <div class="kicker" style="margin-top:14px">The leagues</div>
     <ul class="lglist">${Object.entries(LEAGUES).filter(([k, m]) => m.url).map(([k, m]) =>
       `<li><a href="${m.url}" target="_blank" rel="noopener">${m.img ? `<img src="${m.img}" alt="" loading="lazy">` : `<span class="dot" style="background:${m.color};width:12px;height:12px;border-radius:50%"></span>`}<b>${m.label}</b><span>${m.url.replace('https://', '').replace('www.', '')}</span></a></li>`).join('')}</ul>
-    <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Subscribe: Rank XI updates')}&body=${encodeURIComponent('Sign me up. I am a (player / club / coach / fan):\nState:\n')}">Get launch updates &mdash; join the list</a>
+    <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Subscribe: Ranked XI updates')}&body=${encodeURIComponent('Sign me up. I am a (player / club / coach / fan):\nState:\n')}">Get launch updates &mdash; join the list</a>
     <div class="kicker" style="margin-top:14px">Help us get it right</div>
     <div class="linkrow">
-      <a href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('RankXI Fix: ')}&body=${encodeURIComponent('Page or club:\nWhat is wrong:\n')}"><b>Report an error</b></a>
-      <a href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('RankXI Suggest: league or team')}&body=${encodeURIComponent('League or team name:\nLevel and region:\nWebsite if known:\n')}">Suggest a league or team</a>
+      <a href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('RankedXI Fix: ')}&body=${encodeURIComponent('Page or club:\nWhat is wrong:\n')}"><b>Report an error</b></a>
+      <a href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('RankedXI Suggest: league or team')}&body=${encodeURIComponent('League or team name:\nLevel and region:\nWebsite if known:\n')}">Suggest a league or team</a>
     </div>
     <p class="note">Reports route straight into the fix queue — most data corrections ship within a couple of days.</p>
     <div class="kicker" style="margin-top:14px">Fair questions</div>
@@ -1083,7 +1083,7 @@ function screenFreeAgents() {
   view.innerHTML = `
     <div class="kicker">Get seen by ${CLUBS.length.toLocaleString()} clubs</div>
     <h2 class="disp">Free Agents</h2>
-    <p class="note" style="font-size:.88rem">Players without a club list themselves here: position, region, level sought, film. Clubs browse free and reach out directly — Rank XI never sits in the middle of a deal. Listings are self-reported; players with match history in our data carry a verified badge.</p>
+    <p class="note" style="font-size:.88rem">Players without a club list themselves here: position, region, level sought, film. Clubs browse free and reach out directly — Ranked XI never sits in the middle of a deal. Listings are self-reported; players with match history in our data carry a verified badge.</p>
     <a class="fa-card" href="#/freeagent/sample"><b>See a complete profile &rarr;</b><span>Film, physicals, verified history, awards, references — the full page a listing buys.</span></a>
     <ul class="clublist">${FREE_AGENTS.map(f => `
       <li><a href="#/freeagent/sample">
@@ -1099,14 +1099,14 @@ function screenPricing() {
   crumb.textContent = 'Pricing';
   view.innerHTML = `
     <div class="kicker">What's free, what's paid — and why</div>
-    <h2 class="disp">Rank XI Pricing</h2>
+    <h2 class="disp">Ranked XI Pricing</h2>
     <div class="pricecard"><b>The app · Free, always</b>
       <p>Map, tables, every club and player page, predictions, history. Rankings stay free — that's the point.</p></div>
     <div class="pricecard"><b>Founding Free Agent listing · Free now, $25/season later</b>
       <p>Not "exposure" — proof and delivery: a <b>verified badge</b> backed by league data we already hold, your film front and center, <b>alerts sent to clubs in your region and level</b>, and a receipt: how many clubs viewed you. Founding listings are free while the market proves itself; the price turns on only when players are getting contacted.</p>
       <a class="claim" href="#/freeagent/sample">See a complete player listing</a></div>
     <div class="pricecard paid"><b>Free Agent Pro · $50/season</b>
-      <p>Everything in the listing, plus <b>you make the first move</b>: send direct intro requests to clubs from inside Rank XI — your verified profile and film attached — with <b>5 intros a month</b> and priority placement in club searches. Privacy holds both ways: no emails or numbers exposed until both sides accept the intro.</p>
+      <p>Everything in the listing, plus <b>you make the first move</b>: send direct intro requests to clubs from inside Ranked XI — your verified profile and film attached — with <b>5 intros a month</b> and priority placement in club searches. Privacy holds both ways: no emails or numbers exposed until both sides accept the intro.</p>
       <a class="claim" href="#/freeagent/sample">See how intros work</a></div>
     <div class="pricecard paid"><b>Club Recruiting · Free browse for all clubs · Pro tools $99/season</b>
       <p>Browsing free agents costs nothing, ever. The paid tier is speed: <b>saved-search alerts</b> ("verified GK within 50 miles"), <b>unlimited direct contact</b>, <b>shortlists</b>, and <b>promoted tryout listings</b>. Fill your roster in a week, not a month.</p>
@@ -1230,7 +1230,7 @@ function screenFASample() {
       <li><span class="cw-years">2023–25</span><span class="cw-club">Orange Coast College</span><span class="cw-stat">31 apps · 14 gls</span></li>
       <li><span class="cw-years">2019–23</span><span class="cw-club">Santa Ana United (youth)</span><span class="cw-stat"></span></li>
     </ul>
-    <p class="note">&#10003; = seasons verified against league data already in Rank XI — coaches trust numbers they can check.</p>
+    <p class="note">&#10003; = seasons verified against league data already in Ranked XI — coaches trust numbers they can check.</p>
     <div class="kicker">Awards</div>
     <ul class="honours">
       <li><b>UPSL SoCal Golden Boot</b><span>2026 Spring</span></li>
@@ -1249,7 +1249,7 @@ function screenFASample() {
     </ul>
     <div class="kicker">Contact & socials</div>
     <div class="linkrow">
-      <a href="#/freeagent/sample"><b>Message via Rank XI</b></a>
+      <a href="#/freeagent/sample"><b>Message via Ranked XI</b></a>
       <a href="#/freeagent/sample">Instagram</a>
       <a href="#/freeagent/sample">Hudl</a>
     </div>
@@ -1348,16 +1348,16 @@ function screenLegal() {
   crumb.textContent = 'Legal';
   /* NOTE: contact address swaps to the branded domain once the name is decided */
   const NOTICE_MAIL = 'jkientz@gmail.com';
-  const rmClub = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankXI Removal: club / crest')}&body=${encodeURIComponent('Club:\nYour role (owner / club officer / league staff):\nWhat should come down (crest / the whole club page / something specific):\n')}`;
-  const rmPlayer = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankXI Removal: player')}&body=${encodeURIComponent('Player:\nClub:\nI am (the player / a parent or guardian / a club officer):\nWhat should come down (the whole profile / something specific):\n')}`;
-  const fixNotice = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankXI Notice: correction')}&body=${encodeURIComponent("Page or club:\nWhat's missing or incorrect:\nA source we can check (league page, match report):\n")}`;
+  const rmClub = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankedXI Removal: club / crest')}&body=${encodeURIComponent('Club:\nYour role (owner / club officer / league staff):\nWhat should come down (crest / the whole club page / something specific):\n')}`;
+  const rmPlayer = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankedXI Removal: player')}&body=${encodeURIComponent('Player:\nClub:\nI am (the player / a parent or guardian / a club officer):\nWhat should come down (the whole profile / something specific):\n')}`;
+  const fixNotice = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankedXI Notice: correction')}&body=${encodeURIComponent("Page or club:\nWhat's missing or incorrect:\nA source we can check (league page, match report):\n")}`;
   view.innerHTML = `<div class="about">
     <div class="kicker">The plain-language version</div>
     <h2 class="disp">Terms, Privacy &amp; Notices</h2>
-    <p><b>What this is.</b> Rank XI is an independent guide to American soccer. It is not affiliated with, endorsed by, or sponsored by any league, club, or federation shown.</p>
+    <p><b>What this is.</b> Ranked XI is an independent guide to American soccer. It is not affiliated with, endorsed by, or sponsored by any league, club, or federation shown.</p>
     <p><b>Where the data comes from.</b> We gather club, roster, and historical data from what the leagues themselves publish — league websites and public feeds — plus Wikipedia (CC BY-SA), American Soccer Analysis, and OpenStreetMap. We organize that information; we don't control it at the source. If a league's published table is wrong, ours will be too until someone tells us. Ratings label their basis — real results, real standings, or illustrative.</p>
     <div class="kicker" style="margin-top:14px">Removal requests</div>
-    <p>Club and league names and crests belong to their owners and appear here for identification only. If you'd rather your club, crest, or player info not appear on Rank XI, one email does it. We confirm the request actually comes from the club or the player — a reply from an official club account or league contact is enough — then take it down, usually within the week. Crests and images come down first.</p>
+    <p>Club and league names and crests belong to their owners and appear here for identification only. If you'd rather your club, crest, or player info not appear on Ranked XI, one email does it. We confirm the request actually comes from the club or the player — a reply from an official club account or league contact is enough — then take it down, usually within the week. Crests and images come down first.</p>
     <div class="linkrow">
       <a href="${rmClub}"><b>Remove my club or crest</b></a>
       <a href="${rmPlayer}"><b>Remove my player info</b></a>
@@ -1368,8 +1368,8 @@ function screenLegal() {
       <a href="${fixNotice}"><b>File a correction notice</b></a>
     </div>
     <p style="margin-top:14px"><b>Privacy.</b> No accounts, no tracking cookies, no analytics identifiers. Your favorites live in your browser's local storage and never leave your device. Email us and we see your email — that's it.</p>
-    <p><b>Predictions.</b> Probabilities are statistical estimates for entertainment and analysis. They are not betting advice, and Rank XI takes no wagers and no commissions on anything.</p>
-    <p><b>Free agents &amp; claims.</b> Listings are self-reported by players; verified badges mark only what we can check against league data. Clubs contact players directly — Rank XI is never party to any deal.</p>
+    <p><b>Predictions.</b> Probabilities are statistical estimates for entertainment and analysis. They are not betting advice, and Ranked XI takes no wagers and no commissions on anything.</p>
+    <p><b>Free agents &amp; claims.</b> Listings are self-reported by players; verified badges mark only what we can check against league data. Clubs contact players directly — Ranked XI is never party to any deal.</p>
     <p class="fine" style="font-size:.75rem">Independent project by Jeremy Kientz &middot; 2026. This summary is the policy; a formal version lands with accounts.</p>
   </div>`;
 }
@@ -1429,7 +1429,7 @@ async function screenWire() {
     ${leaders ? `<div class="kicker" style="margin-top:12px">The leaders · real stats</div>` + leaders
       : (sex === 'm' && (wireLg === 'all' || wireLg === 'npsl') ? '' : '<p class="note" style="margin-top:10px">No real-stat leagues in this filter yet.</p>')}
     <div id="wireresults"></div>
-    <p class="note">No aggregation, no editors: every item is computed from the results and stat lines already in Rank XI, so the wire is exactly as fresh as the data. Rating swings are the actual Elo changes from the same walk that produces club ratings &mdash; except MLS, which ranks by the official league table (its results-Elo appears on club pages as an experimental number), and UPSL, which stays standings-derived.</p>`;
+    <p class="note">No aggregation, no editors: every item is computed from the results and stat lines already in Ranked XI, so the wire is exactly as fresh as the data. Rating swings are the actual Elo changes from the same walk that produces club ratings &mdash; except MLS, which ranks by the official league table (its results-Elo appears on club pages as an experimental number), and UPSL, which stays standings-derived.</p>`;
   wireSexToggle();
   view.querySelector('#wirechips').addEventListener('click', e => {
     const b = e.target.closest('[data-wlg]'); if (!b) return;

@@ -1,6 +1,6 @@
 {
-  "name": "Rank XI — US Soccer Rankings",
-  "short_name": "Rank XI",
+  "name": "Ranked XI — US Soccer Rankings",
+  "short_name": "Ranked XI",
   "description": "Every US soccer club on one map — cross-league rankings from MLS to the grassroots, real ratings where the results exist.",
   "start_url": "/app.html#/map",
   "scope": "/",

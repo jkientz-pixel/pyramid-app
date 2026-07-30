@@ -1,4 +1,4 @@
-/* Rank XI service worker — network-first with cache fallback.
+/* Ranked XI service worker — network-first with cache fallback.
    Keeps the app installable + resilient offline without ever serving
    stale data when the network is up. Bump VERSION with each deploy
    (use scripts/bump_version.py — it moves every file's token together). */
