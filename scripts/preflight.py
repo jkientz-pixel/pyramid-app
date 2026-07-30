@@ -23,7 +23,11 @@ else:
             fail.append(f'data.js: {sum(1 for i in ids if not i)} clubs missing an id slug')
         if len(set(ids)) != len(ids):
             fail.append('data.js: duplicate club slugs')
-        print(f'  data.js OK — {len(clubs)} clubs, slugs unique')
+        broken = [c['id'] for c in clubs
+                  if c.get('img') and not (ROOT / c['img']).exists()]
+        if broken:
+            fail.append(f'data.js: {len(broken)} img paths point at missing crest files: {broken[:10]}')
+        print(f'  data.js OK — {len(clubs)} clubs, slugs unique, crest paths resolve')
     except Exception as e:
         fail.append(f'data.js: CLUBS does not parse ({e})')
 
