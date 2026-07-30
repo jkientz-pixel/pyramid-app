@@ -61,8 +61,8 @@ h2{margin:4px 0 2px;font-size:1.35rem}
 .note b{color:var(--ink)}
 
 /* map: light ground, ink boundaries */
-.mapbox{background:var(--raise);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-svg.usmap{width:100%;height:auto;display:block;touch-action:manipulation}
+.mapbox{background:var(--raise);border:1px solid var(--line);border-radius:14px;overflow:clip}
+svg.usmap{width:100%;height:auto;max-height:72vh;display:block;touch-action:manipulation}
 .states path{fill:var(--map-fill);stroke:var(--map-stroke);stroke-width:1;cursor:pointer;transition:fill .15s}
 .states path:hover{fill:var(--map-hover)}
 .states path.dim{opacity:.35}
@@ -215,7 +215,12 @@ image.pin{cursor:pointer}
 .tier-note{color:var(--ink-dim);font-size:.75rem;text-align:center;margin-top:6px}
 .searchwrap.global{margin:10px 16px 0;flex:none}
 .mapbox{position:relative}
-.mapctl{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:8px;z-index:5}
+/* in-flow sticky (not absolute): when a tall state map runs past the fold the
+   controls ride the scroll and stay visible above the tab bar; when the map
+   fits on screen they rest at the box's bottom-right. Needs .mapbox
+   overflow:clip — overflow:hidden would make .mapbox the sticky container.
+   The negative top margin pulls the in-flow block back over the svg. */
+.mapctl{position:sticky;bottom:70px;width:44px;margin:-158px 10px 10px auto;display:flex;flex-direction:column;gap:8px;z-index:5}
 .mapctl button{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--raise);color:var(--ink);font-size:1.3rem;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(30,40,32,.18);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .mapctl button:active{transform:scale(.92);background:var(--accent);color:var(--ground);border-color:var(--accent)}
 svg.usmap{cursor:grab;touch-action:none}

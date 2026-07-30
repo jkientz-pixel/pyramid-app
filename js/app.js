@@ -47,8 +47,12 @@ function reportLink(kind, what) {
   return `<a class="reportlink" href="mailto:jkientz@gmail.com?subject=${subj}&body=${body}">&#9873; See an error? Send us a note</a>
     <a class="reportlink" href="#/legal">Corrections &amp; removal requests</a>`;
 }
+/* crest-content generation: bump when crest PIXELS change under the same
+   filename (e.g. a strip_crest_bg.py run) — crest URLs are cached immutable
+   and cache-first, so only a new ?cv= reaches returning browsers */
+const CRESTV = '2';
 function crestHtml(c) {
-  if (c.img) return `<img class="crest imgcrest" src="${c.img}" alt="${esc(c.n)} crest" loading="lazy">`;
+  if (c.img) return `<img class="crest imgcrest" src="${c.img}?cv=${CRESTV}" alt="${esc(c.n)} crest" loading="lazy">`;
   return `<span class="crest" style="background:${LEAGUES[c.g].color}">${initials(c.n)}</span>`;
 }
 
@@ -112,7 +116,7 @@ function renderMapSvg(clubs, useCrests) {
     const [x, y] = XY(c.la, c.lo);
     const m = LEAGUES[c.g], idx = CLUBS.indexOf(c);
     if (useCrests && c.img) {
-      return `<image class="pin" data-idx="${idx}" data-cx="${x.toFixed(1)}" data-cy="${y.toFixed(1)}" href="${c.img}" x="${(x - 11).toFixed(1)}" y="${(y - 11).toFixed(1)}" width="22" height="22"></image>`;
+      return `<image class="pin" data-idx="${idx}" data-cx="${x.toFixed(1)}" data-cy="${y.toFixed(1)}" href="${c.img}?cv=${CRESTV}" x="${(x - 11).toFixed(1)}" y="${(y - 11).toFixed(1)}" width="22" height="22"></image>`;
     }
     const r0 = c.g === 'mls' ? 7 : c.g === 'loc' ? 4.5 : 5.5;
     const base = `class="pin" data-idx="${idx}" data-r="${r0}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r0}"`;
