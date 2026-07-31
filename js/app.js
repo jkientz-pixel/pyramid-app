@@ -294,7 +294,7 @@ function wireSearch() {
 const LEVELS = {
   all: null,
   pro: ['mls', 'uslc', 'usl1', 'mnp', 'nisa', 'nwsl', 'uslw'],
-  amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'loc', 'uslwl', 'wpsl', 'uws'],
+  amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'swpl', 'mpl', 'loc', 'uslwl', 'wpsl', 'uws'],
   college: ['ncaa1', 'ncaa2', 'ncaa3', 'naia']
 };
 let level = 'all';
@@ -1054,13 +1054,11 @@ const TIERS = {
     { t: 'Division II', pro: true, leagues: ['uslc'] },
     { t: 'Division III', pro: true, leagues: ['usl1', 'mnp'], extra: ['nisa'], note: 'NISA: professional sanctioning not awarded — unsanctioned since Dec 2024' },
     { t: 'National amateur', leagues: ['npsl', 'usl2', 'upsl'] },
-    { t: 'Regional & emerging', leagues: ['apsl', 'loc'], coming: [
+    { t: 'Regional & emerging', leagues: ['apsl', 'loc', 'swpl', 'mpl'], coming: [
       /* named regional leagues link to their sites until their data layers
          land — league owners populate rosters/standings, we ingest. The old
          Eastern Premier (EPSL) is NOT missing: it renamed to APSL in Feb
          2025 and is already a rated layer above. */
-      { label: 'Southwest Premier League', url: 'https://www.swplsoccer.com', img: 'crests/league-swpl.png' },
-      { label: 'Mountain Premier League', url: 'https://www.mountainpremierleague.com', img: 'crests/league-mpl.png' },
       { label: 'Midwest Premier League', url: 'https://www.midwestpl.com', img: 'crests/league-mwpl.png' },
       { label: 'Gulf Coast Premier League', url: 'https://www.gcplsoccer.com', img: 'crests/league-gcpl.png' },
       { label: 'Cascadia Premier League', url: 'https://www.cascadiapremierleague.com', img: 'crests/league-cascadia.png' },
