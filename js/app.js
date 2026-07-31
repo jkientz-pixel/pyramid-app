@@ -176,7 +176,15 @@ function wireMap(scopeStates) {
       im.setAttribute('y', (+im.dataset.cy - sz / 2).toFixed(1));
     });
   }
-  const setVB = v => { svg.setAttribute('viewBox', v.map(n => n.toFixed(1)).join(' ')); rescalePins(v[2]); };
+  /* every viewBox write clamps to the home extent so pan/pinch can never
+     push the map out of the box — dragging past an edge stops at the edge */
+  const clampAxis = (val, lo, hi) => hi < lo ? (lo + hi) / 2 : Math.min(Math.max(val, lo), hi);
+  const setVB = v => {
+    const x = clampAxis(v[0], homeVB[0], homeVB[0] + homeVB[2] - v[2]);
+    const y = clampAxis(v[1], homeVB[1], homeVB[1] + homeVB[3] - v[3]);
+    svg.setAttribute('viewBox', [x, y, v[2], v[3]].map(n => n.toFixed(1)).join(' '));
+    rescalePins(v[2]);
+  };
   rescalePins(homeVB[2]);
   const tip = view.querySelector('.maptip');
   svg.addEventListener('pointerover', e => {
