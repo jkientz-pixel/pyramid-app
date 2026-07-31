@@ -1046,7 +1046,12 @@ const TIERS = {
     { t: 'Division II', pro: true, leagues: ['uslc'] },
     { t: 'Division III', pro: true, leagues: ['usl1', 'mnp'], extra: ['nisa'], note: 'NISA: professional sanctioning not awarded — unsanctioned since Dec 2024' },
     { t: 'National amateur', leagues: ['npsl', 'usl2', 'upsl'] },
-    { t: 'Regional & emerging', leagues: ['apsl', 'loc'], coming: ['More regional leagues', 'State, city & rec leagues'] },
+    { t: 'Regional & emerging', leagues: ['apsl', 'loc'], coming: [
+      /* named regional leagues link to their sites until their data layers
+         land — league owners populate rosters/standings, we ingest */
+      { label: 'Southwest Premier League', url: 'https://www.swplsoccer.com' },
+      { label: 'Mountain Premier League', url: 'https://www.mountainpremierleague.com' },
+      'More regional leagues', 'State, city & rec leagues'] },
     { t: 'College & youth', leagues: ['ncaa1', 'ncaa2', 'ncaa3', 'naia'], coming: ['Youth clubs · directory layer'] }
   ],
   w: [
@@ -1069,7 +1074,9 @@ function screenPyramid() {
         <div class="tier-leagues">
           ${(tier.leagues || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img src="${m.img}" alt="">` : `<span class="dot" style="background:${m.color}"></span>`}<b>${m.label}</b><span>${count(g)} clubs</span>`; return m.url ? `<a class="tierlg" href="${m.url}" target="_blank" rel="noopener">${inner}</a>` : `<span class="tierlg">${inner}</span>`; }).join('')}
           ${(tier.extra || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img src="${m.img}" alt="">` : ''}<b>${m.label}</b><span>${count(g)} clubs</span>`; return m.url ? `<a class="tierlg dimmed" href="${m.url}" target="_blank" rel="noopener">${inner}</a>` : `<span class="tierlg dimmed">${inner}</span>`; }).join('')}
-          ${(tier.coming || []).map(txt => `<span class="tierlg coming"><b>${txt}</b></span>`).join('')}
+          ${(tier.coming || []).map(c => c.url
+            ? `<a class="tierlg coming" href="${c.url}" target="_blank" rel="noopener"><b>${c.label}</b><span>league site</span></a>`
+            : `<span class="tierlg coming"><b>${c.label || c}</b></span>`).join('')}
         </div>
         ${tier.note ? `<div class="tier-note">${tier.note}</div>` : ''}
       </div>`).join('')}
