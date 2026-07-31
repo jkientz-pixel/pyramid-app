@@ -1,0 +1,122 @@
+{
+ "ncaa3": [
+  {
+   "team": "St Joseph's LI",
+   "nearest": "St. Joseph's University"
+  },
+  {
+   "team": "J&W NC",
+   "nearest": "Case Western Reserve University"
+  },
+  {
+   "team": "Fisher",
+   "nearest": "St. John Fisher University"
+  },
+  {
+   "team": "NJ City",
+   "nearest": "City College of New York"
+  },
+  {
+   "team": "Bob Jones",
+   "nearest": null
+  },
+  {
+   "team": "Anna Maria",
+   "nearest": null
+  },
+  {
+   "team": "SUNY Poly",
+   "nearest": "State University of New York at Brockport"
+  },
+  {
+   "team": "Centenary NJ",
+   "nearest": "Centenary College of Louisiana"
+  },
+  {
+   "team": "Regent",
+   "nearest": null
+  },
+  {
+   "team": "PSU-Brandywine",
+   "nearest": "Pennsylvania State University, Abington"
+  },
+  {
+   "team": "NVU-Johnson",
+   "nearest": "Vermont State University\u2013Johnson"
+  },
+  {
+   "team": "Valley Forge",
+   "nearest": "Delaware Valley University"
+  },
+  {
+   "team": "York NY",
+   "nearest": "City College of New York"
+  },
+  {
+   "team": "Carlow",
+   "nearest": null
+  },
+  {
+   "team": "NVU-Lyndon",
+   "nearest": "Vermont State University\u2013Lyndon"
+  }
+ ],
+ "naia": [
+  {
+   "team": "Lourdes",
+   "nearest": null
+  },
+  {
+   "team": "UC Merced",
+   "nearest": null
+  },
+  {
+   "team": "Trinity Chr",
+   "nearest": "Arizona Christian University"
+  },
+  {
+   "team": "Oakland City",
+   "nearest": "Oklahoma City University"
+  },
+  {
+   "team": "TX Wesleyan",
+   "nearest": "Dakota Wesleyan University"
+  },
+  {
+   "team": "Shawnee St",
+   "nearest": "Bismarck State College"
+  },
+  {
+   "team": "TX A&M Texarkana",
+   "nearest": "University of North Texas at Dallas"
+  },
+  {
+   "team": "Siena Hts",
+   "nearest": null
+  },
+  {
+   "team": "Bethesda",
+   "nearest": null
+  },
+  {
+   "team": "Cal Maritime",
+   "nearest": null
+  },
+  {
+   "team": "Alice Lloyd",
+   "nearest": null
+  },
+  {
+   "team": "UHSP",
+   "nearest": null
+  },
+  {
+   "team": "Ohio Chr",
+   "nearest": "Arizona Christian University"
+  },
+  {
+   "team": "PSU-Schuylkill",
+   "nearest": "Bismarck State College"
+  }
+ ]
+}

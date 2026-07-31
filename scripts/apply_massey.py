@@ -119,12 +119,20 @@ def sig(s):
     t = toks(pre(s)) - {'university', 'college', 'of', 'the', 'at', 'in'}
     return (t - STATE_SUFFIX) or t
 
-def main(band_d1=(1500, 1755), band_d2=(1430, 1650)):
+def main(band_d1=(1500, 1755), band_d2=(1430, 1650),
+         band_d3=(1350, 1555), band_naia=(1370, 1575)):
+    # D3/NAIA bands sit below D2 with deliberate overlap — the top of both
+    # (~1555/1575) lands mid-D2, matching how those programs actually fare.
     dpath = os.path.join(ROOT, 'js', 'data.js')
     cur = open(dpath).read()
     clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', cur, re.S).group(1))
+    # build_college_layers.py records the exact massey-name -> club-id map for
+    # the layers it creates; exact hits skip fuzzy matching entirely
+    mpath = os.path.join(ROOT, 'data', 'massey_college_map.json')
+    college_map = json.load(open(mpath)) if os.path.exists(mpath) else {}
 
-    for div, fname, band in [('ncaa1', 'massey_d1.json', band_d1), ('ncaa2', 'massey_d2.json', band_d2)]:
+    for div, fname, band in [('ncaa1', 'massey_d1.json', band_d1), ('ncaa2', 'massey_d2.json', band_d2),
+                             ('ncaa3', 'massey_d3.json', band_d3), ('naia', 'massey_naia.json', band_naia)]:
         path = os.path.join(ROOT, 'data', fname)
         if not os.path.exists(path):
             print(f'{div}: {fname} missing, skipped', file=sys.stderr); continue
@@ -136,9 +144,23 @@ def main(band_d1=(1500, 1755), band_d2=(1430, 1650)):
         lo_r, hi_r = rats[int(.02 * len(rats))], rats[int(.98 * len(rats)) - 1]
         span = (hi_r - lo_r) or 1
         pool = [c for c in clubs if c['g'] == div]
+        by_id = {c['id']: c for c in pool}
+        dmap = college_map.get(div, {})
         matched = amb = 0
         unmatched = []
         for m in rows:
+            c = by_id.get(dmap.get(m['team']))
+            if c is not None:
+                frac = max(0.0, min(1.0, (m['rat'] - lo_r) / span))
+                c['r'] = int(band[0] + frac * (band[1] - band[0]))
+                c['rr'] = 3
+                matched += 1
+                continue
+            if dmap:
+                # mapped layer: an unmapped row is a new/unmatched team, not
+                # fuzzy-match material — log it for build_college_layers work
+                unmatched.append(m['team'])
+                continue
             mt = sig(m['team'])
             if not mt: continue
             cands = [c for c in pool if mt <= sig(c['n'])]
