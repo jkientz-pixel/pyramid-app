@@ -10,6 +10,13 @@ const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260730c')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
+/* bump_version.py rewrites this token with every deploy, and every deploy
+   ships freshly refreshed data — so the footer date derives from it instead
+   of a hand-edited string that drifts stale */
+const BUILDV = '20260730c';
+const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
+  .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
 const PROV_NAME = { QC:'Quebec', ON:'Ontario', BC:'British Columbia' };
@@ -928,7 +935,7 @@ function screenAbout() {
     <ul class="lglist">${ROADMAP.map(r =>
       `<li><a href="${r.url}" target="_blank" rel="noopener"><span class="dot" style="background:var(--ink-dim);width:12px;height:12px;border-radius:50%;opacity:.4"></span><b>${r.label}</b><span>~${r.teams} teams · ${r.sex === 'w' ? "women's" : "men's"}</span></a></li>`).join('')}</ul>
     <p class="note">NISA is currently unsanctioned by U.S. Soccer (Dec 2024); its clubs are shown for completeness. UPSL layer holds the clubs mapped so far — the full league is 400+ clubs.</p>
-    <p class="fine" style="font-size:.75rem">Data last refreshed: July 26, 2026 &middot; rosters auto-refresh every 2 days &middot; <a href="#/legal" style="color:var(--accent)">Terms &amp; Privacy</a></p>
+    <p class="fine" style="font-size:.75rem">Data last refreshed: ${BUILD_DATE} &middot; rosters and stats auto-refresh every 12 hours &middot; <a href="#/legal" style="color:var(--accent)">Terms &amp; Privacy</a></p>
     <p class="fine" style="font-size:.75rem">Data: Wikipedia (CC BY-SA — rosters, profiles, photos, crests), league sites and public feeds (NPSL/Squadi, UPSL), OpenStreetMap Nominatim geocoding. Club and league marks belong to their owners.</p>
     <p class="fine" style="font-size:.75rem">Concept by Jeremy Kientz · 2026</p>
   </div>`;

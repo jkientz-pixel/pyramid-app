@@ -1,11 +1,18 @@
 name: Refresh rosters
 on:
   schedule:
-    - cron: '17 14 */2 * *'
+    # twice daily; GitHub cron is best-effort, so odd minutes dodge the
+    # top-of-hour rush where scheduled runs get delayed or dropped
+    - cron: '17 2,14 * * *'
   workflow_dispatch: {}
 permissions:
   contents: write
   issues: write
+env:
+  # both Cloudflare secrets must exist for the auto-deploy step to run;
+  # without them the workflow still commits data and the site updates on
+  # the next manual ./deploy.sh
+  CF_DEPLOY: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
 jobs:
   refresh:
     runs-on: ubuntu-latest
@@ -22,11 +29,30 @@ jobs:
       - name: Gate — refuse empty or shrunken data
         run: python scripts/verify_refresh.py
       - name: Commit if changed
+        id: commit
         run: |
           git config user.name "roster-bot"
           git config user.email "actions@github.com"
           git add js/rosters.js js/data.js data/wire_asa.json
-          git diff --cached --quiet || (git commit -m "chore: scheduled roster refresh" && git push)
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "chore: scheduled roster refresh" && git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/setup-node@v4
+        if: steps.commit.outputs.changed == 'true' && env.CF_DEPLOY == 'true'
+        with:
+          node-version: '22'
+      # deploy.sh is the single deploy path (bump ?v= token so returning
+      # browsers refetch, preflight, stage ONLY runtime assets — the raw
+      # scrape dumps with player PII never leave the repo)
+      - name: Deploy refreshed data to Cloudflare Pages
+        if: steps.commit.outputs.changed == 'true' && env.CF_DEPLOY == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: ./deploy.sh
       - name: Alert on failure
         if: failure()
         env:
