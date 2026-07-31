@@ -40,7 +40,10 @@ SWPL_CONFS = {
 MPL_STATES = (['CO', 'UT', 'ID', 'WY', 'NM'], ('Denver', 'CO'))
 
 STATE_NAMES = {'AZ': 'Arizona', 'CA': 'California', 'NV': 'Nevada', 'CO': 'Colorado',
-               'UT': 'Utah', 'ID': 'Idaho', 'WY': 'Wyoming', 'NM': 'New Mexico'}
+               'UT': 'Utah', 'ID': 'Idaho', 'WY': 'Wyoming', 'NM': 'New Mexico',
+               'IL': 'Illinois', 'MO': 'Missouri', 'MI': 'Michigan', 'IN': 'Indiana',
+               'OH': 'Ohio', 'WI': 'Wisconsin', 'MN': 'Minnesota', 'IA': 'Iowa',
+               'KS': 'Kansas', 'NE': 'Nebraska', 'WA': 'Washington', 'OR': 'Oregon'}
 
 NAME_NOISE = re.compile(
     r"\b(fc|sc|cf|afc|ac|cd|club|united|city|soccer|celtic|athletic|atletico|real|"
@@ -239,3 +242,134 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+# --- MWPL + Cascadia (second pass) ------------------------------------------
+MWPL_PAGES = [
+    'gateway-conference-east-division', 'gateway-conference-west-division',
+    'great-lakes-conference-east-division', 'great-lakes-conference-west-division',
+    'heartland-conference-division-1', 'heartland-conference-division-2-group-a',
+    'heartland-conference-division-2-group-b',
+]
+MWPL_STATES = (['IL', 'MO', 'MI', 'IN', 'OH', 'WI', 'MN', 'IA', 'KS', 'NE'], ('Chicago', 'IL'))
+CPL_STATES = (['WA'], ('Seattle', 'WA'))
+# women's sides not named "Women"
+CPL_WOMEN_EXTRA = {'Bellevue Valkyries', 'Wenatchee All-Stars Women'}
+CITY_RE = re.compile(r'([A-Z][A-Za-z .\'-]{2,30}),\s*([A-Z]{2})\b')
+
+
+def fetch_mwpl():
+    """[(division, team, logo, city, st)] from the seven division pages —
+    cities are stated on the page next to each club (league-stated)."""
+    out = []
+    for slug in MWPL_PAGES:
+        try:
+            soup = BeautifulSoup(get(f'https://www.midwestpl.com/{slug}/'), 'html.parser')
+        except Exception as e:
+            print(f'mwpl/{slug}: fetch failed ({e})', file=sys.stderr)
+            continue
+        div = slug.replace('-', ' ').title()
+        for block in soup.select('.wp-block-media-text'):
+            img = block.select_one('img')
+            txt = block.get_text('\n', strip=True)
+            lines = [l for l in txt.split('\n') if l.strip()]
+            if not lines:
+                continue
+            name = lines[0].strip()
+            m = CITY_RE.search(txt)
+            city, st = (m.group(1), m.group(2)) if m else (None, None)
+            logo = (img.get('src') or '').split('?')[0] if img else ''
+            if name and len(name) < 60:
+                out.append((div, name, logo, city, st))
+        time.sleep(0.7)
+    return out
+
+
+def fetch_cascadia():
+    """[(team, logo)] from the stats SPA teams page (rendered DOM)."""
+    from playwright.sync_api import sync_playwright
+    out = []
+    with sync_playwright() as pw:
+        b = pw.chromium.launch(headless=True)
+        p = b.new_page(user_agent=UA['User-Agent'])
+        p.goto('https://www.cascadiapremierleague.com/stats#/3770/teams?season_id=10420',
+               wait_until='domcontentloaded', timeout=60000)
+        for _ in range(15):
+            if p.evaluate("document.body.innerText.length") > 2000:
+                break
+            time.sleep(2)
+        rows = p.evaluate("""[...document.querySelectorAll('a[href*="/team/"]')]
+          .map(a => [a.textContent.trim(), (a.querySelector('img') || {}).src || ''])
+          .filter(([t]) => t && t.length < 50)""")
+        b.close()
+    seen = set()
+    for txt, logo in rows:
+        name = txt.split('\n')[0].strip()
+        if name and len(name) < 50 and name not in seen:
+            seen.add(name)
+            out.append((name, logo))
+    return out
+
+
+def ingest_second_pass():
+    clubs = load_clubs()
+    existing_norm = {norm(c['n']) + ':' + c.get('x', 'm') for c in clubs}
+    ids = {c['id'] for c in clubs}
+    geo = load_geo()
+    report = {'skipped_existing': [], 'anchor_fallback': [], 'added': 0}
+
+    def add(name, g, sex, div, logo, city, st, states, anchor):
+        nn = norm(name) + ':' + sex
+        if nn == ':' + sex:
+            return
+        if nn in existing_norm:
+            report['skipped_existing'].append(f'{g}: {name}')
+            return
+        ll, approx = None, False
+        if city and st:
+            ll = geocode(city, [st], geo)
+        if not ll:
+            tok = place_token(name)
+            if tok:
+                words = tok.split()
+                for k in range(len(words), 0, -1):
+                    cand = ' '.join(words[:k])
+                    ll = geocode(cand, states, geo)
+                    if ll:
+                        city, st = cand, next(s for s in states if f'{cand}|{s}' in geo and geo[f'{cand}|{s}'])
+                        break
+        if not ll:
+            city, st = anchor
+            ll = geocode(city, [st], geo)
+            approx = True
+            report['anchor_fallback'].append(f'{g}: {name} -> {city} {st}')
+        if not ll:
+            return
+        cid = slugify(name)
+        if cid in ids:
+            cid = f'{cid}-{g}'
+            if cid in ids:
+                return
+        club = {'n': name, 'g': g, 'x': sex, 'la': ll[0], 'lo': ll[1],
+                'st': st, 'ct': city.title(), 'id': cid, 'dv': div}
+        if approx:
+            club['acc'] = 'a'
+        img = crest_path(g, cid, logo)
+        if img:
+            club['img'] = img
+        clubs.append(club)
+        ids.add(cid)
+        existing_norm.add(nn)
+        report['added'] += 1
+
+    for div, name, logo, city, st in fetch_mwpl():
+        add(name, 'mwpl', 'm', div, logo, city, st, *MWPL_STATES)
+    for name, logo in fetch_cascadia():
+        sex = 'w' if ('women' in name.lower() or name in CPL_WOMEN_EXTRA) else 'm'
+        add(name, 'cpl', sex, 'Cascadia Premier League', logo, None, None, *CPL_STATES)
+
+    json.dump(geo, open(GEO_CACHE, 'w'))
+    json.dump(report, open(os.path.join(ROOT, 'data', 'regionals2_report.json'), 'w'), indent=1)
+    write_clubs(clubs)
+    print(f"pass2: added {report['added']}, skipped {len(report['skipped_existing'])}, "
+          f"anchored {len(report['anchor_fallback'])}")
