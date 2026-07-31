@@ -294,7 +294,7 @@ function wireSearch() {
 const LEVELS = {
   all: null,
   pro: ['mls', 'uslc', 'usl1', 'mnp', 'nisa', 'nwsl', 'uslw'],
-  amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'swpl', 'mpl', 'loc', 'uslwl', 'wpsl', 'uws'],
+  amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'swpl', 'mpl', 'mwpl', 'cpl', 'cplw', 'loc', 'uslwl', 'wpsl', 'uws'],
   college: ['ncaa1', 'ncaa2', 'ncaa3', 'naia']
 };
 let level = 'all';
@@ -313,18 +313,32 @@ function wireLevelChips() {
   });
 }
 /* Direct-sold sponsor slots — no ad networks, no tracking scripts, ever: a
-   filled slot is a static creative + link. Fill a slot by replacing its null
-   with {name, url, img}. Empty slots render a quiet self-selling placeholder. */
+   filled slot is a static creative + link. Sold nationally or per region:
+   a slot resolves regional sponsor (for the region in view) -> national
+   sponsor -> placeholder, so local sponsors show only inside their region
+   and national coverage fills everywhere else.
+   Fill: SPONSORS.map.national = {name, url, img}
+         SPONSORS.region.regions.southwest = {name, url, img} */
 const SPONSORS = {
-  map: null,        // national map — every session starts here
-  tiers: null,      // the pyramid
-  wire: null,       // the wire
-  freeagents: null, // recruiting audience
+  map: { national: null, regions: {} },        // national map — every session starts here
+  tiers: { national: null, regions: {} },      // the pyramid
+  wire: { national: null, regions: {} },       // the wire
+  freeagents: { national: null, regions: {} }, // recruiting audience
+  region: { national: null, regions: {} },     // region + state screens (local inventory)
 };
+function adRegion() {
+  const parts = (location.hash || '').slice(2).split('/');
+  if (parts[0] === 'region') return REGIONS[parts[1]] ? parts[1] : null;
+  if (parts[0] === 'state') return Object.keys(REGIONS).find(r => REGIONS[r].includes(parts[1])) || null;
+  return null;
+}
 function adSlot(key, label) {
-  const s = SPONSORS[key];
+  const cfg = SPONSORS[key] || {};
+  const reg = adRegion();
+  const s = (reg && cfg.regions && cfg.regions[reg]) || cfg.national;
   if (s) return `<a class="adslot filled" href="${s.url}" target="_blank" rel="noopener sponsored">${s.img ? `<img src="${s.img}" alt="${esc(s.name)}">` : ''}<span><i>${label} · presented by</i><b>${esc(s.name)}</b></span></a>`;
-  return `<a class="adslot" href="#/advertise"><span><i>Sponsor slot · ${label}</i><b>Your brand, in front of American soccer</b></span><span class="adcta">Ad space &rarr;</span></a>`;
+  const scope = reg ? `${REGION_LABEL[reg]} regional` : 'national';
+  return `<a class="adslot" href="#/advertise"><span><i>Sponsor slot · ${label} · ${scope}</i><b>Your brand, in front of American soccer</b></span><span class="adcta">Ad space &rarr;</span></a>`;
 }
 
 function screenMap() {
@@ -372,7 +386,8 @@ function screenRegion(key) {
     ${renderMapSvg(visible(clubs), true)}
     ${leagueChips()}
     <div class="kicker" style="margin-top:10px">Top clubs · ${clubs.length} in region</div>
-    <ul class="clublist">${ranked.slice(0, 15).map((c, i) => clubRow(c, i + 1)).join('')}</ul>`;
+    <ul class="clublist">${ranked.slice(0, 15).map((c, i) => clubRow(c, i + 1)).join('')}</ul>
+    ${adSlot('region', REGION_LABEL[key])}`;
   wireSexToggle();
   wireMap(states);
 }
@@ -391,6 +406,7 @@ function screenState(st) {
     ${clubs.length ? leagueChips() : ''}
     <div class="kicker" style="margin-top:10px">${clubs.length ? `Clubs · ${clubs.length}` : 'No clubs mapped yet'}</div>
     <ul class="clublist" id="statelist">${ranked.map((c, i) => clubRow(c, i + 1)).join('')}${concepts.map(c => clubRow(c)).join('')}</ul>
+    ${adSlot('region', STATE_NAME[st])}
     ${clubs.length ? '' : '<p class="note">This is where league expansion starts — the dataset grows as leagues are added.</p>'}`;
   wireSexToggle();
   if (clubs.length) {
@@ -1070,14 +1086,11 @@ const TIERS = {
     { t: 'Division II', pro: true, leagues: ['uslc'] },
     { t: 'Division III', pro: true, leagues: ['usl1', 'mnp'], extra: ['nisa'], note: 'NISA: professional sanctioning not awarded — unsanctioned since Dec 2024' },
     { t: 'National amateur', leagues: ['npsl', 'usl2', 'upsl'] },
-    { t: 'Regional & emerging', leagues: ['apsl', 'loc', 'swpl', 'mpl'], coming: [
-      /* named regional leagues link to their sites until their data layers
-         land — league owners populate rosters/standings, we ingest. The old
-         Eastern Premier (EPSL) is NOT missing: it renamed to APSL in Feb
-         2025 and is already a rated layer above. */
-      { label: 'Midwest Premier League', url: 'https://www.midwestpl.com', img: 'crests/league-mwpl.png' },
+    { t: 'Regional & emerging', leagues: ['apsl', 'loc', 'swpl', 'mpl', 'mwpl', 'cpl'], coming: [
+      /* GCPL stays a chip: its site currently says "update coming soon" with
+         no published teams. The old Eastern Premier (EPSL) is NOT missing:
+         it renamed to APSL in Feb 2025 and is already a rated layer above. */
       { label: 'Gulf Coast Premier League', url: 'https://www.gcplsoccer.com', img: 'crests/league-gcpl.png' },
-      { label: 'Cascadia Premier League', url: 'https://www.cascadiapremierleague.com', img: 'crests/league-cascadia.png' },
       'More regional leagues', 'State, city & rec leagues'] },
     { t: 'College & youth', leagues: ['ncaa1', 'ncaa2', 'ncaa3', 'naia'], coming: ['Youth clubs · directory layer'] }
   ],
@@ -1085,6 +1098,7 @@ const TIERS = {
     { t: 'Division I', pro: true, leagues: ['nwsl', 'uslw'] },
     { t: 'Division II', pro: true, coming: ['WPSL Pro · launching 2026-27'] },
     { t: 'National amateur', leagues: ['uslwl', 'wpsl', 'uws'] },
+    { t: 'Regional & emerging', leagues: ['cplw'], coming: ['More regional leagues'] },
     { t: 'College & youth', coming: ['NCAA women\'s soccer · next', 'Youth clubs · directory layer'] }
   ]
 };
@@ -1155,6 +1169,10 @@ function screenAdvertise() {
     <div class="pricecard paid"><b>${t} · ${price}</b>
       <p>${blurb}</p>
       <a class="claim" href="${mail(subj)}">Ask about this placement</a></div>`).join('')}
+    <div class="kicker" style="margin-top:16px">Regional — your market only</div>
+    <div class="pricecard paid"><b>Regional sponsorship · $79/mo per region</b>
+      <p>Your creative on every region and state screen inside <b>one region</b> — Northwest, Southwest, Midwest, South, Southeast, or Northeast. A San Diego shop sponsors the Southwest; fans in Ohio never see it, and that space stays sellable to someone in Ohio. Local rates for local reach; the national slots above stay independent.</p>
+      <a class="claim" href="${mail('Regional sponsorship')}">Claim a region</a></div>
     <div class="pricecard"><b>Tier sponsorship · custom</b>
       <p>Exclusive "presented by" on a whole tier row of the Pyramid — one sponsor per tier, priced by tier. Leagues: sponsoring your own tier row comes with your data layer.</p>
       <a class="claim" href="${mail('Tier sponsorship')}">Talk to us</a></div>

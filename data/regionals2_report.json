@@ -1,0 +1,34 @@
+{
+ "skipped_existing": [
+  "mwpl: United Capital City Athletic",
+  "mwpl: Union KC",
+  "mwpl: Oakland County FC",
+  "mwpl: Toledo Villa FC",
+  "mwpl: Grand Rapids SC",
+  "mwpl: Midwest United FC U23",
+  "mwpl: Edgewater Castle FC",
+  "mwpl: Berber City FC",
+  "mwpl: Steel City FC",
+  "mwpl: Sueno FC",
+  "mwpl: Chicago Soccer Academy",
+  "mwpl: River Light FC",
+  "mwpl: RKC Third Coast",
+  "cpl: FC Olympia",
+  "cpl: Gala FC",
+  "cpl: Sammamish FC",
+  "cpl: Seattle Eagles FC",
+  "cpl: Strangers United FC",
+  "cpl: Washington Premier FC 2",
+  "cpl: Washington Premier Legends",
+  "cpl: Washington Premier Legends (M)"
+ ],
+ "anchor_fallback": [
+  "cpl: 3RSC Men -> Seattle WA",
+  "cpl: 3RSC Women -> Seattle WA",
+  "cpl: Crossfire -> Seattle WA",
+  "cpl: Gillen FC -> Seattle WA",
+  "cpl: Roster -> Seattle WA",
+  "cpl: Stats -> Seattle WA"
+ ],
+ "added": 60
+}
