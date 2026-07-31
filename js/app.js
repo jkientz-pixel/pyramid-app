@@ -1056,9 +1056,14 @@ const TIERS = {
     { t: 'National amateur', leagues: ['npsl', 'usl2', 'upsl'] },
     { t: 'Regional & emerging', leagues: ['apsl', 'loc'], coming: [
       /* named regional leagues link to their sites until their data layers
-         land — league owners populate rosters/standings, we ingest */
-      { label: 'Southwest Premier League', url: 'https://www.swplsoccer.com' },
-      { label: 'Mountain Premier League', url: 'https://www.mountainpremierleague.com' },
+         land — league owners populate rosters/standings, we ingest. The old
+         Eastern Premier (EPSL) is NOT missing: it renamed to APSL in Feb
+         2025 and is already a rated layer above. */
+      { label: 'Southwest Premier League', url: 'https://www.swplsoccer.com', img: 'crests/league-swpl.png' },
+      { label: 'Mountain Premier League', url: 'https://www.mountainpremierleague.com', img: 'crests/league-mpl.png' },
+      { label: 'Midwest Premier League', url: 'https://www.midwestpl.com', img: 'crests/league-mwpl.png' },
+      { label: 'Gulf Coast Premier League', url: 'https://www.gcplsoccer.com', img: 'crests/league-gcpl.png' },
+      { label: 'Cascadia Premier League', url: 'https://www.cascadiapremierleague.com', img: 'crests/league-cascadia.png' },
       'More regional leagues', 'State, city & rec leagues'] },
     { t: 'College & youth', leagues: ['ncaa1', 'ncaa2', 'ncaa3', 'naia'], coming: ['Youth clubs · directory layer'] }
   ],
@@ -1083,7 +1088,7 @@ function screenPyramid() {
           ${(tier.leagues || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img src="${m.img}" alt="">` : `<span class="dot" style="background:${m.color}"></span>`}<b>${m.label}</b><span>${count(g)} clubs</span>`; return m.url ? `<a class="tierlg" href="${m.url}" target="_blank" rel="noopener">${inner}</a>` : `<span class="tierlg">${inner}</span>`; }).join('')}
           ${(tier.extra || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img src="${m.img}" alt="">` : ''}<b>${m.label}</b><span>${count(g)} clubs</span>`; return m.url ? `<a class="tierlg dimmed" href="${m.url}" target="_blank" rel="noopener">${inner}</a>` : `<span class="tierlg dimmed">${inner}</span>`; }).join('')}
           ${(tier.coming || []).map(c => c.url
-            ? `<a class="tierlg coming" href="${c.url}" target="_blank" rel="noopener"><b>${c.label}</b><span>league site</span></a>`
+            ? `<a class="tierlg coming" href="${c.url}" target="_blank" rel="noopener">${c.img ? `<img src="${c.img}" alt="">` : ''}<b>${c.label}</b><span>league site</span></a>`
             : `<span class="tierlg coming"><b>${c.label || c}</b></span>`).join('')}
         </div>
         ${tier.note ? `<div class="tier-note">${tier.note}</div>` : ''}
