@@ -116,3 +116,31 @@ for (const path of ['/index.html', '/npsl-rankings.html', '/upsl-rankings.html']
     expect(errors).toEqual([]);
   });
 }
+
+test('map pan stays anchored — drag cannot push the map out of the box', async ({ page }) => {
+  const errors = trackErrors(page);
+  await gotoRoute(page, '#/map');
+  const svg = page.locator('svg.usmap');
+  await expect(svg).toBeVisible();
+  // zoom in twice so there is room to pan, then drag hard past the edge
+  await page.click('.mapctl [data-z="in"]');
+  await page.click('.mapctl [data-z="in"]');
+  const box = await svg.boundingBox();
+  // repeated drags across open map area (clear of the .mapctl overlay),
+  // starting and ending inside the svg like a real user — accumulated pan
+  // must clamp at the home extent instead of pushing the map out of the box
+  for (let i = 0; i < 6; i++) {
+    await page.mouse.move(box.x + box.width * 0.8, box.y + box.height * 0.4);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width * 0.2, box.y + box.height * 0.6, { steps: 6 });
+    await page.mouse.up();
+  }
+  const vb = await svg.getAttribute('viewBox');
+  const [x, y, w, h] = vb.split(' ').map(Number);
+  // home extent is 0 0 980 560 — the view must stay inside it
+  expect(x).toBeGreaterThanOrEqual(-0.1);
+  expect(y).toBeGreaterThanOrEqual(-0.1);
+  expect(x + w).toBeLessThanOrEqual(980.1);
+  expect(y + h).toBeLessThanOrEqual(560.1);
+  expect(errors).toEqual([]);
+});
