@@ -293,3 +293,12 @@ a.tierlg:hover{border-color:var(--accent)}
 .wup{color:var(--accent);font-weight:700}
 a.wirelink{display:block;text-decoration:none;color:inherit}
 a.wirelink:hover .side{color:var(--accent)}
+
+/* Sponsor slots — direct-sold, quiet by design */
+.adslot{display:flex;align-items:center;gap:12px;justify-content:space-between;border:1px dashed var(--line);border-radius:14px;padding:12px 16px;margin:12px 0;text-decoration:none;color:var(--ink-dim)}
+.adslot i{display:block;font-style:normal;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+.adslot b{color:var(--ink);font-size:.9rem}
+.adslot .adcta{color:var(--accent);font-size:.8rem;white-space:nowrap}
+.adslot:hover{border-color:var(--accent)}
+.adslot.filled{border-style:solid;background:var(--raise)}
+.adslot.filled img{height:34px;width:auto}
