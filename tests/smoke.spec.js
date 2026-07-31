@@ -14,6 +14,7 @@ const ROUTES = [
   '#/cups',
   '#/wire',
   '#/pricing',
+  '#/advertise',
   '#/freeagents',
   '#/freeagent',
   '#/clubtools',

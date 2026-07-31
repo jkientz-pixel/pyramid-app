@@ -312,6 +312,21 @@ function wireLevelChips() {
     route();
   });
 }
+/* Direct-sold sponsor slots — no ad networks, no tracking scripts, ever: a
+   filled slot is a static creative + link. Fill a slot by replacing its null
+   with {name, url, img}. Empty slots render a quiet self-selling placeholder. */
+const SPONSORS = {
+  map: null,        // national map — every session starts here
+  tiers: null,      // the pyramid
+  wire: null,       // the wire
+  freeagents: null, // recruiting audience
+};
+function adSlot(key, label) {
+  const s = SPONSORS[key];
+  if (s) return `<a class="adslot filled" href="${s.url}" target="_blank" rel="noopener sponsored">${s.img ? `<img src="${s.img}" alt="${esc(s.name)}">` : ''}<span><i>${label} · presented by</i><b>${esc(s.name)}</b></span></a>`;
+  return `<a class="adslot" href="#/advertise"><span><i>Sponsor slot · ${label}</i><b>Your brand, in front of American soccer</b></span><span class="adcta">Ad space &rarr;</span></a>`;
+}
+
 function screenMap() {
   crumb.textContent = 'USA';
   const clubs = pool();
@@ -333,6 +348,7 @@ function screenMap() {
     })()}
     <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>Upsets, rating swings, golden-boot races &mdash; generated live from real results.</span></a>
     <a class="fa-card" href="#/freeagents"><b>&#9733; Free Agents</b><span>No club right now? Get seen by every club on this map.</span></a>
+    ${adSlot('map', 'National map')}
     <p class="note">Tap a state to zoom in. Tap a pin for the club. Pinch, scroll, or use +/&minus; to zoom further.</p>`;
   wireSexToggle();
   wireLevelChips();
@@ -1093,6 +1109,7 @@ function screenPyramid() {
       </div>`).join('')}
     </div>
     <a class="fa-card" href="#/cups"><b>&#127942; The Trophy Room</b><span>MLS Cup, Supporters' Shield, NWSL Championship, and the Open Cup — back to 1914.</span></a>
+    ${adSlot('tiers', 'The Pyramid')}
     <p class="note">Tiers are organizational, not sporting — US soccer has no promotion and relegation between most levels. The pathway runs through players, not clubs: youth to college to the amateur leagues to the pro game. Tap a league to visit its official site.</p>`;
   wireSexToggle();
 }
@@ -1116,8 +1133,32 @@ function screenFreeAgents() {
         <span class="cl-name"><b>${f.name}</b><span>${f.pos} · ${f.age} · ${f.region} · last: ${f.last}</span></span>
         <span class="cl-rt" style="font-size:.7rem;color:var(--ink-dim)">${f.seeks}${f.video ? ' · film' : ''}</span></a></li>`).join('')}</ul>
     <p class="note">Sample listings — the real board opens with player claims.</p>
+    ${adSlot('freeagents', 'Free Agents board')}
     <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Free agent listing request')}&body=${encodeURIComponent('Name:\nPosition:\nAge:\nRegion:\nLast club/level:\nLevel seeking:\nHighlight film link:\n')}">List yourself — $25 per season</a>
     <p class="note">Flat listing fee. No commissions, no placement cuts — your deal is yours. Clubs: browsing is free, and posting open-tryout dates is coming. <a href="#/pricing" style="color:var(--accent)">See all pricing &rarr;</a></p>`;
+}
+
+function screenAdvertise() {
+  crumb.textContent = 'Advertise';
+  const mail = s => `mailto:jkientz@gmail.com?subject=${encodeURIComponent('Ad space inquiry — ' + s)}`;
+  const SLOTS = [
+    ['National map', '$299/mo', 'The home surface. Every session starts on the map — your creative sits directly beneath it, on every visit.', 'National map'],
+    ['Free Agents board', '$149/mo', 'The recruiting audience: players looking for clubs and the clubs scouting them. Boots, fitness, training — this is your buyer.', 'Free Agents board'],
+    ['The Pyramid', '$149/mo', 'The structure-of-American-soccer page — the screen leagues, media, and diehards share and screenshot.', 'The Pyramid'],
+    ['The Wire', '$99/mo', 'Live results, rating swings, golden-boot races. The screen that gets checked after every matchday.', 'The Wire'],
+  ];
+  view.innerHTML = `
+    <div class="kicker">Direct-sold · no ad networks · no tracking</div>
+    <h2 class="disp">Advertise on Ranked XI</h2>
+    <p class="note" style="font-size:.88rem">Four placements, sold directly. A sponsorship is a static creative and a link — we never add ad-network scripts or trackers, so your brand sits on a fast page next to real data, clearly labeled. Founding rates below are flat, month-to-month, and locked for 12 months once you're in.</p>
+    ${SLOTS.map(([t, price, blurb, subj]) => `
+    <div class="pricecard paid"><b>${t} · ${price}</b>
+      <p>${blurb}</p>
+      <a class="claim" href="${mail(subj)}">Ask about this placement</a></div>`).join('')}
+    <div class="pricecard"><b>Tier sponsorship · custom</b>
+      <p>Exclusive "presented by" on a whole tier row of the Pyramid — one sponsor per tier, priced by tier. Leagues: sponsoring your own tier row comes with your data layer.</p>
+      <a class="claim" href="${mail('Tier sponsorship')}">Talk to us</a></div>
+    <p class="note">Honesty policy, same as everything here: we share real traffic numbers on request before you commit — no inflated reach claims. Sponsorships are labeled as such. If a placement underperforms, walk away month-to-month; founding rates exist because early sponsors take the early-traffic risk with us.</p>`;
 }
 
 function screenPricing() {
@@ -1139,6 +1180,9 @@ function screenPricing() {
     <div class="pricecard paid"><b>Claimed player profile · $30/year</b>
       <p>Verify your page: photo, film, socials, corrected history — and recruiting visibility.</p>
       <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim my player profile')}">Claim yours</a></div>
+    <div class="pricecard paid"><b>Sponsorships · from $99/mo</b>
+      <p>Four direct-sold placements — map, free-agent board, pyramid, wire. Static creative + link, no ad networks, no trackers.</p>
+      <a class="claim" href="#/advertise">See placements &amp; rates</a></div>
     <div class="pricecard paid"><b>Youth club directory placement · $99/year</b>
       <p>Coming: your youth club on the national map with a pathway line to the pros above you.</p>
       <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Youth club directory interest')}">Join the waitlist</a></div>
@@ -1454,6 +1498,7 @@ async function screenWire() {
     ${leaders ? `<div class="kicker" style="margin-top:12px">The leaders · real stats</div>` + leaders
       : (sex === 'm' && (wireLg === 'all' || wireLg === 'npsl') ? '' : '<p class="note" style="margin-top:10px">No real-stat leagues in this filter yet.</p>')}
     <div id="wireresults"></div>
+    ${adSlot('wire', 'The Wire')}
     <p class="note">No aggregation, no editors: every item is computed from the results and stat lines already in Ranked XI, so the wire is exactly as fresh as the data. Rating swings are the actual Elo changes from the same walk that produces club ratings &mdash; except MLS, which ranks by the official league table (its results-Elo appears on club pages as an experimental number), and UPSL, which stays standings-derived.</p>`;
   wireSexToggle();
   view.querySelector('#wirechips').addEventListener('click', e => {
@@ -1492,6 +1537,7 @@ function route() {
   if (parts[0] === 'tiers') screenPyramid();
   else if (parts[0] === 'freeagents') screenFreeAgents();
   else if (parts[0] === 'pricing') screenPricing();
+  else if (parts[0] === 'advertise') screenAdvertise();
   else if (parts[0] === 'following') screenFollowing();
   else if (parts[0] === 'legends') screenLegends(parts[1]);
   else if (parts[0] === 'cups') screenCups();
