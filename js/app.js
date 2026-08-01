@@ -520,20 +520,23 @@ function oddsFor(h, a, homeAdv) {
 }
 const moneyline = p => p >= 0.5 ? '-' + Math.round(100 * p / (1 - p)) : '+' + Math.round(100 * (1 - p) / p);
 
+/* ico = crests/platform-<ico>.svg; 'inv' logos are dark-on-transparent
+   wordmarks that invert under the dark theme */
 const WATCH = {
-  mls: { label: 'MLS Season Pass · Apple TV', url: 'https://tv.apple.com/us/channel/mls-season-pass/tvs.sbd.7000' },
-  mnp: { label: 'MLS Next Pro · free on Apple TV', url: 'https://www.mlsnextpro.com/schedule' },
+  mls: { label: 'MLS Season Pass · Apple TV', url: 'https://tv.apple.com/us/channel/mls-season-pass/tvs.sbd.7000', ico: 'appletv', inv: true },
+  mnp: { label: 'MLS Next Pro · free on Apple TV', url: 'https://www.mlsnextpro.com/schedule', ico: 'appletv', inv: true },
   uslc: { label: 'USL Championship · broadcast guide', url: 'https://www.uslchampionship.com/watch' },
   usl1: { label: 'USL League One · broadcast guide', url: 'https://www.uslleagueone.com/watch' },
   nwsl: { label: 'NWSL · how to watch', url: 'https://www.nwslsoccer.com/how-to-watch' },
-  uslw: { label: 'USL Super League · Peacock', url: 'https://www.uslsuperleague.com' },
-  npsl: { label: 'NPSL · league YouTube', url: 'https://www.youtube.com/@NPSLSoccer' },
-  upsl: { label: 'UPSL · league YouTube', url: 'https://www.youtube.com/@UPSLsoccer' }
+  uslw: { label: 'USL Super League · Peacock', url: 'https://www.uslsuperleague.com', ico: 'peacock', inv: true },
+  npsl: { label: 'NPSL · league YouTube', url: 'https://www.youtube.com/@NPSLSoccer', ico: 'youtube' },
+  upsl: { label: 'UPSL · league YouTube', url: 'https://www.youtube.com/@UPSLsoccer', ico: 'youtube' }
 };
 function watchRow(h, a) {
   const w = WATCH[h.g];
   if (!w) return '';
-  return `<div class="meta" style="margin-top:6px"><a class="watchlink" href="${w.url}" target="_blank" rel="noopener">&#9655; Watch: ${w.label}</a></div>`;
+  const ico = w.ico ? `<img class="pico${w.inv ? ' inv' : ''}" src="crests/platform-${w.ico}.svg" alt="" loading="lazy">` : '&#9655; ';
+  return `<div class="meta" style="margin-top:6px"><a class="watchlink" href="${w.url}" target="_blank" rel="noopener">${ico}Watch: ${w.label}</a></div>`;
 }
 /* Confidence buckets over the strongest single outcome — the meter under the
    odds row. Thresholds line up with how bettors read a three-way market. */
@@ -543,9 +546,15 @@ function confidenceFor(o, h, a) {
   const [tag, n] = top >= 0.7 ? ['Strong pick', 4] : top >= 0.55 ? ['Likely', 3] : top >= 0.45 ? ['Lean', 2] : ['Toss-up', 1];
   return { top, fav, tag, n };
 }
+/* small crest + league-logo marks for match rows — the 34px crestHtml chip
+   overwhelms a one-line fixture, so match rows get a 20px variant */
+const mcrest = c => c.img
+  ? `<img class="mcrest" src="${c.img}?cv=${CRESTV}" alt="" loading="lazy">`
+  : `<span class="mcrest ini" style="background:${LEAGUES[c.g].color}">${initials(c.n)}</span>`;
+const lgIcon = g => LEAGUES[g].img ? `<img class="lgico" src="${LEAGUES[g].img}" alt="" loading="lazy">` : '';
 function matchCard(h, a, when) {
-  const head = `<div class="mrow"><a class="side" href="#/club/${h.id}">${esc(h.n)}</a><span class="vs">${when || 'NEUTRAL'}</span><a class="side away" href="#/club/${a.id}">${esc(a.n)}</a></div>
-    <div class="meta"><span>${LEAGUES[h.g].label}${h.g !== a.g ? ' v ' + LEAGUES[a.g].label : ''}</span><span>${h.st}${h.st !== a.st ? ' · ' + a.st : ''}</span></div>`;
+  const head = `<div class="mrow"><a class="side" href="#/club/${h.id}">${mcrest(h)}<span class="sn">${esc(h.n)}</span></a><span class="vs">${when || 'NEUTRAL'}</span><a class="side away" href="#/club/${a.id}">${mcrest(a)}<span class="sn">${esc(a.n)}</span></a></div>
+    <div class="meta"><span>${lgIcon(h.g)}${LEAGUES[h.g].label}${h.g !== a.g ? ' v ' + LEAGUES[a.g].label : ''}</span><span>${h.st}${h.st !== a.st ? ' · ' + a.st : ''}</span></div>`;
   // a club with no Elo yet must never reach the Poisson math — that path is NaN
   if (!h.r || !a.r) return `<div class="match">${head}
     <p class="note" style="margin:8px 0 0">Odds unavailable — ${esc(!h.r ? h.n : a.n)} has no rating yet. Ratings arrive once results land in the dataset.</p>
@@ -1135,14 +1144,16 @@ const TIERS = {
       /* The old Eastern Premier (EPSL) is NOT missing: it renamed to APSL in
          Feb 2025 and is already a rated layer above. */
       'More regional leagues', 'State, city & rec leagues'] },
-    { t: 'College & youth', leagues: ['ncaa1', 'ncaa2', 'ncaa3', 'naia', 'mlsnext', 'ecnlb', 'ea'] }
+    { t: 'College', leagues: ['ncaa1', 'ncaa2', 'ncaa3', 'naia'] },
+    { t: 'Youth', leagues: ['mlsnext', 'ecnlb', 'ea'] }
   ],
   w: [
     { t: 'Division I', pro: true, leagues: ['nwsl', 'uslw'] },
     { t: 'Division II', pro: true, coming: ['WPSL Pro · launching 2026-27'] },
     { t: 'National amateur', leagues: ['uslwl', 'wpsl', 'uws'] },
     { t: 'Regional & emerging', leagues: ['uws2', 'cplw'], coming: ['More regional leagues'] },
-    { t: 'College & youth', leagues: ['ncaa1w', 'ncaa2w', 'ga', 'ecnlg'], coming: ['D3 / NAIA women · next'] }
+    { t: 'College', leagues: ['ncaa1w', 'ncaa2w'], coming: ['D3 / NAIA women · next'] },
+    { t: 'Youth', leagues: ['ga', 'ecnlg'] }
   ]
 };
 function screenPyramid() {
@@ -1512,11 +1523,11 @@ function wireResultRow(w) {
   const hi = clubIdxByName(w.t1), ai = clubIdxByName(w.t2);
   const upset = w.gp >= 3 && ((w.s1 > w.s2 && w.ph <= 0.35) || (w.s2 > w.s1 && w.ph >= 0.65));
   const side = (i2, n2, cls) => i2 >= 0
-    ? `<a class="side ${cls}" href="#/club/${i2}">${esc(n2)}</a>`
-    : `<span class="side ${cls}">${esc(n2)}</span>`;
+    ? `<a class="side ${cls}" href="#/club/${i2}">${mcrest(CLUBS[i2])}<span class="sn">${esc(n2)}</span></a>`
+    : `<span class="side ${cls}"><span class="sn">${esc(n2)}</span></span>`;
   return `<div class="match">
     <div class="mrow">${side(hi, w.t1, '')}<span class="vs">${w.s1}&ndash;${w.s2}</span>${side(ai, w.t2, 'away')}</div>
-    <div class="meta"><span>${fmtWireDay(w.d)} · ${LEAGUES[w.lg] ? LEAGUES[w.lg].label : 'NPSL'}</span><span>${upset ? '<b class="wup">UPSET</b> · ' : ''}Elo swing &plusmn;${Math.abs(w.dr)} · home ${Math.round(w.ph * 100)}% pre-match</span></div>
+    <div class="meta"><span>${LEAGUES[w.lg] ? lgIcon(w.lg) : ''}${fmtWireDay(w.d)} · ${LEAGUES[w.lg] ? LEAGUES[w.lg].label : 'NPSL'}</span><span>${upset ? '<b class="wup">UPSET</b> · ' : ''}Elo swing &plusmn;${Math.abs(w.dr)} · home ${Math.round(w.ph * 100)}% pre-match</span></div>
   </div>`;
 }
 function wireLeaders(lgs) {

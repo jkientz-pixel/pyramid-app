@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Walk-forward calibration backtest of the Elo->Poisson odds engine
-against real NPSL 2026, USL League Two 2026, and pro (ASA) results.
-Reports Brier score vs baselines and a calibration table per tier.
-Lambda mirrors production (js/app.js oddsFor): 1.45 amateur, 1.35 pro."""
+against real NPSL 2026, USL League Two 2026, NCAA D1 2025 (ESPN), and
+pro (ASA) results. Reports Brier score vs baselines and a calibration
+table per tier. Lambda mirrors production (js/app.js oddsFor): 1.45
+amateur (college included), 1.35 pro."""
 import datetime, json, math, os
 
 def poisson_probs(rh, ra, home_adv=50, k_goals=1000, lam=1.35):
@@ -86,6 +87,19 @@ if os.path.exists(usl2_path):
         hits, tot = buckets2[k]
         if tot >= 10:
             print(f'  {k*10}-{k*10+9}% predicted -> {100*hits/tot:.0f}% actual ({tot} matches)')
+
+# NCAA D1: college leagues sit in AMATEUR_TIER in production, so they are
+# scored with the same amateur params (fetch_espn_college.py refreshes data)
+college_path = os.path.join(root, 'data', 'espn_college_2025.json')
+if os.path.exists(college_path):
+    col = json.load(open(college_path))
+    print()
+    print('=== COLLEGE (NCAA D1 2025 via ESPN, amateur params K=64 home+30 lam=1.45) ===')
+    for lg in sorted(col):
+        ms = [{'t1': m['t1'], 't2': m['t2'], 's1': m['s1'], 's2': m['s2']}
+              for m in col[lg]]
+        bc, bbc, _, nc, _ = run(ms, 64, 30, lam=1.45)
+        print(f'  {lg:7s} Brier {bc:.4f} (uniform {bbc:.4f}) over {nc} of {len(ms)} games')
 
 asa_path = os.path.join(root, 'data', 'wire_asa.json')
 if os.path.exists(asa_path):
