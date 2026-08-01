@@ -66,6 +66,7 @@ svg.usmap{width:100%;height:auto;max-height:72vh;display:block;touch-action:mani
 .canada{opacity:.4;pointer-events:none}
 .canada.dim{opacity:.14}
 .canada path{fill:var(--map-fill);stroke:var(--map-stroke);stroke-width:1}
+.canada path.prov{fill:none}
 .states path{fill:var(--map-fill);stroke:var(--map-stroke);stroke-width:1;cursor:pointer;transition:fill .15s}
 .states path:hover{fill:var(--map-hover)}
 .states path.dim{opacity:.35}
