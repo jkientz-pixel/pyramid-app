@@ -131,13 +131,15 @@ function renderMapSvg(clubs, useCrests) {
       ? `<circle ${base} fill="none" stroke="${m.color}" stroke-width="1.6"></circle>`
       : `<circle ${base} fill="${m.color}" fill-opacity=".9"></circle>`;
   }).join('');
-  return `<div class="mapbox"><svg class="usmap" viewBox="0 0 980 560" role="img" aria-label="US soccer club map">${USMAP}<g id="pins">${pins}</g></svg>
+  return `<div class="mapbox"><svg class="usmap" viewBox="0 -20 980 580" role="img" aria-label="US and Canada soccer club map">${USMAP}<g id="pins">${pins}</g></svg>
     <div class="mapctl"><button data-z="in" aria-label="Zoom in">+</button><button data-z="out" aria-label="Zoom out">&minus;</button><button data-z="reset" aria-label="Reset zoom">&#8634;</button></div>
     <div class="maptip" hidden></div></div>`;
 }
 
 function zoomTo(svg, states) {
-  if (!states) { svg.setAttribute('viewBox', '0 0 980 560'); return; }
+  const canada = svg.querySelector('.canada');
+  if (canada) canada.classList.toggle('dim', !!states);
+  if (!states) { svg.setAttribute('viewBox', '0 -20 980 580'); return; }
   let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
   svg.querySelectorAll('.states path').forEach(p => {
     const st = p.getAttribute('data-st');
@@ -179,13 +181,21 @@ function wireMap(scopeStates) {
   /* every viewBox write clamps to the home extent so pan/pinch can never
      push the map out of the box — dragging past an edge stops at the edge */
   const clampAxis = (val, lo, hi) => hi < lo ? (lo + hi) / 2 : Math.min(Math.max(val, lo), hi);
+  /* session view memory: returning to this screen restores the zoom/pan the
+     user left instead of resetting to the screen's default framing */
+  const memKey = 'rxi-vb:' + (location.hash || '#/map');
   const setVB = v => {
     const x = clampAxis(v[0], homeVB[0], homeVB[0] + homeVB[2] - v[2]);
     const y = clampAxis(v[1], homeVB[1], homeVB[1] + homeVB[3] - v[3]);
     svg.setAttribute('viewBox', [x, y, v[2], v[3]].map(n => n.toFixed(1)).join(' '));
     rescalePins(v[2]);
+    try { sessionStorage.setItem(memKey, [x, y, v[2], v[3]].map(n => n.toFixed(1)).join(',')); } catch {}
   };
   rescalePins(homeVB[2]);
+  try {
+    const saved = (sessionStorage.getItem(memKey) || '').split(',').map(Number);
+    if (saved.length === 4 && saved.every(isFinite) && saved[2] > 0 && saved[2] <= homeVB[2]) setVB(saved);
+  } catch {}
   const tip = view.querySelector('.maptip');
   svg.addEventListener('pointerover', e => {
     const pin = e.target.closest('.pin'); if (!pin || !tip) return;
@@ -602,9 +612,11 @@ function screenMatches(preH) {
   };
   view.querySelector('#pickH').addEventListener('change', redo);
   view.querySelector('#pickA').addEventListener('change', redo);
-  fixturesDb().then(fx => {
+  /* NPSL is a men's league: never render its fixtures into the women's view,
+     including late async resolution after the user toggles sex */
+  if (sex === 'm') fixturesDb().then(fx => {
     const box = view.querySelector('#realfx');
-    if (!box || !fx.length) return;
+    if (!box || !fx.length || sex !== 'm') return;
     box.innerHTML = `<div class="kicker">Real fixtures · NPSL playoffs · live from the league</div>
       <h2 class="disp">The Real Thing</h2>` + fx.map(f => {
         const hi = clubIdxByName(f.t1), ai = clubIdxByName(f.t2);
