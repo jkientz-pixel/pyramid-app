@@ -128,6 +128,16 @@ svg.usmap{width:100%;height:auto;max-height:72vh;display:block;touch-action:mani
 .odds{flex:1;text-align:center;background:var(--ground2);border-radius:8px;padding:6px 4px}
 .odds b{display:block;font-variant-numeric:tabular-nums;font-size:.9rem}
 .odds span{color:var(--ink-dim);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}
+.confmeter{display:flex;align-items:center;gap:8px;margin-top:7px;font-size:.72rem;color:var(--ink-dim)}
+.conf-label{text-transform:uppercase;letter-spacing:.08em;flex:none}
+.conf-segs{display:flex;gap:3px;flex:none;width:88px}
+.conf-segs i{height:6px;flex:1;border-radius:3px;background:var(--ground2);border:1px solid var(--line)}
+.confmeter.l1 .conf-segs i.on{background:var(--ink-dim);border-color:var(--ink-dim)}
+.confmeter.l2 .conf-segs i.on{background:var(--nisa);border-color:var(--nisa)}
+.confmeter.l3 .conf-segs i.on{background:var(--accent);border-color:var(--accent)}
+.confmeter.l4 .conf-segs i.on{background:var(--loc);border-color:var(--loc)}
+.conf-read{margin-left:auto;text-align:right}
+.conf-read b{color:var(--ink);font-weight:700}
 .prob{height:4px;border-radius:2px;background:var(--line);margin-top:8px;overflow:hidden;display:flex}
 .prob i{display:block;height:100%}
 .pickrow{display:flex;gap:8px;align-items:center;margin:10px 0}

@@ -531,19 +531,38 @@ function watchRow(h, a) {
   if (!w) return '';
   return `<div class="meta" style="margin-top:6px"><a class="watchlink" href="${w.url}" target="_blank" rel="noopener">&#9655; Watch: ${w.label}</a></div>`;
 }
+/* Confidence buckets over the strongest single outcome — the meter under the
+   odds row. Thresholds line up with how bettors read a three-way market. */
+function confidenceFor(o, h, a) {
+  const top = Math.max(o.pH, o.pD, o.pA);
+  const fav = top === o.pH ? esc(initials(h.n)) + ' win' : top === o.pA ? esc(initials(a.n)) + ' win' : 'Draw';
+  const [tag, n] = top >= 0.7 ? ['Strong pick', 4] : top >= 0.55 ? ['Likely', 3] : top >= 0.45 ? ['Lean', 2] : ['Toss-up', 1];
+  return { top, fav, tag, n };
+}
 function matchCard(h, a, when) {
+  const head = `<div class="mrow"><a class="side" href="#/club/${h.id}">${esc(h.n)}</a><span class="vs">${when || 'NEUTRAL'}</span><a class="side away" href="#/club/${a.id}">${esc(a.n)}</a></div>
+    <div class="meta"><span>${LEAGUES[h.g].label}${h.g !== a.g ? ' v ' + LEAGUES[a.g].label : ''}</span><span>${h.st}${h.st !== a.st ? ' · ' + a.st : ''}</span></div>`;
+  // a club with no Elo yet must never reach the Poisson math — that path is NaN
+  if (!h.r || !a.r) return `<div class="match">${head}
+    <p class="note" style="margin:8px 0 0">Odds unavailable — ${esc(!h.r ? h.n : a.n)} has no rating yet. Ratings arrive once results land in the dataset.</p>
+  </div>`;
   const o = oddsFor(h, a);
+  const cf = confidenceFor(o, h, a);
   return `<div class="match">
-    <div class="mrow"><a class="side" href="#/club/${h.id}">${esc(h.n)}</a><span class="vs">${when || 'NEUTRAL'}</span><a class="side away" href="#/club/${a.id}">${esc(a.n)}</a></div>
-    <div class="meta"><span>${LEAGUES[h.g].label}${h.g !== a.g ? ' v ' + LEAGUES[a.g].label : ''}</span><span>${h.st}${h.st !== a.st ? ' · ' + a.st : ''}</span></div>
+    ${head}
     <div class="scoreline">${o.score[0]}–${o.score[1]}</div>
     <div class="meta" style="justify-content:center;margin-top:0"><span>most likely score</span></div>
     <div class="oddsrow">
-      <div class="odds"><b>${(o.pH * 100).toFixed(0)}%</b><span>${esc(initials(h.n))} win · ${moneyline(o.pH)}</span></div>
-      <div class="odds"><b>${(o.pD * 100).toFixed(0)}%</b><span>Draw · ${moneyline(o.pD)}</span></div>
-      <div class="odds"><b>${(o.pA * 100).toFixed(0)}%</b><span>${esc(initials(a.n))} win · ${moneyline(o.pA)}</span></div>
+      <div class="odds"><b>${(o.pH * 100).toFixed(1)}%</b><span>${esc(initials(h.n))} win · ${moneyline(o.pH)}</span></div>
+      <div class="odds"><b>${(o.pD * 100).toFixed(1)}%</b><span>Draw · ${moneyline(o.pD)}</span></div>
+      <div class="odds"><b>${(o.pA * 100).toFixed(1)}%</b><span>${esc(initials(a.n))} win · ${moneyline(o.pA)}</span></div>
     </div>
-    <div class="prob"><i style="width:${(o.pH * 100).toFixed(0)}%;background:${LEAGUES[h.g].color}"></i><i style="width:${(o.pD * 100).toFixed(0)}%;background:var(--line)"></i><i style="flex:1;background:${LEAGUES[a.g].color};opacity:.55"></i></div>
+    <div class="confmeter l${cf.n}" role="img" aria-label="Confidence: ${cf.tag} — ${cf.fav} at ${(cf.top * 100).toFixed(1)} percent">
+      <span class="conf-label">Confidence</span>
+      <span class="conf-segs">${[1, 2, 3, 4].map(i => `<i${i <= cf.n ? ' class="on"' : ''}></i>`).join('')}</span>
+      <span class="conf-read"><b>${cf.tag}</b> · ${cf.fav}</span>
+    </div>
+    <div class="prob"><i style="width:${(o.pH * 100).toFixed(1)}%;background:${LEAGUES[h.g].color}"></i><i style="width:${(o.pD * 100).toFixed(1)}%;background:var(--line)"></i><i style="flex:1;background:${LEAGUES[a.g].color};opacity:.55"></i></div>
     <div class="meta"><span>Elo ${h.r} v ${a.r}</span><span>home edge +${o.ha}</span></div>
     ${watchRow(h, a)}
   </div>`;
@@ -581,8 +600,13 @@ function screenMatches(preH) {
     const p = rated.filter(c => c.g === g);
     for (const home of p) {
       if (used.has(home) || fixtures.length >= 12) break;
-      const opp = neighbors(home, 3).find(o => !used.has(o));
-      if (!opp) continue;
+      /* vary which neighbor each club draws — always pairing nearest-with-
+         nearest gives every card the same tiny Elo gap and near-identical
+         odds; a deterministic spread across the 6 closest keeps the demo
+         slate looking like a real weekend */
+      const cand = neighbors(home, 6).filter(o => !used.has(o));
+      if (!cand.length) continue;
+      const opp = cand[(home.n.length * 7 + fixtures.length * 3) % cand.length];
       used.add(home); used.add(opp);
       fixtures.push([home, opp]);
     }
@@ -855,7 +879,12 @@ async function screenClub(ref) {
   const peers = CLUBS.filter(o => o.g === c.g && o.r && !o.h).sort((a, b) => b.r - a.r);
   const rank = c.r ? peers.indexOf(c) + 1 : null;
   const natl = CLUBS.filter(o => o.x === c.x && o.r && !o.h).sort((a, b) => b.r - a.r);
-  const opps = neighbors(c, 7);
+  /* same-league neighbors first; a club whose league has no nearby rated
+     peers borrows the closest rated same-sex clubs so every rated club still
+     gets fixtures and odds instead of an empty section */
+  let opps = neighbors(c, 7);
+  if (opps.length < 2 && c.r) opps = CLUBS.filter(o => o !== c && o.x === c.x && o.r && !o.h)
+    .sort((a2, b2) => dist2(a2, c) - dist2(b2, c)).slice(0, 7);
   let seed = 0; for (const ch of c.n) seed = (seed * 31 + ch.charCodeAt(0)) % 233;
   const PAST = ['JUL 19', 'JUL 12', 'JUL 5', 'JUN 28', 'JUN 21', 'JUN 14', 'JUN 7', 'MAY 31'];
   const history = c.r ? PAST.map((date, i) => {
@@ -892,8 +921,8 @@ async function screenClub(ref) {
     }).join('')}</ul></div>
     <p class="note">${c.g === 'mls' ? 'Shown for the record — MLS ranks by the official league table, so Cup results never move an MLS rating here.' : 'These matches move the rating. Cross-tier cup results are where the levels actually meet; extra-time and shootout wins count at reduced weight.'}${c.pv ? " Marked provisional: most of this club's cup movement came against opponents outside our database, valued at league average." : ''}</p>` : ''}
     ${c.re ? `<p class="note" style="margin:2px 0 10px;font-size:.78rem">Results-only Elo: <b>${c.re}</b> · experimental — computed from every 2026 match and published for transparency; the headline rating and ranks above stay with the official league table.</p>` : ''}
-    ${c.rr ? `<div class="kicker">Upcoming · demo fixtures</div>
-    ${opps.slice(5, 7).map((o, i) => matchCard(i === 0 ? c : o, i === 0 ? o : c, i === 0 ? 'SAT JUL 26' : 'SAT AUG 2')).join('') || '<p class="note">No nearby opponents in the dataset yet.</p>'}
+    ${c.r ? `<div class="kicker">Upcoming · demo fixtures</div>
+    ${(opps.length > 6 ? opps.slice(5, 7) : opps.slice(0, 2)).map((o, i) => matchCard(i === 0 ? c : o, i === 0 ? o : c, i === 0 ? 'SAT JUL 26' : 'SAT AUG 2')).join('') || '<p class="note">No rated opponents in the dataset yet.</p>'}
     <div class="kicker" style="margin-top:14px">Results · demo</div>
     <ul class="results">${history.map(h =>
       `<li class="${h.uw ? 'uw' : ''}${h.bl ? 'bl' : ''}"><span class="wl ${h.wl}">${h.wl}</span>
