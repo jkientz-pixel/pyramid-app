@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Build the youth directory layers: MLS NEXT (boys), ECNL Boys & Girls,
-Girls Academy.
+Girls Academy, Elite Academy League (boys).
 
 Sources:
   * mlsnext — Wikipedia 'MLS Next' Clubs table (club, 'City, State', join
@@ -12,6 +12,11 @@ Sources:
   * ga — girlsacademyleague.com/members/ is server-rendered Divi: club lines
     read 'Name (City, ST)' grouped under conference headings. Second teams
     of one club ('Lou Fusz Athletic White') fold into the parent club.
+  * ea — the league publishes its club list only as a JPEG on
+    eliteacademyleague.com/members/, so data/ea_clubs_2026.json holds the
+    transcription. city is filled ONLY where the club's own name states a
+    real city; clubs without a league- or self-stated city are logged to
+    no_geocode instead of pinned (no-guessed-locations policy).
 
 Locations are settlement-geocoded through the shared data/geocache.json
 (Nominatim, 1.1s courtesy delay on misses); a club whose city won't resolve
@@ -40,7 +45,7 @@ UA = {'User-Agent': 'RankXI/1.0 (jkientz@gmail.com; youth layer ingest)'}
 GEO_CACHE = os.path.join(ROOT, 'data', 'geocache.json')
 TGS_API = 'https://api.athleteone.com/api/Event/get-org-club-list-by-orgID/%d'
 GA_URL = 'https://girlsacademyleague.com/members/'
-YOUTH = ('mlsnext', 'ecnlb', 'ga', 'ecnlg')
+YOUTH = ('mlsnext', 'ecnlb', 'ga', 'ecnlg', 'ea')
 
 # strip only organizational suffixes — location/identity words (united, city,
 # academy, SA) are what distinguish real youth orgs from same-token adult clubs
@@ -122,6 +127,12 @@ def parse_ga():
     return out
 
 
+def parse_ea():
+    src = json.load(open(os.path.join(ROOT, 'data', 'ea_clubs_2026.json')))
+    return [{'name': c['n'], 'city': c['city'], 'st': c['st']}
+            for c in src['clubs']]
+
+
 def drop_second_teams(rows, log):
     names = {norm(r['name']) for r in rows}
     keep = []
@@ -157,7 +168,8 @@ def geocode(city, st, cache):
 SOURCES = [('mlsnext', 'm', parse_mlsnext),
            ('ecnlb', 'm', lambda: parse_tgs(12)),
            ('ga', 'w', parse_ga),
-           ('ecnlg', 'w', lambda: parse_tgs(9))]
+           ('ecnlg', 'w', lambda: parse_tgs(9)),
+           ('ea', 'm', parse_ea)]
 
 
 def main():
@@ -187,6 +199,11 @@ def main():
                 continue
             if (key, x) in youth_taken:
                 log['youth_dup'].append(r['name'])
+                continue
+            # EA publishes no locations: a club without a stated city is
+            # logged, never pinned from a guessed coordinate
+            if not r.get('city') or not r.get('st'):
+                log['no_geocode'].append(f"{r['name']} (no league-stated city)")
                 continue
             ll = geocode(r['city'], r['st'], cache)
             if not ll:

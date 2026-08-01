@@ -306,7 +306,7 @@ const LEVELS = {
   pro: ['mls', 'uslc', 'usl1', 'mnp', 'nisa', 'nwsl', 'uslw'],
   amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'swpl', 'mpl', 'mwpl', 'cpl', 'cplw', 'gcpl', 'loc', 'uslwl', 'wpsl', 'uws', 'uws2'],
   college: ['ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w'],
-  youth: ['mlsnext', 'ecnlb', 'ga', 'ecnlg']
+  youth: ['mlsnext', 'ecnlb', 'ga', 'ecnlg', 'ea']
 };
 let level = 'all';
 function levelChips() {
@@ -1135,7 +1135,7 @@ const TIERS = {
       /* The old Eastern Premier (EPSL) is NOT missing: it renamed to APSL in
          Feb 2025 and is already a rated layer above. */
       'More regional leagues', 'State, city & rec leagues'] },
-    { t: 'College & youth', leagues: ['ncaa1', 'ncaa2', 'ncaa3', 'naia', 'mlsnext', 'ecnlb'] }
+    { t: 'College & youth', leagues: ['ncaa1', 'ncaa2', 'ncaa3', 'naia', 'mlsnext', 'ecnlb', 'ea'] }
   ],
   w: [
     { t: 'Division I', pro: true, leagues: ['nwsl', 'uslw'] },
