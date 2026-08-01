@@ -1,0 +1,51 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - heading "Ranked XI" [level=1] [ref=e4]
+    - paragraph [ref=e5]: Every club in American soccer — MLS to the grassroots — on one map, with one national ranking. Real clubs, real locations, real ratings where the results exist — labeled everywhere else.
+    - list [ref=e6]:
+      - listitem [ref=e7]: Tap a state to zoom to its clubs
+      - listitem [ref=e8]: Browse by region, league, or the national table
+      - listitem [ref=e9]: Every club links out to its own site and socials
+    - paragraph [ref=e10]: Concept by Jeremy Kientz · 1,788 clubs loaded · ratings illustrative
+  - generic [ref=e12]:
+    - banner [ref=e13]:
+      - generic [ref=e14]: Ranked XI
+      - generic [ref=e15]:
+        - button "Toggle dark mode" [ref=e16] [cursor=pointer]: ◑
+        - generic [ref=e17]: NV
+    - searchbox "Search clubs and players" [ref=e19]
+    - main [ref=e20]:
+      - button "← Back" [ref=e232] [cursor=pointer]
+      - generic [ref=e233]:
+        - img "Be Pro FC crest" [ref=e234]
+        - generic [ref=e235]:
+          - heading "Be Pro FC" [level=2] [ref=e236]
+          - link "Southwest Premier League ↗" [ref=e237] [cursor=pointer]:
+            - /url: https://www.swplsoccer.com
+          - text: Las Vegas, NV
+      - generic [ref=e238]:
+        - button "☆ Follow" [ref=e239] [cursor=pointer]
+        - link "Find website" [ref=e240] [cursor=pointer]:
+          - /url: https://www.google.com/search?q=Be%20Pro%20FC%20soccer%20official%20site
+      - paragraph [ref=e241]: Expansion concept — not yet an active club. It appears on the map as a hollow pin.
+      - paragraph [ref=e242]: Club website and socials appear at the top once the club claims its page — links always go exactly where they say.
+      - link "Run this club? Claim this page" [ref=e243] [cursor=pointer]:
+        - /url: mailto:jkientz@gmail.com?subject=Claim%20club%3A%20Be%20Pro%20FC
+      - paragraph [ref=e244]: Claimed clubs manage their crest, links, roster and schedule.
+      - link "⚑ See an error? Send us a note" [ref=e245] [cursor=pointer]:
+        - /url: mailto:jkientz@gmail.com?subject=RankedXI%20Fix%3A%20Be%20Pro%20FC&body=Page%3A%20%23%2Fclub%2Fbe-pro-fc%0AWhat's%20wrong%20%2F%20your%20suggestion%3A%0A%0A
+      - link "Corrections & removal requests" [ref=e246] [cursor=pointer]:
+        - /url: "#/legal"
+    - navigation "App sections" [ref=e195]:
+      - link "Map" [ref=e196] [cursor=pointer]:
+        - /url: "#/map"
+      - link "Tiers" [ref=e200] [cursor=pointer]:
+        - /url: "#/tiers"
+      - link "Table" [ref=e203] [cursor=pointer]:
+        - /url: "#/table"
+      - link "Matches" [ref=e206] [cursor=pointer]:
+        - /url: "#/matches"
+      - link "Following" [ref=e210] [cursor=pointer]:
+        - /url: "#/following"
+      - link "About" [ref=e213] [cursor=pointer]:
+        - /url: "#/about"

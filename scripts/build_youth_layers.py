@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Build the youth directory layers: MLS NEXT (boys), ECNL Boys & Girls,
-Girls Academy, Elite Academy League (boys).
+Girls Academy, Elite Academy League (boys), ECNL Regional League Boys &
+Girls (TGS orgIDs 16/13), GA Aspire (girls tier two).
 
 Sources:
   * mlsnext — Wikipedia 'MLS Next' Clubs table (club, 'City, State', join
@@ -45,7 +46,10 @@ UA = {'User-Agent': 'RankXI/1.0 (jkientz@gmail.com; youth layer ingest)'}
 GEO_CACHE = os.path.join(ROOT, 'data', 'geocache.json')
 TGS_API = 'https://api.athleteone.com/api/Event/get-org-club-list-by-orgID/%d'
 GA_URL = 'https://girlsacademyleague.com/members/'
-YOUTH = ('mlsnext', 'ecnlb', 'ga', 'ecnlg', 'ea')
+# GA Aspire (tier-two GA, launched 2026-27) publishes its directory on the
+# membership page in the same Divi 'Name (City, ST)' format as GA members
+GAA_URL = 'https://girlsacademyleague.com/aspire-membership/'
+YOUTH = ('mlsnext', 'ecnlb', 'ga', 'ecnlg', 'ea', 'ecrlb', 'ecrlg', 'gaa')
 
 # strip only organizational suffixes — location/identity words (united, city,
 # academy, SA) are what distinguish real youth orgs from same-token adult clubs
@@ -111,9 +115,9 @@ def parse_tgs(org_id):
     return out
 
 
-def parse_ga():
+def parse_ga(url=GA_URL):
     html = urllib.request.urlopen(
-        urllib.request.Request(GA_URL, headers=UA), timeout=30
+        urllib.request.Request(url, headers=UA), timeout=30
     ).read().decode('utf-8', 'replace')
     text = re.sub(r'<script.*?</script>|<style.*?</style>', '', html, flags=re.S)
     out = []
@@ -129,8 +133,20 @@ def parse_ga():
 
 def parse_ea():
     src = json.load(open(os.path.join(ROOT, 'data', 'ea_clubs_2026.json')))
-    return [{'name': c['n'], 'city': c['city'], 'st': c['st']}
-            for c in src['clubs']]
+    # EA states no locations; the audit file carries cities resolved from
+    # OTHER leagues' official directories (scripts/audit_youth_locations.py),
+    # source-recorded per club — still league-stated, never guessed
+    audit = {}
+    ap = os.path.join(ROOT, 'data', 'youth_location_audit.json')
+    if os.path.exists(ap):
+        audit = json.load(open(ap)).get('resolved', {}).get('ea', {})
+    out = []
+    for c in src['clubs']:
+        hit = None if c['city'] else audit.get(c['n'])
+        out.append({'name': c['n'],
+                    'city': c['city'] or (hit and hit['city']),
+                    'st': c['st'] or (hit and hit['st'])})
+    return out
 
 
 def drop_second_teams(rows, log):
@@ -165,11 +181,20 @@ def geocode(city, st, cache):
     return ll
 
 
+# ECRL orgIDs 16 (boys) / 13 (girls) confirmed via
+# get-event-details-by-eventID on 2026-27 conference events (e.g. 4296, 4352),
+# whose records carry orgID + current orgSeasonID; the org club list is the
+# current-season membership (each club row references its 2026-27 conference
+# eventID). Higher leagues parse first so a club fielding ECNL and ECRL teams
+# pins once, under the higher league (youth_taken dedupe).
 SOURCES = [('mlsnext', 'm', parse_mlsnext),
            ('ecnlb', 'm', lambda: parse_tgs(12)),
            ('ga', 'w', parse_ga),
            ('ecnlg', 'w', lambda: parse_tgs(9)),
-           ('ea', 'm', parse_ea)]
+           ('ea', 'm', parse_ea),
+           ('ecrlb', 'm', lambda: parse_tgs(16)),
+           ('ecrlg', 'w', lambda: parse_tgs(13)),
+           ('gaa', 'w', lambda: parse_ga(GAA_URL))]
 
 
 def main():

@@ -308,9 +308,12 @@ const LEVELS = {
   pro: ['mls', 'uslc', 'usl1', 'mnp', 'nisa', 'nwsl', 'uslw'],
   amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'swpl', 'mpl', 'mwpl', 'cpl', 'cplw', 'gcpl', 'loc', 'uslwl', 'wpsl', 'uws', 'uws2'],
   college: ['ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w'],
-  youth: ['mlsnext', 'ecnlb', 'ga', 'ecnlg', 'ea']
+  youth: ['mlsnext', 'ecnlb', 'ga', 'ecnlg', 'ea', 'ecrlb', 'ecrlg', 'gaa']
 };
 let level = 'all';
+/* demo-data quarantine chip — pair with .badge.d so nothing demo ever
+   renders in the verified green */
+const DTAG = '<span class="dtag">Demo</span>';
 function levelChips() {
   return `<div class="chips" id="lvlchips">${Object.keys(LEVELS).map(k =>
     `<button class="chip solid" data-lvl="${k}" aria-pressed="${level === k}">${k === 'all' ? 'All levels' : k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div>`;
@@ -448,7 +451,7 @@ function screenTable() {
   };
   view.innerHTML = `
     ${sexToggle()}
-    <div class="kicker">Cross-league · demo ratings</div>
+    <div class="kicker">${tableMode === 'players' ? DTAG + 'Cross-league · demo stats' : 'Cross-league · Elo where results exist, demo elsewhere'}</div>
     <h2 class="disp">The National Table</h2>
     <div class="chips seg" id="modeseg">
       <button class="chip solid" data-mode="clubs" aria-pressed="${tableMode === 'clubs'}">Clubs</button>
@@ -633,7 +636,7 @@ function screenMatches(preH) {
     ${sexToggle()}
     <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>This week's results, upsets and rating swings &mdash; generated from real data.</span></a>
     <div id="realfx"></div>
-    <div class="kicker">Any club v any club · demo odds</div>
+    <div class="kicker">${DTAG}Any club v any club · demo odds</div>
     <h2 class="disp">Matchup Machine</h2>
     <div class="pickrow">
       <select id="pickH" aria-label="Home club">${opts(CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0])}</select>
@@ -641,7 +644,7 @@ function screenMatches(preH) {
       <select id="pickA" aria-label="Away club">${opts(rated[1])}</select>
     </div>
     <div id="pickout">${matchCard(CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0], rated[1], 'HYPOTHETICAL')}</div>
-    <div class="kicker" style="margin-top:18px">Demo fixtures · generated from geography</div>
+    <div class="kicker" style="margin-top:18px">${DTAG}Fixtures · generated from geography</div>
     <h2 class="disp">This Weekend</h2>
     ${fixtures.map(([h, a], i) => matchCard(h, a, `SAT ${i % 2 ? '5:00' : '7:30'} PM`)).join('')}
     <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Demo ratings — production uses live results. Predictions, not betting advice.</p>`;
@@ -876,10 +879,10 @@ const PRO = new Set(['mls', 'uslc', 'usl1', 'mnp', 'nwsl', 'uslw']);
 function verifyBadge(c) {
   const ro = ROSTERS[rosterKey(c)];
   if (ro && ro.some(p => p.st)) return `<span class="badge v">Real ${c.g === 'uslw' ? '2025-26' : '2026'} stats · American Soccer Analysis · roster via Wikipedia/ASA</span>`;
-  if (ro) return '<span class="badge v">Roster: live from Wikipedia, refreshed every 2 days · stats demo</span>';
+  if (ro) return '<span class="badge v">Roster: live from Wikipedia, refreshed every 2 days</span> <span class="badge d">Stats: demo</span>';
   return PRO.has(c.g)
-    ? '<span class="badge v">Stats: league match reports (demo)</span>'
-    : '<span class="badge c">Stats: club-submitted, email-verified (demo)</span>';
+    ? '<span class="badge d">Stats: demo · league match reports coming</span>'
+    : '<span class="badge d">Stats: demo · club-submitted reporting planned</span>';
 }
 
 async function screenClub(ref) {
@@ -927,7 +930,7 @@ async function screenClub(ref) {
     <div class="btnrow">${favBtn('clubs', c.id)}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.url ? `<a class="hdrlink" href="${safeHref(c.url)}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${safeHref(c.si)}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${safeHref(c.sx)}" target="_blank" rel="noopener">X</a>` : ''}</div>
     ${(HONOURS[rosterKey(c)] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[rosterKey(c)] || []).map(h2 => `<li><b>${esc(h2.t)}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
-      <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : 'Rating (demo)'}${c.pv ? ' · provisional' : ''}</span></div>
+      <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : DTAG + 'Rating'}${c.pv ? ' · provisional' : ''}</span></div>
       <div class="stat"><b>#${rank}</b><span>${m.label}</span></div>
       <div class="stat"><b>#${natl.indexOf(c) + 1}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
     </div>
@@ -938,9 +941,9 @@ async function screenClub(ref) {
     }).join('')}</ul></div>
     <p class="note">${c.g === 'mls' ? 'Shown for the record — MLS ranks by the official league table, so Cup results never move an MLS rating here.' : 'These matches move the rating. Cross-tier cup results are where the levels actually meet; extra-time and shootout wins count at reduced weight.'}${c.pv ? " Marked provisional: most of this club's cup movement came against opponents outside our database, valued at league average." : ''}</p>` : ''}
     ${c.re ? `<p class="note" style="margin:2px 0 10px;font-size:.78rem">Results-only Elo: <b>${c.re}</b> · experimental — computed from every 2026 match and published for transparency; the headline rating and ranks above stay with the official league table.</p>` : ''}
-    ${c.r ? `<div class="kicker">Upcoming · demo fixtures</div>
+    ${c.r ? `<div class="kicker">${DTAG}Upcoming fixtures</div>
     ${(opps.length > 6 ? opps.slice(5, 7) : opps.slice(0, 2)).map((o, i) => matchCard(i === 0 ? c : o, i === 0 ? o : c, i === 0 ? 'SAT JUL 26' : 'SAT AUG 2')).join('') || '<p class="note">No rated opponents in the dataset yet.</p>'}
-    <div class="kicker" style="margin-top:14px">Results · demo</div>
+    <div class="kicker" style="margin-top:14px">${DTAG}Results</div>
     <ul class="results">${history.map(h =>
       `<li class="${h.uw ? 'uw' : ''}${h.bl ? 'bl' : ''}"><span class="wl ${h.wl}">${h.wl}</span>
        <span class="res-opp">${h.score} ${h.home ? 'v' : '@'} <a class="opp-link" href="#/club/${h.o.id}">${esc(h.o.n)}</a>
@@ -961,7 +964,7 @@ async function screenClub(ref) {
     <ul class="squad">${squadFor(c).map((pl, pi) =>
       `<li><a href="#/player/${c.id}/${pi}"><span class="sq-num">${pl.num}</span><span class="sq-name">${esc(pl.name)}</span><span class="sq-pos">${pl.pos}</span><span class="sq-age">${pl.real ? (pl.nat || '') : ''}</span><span class="sq-ga">${pl.pos === 'GK' ? pl.cs + ' CS' : pl.goals + 'g ' + pl.assists + 'a'}</span><span class="sq-form">${pl.pvr}</span></a></li>`).join('')}</ul>
     ` : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p><a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim club: ' + c.n)}" style="margin-top:6px">Run this club? Add your roster</a>`}
-    ${worldLadder(c)}` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
+    ${worldLadder(c)}` : LEVELS.youth.includes(c.g) ? `<p class="note" style="font-size:.9rem">Youth directory listing — an active ${LEAGUES[c.g].label} member club. Youth organizations carry no ratings, fixtures, or player data here; the entry is name, league, and league-stated location only.</p>` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
     ${(() => {
       if (!hist) return '';
       const rows = [];
@@ -1149,7 +1152,7 @@ const TIERS = {
          Feb 2025 and is already a rated layer above. */
       'More regional leagues', 'State, city & rec leagues'] },
     { t: 'College', leagues: ['ncaa1', 'ncaa2', 'ncaa3', 'naia'] },
-    { t: 'Youth', leagues: ['mlsnext', 'ecnlb', 'ea'] }
+    { t: 'Youth', leagues: ['mlsnext', 'ecnlb', 'ecrlb', 'ea'] }
   ],
   w: [
     { t: 'Division I', pro: true, leagues: ['nwsl', 'uslw'] },
@@ -1157,7 +1160,7 @@ const TIERS = {
     { t: 'National amateur', leagues: ['uslwl', 'wpsl', 'uws'] },
     { t: 'Regional & emerging', leagues: ['uws2', 'cplw'], coming: ['More regional leagues'] },
     { t: 'College', leagues: ['ncaa1w', 'ncaa2w'], coming: ['D3 / NAIA women · next'] },
-    { t: 'Youth', leagues: ['ga', 'ecnlg'] }
+    { t: 'Youth', leagues: ['ga', 'ecnlg', 'ecrlg', 'gaa'] }
   ]
 };
 function screenPyramid() {
@@ -1502,7 +1505,7 @@ function screenLegal() {
     <p><b>What this is.</b> Ranked XI is an independent guide to American soccer. It is not affiliated with, endorsed by, or sponsored by any league, club, or federation shown.</p>
     <p><b>Where the data comes from.</b> We gather club, roster, and historical data from what the leagues themselves publish — league websites and public feeds — plus Wikipedia (CC BY-SA), American Soccer Analysis, and OpenStreetMap. We organize that information; we don't control it at the source. If a league's published table is wrong, ours will be too until someone tells us. Ratings label their basis — real results, real standings, or illustrative.</p>
     <div class="kicker" style="margin-top:14px">Removal requests</div>
-    <p>Club and league names and crests belong to their owners and appear here for identification only. If you'd rather your club, crest, or player info not appear on Ranked XI, one email does it. We confirm the request actually comes from the club or the player — a reply from an official club account or league contact is enough — then take it down, usually within the week. Crests and images come down first.</p>
+    <p>Club and league names and crests belong to their owners and appear here for identification only — shown small, next to the club's own public information, never as a claim of affiliation or endorsement. If you'd rather your club, crest, or player info not appear on Ranked XI, one email does it. We confirm the request actually comes from the club or the player — a reply from an official club account or league contact is enough — then take it down, usually within the week. Crests and images come down first.</p>
     <div class="linkrow">
       <a href="${rmClub}"><b>Remove my club or crest</b></a>
       <a href="${rmPlayer}"><b>Remove my player info</b></a>
@@ -1513,7 +1516,9 @@ function screenLegal() {
       <a href="${fixNotice}"><b>File a correction notice</b></a>
     </div>
     <p style="margin-top:14px"><b>Privacy.</b> No accounts, no tracking cookies, no analytics identifiers. Your favorites live in your browser's local storage and never leave your device. Email us and we see your email — that's it.</p>
-    <p><b>Predictions.</b> Probabilities are statistical estimates for entertainment and analysis. They are not betting advice, and Ranked XI takes no wagers and no commissions on anything.</p>
+    <p><b>Predictions.</b> Probabilities are statistical estimates for entertainment and analysis. They are not betting advice, and Ranked XI takes no wagers and no commissions on anything. Ratings and probabilities describe teams and organizations, never individual athletes.</p>
+    <p><b>Demo data.</b> Anything wearing the dashed <span class="dtag">Demo</span> tag is illustrative — it demonstrates the product, not the club. Real results, standings, and stats always say what they're based on.</p>
+    <p><b>Youth clubs.</b> Youth league entries are organization listings only — name, league, and location from what the league publishes. Youth clubs carry no ratings, no fixtures, and no player data, and we never publish personal information about minors.</p>
     <p><b>Free agents &amp; claims.</b> Listings are self-reported by players; verified badges mark only what we can check against league data. Clubs contact players directly — Ranked XI is never party to any deal.</p>
     <p class="fine" style="font-size:.75rem">Independent project by Jeremy Kientz &middot; 2026. This summary is the policy; a formal version lands with accounts.</p>
   </div>`;
@@ -1640,5 +1645,6 @@ document.getElementById('themebtn')?.addEventListener('click', () => {
 addEventListener('hashchange', route);
 route();
 wireSearch();
+{ const cc = document.getElementById('clubcount'); if (cc) cc.textContent = CLUBS.length.toLocaleString(); }
 /* prefetch rosters once the first view has painted so club taps are instant */
 (self.requestIdleCallback || (f => setTimeout(f, 2000)))(() => loadRosters().catch(() => {}));

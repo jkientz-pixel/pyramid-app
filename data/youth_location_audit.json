@@ -1,0 +1,419 @@
+{
+ "_source": "cross-league join against official league club directories (TGS orgIDs 12/9/16/13/22/21, GA, GA Aspire); every city is league-stated, source recorded per club",
+ "resolved": {
+  "ea": {
+   "Mt. Rainier": {
+    "city": "Buckley",
+    "st": "WA",
+    "source": "GA Aspire directory"
+   },
+   "ALBION SC Central Valley": {
+    "city": "Clovis",
+    "st": "CA",
+    "source": "ECNL RL Boys directory (TGS)"
+   },
+   "California Football Academy": {
+    "city": "Laguna Hills",
+    "st": "CA",
+    "source": "GA Aspire directory"
+   },
+   "CITY SC Southwest": {
+    "city": "Temecula",
+    "st": "CA",
+    "source": "GA members directory"
+   },
+   "Rangers FC": {
+    "city": "Fullerton",
+    "st": "CA",
+    "source": "GA members directory"
+   },
+   "SoCal Reds FC": {
+    "city": "Irvine",
+    "st": "CA",
+    "source": "GA members directory"
+   },
+   "Colorado Rush": {
+    "city": "Denver, CO 80231",
+    "st": "CO",
+    "source": "ECNL Boys directory (TGS)"
+   },
+   "Colorado Storm": {
+    "city": "Aurora",
+    "st": "CO",
+    "source": "ECNL Boys directory (TGS)"
+   },
+   "Colorado United": {
+    "city": "Littleton",
+    "st": "CO",
+    "source": "GA members directory"
+   },
+   "Utah Athletic": {
+    "city": "Provo",
+    "st": "UT",
+    "source": "ECNL RL Boys directory (TGS)"
+   },
+   "BVBIA DFW": {
+    "city": "Frisco",
+    "st": "TX",
+    "source": "ECNL RL Boys directory (TGS)"
+   },
+   "FC Stars": {
+    "city": "Lancaster",
+    "st": "MA",
+    "source": "ECNL Boys directory (TGS)"
+   },
+   "Manitou FC": {
+    "city": "White Bear Lake",
+    "st": "MN",
+    "source": "ECNL RL Girls directory (TGS)"
+   }
+  },
+  "mlsnext_academy": {
+   "AFC Lightning": {
+    "city": "Peachtree City",
+    "st": "GA",
+    "source": "GA Aspire directory"
+   },
+   "ALBION SC Las Vegas": {
+    "city": "Las Vegas",
+    "st": "NV",
+    "source": "GA members directory"
+   },
+   "Alexandria SA": {
+    "city": "Alexandria",
+    "st": "VA",
+    "source": "GA members directory"
+   },
+   "Atlantic United": {
+    "city": "Stony Brook",
+    "st": "NY",
+    "source": "GA Aspire directory"
+   },
+   "Bayside FC": {
+    "city": "Providence",
+    "st": "RI",
+    "source": "GA members directory"
+   },
+   "Burlingame Soccer Club": {
+    "city": "Burlingame",
+    "st": "CA",
+    "source": "ECNL RL Boys directory (TGS)"
+   },
+   "Diablo Valley Futbol Club": {
+    "city": "Clayton",
+    "st": "CA",
+    "source": "ECNL RL Boys directory (TGS)"
+   },
+   "Downtown United Soccer Club": {
+    "city": "New York",
+    "st": "NY",
+    "source": "GA members directory"
+   },
+   "Elk Grove Soccer": {
+    "city": "Elk Grove",
+    "st": "CA",
+    "source": "ECNL RL Boys directory (TGS)"
+   },
+   "FC Bay Area Surf": {
+    "city": "Bay Area",
+    "st": "CA",
+    "source": "ECNL Boys directory (TGS)"
+   },
+   "FC DELCO": {
+    "city": "Conshohocken",
+    "st": "PA",
+    "source": "ECNL Girls directory (TGS)"
+   },
+   "FC Richmond": {
+    "city": "Richmond",
+    "st": "VA",
+    "source": "GA Aspire directory"
+   },
+   "Ginga FC": {
+    "city": "Woodbridge",
+    "st": "CT",
+    "source": "GA Aspire directory"
+   },
+   "Jacksonville FC": {
+    "city": "Jacksonville",
+    "st": "FL",
+    "source": "ECNL Girls directory (TGS)"
+   },
+   "Kings Hammer Cincinnati": {
+    "city": "Covington",
+    "st": "KY",
+    "source": "Pre-ECNL Boys directory (TGS)"
+   },
+   "Lamorinda Soccer Club": {
+    "city": "Orinda",
+    "st": "CA",
+    "source": "GA members directory"
+   },
+   "Lexington Sporting Club": {
+    "city": "Lexington",
+    "st": "KY",
+    "source": "ECNL RL Girls directory (TGS)"
+   },
+   "Long Island Slammers": {
+    "city": "Central Islip",
+    "st": "NY",
+    "source": "ECNL RL Girls directory (TGS)"
+   },
+   "Lowcountry United": {
+    "city": "Charleston",
+    "st": "SC",
+    "source": "GA Aspire directory"
+   },
+   "Michigan Jaguars": {
+    "city": "Novi",
+    "st": "MI",
+    "source": "GA members directory"
+   },
+   "Minneapolis United SC": {
+    "city": "Minneapolis",
+    "st": "MN",
+    "source": "ECNL RL Boys directory (TGS)"
+   },
+   "New England Surf SC": {
+    "city": "Charlestown",
+    "st": "MA",
+    "source": "ECNL RL Girls directory (TGS)"
+   },
+   "Oakwood Soccer Club": {
+    "city": "Glastonbury",
+    "st": "CT",
+    "source": "ECNL Boys directory (TGS)"
+   },
+   "Phoenix Premier FC": {
+    "city": "Phoenix",
+    "st": "AZ",
+    "source": "GA Aspire directory"
+   },
+   "SC Del Sol": {
+    "city": "Phoenix",
+    "st": "AZ",
+    "source": "GA members directory"
+   },
+   "Seacoast United": {
+    "city": "Epping",
+    "st": "NH",
+    "source": "GA members directory"
+   },
+   "Seattle Celtic": {
+    "city": "Seattle",
+    "st": "WA",
+    "source": "GA members directory"
+   },
+   "South Florida Football Academy": {
+    "city": "Boca Raton",
+    "st": "FL",
+    "source": "ECNL RL Girls directory (TGS)"
+   },
+   "Southern Soccer Academy": {
+    "city": "Marietta",
+    "st": "GA",
+    "source": "GA members directory"
+   },
+   "Sporting Athletic Club": {
+    "city": "Wilmington",
+    "st": "DE",
+    "source": "GA members directory"
+   },
+   "Sporting Springfield": {
+    "city": "Springfield",
+    "st": "MO",
+    "source": "ECNL RL Girls directory (TGS)"
+   },
+   "Springfield SYC": {
+    "city": "Springfield",
+    "st": "VA",
+    "source": "GA Aspire directory"
+   },
+   "Sting Nebraska": {
+    "city": "Beaver Crossing",
+    "st": "NE",
+    "source": "ECNL RL Girls directory (TGS)"
+   },
+   "Virginia Revolution SC": {
+    "city": "Leesburg",
+    "st": "VA",
+    "source": "GA Aspire directory"
+   },
+   "West Florida Flames": {
+    "city": "Apollo Beach",
+    "st": "FL",
+    "source": "GA members directory"
+   },
+   "Westside Metros FC": {
+    "city": "Beaverton",
+    "st": "OR",
+    "source": "GA members directory"
+   },
+   "Whatcom Rangers": {
+    "city": "Bellingham",
+    "st": "WA",
+    "source": "ECNL RL Boys directory (TGS)"
+   },
+   "Wisconsin United FC": {
+    "city": "Appleton",
+    "st": "WI",
+    "source": "GA Aspire directory"
+   }
+  }
+ },
+ "unresolved": {
+  "ea": [
+   "ALBION SC Hawaii",
+   "ALBION SC Washington",
+   "Atletico",
+   "BVBIA Washington",
+   "Emerald City Football Club",
+   "Harbor Soccer Club",
+   "Highline Premier FC",
+   "Sozos",
+   "Sting Soccer Club ID",
+   "United Sports FC",
+   "Warriors Sports Academy",
+   "Washington East Surf Columbia Basin",
+   "Western WA Surf Academy",
+   "ALBION SC Silicon Valley",
+   "Football Club Alliance",
+   "Nevada Futbol Club",
+   "Sonoma Valley United",
+   "ALBION SC Antelope Valley",
+   "Boca OC",
+   "Central Cal Aztecs",
+   "FC Golden State Force",
+   "FLYTE SC Inland Empire",
+   "Fram CQ",
+   "Inland Surf",
+   "LA SURF FUTURES",
+   "LA SURF LC",
+   "Laguna United",
+   "LAIFC",
+   "Oaks FC",
+   "SoCal Elite FC",
+   "Strikers FC North",
+   "Total Futbol Academy",
+   "Total Futbol Academy OC",
+   "ALBION SC Boulder County",
+   "ALBION SC Utah",
+   "BVBIA Arizona",
+   "City SC NOCO",
+   "Colorado Elevation FC",
+   "Colorado Rush COS",
+   "Inter Utah SC",
+   "Spartans FC",
+   "Utah Athletic - North",
+   "Manchester City North Texas",
+   "Steel United TX",
+   "Croatian Eagles SC",
+   "FC1 Academy",
+   "JaBHat FC",
+   "North Shore United Soccer Club",
+   "Team Chicago",
+   "Hoosier Futbol Club",
+   "JB Marine Soccer Club",
+   "United Elite SC",
+   "USA of Indiana",
+   "Black River Athletics",
+   "FC Dutchmen",
+   "FC Dynamo ROC",
+   "Global Foutbol Stras 11 Academy",
+   "JP Soccer",
+   "North East Reds Long Island",
+   "NY Rush East",
+   "Saratoga-Wilton Soccer Club",
+   "ALBION SC Atlanta Metro",
+   "All-In FC",
+   "BVBIA Georgia",
+   "Covered Bridge Soccer Club"
+  ],
+  "mlsnext_academy": [
+   "956 United",
+   "ALBION SC Boulder County",
+   "Aspire FC",
+   "Athletum FC Academy",
+   "Atletico FC",
+   "Ballistic United",
+   "Baltimore Armour",
+   "Bavarian United SC",
+   "Capital City South",
+   "Carolina Velocity FC",
+   "Cedar Stars Academy Newark",
+   "Celtic Storm",
+   "Charleston SC",
+   "Chicago FC United",
+   "Chicago Fire Youth SC",
+   "City SC - San Diego",
+   "Classic FC",
+   "Dallas Hornets",
+   "Dallas Hornets North",
+   "Downtown Las Vegas Soccer Club",
+   "FC Greater Boston Bolts",
+   "FC Harlem",
+   "FC Hudson Valley",
+   "FC Tucson Youth Soccer Club",
+   "Fox Soccer Academy Carolinas",
+   "Galacticos Soccer Academy",
+   "GFI Academy South",
+   "Grand Junction Soccer Club",
+   "Hillsboro Rush",
+   "Hoover-Vestavia Soccer",
+   "Houston Futsal Club",
+   "IdeaSport SA",
+   "IFA West",
+   "Intercontinental Football Academy of New England",
+   "Kings Hammer Nashville",
+   "KSA",
+   "LA Youth",
+   "Lanier Soccer Association",
+   "Lou Fusz Athletic 2",
+   "Louisiana Elite SP",
+   "McLean Youth Soccer",
+   "Miami Futbol Academy Rush",
+   "Michigan Bucks Academy",
+   "Michigan Futbol Academy",
+   "Michigan Jaguars United FC",
+   "Monarchs AZ",
+   "Mt. Rainier Futbol Club",
+   "NEFC South",
+   "New York Elite Alleycats FC",
+   "New York Rush",
+   "New York SC",
+   "Oaks FC",
+   "One FC",
+   "Orlando City Youth SC",
+   "Ozark United FC Academy",
+   "PA Classics Harrisburg",
+   "PDA Hibernian",
+   "Plantation FC Rush",
+   "Players SC",
+   "Rochester NY FC",
+   "Roswell Soccer Club",
+   "SA United SC",
+   "Saint Paul Blackhawks",
+   "Saints Academy",
+   "San Francisco Glens SC",
+   "SC Wave",
+   "Seacoast United Mass",
+   "SGA",
+   "Skyline Soccer Association",
+   "Sol Sports Club",
+   "Sound FC",
+   "Sozo FC",
+   "Sparta United Soccer Club",
+   "Sporting Oklahoma",
+   "Sporting San Diego",
+   "St. Louis Scott Gallagher IL",
+   "St. Louis Scott Gallagher St. Charles",
+   "Syracuse Development Academy",
+   "The St. James",
+   "Trenton City Soccer Club",
+   "Triangle United Soccer Association",
+   "Tulsa Greenwood SC",
+   "Virginia Rush",
+   "Westside Metros FC South"
+  ]
+ }
+}
