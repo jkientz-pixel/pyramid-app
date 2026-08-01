@@ -305,7 +305,7 @@ const LEVELS = {
   all: null,
   pro: ['mls', 'uslc', 'usl1', 'mnp', 'nisa', 'nwsl', 'uslw'],
   amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'swpl', 'mpl', 'mwpl', 'cpl', 'cplw', 'loc', 'uslwl', 'wpsl', 'uws'],
-  college: ['ncaa1', 'ncaa2', 'ncaa3', 'naia']
+  college: ['ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w']
 };
 let level = 'all';
 function levelChips() {
@@ -497,7 +497,7 @@ const FACT = [1, 1, 2, 6, 24, 120, 720, 5040];
 /* Tier-tuned engine — backtested 2026-07-27 on 1,377 real matches (310 NPSL
    + 1,067 pro): amateur football wants a bigger K and smaller home edge than
    pro parity leagues, so params split by tier instead of one-size-fits-all. */
-const AMATEUR_TIER = new Set(['npsl', 'upsl', 'usl2', 'apsl', 'loc', 'uslwl', 'wpsl', 'uws', 'nisa', 'ncaa1', 'ncaa2', 'ncaa3', 'naia']);
+const AMATEUR_TIER = new Set(['npsl', 'upsl', 'usl2', 'apsl', 'loc', 'uslwl', 'wpsl', 'uws', 'nisa', 'ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w']);
 function oddsFor(h, a, homeAdv) {
   const amateur = AMATEUR_TIER.has(h.g) && AMATEUR_TIER.has(a.g);
   const ha = homeAdv != null ? homeAdv : (amateur ? 30 : 65);
@@ -1111,7 +1111,7 @@ const TIERS = {
     { t: 'Division II', pro: true, coming: ['WPSL Pro · launching 2026-27'] },
     { t: 'National amateur', leagues: ['uslwl', 'wpsl', 'uws'] },
     { t: 'Regional & emerging', leagues: ['cplw'], coming: ['More regional leagues'] },
-    { t: 'College & youth', coming: ['NCAA women\'s soccer · next', 'Youth clubs · directory layer'] }
+    { t: 'College & youth', leagues: ['ncaa1w', 'ncaa2w'], coming: ['D3 / NAIA women · next', 'Youth clubs · directory layer'] }
   ]
 };
 function screenPyramid() {

@@ -18,6 +18,9 @@ from playwright.sync_api import sync_playwright
 SCOPES = {
     'd3':   'https://masseyratings.com/csoc2025/ncaa-d3/ratings',
     'naia': 'https://masseyratings.com/csoc2025/naia/ratings',
+    # women's college soccer is a separate Massey scope: csocw<season>
+    'd1w':  'https://masseyratings.com/csocw2025/ncaa-d1/ratings',
+    'd2w':  'https://masseyratings.com/csocw2025/ncaa-d2/ratings',
 }
 UA = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 '
       '(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36')
