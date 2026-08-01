@@ -63,6 +63,9 @@ h2{margin:4px 0 2px;font-size:1.35rem}
 /* map: light ground, ink boundaries */
 .mapbox{background:var(--raise);border:1px solid var(--line);border-radius:14px;overflow:clip}
 svg.usmap{width:100%;height:auto;max-height:72vh;display:block;touch-action:manipulation}
+.canada{opacity:.4;pointer-events:none}
+.canada.dim{opacity:.14}
+.canada path{fill:var(--map-fill);stroke:var(--map-stroke);stroke-width:1}
 .states path{fill:var(--map-fill);stroke:var(--map-stroke);stroke-width:1;cursor:pointer;transition:fill .15s}
 .states path:hover{fill:var(--map-hover)}
 .states path.dim{opacity:.35}

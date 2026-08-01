@@ -138,9 +138,9 @@ test('map pan stays anchored — drag cannot push the map out of the box', async
   }
   const vb = await svg.getAttribute('viewBox');
   const [x, y, w, h] = vb.split(' ').map(Number);
-  // home extent is 0 0 980 560 — the view must stay inside it
+  // home extent is 0 -20 980 580 (top headroom for Canada) — view stays inside
   expect(x).toBeGreaterThanOrEqual(-0.1);
-  expect(y).toBeGreaterThanOrEqual(-0.1);
+  expect(y).toBeGreaterThanOrEqual(-20.1);
   expect(x + w).toBeLessThanOrEqual(980.1);
   expect(y + h).toBeLessThanOrEqual(560.1);
   expect(errors).toEqual([]);
