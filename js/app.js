@@ -59,7 +59,9 @@ function reportLink(kind, what) {
    and cache-first, so only a new ?cv= reaches returning browsers */
 const CRESTV = '2';
 function crestHtml(c) {
-  if (c.img) return `<img class="crest imgcrest" src="${c.img}?cv=${CRESTV}" alt="${esc(c.n)} crest" loading="lazy">`;
+  /* a failed crest load must degrade to the initials chip, never the
+     browser's broken-image glyph with overflowing alt text */
+  if (c.img) return `<img class="crest imgcrest" src="${c.img}?cv=${CRESTV}" alt="${esc(c.n)} crest" loading="lazy" onerror="this.outerHTML='<span class=&quot;crest&quot; style=&quot;background:${LEAGUES[c.g].color}&quot;>${initials(c.n)}</span>'">`;
   return `<span class="crest" style="background:${LEAGUES[c.g].color}">${initials(c.n)}</span>`;
 }
 
@@ -549,9 +551,11 @@ function confidenceFor(o, h, a) {
 /* small crest + league-logo marks for match rows — the 34px crestHtml chip
    overwhelms a one-line fixture, so match rows get a 20px variant */
 const mcrest = c => c.img
-  ? `<img class="mcrest" src="${c.img}?cv=${CRESTV}" alt="" loading="lazy">`
+  ? `<img class="mcrest" src="${c.img}?cv=${CRESTV}" alt="" loading="lazy" onerror="this.style.display='none'">`
   : `<span class="mcrest ini" style="background:${LEAGUES[c.g].color}">${initials(c.n)}</span>`;
-const lgIcon = g => LEAGUES[g].img ? `<img class="lgico" src="${LEAGUES[g].img}" alt="" loading="lazy">` : '';
+/* inv: 'd' = dark-art mark, invert under dark theme; 'l' = white mark,
+   invert under light theme — one asset serves both themes either way */
+const lgIcon = g => { const m = LEAGUES[g]; return m.img ? `<img class="lgico${m.inv ? ' inv-' + m.inv : ''}" src="${m.img}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''; };
 function matchCard(h, a, when) {
   const head = `<div class="mrow"><a class="side" href="#/club/${h.id}">${mcrest(h)}<span class="sn">${esc(h.n)}</span></a><span class="vs">${when || 'NEUTRAL'}</span><a class="side away" href="#/club/${a.id}">${mcrest(a)}<span class="sn">${esc(a.n)}</span></a></div>
     <div class="meta"><span>${lgIcon(h.g)}${LEAGUES[h.g].label}${h.g !== a.g ? ' v ' + LEAGUES[a.g].label : ''}</span><span>${h.st}${h.st !== a.st ? ' · ' + a.st : ''}</span></div>`;
@@ -1167,8 +1171,8 @@ function screenPyramid() {
       <div class="tier" style="width:${100 - i * (52 / TIERS[sex].length)}%">
         <div class="tier-label">${tier.t}${tier.pro ? ' · pro' : ''}</div>
         <div class="tier-leagues">
-          ${(tier.leagues || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img src="${m.img}" alt="">` : `<span class="dot" style="background:${m.color}"></span>`}<b>${m.label}</b><span>${count(g)} clubs</span>`; return m.url ? `<a class="tierlg" href="${m.url}" target="_blank" rel="noopener">${inner}</a>` : `<span class="tierlg">${inner}</span>`; }).join('')}
-          ${(tier.extra || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img src="${m.img}" alt="">` : ''}<b>${m.label}</b><span>${count(g)} clubs</span>`; return m.url ? `<a class="tierlg dimmed" href="${m.url}" target="_blank" rel="noopener">${inner}</a>` : `<span class="tierlg dimmed">${inner}</span>`; }).join('')}
+          ${(tier.leagues || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img class="${m.inv ? 'inv-' + m.inv : ''}" src="${m.img}" alt="" onerror="this.style.display='none'">` : `<span class="dot" style="background:${m.color}"></span>`}<b>${m.label}</b><span>${count(g)} clubs</span>`; return m.url ? `<a class="tierlg" href="${m.url}" target="_blank" rel="noopener">${inner}</a>` : `<span class="tierlg">${inner}</span>`; }).join('')}
+          ${(tier.extra || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img class="${m.inv ? 'inv-' + m.inv : ''}" src="${m.img}" alt="" onerror="this.style.display='none'">` : ''}<b>${m.label}</b><span>${count(g)} clubs</span>`; return m.url ? `<a class="tierlg dimmed" href="${m.url}" target="_blank" rel="noopener">${inner}</a>` : `<span class="tierlg dimmed">${inner}</span>`; }).join('')}
           ${(tier.coming || []).map(c => c.url
             ? `<a class="tierlg coming" href="${c.url}" target="_blank" rel="noopener">${c.img ? `<img src="${c.img}" alt="">` : ''}<b>${c.label}</b><span>league site</span></a>`
             : `<span class="tierlg coming"><b>${c.label || c}</b></span>`).join('')}
