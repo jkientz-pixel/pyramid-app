@@ -1,19 +1,19 @@
-import { PROJ, USMAP } from './usmap.js?v=20260801k';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260801k';
+import { PROJ, USMAP } from './usmap.js?v=20260801l';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260801l';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260801k')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260801l')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260801k';
+const BUILDV = '20260801l';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -591,7 +591,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260801k')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260801l')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -600,7 +600,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260801k'), grab('data/wire_asa.json?v=20260801k')]);
+    grab('data/wire_npsl.json?v=20260801l'), grab('data/wire_asa.json?v=20260801l')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -839,28 +839,28 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260801k')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260801l')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260801k')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260801l')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260801k')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260801l')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260801k')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260801l')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -1329,7 +1329,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260801k')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260801l')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
