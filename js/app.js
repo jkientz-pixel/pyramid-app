@@ -1,19 +1,19 @@
-import { PROJ, USMAP } from './usmap.js?v=20260801d';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260801d';
+import { PROJ, USMAP } from './usmap.js?v=20260801g';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260801g';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260801d')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260801g')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260801d';
+const BUILDV = '20260801g';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -125,7 +125,7 @@ function renderMapSvg(clubs, useCrests) {
     if (useCrests && c.img) {
       return `<image class="pin" data-idx="${idx}" data-cx="${x.toFixed(1)}" data-cy="${y.toFixed(1)}" href="${c.img}?cv=${CRESTV}" x="${(x - 11).toFixed(1)}" y="${(y - 11).toFixed(1)}" width="22" height="22"></image>`;
     }
-    const r0 = c.g === 'mls' ? 7 : c.g === 'loc' ? 4.5 : 5.5;
+    const r0 = c.g === 'mls' ? 7 : (c.g === 'loc' || LEVELS.youth.includes(c.g)) ? 4.5 : 5.5;
     const base = `class="pin" data-idx="${idx}" data-r="${r0}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r0}"`;
     return m.hollow
       ? `<circle ${base} fill="none" stroke="${m.color}" stroke-width="1.6"></circle>`
@@ -304,9 +304,9 @@ function wireSearch() {
 const LEVELS = {
   all: null,
   pro: ['mls', 'uslc', 'usl1', 'mnp', 'nisa', 'nwsl', 'uslw'],
-  amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'swpl', 'mpl', 'mwpl', 'cpl', 'cplw', 'loc', 'uslwl', 'wpsl', 'uws'],
+  amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'swpl', 'mpl', 'mwpl', 'cpl', 'cplw', 'gcpl', 'loc', 'uslwl', 'wpsl', 'uws', 'uws2'],
   college: ['ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w'],
-  youth: ['mlsnext']
+  youth: ['mlsnext', 'ecnlb', 'ga', 'ecnlg']
 };
 let level = 'all';
 function levelChips() {
@@ -498,7 +498,7 @@ const FACT = [1, 1, 2, 6, 24, 120, 720, 5040];
 /* Tier-tuned engine — backtested 2026-07-27 on 1,377 real matches (310 NPSL
    + 1,067 pro): amateur football wants a bigger K and smaller home edge than
    pro parity leagues, so params split by tier instead of one-size-fits-all. */
-const AMATEUR_TIER = new Set(['npsl', 'upsl', 'usl2', 'apsl', 'loc', 'uslwl', 'wpsl', 'uws', 'nisa', 'ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w']);
+const AMATEUR_TIER = new Set(['npsl', 'upsl', 'usl2', 'apsl', 'gcpl', 'loc', 'uslwl', 'wpsl', 'uws', 'nisa', 'ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w']);
 function oddsFor(h, a, homeAdv) {
   const amateur = AMATEUR_TIER.has(h.g) && AMATEUR_TIER.has(a.g);
   const ha = homeAdv != null ? homeAdv : (amateur ? 30 : 65);
@@ -575,7 +575,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260801d')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260801g')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -584,7 +584,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260801d'), grab('data/wire_asa.json?v=20260801d')]);
+    grab('data/wire_npsl.json?v=20260801g'), grab('data/wire_asa.json?v=20260801g')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -823,28 +823,28 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260801d')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260801g')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260801d')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260801g')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260801d')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260801g')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260801d')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260801g')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -1131,20 +1131,18 @@ const TIERS = {
     { t: 'Division II', pro: true, leagues: ['uslc'] },
     { t: 'Division III', pro: true, leagues: ['usl1', 'mnp'], extra: ['nisa'], note: 'NISA: professional sanctioning not awarded — unsanctioned since Dec 2024' },
     { t: 'National amateur', leagues: ['npsl', 'usl2', 'upsl'] },
-    { t: 'Regional & emerging', leagues: ['apsl', 'loc', 'swpl', 'mpl', 'mwpl', 'cpl'], coming: [
-      /* GCPL stays a chip: its site currently says "update coming soon" with
-         no published teams. The old Eastern Premier (EPSL) is NOT missing:
-         it renamed to APSL in Feb 2025 and is already a rated layer above. */
-      { label: 'Gulf Coast Premier League', url: 'https://www.gcplsoccer.com', img: 'crests/league-gcpl.png' },
+    { t: 'Regional & emerging', leagues: ['apsl', 'gcpl', 'loc', 'swpl', 'mpl', 'mwpl', 'cpl'], coming: [
+      /* The old Eastern Premier (EPSL) is NOT missing: it renamed to APSL in
+         Feb 2025 and is already a rated layer above. */
       'More regional leagues', 'State, city & rec leagues'] },
-    { t: 'College & youth', leagues: ['ncaa1', 'ncaa2', 'ncaa3', 'naia', 'mlsnext'] }
+    { t: 'College & youth', leagues: ['ncaa1', 'ncaa2', 'ncaa3', 'naia', 'mlsnext', 'ecnlb'] }
   ],
   w: [
     { t: 'Division I', pro: true, leagues: ['nwsl', 'uslw'] },
     { t: 'Division II', pro: true, coming: ['WPSL Pro · launching 2026-27'] },
     { t: 'National amateur', leagues: ['uslwl', 'wpsl', 'uws'] },
-    { t: 'Regional & emerging', leagues: ['cplw'], coming: ['More regional leagues'] },
-    { t: 'College & youth', leagues: ['ncaa1w', 'ncaa2w'], coming: ['D3 / NAIA women · next', 'Girls youth (GA / ECNL) · when member lists publish'] }
+    { t: 'Regional & emerging', leagues: ['uws2', 'cplw'], coming: ['More regional leagues'] },
+    { t: 'College & youth', leagues: ['ncaa1w', 'ncaa2w', 'ga', 'ecnlg'], coming: ['D3 / NAIA women · next'] }
   ]
 };
 function screenPyramid() {
@@ -1247,7 +1245,7 @@ function screenPricing() {
       <p>Four direct-sold placements — map, free-agent board, pyramid, wire. Static creative + link, no ad networks, no trackers.</p>
       <a class="claim" href="#/advertise">See placements &amp; rates</a></div>
     <div class="pricecard paid"><b>Youth club directory placement · $99/year</b>
-      <p>Coming: your youth club on the national map with a pathway line to the pros above you.</p>
+      <p>Your youth club on the national map with a pathway line to the pros above you.</p>
       <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Youth club directory interest')}">Join the waitlist</a></div>
     <p class="note">Honesty policy: paid tiers switch on only after the marketplace demonstrably works — players getting contacted, clubs filling spots. Reserving is free and locks founding rates. No commissions, ever: your deals are yours.</p>`;
 }
@@ -1313,7 +1311,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260801d')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260801g')).json(); }
   catch { _cups = {}; }
   return _cups;
 }

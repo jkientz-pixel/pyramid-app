@@ -1,23 +1,34 @@
 #!/usr/bin/env python3
-"""Seed the youth directory layer: MLS NEXT member clubs (boys).
+"""Build the youth directory layers: MLS NEXT (boys), ECNL Boys & Girls,
+Girls Academy.
 
-Source: the Wikipedia 'MLS Next' Clubs table (club name, 'City, State'
-location, join season) — the league's own site has no machine-readable
-member list. Locations are settlement-geocoded through the shared
-data/geocache.json (Nominatim, 1.1s courtesy delay on misses); a club whose
-city won't resolve is skipped and logged rather than pinned wrong.
+Sources:
+  * mlsnext — Wikipedia 'MLS Next' Clubs table (club, 'City, State', join
+    season); the league's own site has no machine-readable member list.
+  * ecnlb / ecnlg — the Total Global Sports API that powers theecnl.com and
+    the ECNL app: api.athleteone.com get-org-club-list-by-orgID (12 = boys,
+    9 = girls, confirmed against ECNL conference-standings URLs which carry
+    the orgID). Returns clubFullName + city + stateCode per club.
+  * ga — girlsacademyleague.com/members/ is server-rendered Divi: club lines
+    read 'Name (City, ST)' grouped under conference headings. Second teams
+    of one club ('Lou Fusz Athletic White') fold into the parent club.
 
-Girls' side note: neither Girls Academy nor ECNL publishes a scrapeable
-member directory (GA /members/ is a JS shell, theecnl.com/clubs 404s, no
-Wikipedia list). The girls' youth layer stays a coming-chip until one of
-those publishes a list or we enter it manually.
+Locations are settlement-geocoded through the shared data/geocache.json
+(Nominatim, 1.1s courtesy delay on misses); a club whose city won't resolve
+is skipped and logged rather than pinned wrong.
 
-Clubs whose normalized name already exists in ANY layer are skipped and
-logged (MLS academy sides collide with their first teams by design).
+Folding: a youth club whose normalized name matches an existing NON-youth
+club IN THE SAME STATE folds into it (MLS academies collide with their first
+teams by design; a same-name club in another state is a different org and
+gets its own pin — 'AFC Lightning' GA vs 'Lightning SC' OH). Within the
+youth tier one entry per (name, sex): a club fielding both ECNL boys and
+girls appears once per sex, mirroring how adult clubs hold one entry per
+league membership.
 
-Outputs: clubs appended to js/data.js (g=mlsnext, x=m, unrated),
-         skip/geo log to data/youth_report.json.
-Idempotent: existing mlsnext clubs are rebuilt from scratch each run.
+Outputs: clubs appended to js/data.js (unrated, hollow pins),
+         per-league fold/geo log to data/youth_report.json.
+Idempotent: youth clubs are rebuilt from scratch each run; previously
+written youth ids keep their array positions (write_clubs is append-only).
 """
 import json, os, re, sys, time, urllib.parse, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -27,10 +38,18 @@ from build_college_layers import api, unwiki, deacc, STATES
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UA = {'User-Agent': 'RankXI/1.0 (jkientz@gmail.com; youth layer ingest)'}
 GEO_CACHE = os.path.join(ROOT, 'data', 'geocache.json')
+TGS_API = 'https://api.athleteone.com/api/Event/get-org-club-list-by-orgID/%d'
+GA_URL = 'https://girlsacademyleague.com/members/'
+YOUTH = ('mlsnext', 'ecnlb', 'ga', 'ecnlg')
 
 # strip only organizational suffixes — location/identity words (united, city,
 # academy, SA) are what distinguish real youth orgs from same-token adult clubs
 NAME_NOISE = re.compile(r"\b(fc|sc|cf|afc|ac|club|soccer)\b", re.I)
+# trailing squad qualifiers: 'Lou Fusz Athletic White' is a second GA team of
+# Lou Fusz Athletic, not a separate club
+TEAM_QUALIFIER = {'white', 'black', 'blue', 'red', 'gold', 'silver', 'ii'}
+# source typos that break geocoding ('Middle Villages, NY' in the wiki table)
+CITY_FIX = {'Middle Villages': 'Middle Village', 'Cinncinati': 'Cincinnati'}
 
 
 def norm(n):
@@ -42,6 +61,12 @@ def norm(n):
 
 def slugify(n):
     return re.sub(r'-+', '-', re.sub(r'[^a-z0-9]+', '-', deacc(n).lower())).strip('-')
+
+
+def _cell(raw):
+    # wikitext cell may carry attributes: 'rowspan="2"| Commerce City, CO'
+    m = re.match(r'\s*[a-z]+="[^"]*"\s*\|(.*)$', raw)
+    return unwiki((m.group(1) if m else raw)).strip()
 
 
 def parse_mlsnext():
@@ -56,7 +81,7 @@ def parse_mlsnext():
         lines = [l for l in block.split('\n') if l.startswith('|') and not l.startswith('|}')]
         if len(lines) < 2 or lines[0].startswith('|+'):
             continue
-        name, loc = unwiki(lines[0][1:]).strip(), unwiki(lines[1][1:]).strip()
+        name, loc = _cell(lines[0][1:]), _cell(lines[1][1:])
         m = re.match(r'(.+?),\s*([A-Za-z .]+)$', loc)
         if not (name and m):
             continue
@@ -67,7 +92,50 @@ def parse_mlsnext():
     return out
 
 
+def parse_tgs(org_id):
+    req = urllib.request.Request(TGS_API % org_id,
+                                 headers={**UA, 'Accept': 'application/json'})
+    data = json.load(urllib.request.urlopen(req, timeout=30))
+    out = []
+    for c in data.get('data') or []:
+        name = (c.get('clubFullName') or c.get('clubName') or '').strip()
+        city = (c.get('city') or '').strip()
+        st = (c.get('stateCode') or '').strip().upper()
+        if name and city and re.fullmatch(r'[A-Z]{2}', st):
+            out.append({'name': name, 'city': city, 'st': st})
+    return out
+
+
+def parse_ga():
+    html = urllib.request.urlopen(
+        urllib.request.Request(GA_URL, headers=UA), timeout=30
+    ).read().decode('utf-8', 'replace')
+    text = re.sub(r'<script.*?</script>|<style.*?</style>', '', html, flags=re.S)
+    out = []
+    for line in re.sub(r'<[^>]+>', '\n', text).split('\n'):
+        line = (line.strip().replace('&#038;', '&').replace('&amp;', '&')
+                .replace('&#8217;', "'").replace('&#8211;', '-'))
+        m = re.match(r'^(.{2,60}?)\s*\(([^,()]+),\s*([A-Z]{2})\)$', line)
+        if m:
+            out.append({'name': m.group(1), 'city': m.group(2).strip(),
+                        'st': m.group(3)})
+    return out
+
+
+def drop_second_teams(rows, log):
+    names = {norm(r['name']) for r in rows}
+    keep = []
+    for r in rows:
+        toks = norm(r['name']).split()
+        if len(toks) > 1 and toks[-1] in TEAM_QUALIFIER and ' '.join(toks[:-1]) in names:
+            log.append(r['name'])
+            continue
+        keep.append(r)
+    return keep
+
+
 def geocode(city, st, cache):
+    city = CITY_FIX.get(city, city)
     key = f'{city}|{st}'
     if key in cache:
         return tuple(cache[key]) if cache[key] else None
@@ -86,42 +154,82 @@ def geocode(city, st, cache):
     return ll
 
 
+SOURCES = [('mlsnext', 'm', parse_mlsnext),
+           ('ecnlb', 'm', lambda: parse_tgs(12)),
+           ('ga', 'w', parse_ga),
+           ('ecnlg', 'w', lambda: parse_tgs(9))]
+
+
 def main():
     dpath = os.path.join(ROOT, 'js', 'data.js')
     cur = open(dpath).read()
     clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', cur, re.S).group(1))
-    clubs = [c for c in clubs if c['g'] != 'mlsnext']
-    taken_ids = {c['id'] for c in clubs}
-    taken_names = {norm(c['n']) for c in clubs}
+    adults = [c for c in clubs if c['g'] not in YOUTH]
+    # fold targets: same normalized name AND same state as an existing
+    # non-youth club (cross-state matches are different orgs)
+    adult_states = {}
+    for c in adults:
+        adult_states.setdefault(norm(c['n']), set()).add(c.get('st'))
+    taken_ids = {c['id'] for c in adults}
     cache = json.load(open(GEO_CACHE)) if os.path.exists(GEO_CACHE) else {}
 
-    rows = parse_mlsnext()
-    print(f'mlsnext: {len(rows)} clubs in the member table')
-    new_clubs, skipped, nogeo = [], [], []
-    for r in rows:
-        if norm(r['name']) in taken_names:
-            skipped.append(r['name'])
-            continue
-        cid = slugify(r['name'])
-        if cid in taken_ids:
-            skipped.append(r['name'] + ' (slug)')
-            continue
-        ll = geocode(r['city'], r['st'], cache)
-        if not ll:
-            nogeo.append(f"{r['name']} ({r['city']}, {r['st']})")
-            continue
-        taken_ids.add(cid)
-        taken_names.add(norm(r['name']))
-        new_clubs.append({'n': r['name'], 'g': 'mlsnext', 'x': 'm',
-                          'la': ll[0], 'lo': ll[1], 'st': r['st'],
-                          'ct': r['city'], 'id': cid})
+    report, new_youth = {}, []
+    youth_taken = set()          # (norm name, sex) — one youth pin per sex
+    for g, x, parse in SOURCES:
+        rows = parse()
+        log = {'listed': len(rows), 'folded': [], 'youth_dup': [],
+               'second_teams': [], 'no_geocode': [], 'added': 0}
+        rows = drop_second_teams(rows, log['second_teams'])
+        for r in rows:
+            key = norm(r['name'])
+            if r['st'] in adult_states.get(key, ()):
+                log['folded'].append(r['name'])
+                continue
+            if (key, x) in youth_taken:
+                log['youth_dup'].append(r['name'])
+                continue
+            ll = geocode(r['city'], r['st'], cache)
+            if not ll:
+                log['no_geocode'].append(f"{r['name']} ({r['city']}, {r['st']})")
+                continue
+            cid = slugify(r['name'])
+            if cid in taken_ids:
+                cid = f'{cid}-{g}'
+            if cid in taken_ids:
+                log['youth_dup'].append(r['name'] + ' (slug)')
+                continue
+            taken_ids.add(cid)
+            youth_taken.add((key, x))
+            new_youth.append({'n': r['name'], 'g': g, 'x': x,
+                              'la': ll[0], 'lo': ll[1], 'st': r['st'],
+                              'ct': r['city'], 'id': cid})
+            log['added'] += 1
+        report[g] = log
     json.dump(cache, open(GEO_CACHE, 'w'))
-    clubs.extend(new_clubs)
-    write_clubs(clubs, cur)
-    json.dump({'skipped_collisions': skipped, 'no_geocode': nogeo},
-              open(os.path.join(ROOT, 'data', 'youth_report.json'), 'w'), indent=1)
-    print(f'built {len(new_clubs)} mlsnext clubs; '
-          f'{len(skipped)} name collisions skipped, {len(nogeo)} no-geocode')
+
+    # array position is the legacy-URL map, and other layers may sit AFTER the
+    # youth block — so rebuild in place: an existing youth id is replaced at
+    # its old position (or kept as-is if its source dropped it this run) and
+    # only genuinely new clubs append at the tail
+    regen = {c['id']: c for c in new_youth}
+    out, stale = [], []
+    for c in clubs:
+        if c['g'] in YOUTH and c['id'] not in regen:
+            stale.append(c['n'])
+        out.append(regen.pop(c['id'], c) if c['g'] in YOUTH else c)
+    out.extend(regen.values())
+    if stale:
+        report['kept_stale'] = stale
+    write_clubs(out, cur)
+    json.dump(report, open(os.path.join(ROOT, 'data', 'youth_report.json'), 'w'),
+              indent=1)
+    for g, log in report.items():
+        if g == 'kept_stale':
+            print(f'kept_stale: {len(log)}')
+            continue
+        print(f"{g}: {log['listed']} listed -> {log['added']} added, "
+              f"{len(log['folded'])} folded, {len(log['second_teams'])} second teams, "
+              f"{len(log['youth_dup'])} youth dups, {len(log['no_geocode'])} no-geocode")
 
 
 if __name__ == '__main__':
