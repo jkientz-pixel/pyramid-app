@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Walk-forward calibration backtest of the Elo->Poisson odds engine
-against real NPSL 2026 results. Reports Brier score vs baselines and
-a calibration table."""
-import json, math, os
+against real NPSL 2026, USL League Two 2026, and pro (ASA) results.
+Reports Brier score vs baselines and a calibration table per tier.
+Lambda mirrors production (js/app.js oddsFor): 1.45 amateur, 1.35 pro."""
+import datetime, json, math, os
 
 def poisson_probs(rh, ra, home_adv=50, k_goals=1000, lam=1.35):
     d = rh + home_adv - ra
@@ -18,7 +19,7 @@ def poisson_probs(rh, ra, home_adv=50, k_goals=1000, lam=1.35):
     t = ph + pd + pa
     return ph / t, pd / t, pa / t
 
-def run(matches, K=40, home_adv=50):
+def run(matches, K=40, home_adv=50, lam=1.35):
     elo = {}
     brier = 0.0; base_brier = 0.0; freq_brier = 0.0; n = 0
     buckets = {}
@@ -26,7 +27,7 @@ def run(matches, K=40, home_adv=50):
         h, a, hg, ag = m['t1'], m['t2'], m['s1'], m['s2']
         rh, ra = elo.get(h, 1500), elo.get(a, 1500)
         if h in elo and a in elo:  # only score predictions once both teams seen
-            ph, pd, pa = poisson_probs(rh, ra, home_adv)
+            ph, pd, pa = poisson_probs(rh, ra, home_adv, lam=lam)
             out = [1, 0, 0] if hg > ag else ([0, 1, 0] if hg == ag else [0, 0, 1])
             brier += (ph - out[0]) ** 2 + (pd - out[1]) ** 2 + (pa - out[2]) ** 2
             base_brier += (1/3 - out[0]) ** 2 + (1/3 - out[1]) ** 2 + (1/3 - out[2]) ** 2
@@ -47,8 +48,8 @@ matches = json.load(open(os.path.join(root, 'data', 'npsl_matches_2026.json')))
 matches.sort(key=lambda m: m['start'])
 
 # tiered engine (backtested 2026-07-27): amateur K=64/+30, pro K=32/+65
-print('=== AMATEUR TIER (NPSL, K=64 home+30) ===')
-b, bb, fb, n, buckets = run(matches, 64, 30)
+print('=== AMATEUR TIER (NPSL, K=64 home+30 lam=1.45) ===')
+b, bb, fb, n, buckets = run(matches, 64, 30, lam=1.45)
 print(f'predictions scored: {n} matches (walk-forward, both teams previously seen)')
 print(f'Brier (ours): {b:.4f} | uniform baseline: {bb:.4f} | home-freq baseline: {fb:.4f}')
 print('calibration (predicted home-win % -> actual):')
@@ -56,6 +57,35 @@ for k in sorted(buckets):
     hits, tot = buckets[k]
     if tot >= 5:
         print(f'  {k*10}-{k*10+9}% predicted -> {100*hits/tot:.0f}% actual ({tot} matches)')
+
+# USL League Two: same amateur engine on a second, larger league — the
+# tiered params must generalize beyond the league they were fitted on
+usl2_path = os.path.join(root, 'data', 'usl2_matches.json')
+if os.path.exists(usl2_path):
+    u = json.load(open(usl2_path))
+    rows = []
+    for m in u['matches'].values():
+        s = m.get('score') or ''
+        if ':' not in s:
+            continue
+        try:
+            hg, ag = (int(x) for x in s.split(':'))
+            dt = datetime.datetime.strptime(m['date'].split(' ')[0], '%m/%d/%y')
+        except ValueError:
+            continue
+        rows.append({'start': dt.isoformat(), 't1': m['home'], 't2': m['away'],
+                     's1': hg, 's2': ag})
+    rows.sort(key=lambda r: r['start'])
+    print()
+    print('=== AMATEUR TIER (USL League Two, K=64 home+30 lam=1.45) ===')
+    b2, bb2, fb2, n2, buckets2 = run(rows, 64, 30, lam=1.45)
+    print(f'predictions scored: {n2} of {len(rows)} matches')
+    print(f'Brier (ours): {b2:.4f} | uniform baseline: {bb2:.4f} | home-freq baseline: {fb2:.4f}')
+    print('calibration (predicted home-win % -> actual):')
+    for k in sorted(buckets2):
+        hits, tot = buckets2[k]
+        if tot >= 10:
+            print(f'  {k*10}-{k*10+9}% predicted -> {100*hits/tot:.0f}% actual ({tot} matches)')
 
 asa_path = os.path.join(root, 'data', 'wire_asa.json')
 if os.path.exists(asa_path):
