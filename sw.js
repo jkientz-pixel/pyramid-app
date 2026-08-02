@@ -14,10 +14,12 @@ const ASSETS = 'rankxi-assets-v3';
 /* The shell must include the code the app needs to boot, not just the HTML —
    precaching only the documents left an installed PWA blank offline. */
 const SHELL = [
-  '/app.html', '/index.html', '/manifest.webmanifest',
+  // extensionless forms cached too: internal links now use / and /app, and an
+  // offline navigation to /app would miss a cache that only holds /app.html
+  '/', '/app', '/app.html', '/index.html', '/manifest.webmanifest',
   '/icon-192.png', '/icon-512.png',
   '/js/app.js', '/js/data.js', '/js/rosters.js', '/js/usmap.js',
-  '/css/app.css',
+  '/css/app.css', '/fonts/barlow-condensed-latin-700.woff2',
 ];
 
 self.addEventListener('install', e => {

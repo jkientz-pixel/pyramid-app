@@ -13,11 +13,17 @@
 # document would pin users to old asset URLs after a deploy.
 /
   Cache-Control: no-cache
+/app
+  Cache-Control: no-cache
 /app.html
   Cache-Control: no-cache
 /index.html
   Cache-Control: no-cache
+/npsl-rankings
+  Cache-Control: no-cache
 /npsl-rankings.html
+  Cache-Control: no-cache
+/upsl-rankings
   Cache-Control: no-cache
 /upsl-rankings.html
   Cache-Control: no-cache
@@ -44,4 +50,7 @@
 /data/*
   Cache-Control: public, max-age=31536000, immutable
 /crests/*
+  Cache-Control: public, max-age=31536000, immutable
+# fonts are content-addressed by filename — a changed font gets a new name
+/fonts/*
   Cache-Control: public, max-age=31536000, immutable

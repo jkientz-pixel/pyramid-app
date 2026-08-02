@@ -566,7 +566,6 @@ function oddsFor(h, a, homeAdv) {
   const tot = pH + pD + pA;
   return { pH: pH / tot, pD: pD / tot, pA: pA / tot, score: best, ha };
 }
-const moneyline = p => p >= 0.5 ? '-' + Math.round(100 * p / (1 - p)) : '+' + Math.round(100 * (1 - p) / p);
 
 /* ico = crests/platform-<ico>.svg; 'inv' logos are dark-on-transparent
    wordmarks that invert under the dark theme */
@@ -602,7 +601,9 @@ const mcrest = c => c.img
 /* inv: 'd' = dark-art mark, invert under dark theme; 'l' = white mark,
    invert under light theme — one asset serves both themes either way */
 const lgIcon = g => { const m = LEAGUES[g]; return m.img ? `<img class="lgico${m.inv ? ' inv-' + m.inv : ''}" src="${m.img}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''; };
-function matchCard(h, a, when) {
+/* real=true only for verified fixtures — a watch link on a hypothetical
+   matchup advertised a broadcast for a game that doesn't exist (audit #7) */
+function matchCard(h, a, when, real) {
   const head = `<div class="mrow"><a class="side" href="#/club/${h.id}">${mcrest(h)}<span class="sn">${esc(h.n)}</span></a><span class="vs">${when || 'NEUTRAL'}</span><a class="side away" href="#/club/${a.id}">${mcrest(a)}<span class="sn">${esc(a.n)}</span></a></div>
     <div class="meta"><span>${lgIcon(h.g)}${LEAGUES[h.g].label}${h.g !== a.g ? ' v ' + LEAGUES[a.g].label : ''}</span><span>${h.st}${h.st !== a.st ? ' · ' + a.st : ''}</span></div>`;
   // a club with no Elo yet must never reach the Poisson math — that path is NaN
@@ -616,9 +617,9 @@ function matchCard(h, a, when) {
     <div class="scoreline">${o.score[0]}–${o.score[1]}</div>
     <div class="meta" style="justify-content:center;margin-top:0"><span>most likely score</span></div>
     <div class="oddsrow">
-      <div class="odds"><b>${(o.pH * 100).toFixed(1)}%</b><span>${esc(initials(h.n))} win · ${moneyline(o.pH)}</span></div>
-      <div class="odds"><b>${(o.pD * 100).toFixed(1)}%</b><span>Draw · ${moneyline(o.pD)}</span></div>
-      <div class="odds"><b>${(o.pA * 100).toFixed(1)}%</b><span>${esc(initials(a.n))} win · ${moneyline(o.pA)}</span></div>
+      <div class="odds"><b>${(o.pH * 100).toFixed(1)}%</b><span>${esc(initials(h.n))} win</span></div>
+      <div class="odds"><b>${(o.pD * 100).toFixed(1)}%</b><span>Draw</span></div>
+      <div class="odds"><b>${(o.pA * 100).toFixed(1)}%</b><span>${esc(initials(a.n))} win</span></div>
     </div>
     <div class="confmeter l${cf.n}" role="img" aria-label="Confidence: ${cf.tag} — ${cf.fav} at ${(cf.top * 100).toFixed(1)} percent">
       <span class="conf-label">Confidence</span>
@@ -627,7 +628,7 @@ function matchCard(h, a, when) {
     </div>
     <div class="prob"><i style="width:${(o.pH * 100).toFixed(1)}%;background:${LEAGUES[h.g].color}"></i><i style="width:${(o.pD * 100).toFixed(1)}%;background:var(--line)"></i><i style="flex:1;background:${LEAGUES[a.g].color};opacity:.55"></i></div>
     <div class="meta"><span>Elo ${h.r} v ${a.r}</span><span>home edge +${o.ha}</span></div>
-    ${watchRow(h, a)}
+    ${real ? watchRow(h, a) : ''}
   </div>`;
 }
 
@@ -727,7 +728,7 @@ function screenMatches(preH) {
         if (!h || !a) return `<div class="match"><div class="mrow"><span class="side"><span class="sn">${esc(f.t1)}</span></span><span class="vs">v</span><span class="side away"><span class="sn">${esc(f.t2)}</span></span></div>
           <div class="meta"><span>${when}</span><span>${esc(f.round)} · ${esc(f.venue || 'Venue TBD')}</span></div>
           <p class="note" style="margin:6px 0 0">Pairing set once the semifinals finish.</p></div>`;
-        return matchCard(h, a, f.round.toUpperCase()) .replace('<div class="meta"><span>Elo', `<div class="meta"><span>${when} · ${esc(f.venue || '')}</span><span></span></div><div class="meta"><span>Elo`);
+        return matchCard(h, a, f.round.toUpperCase(), true) .replace('<div class="meta"><span>Elo', `<div class="meta"><span>${when} · ${esc(f.venue || '')}</span><span></span></div><div class="meta"><span>Elo`);
       }).join('') + `<p class="note">Times shown in Eastern and your local time. Odds from real-results Elo.</p>`;
   });
 }
@@ -1068,7 +1069,7 @@ function screenAbout() {
     <div class="kicker">About</div>
     <h2 class="disp">One pyramid, one table</h2>
     <p>American soccer has no single place to see every club, how they rank, and how the levels connect. <b>Ranked XI</b> maps all of it: MLS to the grassroots, with men's and women's tables ranked separately.</p>
-    <p><b>How rankings work.</b> League results feed a weekly Elo rating. Cup competitions — Open Cup qualifying, the National Amateur Cup — are where leagues actually meet, and those matches calibrate the cross-league scale. Every rating change is published with the match that caused it. College teams don't play in the Cups, so their layers are ordered by independent Massey ratings and placed in calibrated bands — men's capped below the pro leagues, women's higher (college is the women's development tier) — see <a href="/methodology.html" style="color:var(--accent)">Methodology</a>.</p>
+    <p><b>How rankings work.</b> League results feed a weekly Elo rating. Cup competitions — Open Cup qualifying, the National Amateur Cup — are where leagues actually meet, and those matches calibrate the cross-league scale. Every rating change is published with the match that caused it. College teams don't play in the Cups, so their layers are ordered by independent Massey ratings and placed in calibrated bands — men's capped below the pro leagues, women's higher (college is the women's development tier) — see <a href="/methodology" style="color:var(--accent)">Methodology</a>.</p>
     <p><b>World context.</b> Each club page projects the club onto a hypothetical global ladder against European reference sides — a conversation-starter, clearly labeled, never presented as measurement.</p>
     <p><b>What's real.</b> All ${CLUBS.filter(c => !c.h).length.toLocaleString()} clubs and locations come from what the leagues publish. Ratings label their basis on every page — real results, real standings, an independent results model, or an illustrative placeholder until that league's feed connects. Fixtures and results are never invented: match data appears only where a real feed provides it.</p>
     <p><b>Pricing.</b> The app is free; paid extras are listed plainly at <a href="#/pricing" style="color:var(--accent)">Pricing</a>.</p>
@@ -1103,7 +1104,7 @@ function screenAbout() {
     <ul class="lglist">${ROADMAP.map(r =>
       `<li><a href="${r.url}" target="_blank" rel="noopener"><span class="dot" style="background:var(--ink-dim);width:12px;height:12px;border-radius:50%;opacity:.4"></span><b>${r.label}</b><span>~${r.teams} teams · ${r.sex === 'w' ? "women's" : "men's"}</span></a></li>`).join('')}</ul>
     <p class="note">NISA is currently unsanctioned by U.S. Soccer (Dec 2024); its clubs are shown for completeness. UPSL layer holds the clubs mapped so far — the full league is 400+ clubs.</p>
-    <p class="fine" style="font-size:.75rem">Data last refreshed: ${BUILD_DATE} &middot; rosters and stats auto-refresh every 12 hours &middot; <a href="#/legal" style="color:var(--accent)">Terms &amp; Privacy</a> &middot; <a href="/methodology.html" style="color:var(--accent)">Methodology &amp; Disclaimer</a></p>
+    <p class="fine" style="font-size:.75rem">Data last refreshed: ${BUILD_DATE} &middot; rosters and stats auto-refresh every 12 hours &middot; <a href="#/legal" style="color:var(--accent)">Terms &amp; Privacy</a> &middot; <a href="/methodology" style="color:var(--accent)">Methodology &amp; Disclaimer</a></p>
     <p class="fine" style="font-size:.75rem">Data: Wikipedia (CC BY-SA — rosters, profiles, photos, crests), league sites and public feeds (NPSL/Squadi, UPSL), OpenStreetMap Nominatim geocoding. Club and league marks belong to their owners.</p>
     <p class="fine" style="font-size:.75rem">Built by Jeremy Kientz · 2026</p>
   </div>`;
@@ -1288,7 +1289,7 @@ const FREE_AGENTS = [
 function screenFreeAgents() {
   crumb.textContent = 'Free agents';
   view.innerHTML = `
-    <div class="kicker">Get seen by ${CLUBS.length.toLocaleString()} clubs</div>
+    <div class="kicker">Get seen by ${CLUBS.filter(c => !c.h).length.toLocaleString()} clubs</div>
     <h2 class="disp">Free Agents</h2>
     <p class="note" style="font-size:.88rem">Players without a club list themselves here: position, region, level sought, film. Clubs browse free and reach out directly — Ranked XI never sits in the middle of a deal. Listings are self-reported; players with match history in our data carry a verified badge.</p>
     <a class="fa-card" href="#/freeagent/sample"><b>See a complete profile &rarr;</b><span>Film, physicals, verified history, awards, references — the full page a listing buys.</span></a>
@@ -1637,7 +1638,7 @@ function screenLegal() {
     <div class="linkrow">
       <a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankedXI Accessibility barrier')}&body=${encodeURIComponent('Page or screen:\nWhat got in the way (keyboard, screen reader, contrast, motion):\nAssistive tech used, if any:\n')}"><b>Report an accessibility barrier</b></a>
     </div>
-    <p class="fine" style="font-size:.75rem">Independent project by Jeremy Kientz &middot; 2026. This page and <a href="/methodology.html" style="color:var(--accent)">Methodology &amp; Disclaimer</a> are the policy; material changes are dated there.</p>
+    <p class="fine" style="font-size:.75rem">Independent project by Jeremy Kientz &middot; 2026. This page and <a href="/methodology" style="color:var(--accent)">Methodology &amp; Disclaimer</a> are the policy; material changes are dated there.</p>
   </div>`;
 }
 
@@ -1767,6 +1768,20 @@ document.getElementById('themebtn')?.addEventListener('click', () => {
   document.documentElement.dataset.theme = next;
   localStorage.setItem('pyr-theme', next);
 });
+/* ≥1160px layout toggle (button hidden below that width). The default is the
+   full-browser layout; the phone bezel is the opt-in presentation. The
+   attribute itself is set pre-paint in app.html — this only wires the switch. */
+{
+  const lb = document.getElementById('layoutbtn');
+  const paint = () => { if (lb) lb.textContent = document.documentElement.dataset.layout === 'phone' ? 'Full view' : 'Phone view'; };
+  paint();
+  lb?.addEventListener('click', () => {
+    const next = document.documentElement.dataset.layout === 'phone' ? 'wide' : 'phone';
+    document.documentElement.dataset.layout = next;
+    localStorage.setItem('rxi-layout', next);
+    paint();
+  });
+}
 addEventListener('hashchange', route);
 route();
 wireSearch();
