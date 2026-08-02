@@ -79,7 +79,9 @@ def parse_list(title):
                 'redirects': 1, 'format': 'json'})['parse']['wikitext']['*']
     out = []
     for block in re.split(r'\n\|-\s*', text):
-        m = re.match(r'\s*!\s*scope="?row"?\s*\|(.*)', block, re.S)
+        # both !scope=row and |scope=row occur (highlighted transition rows),
+        # sometimes behind a row-attribute line like bgcolor=#ffa0a0
+        m = re.match(r'\s*(?:[a-z][^\n|!]*\n)?\s*[!|]\s*scope="?row"?\s*\|(.*)', block, re.S)
         if not m:
             continue
         lines = m.group(1).split('\n|', 1)

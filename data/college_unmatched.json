@@ -118,5 +118,12 @@
    "team": "PSU-Schuylkill",
    "nearest": "Bismarck State College"
   }
+ ],
+ "ncaa1w": [],
+ "ncaa2w": [
+  {
+   "team": "Gordon",
+   "nearest": null
+  }
  ]
 }

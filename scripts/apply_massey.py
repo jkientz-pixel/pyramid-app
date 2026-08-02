@@ -121,6 +121,9 @@ def sig(s):
 
 def main(band_d1=(1500, 1755), band_d2=(1430, 1650),
          band_d3=(1350, 1555), band_naia=(1370, 1575)):
+    # women's D1/D2 reuse the men's bands: same relative position in the
+    # women's pyramid (below the USL Super League floor ~1660, overlapping
+    # the top of USL W / WPSL amateur play)
     # D3/NAIA bands sit below D2 with deliberate overlap — the top of both
     # (~1555/1575) lands mid-D2, matching how those programs actually fare.
     dpath = os.path.join(ROOT, 'js', 'data.js')
@@ -132,7 +135,8 @@ def main(band_d1=(1500, 1755), band_d2=(1430, 1650),
     college_map = json.load(open(mpath)) if os.path.exists(mpath) else {}
 
     for div, fname, band in [('ncaa1', 'massey_d1.json', band_d1), ('ncaa2', 'massey_d2.json', band_d2),
-                             ('ncaa3', 'massey_d3.json', band_d3), ('naia', 'massey_naia.json', band_naia)]:
+                             ('ncaa3', 'massey_d3.json', band_d3), ('naia', 'massey_naia.json', band_naia),
+                             ('ncaa1w', 'massey_d1w.json', band_d1), ('ncaa2w', 'massey_d2w.json', band_d2)]:
         path = os.path.join(ROOT, 'data', fname)
         if not os.path.exists(path):
             print(f'{div}: {fname} missing, skipped', file=sys.stderr); continue

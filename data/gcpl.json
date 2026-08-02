@@ -1,0 +1,226 @@
+{
+ "fetched": "2026-08-01",
+ "season": 2026,
+ "sources": {
+  "premier": "https://en.wikipedia.org/wiki/2026_The_League_for_Clubs_season",
+  "gcl2": "https://www.nationalsoccernetwork.com/post/gcl2-season-opens"
+ },
+ "premier_standings": {
+  "Pensacola FC": {
+   "div": "East",
+   "mp": 10,
+   "w": 7,
+   "d": 3,
+   "l": 0,
+   "gf": 49,
+   "ga": 5,
+   "pts": 24
+  },
+  "Tallahassee SC": {
+   "div": "East",
+   "mp": 10,
+   "w": 7,
+   "d": 2,
+   "l": 1,
+   "gf": 33,
+   "ga": 12,
+   "pts": 23
+  },
+  "PSC Panama City Beach FC": {
+   "div": "East",
+   "mp": 10,
+   "w": 6,
+   "d": 1,
+   "l": 3,
+   "gf": 15,
+   "ga": 11,
+   "pts": 19
+  },
+  "Valdosta FC": {
+   "div": "East",
+   "mp": 10,
+   "w": 3,
+   "d": 1,
+   "l": 6,
+   "gf": 14,
+   "ga": 29,
+   "pts": 10
+  },
+  "LAX FC": {
+   "div": "East",
+   "mp": 10,
+   "w": 0,
+   "d": 0,
+   "l": 10,
+   "gf": 5,
+   "ga": 65,
+   "pts": 0
+  },
+  "Union 10 FC": {
+   "div": "West",
+   "mp": 10,
+   "w": 9,
+   "d": 1,
+   "l": 0,
+   "gf": 39,
+   "ga": 8,
+   "pts": 28
+  },
+  "Gaffa FC": {
+   "div": "West",
+   "mp": 10,
+   "w": 4,
+   "d": 3,
+   "l": 3,
+   "gf": 23,
+   "ga": 19,
+   "pts": 15
+  },
+  "Pensacola FC Academy": {
+   "div": "West",
+   "mp": 10,
+   "w": 3,
+   "d": 2,
+   "l": 5,
+   "gf": 20,
+   "ga": 23,
+   "pts": 11
+  },
+  "AFC Mobile": {
+   "div": "West",
+   "mp": 10,
+   "w": 2,
+   "d": 3,
+   "l": 5,
+   "gf": 17,
+   "ga": 19,
+   "pts": 9
+  },
+  "NOLA Ramparts FC": {
+   "div": "West",
+   "mp": 10,
+   "w": 1,
+   "d": 0,
+   "l": 9,
+   "gf": 9,
+   "ga": 33,
+   "pts": 3
+  }
+ },
+ "ratings": {
+  "Pensacola FC": 1501,
+  "Tallahassee SC": 1463,
+  "PSC Panama City Beach FC": 1403,
+  "Valdosta FC": 1290,
+  "LAX FC": 1275,
+  "Union 10 FC": 1525,
+  "Gaffa FC": 1363,
+  "Pensacola FC Academy": 1314,
+  "AFC Mobile": 1296,
+  "NOLA Ramparts FC": 1275
+ },
+ "playoffs": {
+  "semis": [
+   "Union 10 FC 4-1 Gaffa FC",
+   "Pensacola FC 1-0 Tallahassee SC"
+  ],
+  "final": "Pensacola FC 3-2 Union 10 FC"
+ },
+ "gcl2": [
+  {
+   "n": "Gulf Coast United",
+   "ct": "Gulfport",
+   "st": "MS",
+   "conf": "Magnolia"
+  },
+  {
+   "n": "Invictus FC",
+   "ct": "McComb",
+   "st": "MS",
+   "conf": "Magnolia"
+  },
+  {
+   "n": "Mississippi Blues FC",
+   "ct": "Clinton",
+   "st": "MS",
+   "conf": "Magnolia"
+  },
+  {
+   "n": "Central Louisiana FC",
+   "ct": "Alexandria",
+   "st": "LA",
+   "conf": "Red River"
+  },
+  {
+   "n": "Red River FC",
+   "ct": "Bossier City",
+   "st": "LA",
+   "conf": "Red River"
+  },
+  {
+   "n": "Shreveport United",
+   "ct": "Shreveport",
+   "st": "LA",
+   "conf": "Red River"
+  },
+  {
+   "n": "Twin Cities FC",
+   "ct": "West Monroe",
+   "st": "LA",
+   "conf": "Red River"
+  },
+  {
+   "n": "BRSC Capitals",
+   "ct": "Baton Rouge",
+   "st": "LA",
+   "conf": "Bayou"
+  },
+  {
+   "n": "LA Krewe Rush",
+   "ct": "Lafayette",
+   "st": "LA",
+   "conf": "Bayou"
+  },
+  {
+   "n": "Louisiana Fire FC",
+   "ct": "Kenner",
+   "st": "LA",
+   "conf": "Bayou"
+  },
+  {
+   "n": "SWLA Hurricanes",
+   "ct": "Lake Charles",
+   "st": "LA",
+   "conf": "Bayou"
+  }
+ ],
+ "report": {
+  "migrated": [],
+  "added": [],
+  "skipped": [
+   "Pensacola FC: already gcpl",
+   "Tallahassee SC: already gcpl",
+   "PSC Panama City Beach FC: already gcpl",
+   "Valdosta FC: already gcpl",
+   "Union 10 FC: already gcpl",
+   "Gaffa FC: already gcpl",
+   "Pensacola FC Academy: already gcpl",
+   "AFC Mobile: already gcpl",
+   "NOLA Ramparts FC: already gcpl",
+   "LAX FC: already gcpl",
+   "Gulf Coast United: already gcpl",
+   "Invictus FC: already gcpl",
+   "Mississippi Blues FC: already gcpl",
+   "Central Louisiana FC: already gcpl",
+   "Red River FC: already gcpl",
+   "Shreveport United: already gcpl",
+   "Twin Cities FC: already gcpl",
+   "BRSC Capitals: already gcpl",
+   "LA Krewe Rush: already gcpl",
+   "Louisiana Fire FC: already gcpl",
+   "SWLA Hurricanes: already gcpl",
+   "Hattiesburg FC: reserve of USL2 first team (Christos precedent)"
+  ],
+  "renamed": []
+ }
+}

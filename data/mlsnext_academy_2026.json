@@ -1,0 +1,665 @@
+{
+ "_source": "https://www.mlssoccer.com/mlsnext/academy-division/members (fetched 2026-08-01; names only, no locations published \u2014 needs_location clubs await a location audit before pinning)",
+ "season": "2025-26",
+ "already_on_map": [
+  {
+   "n": "AC River",
+   "club_id": "ac-river",
+   "st": "TX"
+  },
+  {
+   "n": "ALBION SC Denver",
+   "club_id": "albion-sc-denver",
+   "st": "CO"
+  },
+  {
+   "n": "ALBION SC Los Angeles",
+   "club_id": "albion-sc-los-angeles",
+   "st": "CA"
+  },
+  {
+   "n": "ALBION SC Merced",
+   "club_id": "albion-sc-merced",
+   "st": "CA"
+  },
+  {
+   "n": "ALBION SC Riverside",
+   "club_id": "albion-sc-riverside",
+   "st": "CA"
+  },
+  {
+   "n": "ALBION SC San Diego",
+   "club_id": "albion-san-diego",
+   "st": "CA"
+  },
+  {
+   "n": "Almaden FC",
+   "club_id": "almaden-fc",
+   "st": "CA"
+  },
+  {
+   "n": "ASG",
+   "club_id": "asg-fc",
+   "st": "FL"
+  },
+  {
+   "n": "Atletico Santa Rosa",
+   "club_id": "atletico-santa-rosa",
+   "st": "CA"
+  },
+  {
+   "n": "Barca Residency Academy",
+   "club_id": "barca-residency-academy",
+   "st": "AZ"
+  },
+  {
+   "n": "Beachside of Connecticut",
+   "club_id": "beachside-of-connecticut",
+   "st": "CT"
+  },
+  {
+   "n": "Beadling SC",
+   "club_id": "beadling-soccer-club",
+   "st": "PA"
+  },
+  {
+   "n": "Bethesda SC",
+   "club_id": "bethesda-sc",
+   "st": "MD"
+  },
+  {
+   "n": "Blau Weiss Gottschee",
+   "club_id": "blau-weiss-gottschee",
+   "st": "NY"
+  },
+  {
+   "n": "Broomfield Soccer Club",
+   "club_id": "broomfield-sc",
+   "st": "CO"
+  },
+  {
+   "n": "Capital City SC",
+   "club_id": "capital-city-soccer-club",
+   "st": "TX"
+  },
+  {
+   "n": "Carolina Core FC",
+   "club_id": "carolina-core",
+   "st": "NC"
+  },
+  {
+   "n": "Cedar Stars Academy Bergen",
+   "club_id": "cedar-stars-academy-bergen",
+   "st": "NJ"
+  },
+  {
+   "n": "Cedar Stars Academy Monmouth",
+   "club_id": "cedar-stars-academy-monmouth",
+   "st": "NJ"
+  },
+  {
+   "n": "Chargers Soccer Club",
+   "club_id": "chargers-sc",
+   "st": "FL"
+  },
+  {
+   "n": "Charlotte Independence SC",
+   "club_id": "charlotte-independence",
+   "st": "NC"
+  },
+  {
+   "n": "Chula Vista FC",
+   "club_id": "chula-vista-fc",
+   "st": "CA"
+  },
+  {
+   "n": "Cincinnati United Premier Soccer Club",
+   "club_id": "cincinnati-united-premier",
+   "st": "OH"
+  },
+  {
+   "n": "City SC Southwest",
+   "club_id": "city-sc-southwest",
+   "st": "CA"
+  },
+  {
+   "n": "City SC Utah",
+   "club_id": "city-sc-utah",
+   "st": "UT"
+  },
+  {
+   "n": "Club Ohio",
+   "club_id": "club-ohio",
+   "st": "OH"
+  },
+  {
+   "n": "Colorado United SC",
+   "club_id": "colorado-united",
+   "st": "CO"
+  },
+  {
+   "n": "Connecticut Rush",
+   "club_id": "connecticut-rush",
+   "st": "CT"
+  },
+  {
+   "n": "Coppermine SC",
+   "club_id": "coppermine-sc",
+   "st": "MD"
+  },
+  {
+   "n": "De Anza Force",
+   "club_id": "de-anza-force",
+   "st": "CA"
+  },
+  {
+   "n": "Elmbrook United",
+   "club_id": "elmbrook-united",
+   "st": "WI"
+  },
+  {
+   "n": "FA Euro New York",
+   "club_id": "fa-euro-new-york",
+   "st": "NY"
+  },
+  {
+   "n": "FC Golden State Force",
+   "club_id": "fc-golden-state-force",
+   "st": "CA"
+  },
+  {
+   "n": "FC Westchester",
+   "club_id": "westchester-sc",
+   "st": "NY"
+  },
+  {
+   "n": "Forward Madison FC",
+   "club_id": "forward-madison",
+   "st": "WI"
+  },
+  {
+   "n": "Galaxy Soccer Club",
+   "club_id": "galaxy-sc",
+   "st": "IL"
+  },
+  {
+   "n": "Global Football Innovation Academy",
+   "club_id": "global-football-innovation-academy",
+   "st": "TX"
+  },
+  {
+   "n": "Houston Rangers",
+   "club_id": "houston-rangers",
+   "st": "TX"
+  },
+  {
+   "n": "IMG",
+   "club_id": "img-academy",
+   "st": "FL"
+  },
+  {
+   "n": "Indy Eleven",
+   "club_id": "indy-eleven",
+   "st": "IN"
+  },
+  {
+   "n": "Inter Atlanta FC",
+   "club_id": "inter-atlanta-fc",
+   "st": "GA"
+  },
+  {
+   "n": "Ironbound Soccer Club",
+   "club_id": "ironbound-sc",
+   "st": "NJ"
+  },
+  {
+   "n": "Javanon FC",
+   "club_id": "javanon-fc",
+   "st": "KY"
+  },
+  {
+   "n": "Keystone FC",
+   "club_id": "keystone-fc",
+   "st": "PA"
+  },
+  {
+   "n": "LA Surf Soccer Club",
+   "club_id": "la-surf-soccer-club",
+   "st": "CA"
+  },
+  {
+   "n": "Laguna United FC",
+   "club_id": "laguna-united-fc",
+   "st": "CA"
+  },
+  {
+   "n": "Lakeville SC",
+   "club_id": "lakeville-soccer-club",
+   "st": "MN"
+  },
+  {
+   "n": "Las Vegas Sports Academy",
+   "club_id": "las-vegas-sports-academy",
+   "st": "NV"
+  },
+  {
+   "n": "Long Island Soccer Club",
+   "club_id": "long-island-soccer-club",
+   "st": "NY"
+  },
+  {
+   "n": "Los Angeles Bulls Soccer Club",
+   "club_id": "los-angeles-bulls-sc",
+   "st": "CA"
+  },
+  {
+   "n": "Los Angeles Soccer Club",
+   "club_id": "los-angeles-sc",
+   "st": "CA"
+  },
+  {
+   "n": "Lou Fusz Athletic",
+   "club_id": "lou-fusz-athletic",
+   "st": "MO"
+  },
+  {
+   "n": "Loudoun Soccer Club",
+   "club_id": "loudoun-sc",
+   "st": "VA"
+  },
+  {
+   "n": "Manitou F.C.",
+   "club_id": "manitou-f-c",
+   "st": "MN"
+  },
+  {
+   "n": "Metropolitan Oval",
+   "club_id": "metropolitan-oval",
+   "st": "NY"
+  },
+  {
+   "n": "Michigan Stars Elite",
+   "club_id": "michigan-stars-elite",
+   "st": "MI"
+  },
+  {
+   "n": "Michigan Tigers FC",
+   "club_id": "michigan-tigers",
+   "st": "MI"
+  },
+  {
+   "n": "Michigan Wolves",
+   "club_id": "michigan-wolves",
+   "st": "MI"
+  },
+  {
+   "n": "Midwest United FC",
+   "club_id": "midwest-united-fc",
+   "st": "MI"
+  },
+  {
+   "n": "Modesto Ajax United",
+   "club_id": "modesto-ajax-united",
+   "st": "CA"
+  },
+  {
+   "n": "Napa United",
+   "club_id": "napa-united",
+   "st": "CA"
+  },
+  {
+   "n": "NEFC",
+   "club_id": "nefc",
+   "st": "MA"
+  },
+  {
+   "n": "New Mexico Soccer Academy",
+   "club_id": "new-mexico-fc",
+   "st": "NM"
+  },
+  {
+   "n": "NONA Soccer Academy",
+   "club_id": "nona-fc",
+   "st": "FL"
+  },
+  {
+   "n": "One Knoxville SC",
+   "club_id": "one-knoxville",
+   "st": "TN"
+  },
+  {
+   "n": "Oregon Surf SC",
+   "club_id": "oregon-surf-sc",
+   "st": "OR"
+  },
+  {
+   "n": "Orlando City Soccer School South",
+   "club_id": "orlando-city-soccer-school-south",
+   "st": "FL"
+  },
+  {
+   "n": "PA Classics",
+   "club_id": "pa-classics",
+   "st": "PA"
+  },
+  {
+   "n": "Phoenix Rising FC",
+   "club_id": "phoenix-rising",
+   "st": "AZ"
+  },
+  {
+   "n": "Players Development Academy",
+   "club_id": "players-development-academy",
+   "st": "NJ"
+  },
+  {
+   "n": "Queen City Mutiny FC",
+   "club_id": "queen-city-mutiny",
+   "st": "NC"
+  },
+  {
+   "n": "Real Futbol Academy",
+   "club_id": "real-futbol-academy",
+   "st": "NJ"
+  },
+  {
+   "n": "Rhode Island Surf SC",
+   "club_id": "rhode-island-surf",
+   "st": "RI"
+  },
+  {
+   "n": "RSL Arizona",
+   "club_id": "rsl-arizona",
+   "st": "AZ"
+  },
+  {
+   "n": "RSL Arizona Mesa",
+   "club_id": "rsl-arizona-mesa",
+   "st": "AZ"
+  },
+  {
+   "n": "Sacramento United",
+   "club_id": "sacramento-united",
+   "st": "CA"
+  },
+  {
+   "n": "San Francisco Seals",
+   "club_id": "san-francisco-seals",
+   "st": "CA"
+  },
+  {
+   "n": "Silicon Valley Soccer Academy",
+   "club_id": "silicon-valley-fc",
+   "st": "CA"
+  },
+  {
+   "n": "SoCal Reds FC",
+   "club_id": "socal-reds-fc",
+   "st": "CA"
+  },
+  {
+   "n": "Soccer Chance Academy",
+   "club_id": "soccer-chance-academy",
+   "st": "OR"
+  },
+  {
+   "n": "Sockers FC Chicago",
+   "club_id": "sockers-fc-chicago",
+   "st": "IL"
+  },
+  {
+   "n": "Southern States Soccer",
+   "club_id": "southern-states-soccer-club",
+   "st": "MS"
+  },
+  {
+   "n": "Sporting Blue Valley",
+   "club_id": "sporting-blue-valley",
+   "st": "KS"
+  },
+  {
+   "n": "Sporting City",
+   "club_id": "sporting-city",
+   "st": "MO"
+  },
+  {
+   "n": "Sporting Wichita",
+   "club_id": "sporting-wichita-sc",
+   "st": "KS"
+  },
+  {
+   "n": "St. Louis Development Academy",
+   "club_id": "st-louis-development-academy",
+   "st": "MO"
+  },
+  {
+   "n": "St. Louis Scott Gallagher",
+   "club_id": "st-louis-scott-gallagher",
+   "st": "MO"
+  },
+  {
+   "n": "Strikers FC",
+   "club_id": "strikers-fc",
+   "st": "CA"
+  },
+  {
+   "n": "Tampa Bay United",
+   "club_id": "tampa-bay-united",
+   "st": "FL"
+  },
+  {
+   "n": "The Football Academy",
+   "club_id": "the-football-academy",
+   "st": "NJ"
+  },
+  {
+   "n": "Tonka Fusion Elite",
+   "club_id": "tonka-fusion-elite",
+   "st": "MN"
+  },
+  {
+   "n": "Tormenta FC Academy",
+   "club_id": "tormenta-fc",
+   "st": "GA"
+  },
+  {
+   "n": "Total Futbol Academy",
+   "club_id": "total-futbol-academy",
+   "st": "CA"
+  },
+  {
+   "n": "TSF Academy",
+   "club_id": "tsf-academy",
+   "st": "NJ"
+  },
+  {
+   "n": "United Soccer Alliance",
+   "club_id": "united-soccer-alliance",
+   "st": "FL"
+  },
+  {
+   "n": "Valeo Futbol Club",
+   "club_id": "valeo-futbol-club",
+   "st": "MA"
+  },
+  {
+   "n": "Valor Soccer",
+   "club_id": "valor-sc",
+   "st": "CO"
+  },
+  {
+   "n": "Vardar Soccer Club",
+   "club_id": "vardar-soccer-club",
+   "st": "MI"
+  },
+  {
+   "n": "Ventura County Fusion",
+   "club_id": "ventura-county-fusion",
+   "st": "CA"
+  },
+  {
+   "n": "Wake FC",
+   "club_id": "wake-fc",
+   "st": "NC"
+  },
+  {
+   "n": "Wasatch SC",
+   "club_id": "wasatch-sc",
+   "st": "UT"
+  },
+  {
+   "n": "Washington East Surf SC",
+   "club_id": "washington-east-surf-sc",
+   "st": "WA"
+  },
+  {
+   "n": "Washington Rush",
+   "club_id": "washington-rush",
+   "st": "WA"
+  },
+  {
+   "n": "West Virginia Soccer",
+   "club_id": "west-virginia-soccer",
+   "st": "WV"
+  },
+  {
+   "n": "Western Washington Surf SC",
+   "club_id": "western-washington-surf",
+   "st": "WA"
+  },
+  {
+   "n": "Weston FC",
+   "club_id": "weston-fc",
+   "st": "FL"
+  },
+  {
+   "n": "Woodside Soccer Club Crush",
+   "club_id": "woodside-soccer-club-crush",
+   "st": "CA"
+  }
+ ],
+ "needs_location": [
+  "956 United",
+  "AFC Lightning",
+  "ALBION SC Boulder County",
+  "ALBION SC Las Vegas",
+  "Alexandria SA",
+  "Aspire FC",
+  "Athletum FC Academy",
+  "Atlantic United",
+  "Atletico FC",
+  "Ballistic United",
+  "Baltimore Armour",
+  "Bavarian United SC",
+  "Bayside FC",
+  "Burlingame Soccer Club",
+  "Capital City South",
+  "Carolina Velocity FC",
+  "Cedar Stars Academy Newark",
+  "Celtic Storm",
+  "Charleston SC",
+  "Chicago FC United",
+  "Chicago Fire Youth SC",
+  "City SC - San Diego",
+  "Classic FC",
+  "Dallas Hornets",
+  "Dallas Hornets North",
+  "Diablo Valley Futbol Club",
+  "Downtown Las Vegas Soccer Club",
+  "Downtown United Soccer Club",
+  "Elk Grove Soccer",
+  "FC Bay Area Surf",
+  "FC DELCO",
+  "FC Greater Boston Bolts",
+  "FC Harlem",
+  "FC Hudson Valley",
+  "FC Richmond",
+  "FC Tucson Youth Soccer Club",
+  "Fox Soccer Academy Carolinas",
+  "Galacticos Soccer Academy",
+  "GFI Academy South",
+  "Ginga FC",
+  "Grand Junction Soccer Club",
+  "Hillsboro Rush",
+  "Hoover-Vestavia Soccer",
+  "Houston Futsal Club",
+  "IdeaSport SA",
+  "IFA West",
+  "Intercontinental Football Academy of New England",
+  "Jacksonville FC",
+  "Kings Hammer Cincinnati",
+  "Kings Hammer Nashville",
+  "KSA",
+  "LA Youth",
+  "Lamorinda Soccer Club",
+  "Lanier Soccer Association",
+  "Lexington Sporting Club",
+  "Long Island Slammers",
+  "Lou Fusz Athletic 2",
+  "Louisiana Elite SP",
+  "Lowcountry United",
+  "McLean Youth Soccer",
+  "Miami Futbol Academy Rush",
+  "Michigan Bucks Academy",
+  "Michigan Futbol Academy",
+  "Michigan Jaguars",
+  "Michigan Jaguars United FC",
+  "Minneapolis United SC",
+  "Monarchs AZ",
+  "Mt. Rainier Futbol Club",
+  "NEFC South",
+  "New England Surf SC",
+  "New York Elite Alleycats FC",
+  "New York Rush",
+  "New York SC",
+  "Oaks FC",
+  "Oakwood Soccer Club",
+  "One FC",
+  "Orlando City Youth SC",
+  "Ozark United FC Academy",
+  "PA Classics Harrisburg",
+  "PDA Hibernian",
+  "Phoenix Premier FC",
+  "Plantation FC Rush",
+  "Players SC",
+  "Rochester NY FC",
+  "Roswell Soccer Club",
+  "SA United SC",
+  "Saint Paul Blackhawks",
+  "Saints Academy",
+  "San Francisco Glens SC",
+  "SC Del Sol",
+  "SC Wave",
+  "Seacoast United",
+  "Seacoast United Mass",
+  "Seattle Celtic",
+  "SGA",
+  "Skyline Soccer Association",
+  "Sol Sports Club",
+  "Sound FC",
+  "South Florida Football Academy",
+  "Southern Soccer Academy",
+  "Sozo FC",
+  "Sparta United Soccer Club",
+  "Sporting Athletic Club",
+  "Sporting Oklahoma",
+  "Sporting San Diego",
+  "Sporting Springfield",
+  "Springfield SYC",
+  "St. Louis Scott Gallagher IL",
+  "St. Louis Scott Gallagher St. Charles",
+  "Sting Nebraska",
+  "Syracuse Development Academy",
+  "The St. James",
+  "Trenton City Soccer Club",
+  "Triangle United Soccer Association",
+  "Tulsa Greenwood SC",
+  "Virginia Revolution SC",
+  "Virginia Rush",
+  "West Florida Flames",
+  "Westside Metros FC",
+  "Westside Metros FC South",
+  "Whatcom Rangers",
+  "Wisconsin United FC"
+ ]
+}

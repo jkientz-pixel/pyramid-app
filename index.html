@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ranked XI — every US soccer club, one map, one table</title>
-<meta name="description" content="American soccer's missing national table: every club from MLS to the grassroots, mapped and ranked. Live concept.">
+<meta name="description" content="American soccer's missing national table: every club from MLS to the grassroots, mapped and ranked.">
 <meta property="og:title" content="Ranked XI — every US soccer club, one map">
-<meta property="og:description" content="1,700 clubs from MLS to the grassroots — real ratings, real stats, predictions with receipts.">
-<meta property="og:image" content="https://rank-xi.pages.dev/og.png">
+<meta property="og:description" content="3,900+ clubs from MLS to the grassroots — real ratings, real stats, predictions with receipts.">
+<meta property="og:image" content="https://www.rankedxi.com/og.png">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","name":"Ranked XI","url":"https://rank-xi.pages.dev/","description":"American soccer's missing national table: every club from MLS to the grassroots, mapped and ranked.","publisher":{"@type":"Organization","name":"Ranked XI"}}
+{"@context":"https://schema.org","@type":"WebSite","name":"Ranked XI","url":"https://www.rankedxi.com/","description":"American soccer's missing national table: every club from MLS to the grassroots, mapped and ranked.","publisher":{"@type":"Organization","name":"Ranked XI"}}
 </script>
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js'));</script>
-<link rel="canonical" href="https://rank-xi.pages.dev/">
+<link rel="canonical" href="https://www.rankedxi.com/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
-<script>if (location.hash.startsWith('#/')) location.replace('app.html' + location.hash);</script>
+<script>if (location.hash.startsWith('#/')) location.replace('/app.html' + location.hash);</script>
 <style>
 :root{--ground:#FAFBF8;--ink:#16211B;--dim:#61705F;--line:#DCE2D8;--accent:#C77F1E;--raise:#fff}
 *{box-sizing:border-box}body{margin:0;background:var(--ground);color:var(--ink);font:17px/1.6 -apple-system,"Segoe UI",Roboto,sans-serif}
@@ -32,7 +32,7 @@ h1{font-size:clamp(2.6rem,6vw,5rem);line-height:.95;margin:.2em 0}
 .sub{color:var(--dim);max-width:34em;font-size:1.05rem}
 .cta-row{display:flex;gap:12px;margin:26px 0;flex-wrap:wrap}
 .cta-row a{padding:14px 26px;border-radius:12px;text-decoration:none;font-weight:700}
-.cta-row .primary{background:var(--accent);color:#fff}
+.cta-row .primary{background:var(--accent);color:#1D1509}
 .cta-row .ghost{border:1px solid var(--line);color:var(--ink);background:var(--raise)}
 .stats{display:flex;gap:28px;flex-wrap:wrap;color:var(--dim);font-size:.9rem}
 .stats b{display:block;color:var(--ink);font-size:1.5rem;font-variant-numeric:tabular-nums}
@@ -48,15 +48,16 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
 </style>
 </head>
 <body>
-<header><span class="mark disp">Ranked XI</span><a class="cta" href="app.html">Open the app</a></header>
+<header><span class="mark disp">Ranked XI</span><a class="cta" href="/app.html">Open the app</a></header>
+<main>
 <section class="hero">
   <div>
     <h1 class="disp">Every club in American soccer.<br>One map. One table.</h1>
     <p class="sub">MLS to the grassroots, men's and women's — <span data-stat="clubs">1,726</span> real clubs mapped, ranked on one scale, with real pro rosters and stats, club honours, player pages and the pathway between every level. The national table American soccer never had.</p>
     <div class="cta-row">
-      <a class="primary" href="app.html">Open the app</a>
-      <a class="ghost" href="app.html#/table">See the national table</a>
-      <a class="ghost" href="mailto:jkientz@gmail.com?subject=Subscribe%3A%20Rank%20XI%20updates">Get launch updates</a>
+      <a class="primary" href="/app.html">Open the app</a>
+      <a class="ghost" href="/app.html#/table">See the national table</a>
+      <a class="ghost" href="mailto:hello@rankedxi.com?subject=Subscribe%3A%20Rank%20XI%20updates">Get launch updates</a>
     </div>
     <div class="stats">
       <span><b data-stat="clubs">1,726</b>clubs mapped</span>
@@ -64,17 +65,18 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
       <span><b data-stat="leagues">12</b>leagues today, more coming</span>
     </div>
   </div>
-  <div class="phone-wrap"><div class="bezel"><iframe src="app.html" title="Ranked XI app demo" loading="lazy"></iframe></div></div>
+  <div class="phone-wrap"><div class="bezel"><iframe src="/app.html" title="Ranked XI app preview" loading="lazy"></iframe></div></div>
 </section>
 <section class="feat">
   <div><b>The map is the front door</b><p>Tap any state for its clubs, filter by league or region, men's and women's game ranked separately.</p></div>
   <div><b>Odds &amp; the Matchup Machine</b><p>Any club against any club: predicted score, three-way odds, and how a US side stacks up against Europe — hypothetically.</p></div>
   <div><b>Players, pathways, honours</b><p>Real MLS and USL Super League rosters refreshed from Wikipedia every two days, trophy cabinets, second-team pathways, and player pages built for the climb.</p></div>
 </section>
-<footer>Concept by Jeremy Kientz · ratings and stats are illustrative where marked · club and league marks belong to their owners · <a href="app.html#/legal" style="color:inherit">corrections &amp; removal requests</a></footer>
+</main>
+<footer>By Jeremy Kientz · every rating and stat labels its basis · club and league marks belong to their owners · <a href="/app.html#/legal" style="color:inherit">corrections &amp; removal requests</a></footer>
 <script type="module">
-import { CLUBS, LEAGUES } from './js/data.js?v=20260801a';
-import { ROSTERS } from './js/rosters.js?v=20260801a';
+import { CLUBS, LEAGUES } from './js/data.js?v=20260801n';
+import { ROSTERS } from './js/rosters.js?v=20260801n';
 const counts = {
   clubs: CLUBS.length,
   statlines: Object.values(ROSTERS).flat().filter(p => p.st).length,

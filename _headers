@@ -1,10 +1,13 @@
 /*
   X-Content-Type-Options: nosniff
-  X-Frame-Options: DENY
+  # SAMEORIGIN (not DENY): index.html embeds app.html in the phone-bezel
+  # iframe — 'none' broke the landing-page demo. Cross-origin framing is
+  # still blocked.
+  X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'none'
 
 # HTML and the service worker must revalidate on every load — a long-cached
 # document would pin users to old asset URLs after a deploy.

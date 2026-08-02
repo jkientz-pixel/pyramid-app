@@ -19,7 +19,9 @@ git push
 STAGE="$(mktemp -d)"
 trap 'rm -rf "$STAGE"' EXIT
 
-cp -R app.html index.html npsl-rankings.html upsl-rankings.html \
+# 404.html must ship: its presence is what turns off the Pages SPA fallback,
+# so bad URLs return a real 404 instead of the homepage with HTTP 200
+cp -R app.html index.html 404.html npsl-rankings.html upsl-rankings.html \
       manifest.webmanifest sw.js robots.txt sitemap.xml _headers \
       js css crests \
       icon-192.png icon-512.png apple-touch-icon.png og.png "$STAGE/"

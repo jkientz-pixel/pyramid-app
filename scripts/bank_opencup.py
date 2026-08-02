@@ -13,7 +13,7 @@ Output: data/opencup_matches.json
 import json, re, sys, time, urllib.parse, urllib.request
 
 API = 'https://en.wikipedia.org/w/api.php'
-UA = 'RankXI-OpenCupBank/1.0 (https://rank-xi.pages.dev; jkientz@gmail.com)'
+UA = 'RankXI-OpenCupBank/1.0 (https://www.rankedxi.com; jkientz@gmail.com)'
 YEARS = [2016, 2017, 2018, 2019, 2022, 2023, 2024, 2025, 2026]
 
 def api(params):

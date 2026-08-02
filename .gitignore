@@ -19,3 +19,4 @@ js/*.js.tmp
 node_modules/
 test-results/
 playwright-report/
+.playwright-mcp/
