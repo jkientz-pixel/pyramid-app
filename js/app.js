@@ -724,8 +724,8 @@ function screenMatches(preH) {
         const hi = clubIdxByName(f.t1), ai = clubIdxByName(f.t2);
         const h = CLUBS[hi], a = CLUBS[ai];
         const when = fmtKick(f.start);
-        if (!h || !a) return `<div class="match"><div class="mrow"><span class="side">${esc(f.t1)}</span><span class="vs">${f.round}</span><span class="side away">${esc(f.t2)}</span></div>
-          <div class="meta"><span>${when}</span><span>${esc(f.venue || 'Venue TBD')}</span></div>
+        if (!h || !a) return `<div class="match"><div class="mrow"><span class="side"><span class="sn">${esc(f.t1)}</span></span><span class="vs">v</span><span class="side away"><span class="sn">${esc(f.t2)}</span></span></div>
+          <div class="meta"><span>${when}</span><span>${esc(f.round)} · ${esc(f.venue || 'Venue TBD')}</span></div>
           <p class="note" style="margin:6px 0 0">Pairing set once the semifinals finish.</p></div>`;
         return matchCard(h, a, f.round.toUpperCase()) .replace('<div class="meta"><span>Elo', `<div class="meta"><span>${when} · ${esc(f.venue || '')}</span><span></span></div><div class="meta"><span>Elo`);
       }).join('') + `<p class="note">Times shown in Eastern and your local time. Odds from real-results Elo.</p>`;
