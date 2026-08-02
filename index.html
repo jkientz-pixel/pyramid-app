@@ -104,8 +104,8 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
 </main>
 <footer>By Jeremy Kientz · every rating and stat labels its basis · club and league marks belong to their owners · <a href="/methodology.html" style="color:inherit">methodology &amp; disclaimer</a> · <a href="/app.html#/legal" style="color:inherit">corrections &amp; removal requests</a></footer>
 <script type="module">
-import { CLUBS, LEAGUES } from './js/data.js?v=20260801o';
-import { ROSTERS } from './js/rosters.js?v=20260801o';
+import { CLUBS, LEAGUES } from './js/data.js?v=20260801p';
+import { ROSTERS } from './js/rosters.js?v=20260801p';
 const counts = {
   clubs: CLUBS.filter(c => !c.h).length,
   statlines: Object.values(ROSTERS).flat().filter(p => p.st).length,
