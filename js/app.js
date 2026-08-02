@@ -813,7 +813,9 @@ const favs = () => { try {
 function favToggle(type, id) {
   const f = favs(); const arr = f[type]; const i = arr.indexOf(id);
   if (i >= 0) arr.splice(i, 1); else arr.push(id);
-  localStorage.setItem('pyr-favs', JSON.stringify(f)); return i < 0;
+  localStorage.setItem('pyr-favs', JSON.stringify(f));
+  if (type === 'clubs') { syncAlertPrefs().catch(() => {}); updateFollowBadge(); }
+  return i < 0;
 }
 const isFav = (type, id) => favs()[type].includes(id);
 function favBtn(type, id) {
@@ -825,6 +827,78 @@ function wireFav() {
     b.classList.toggle('on', on);
     b.innerHTML = on ? '&#9733; Following' : '&#9734; Follow';
   }));
+}
+
+/* ---- Follow updates + match alerts ------------------------------------
+   The feed and the notifications both derive from the wire (real results)
+   and the fixtures file — nothing here invents data. Alert prefs and the
+   followed-club names mirror into IndexedDB because sw.js runs the
+   background check and a service worker cannot read localStorage. */
+const nameKey = nm => nm.toLowerCase().replace(/\b(fc|sc|cf|afc|club|the)\b/g, '').replace(/\s+/g, '');
+const idbKV = op => new Promise((res, rej) => {
+  const q = indexedDB.open('rankxi', 1);
+  q.onupgradeneeded = () => q.result.createObjectStore('kv');
+  q.onerror = () => rej(q.error);
+  q.onsuccess = () => {
+    const db = q.result, tx = db.transaction('kv', 'readwrite'), r = op(tx.objectStore('kv'));
+    tx.oncomplete = () => { db.close(); res(r.result); };
+    tx.onerror = () => { db.close(); rej(tx.error); };
+  };
+});
+const alertsOn = () => localStorage.getItem('pyr-alerts') === 'on'
+  && typeof Notification !== 'undefined' && Notification.permission === 'granted';
+async function syncAlertPrefs() {
+  const names = favs().clubs.map(id => { const i = clubIdx(id); return i >= 0 ? CLUBS[i].n : null; }).filter(Boolean);
+  const prev = await idbKV(s => s.get('alerts')).catch(() => null);
+  await idbKV(s => s.put({ ...(prev || {}), on: alertsOn(), follows: names }, 'alerts'));
+}
+/* baseline=true marks everything already in the wire as read, so enabling
+   alerts never dumps a season of history as notifications */
+function pokeSw(baseline) {
+  if (!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.ready.then(reg => {
+    reg.active?.postMessage({ type: 'rankxi-check', baseline: !!baseline });
+    if (alertsOn() && 'periodicSync' in reg)
+      reg.periodicSync.register('rankxi-updates', { minInterval: 6 * 3600 * 1000 }).catch(() => {});
+  }).catch(() => {});
+}
+async function setAlerts(on) {
+  if (on) {
+    const perm = await Notification.requestPermission();
+    if (perm !== 'granted') return false;
+    localStorage.setItem('pyr-alerts', 'on');
+    await syncAlertPrefs().catch(() => {});
+    pokeSw(true);
+    return true;
+  }
+  localStorage.removeItem('pyr-alerts');
+  await syncAlertPrefs().catch(() => {});
+  if ('serviceWorker' in navigator) navigator.serviceWorker.ready.then(reg => {
+    if ('periodicSync' in reg) reg.periodicSync.unregister('rankxi-updates').catch(() => {});
+  }).catch(() => {});
+  return false;
+}
+async function followFeed(f) {
+  const keys = new Set(f.clubs.map(id => { const i = clubIdx(id); return i >= 0 ? nameKey(CLUBS[i].n) : null; }).filter(Boolean));
+  if (!keys.size) return { upcoming: [], results: [], covered: new Set() };
+  const [rows, fx] = await Promise.all([wireDb(), fixturesDb()]);
+  const mine = w => keys.has(nameKey(w.t1)) || keys.has(nameKey(w.t2));
+  return { upcoming: fx.filter(mine), results: rows.filter(mine).reverse(), covered: new Set(rows.map(w => w.lg)) };
+}
+async function updateFollowBadge() {
+  const tab = document.querySelector('.tabbar a[data-tab="following"]'); if (!tab) return;
+  const f = favs();
+  let n = 0;
+  if (f.clubs.length) {
+    const seen = localStorage.getItem('pyr-feed-seen');
+    /* first run baselines to today instead of flagging all of history */
+    if (seen === null) localStorage.setItem('pyr-feed-seen', new Date().toISOString().slice(0, 10));
+    else n = (await followFeed(f)).results.filter(w => w.d > seen).length;
+  }
+  let dot = tab.querySelector('.tabdot');
+  if (!n) { dot?.remove(); return; }
+  if (!dot) { dot = document.createElement('i'); dot.className = 'tabdot'; tab.appendChild(dot); }
+  dot.textContent = n > 9 ? '9+' : n;
 }
 let _pcache = {};
 function allPlayers(sx) {
@@ -899,8 +973,8 @@ async function profilesDb() {
 }
 const AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23EFF2EC'/%3E%3Ccircle cx='50' cy='38' r='19' fill='%23AAB8A8'/%3E%3Cpath d='M14 94c5-24 19-32 36-32s31 8 36 32z' fill='%23AAB8A8'/%3E%3C/svg%3E";
 function clubIdxByName(nm) {
-  const k = nm.toLowerCase().replace(/\b(fc|sc|cf|afc|club|the)\b/g, '').replace(/\s+/g, '');
-  return CLUBS.findIndex(c => c.n.toLowerCase().replace(/\b(fc|sc|cf|afc|club|the)\b/g, '').replace(/\s+/g, '') === k);
+  const k = nameKey(nm);
+  return CLUBS.findIndex(c => nameKey(c.n) === k);
 }
 function careerRow(step) {
   const idx = clubIdxByName(step.club);
@@ -1300,6 +1374,56 @@ function screenPricing() {
       <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Youth club directory interest')}">Join the waitlist</a></div>
     <p class="note">Honesty policy: paid tiers switch on only after the marketplace demonstrably works — players getting contacted, clubs filling spots. Reserving is free and locks founding rates. No commissions, ever: your deals are yours.</p>`;
 }
+function alertsCardHtml() {
+  if (typeof Notification === 'undefined') return '';
+  const blocked = Notification.permission === 'denied';
+  const on = alertsOn();
+  return `<div class="alertcard">
+    <div class="ac-copy"><b>Match alerts</b><span id="alertsub">${blocked
+      ? 'Notifications are blocked for this site in your browser settings.'
+      : on ? 'On — results and fixtures for your clubs land on this device.'
+           : 'Get a notification when a followed club plays or a result comes in.'}</span></div>
+    ${blocked ? '' : `<button class="chip solid" id="alertbtn" aria-pressed="${on}">${on ? 'Turn off' : 'Turn on'}</button>`}
+  </div>
+  <p class="note" style="margin:4px 0 0">Alerts check while the app is open — and in the background on installed Android and desktop apps. On iPhone, opening the app pulls the latest. No account, no server: your follows never leave this device.</p>`;
+}
+function wireAlertsCard() {
+  view.querySelector('#alertbtn')?.addEventListener('click', async e => {
+    const on = await setAlerts(!alertsOn());
+    if (!on && typeof Notification !== 'undefined' && Notification.permission === 'denied') return screenFollowing();
+    e.target.textContent = on ? 'Turn off' : 'Turn on';
+    e.target.setAttribute('aria-pressed', String(on));
+    const sub = view.querySelector('#alertsub');
+    if (sub) sub.textContent = on ? 'On — results and fixtures for your clubs land on this device.'
+      : 'Get a notification when a followed club plays or a result comes in.';
+  });
+}
+let feedLimit = 10;
+async function renderFollowFeed(f) {
+  const feed = await followFeed(f);
+  const box = view.querySelector('#followfeed');
+  if (!box || !box.isConnected) return;
+  const lgs = new Set(f.clubs.map(id => { const i = clubIdx(id); return i >= 0 ? CLUBS[i].g : null; }).filter(Boolean));
+  const uncovered = [...lgs].filter(g => !feed.covered.has(g) && LEAGUES[g]);
+  box.innerHTML =
+    (feed.upcoming.length ? `<div class="kicker" style="margin-top:14px">Coming up · your clubs</div>` +
+      feed.upcoming.map(fx => `<div class="match"><div class="mrow"><span class="side">${esc(fx.t1)}</span><span class="vs">${esc(fx.round || 'v')}</span><span class="side away">${esc(fx.t2)}</span></div>
+        <div class="meta"><span>${fmtKick(fx.start)}</span><span>${esc(fx.venue || '')}</span></div></div>`).join('') : '') +
+    (feed.results.length ? `<div class="kicker" style="margin-top:14px">Latest results · your clubs</div>` +
+      feed.results.slice(0, feedLimit).map(wireResultRow).join('') +
+      (feed.results.length > feedLimit ? `<button class="chip solid" id="feedmore" style="margin-top:8px">Show more</button>` : '')
+    : '') +
+    (uncovered.length ? `<p class="note" style="margin:8px 0 0">No results feed yet for ${uncovered.map(g => LEAGUES[g].label).join(', ')} — the feed grows league by league as real results land.</p>` : '');
+  box.querySelector('#feedmore')?.addEventListener('click', () => { feedLimit += 20; renderFollowFeed(f); });
+  /* seeing the feed marks it read and clears the tab badge */
+  if (feed.results.length) {
+    const seen = localStorage.getItem('pyr-feed-seen');
+    if (!seen || feed.results[0].d > seen) localStorage.setItem('pyr-feed-seen', feed.results[0].d);
+  } else if (localStorage.getItem('pyr-feed-seen') === null) {
+    localStorage.setItem('pyr-feed-seen', new Date().toISOString().slice(0, 10));
+  }
+  updateFollowBadge();
+}
 function screenFollowing() {
   crumb.textContent = 'Following';
   const f = favs();
@@ -1314,10 +1438,14 @@ function screenFollowing() {
   view.innerHTML = `
     <div class="kicker">Your clubs and players</div>
     <h2 class="disp">Following</h2>
-    ${(!f.clubs.length && !f.players.length) ? `<p class="note" style="font-size:.9rem">Nothing yet. Tap <b>&#9734; Follow</b> on any club or player page and they'll live here — quick access from every visit, and match alerts once notifications land.</p>` : ''}
-    ${f.clubs.length ? `<div class="kicker" style="margin-top:8px">Clubs · ${f.clubs.length}</div><ul class="clublist">${clubRows}</ul>` : ''}
+    ${(!f.clubs.length && !f.players.length) ? `<p class="note" style="font-size:.9rem">Nothing yet. Tap <b>&#9734; Follow</b> on any club, college program, or player page and they'll live here — latest results, upcoming matches, and optional alerts, all in one place.</p>` : ''}
+    ${f.clubs.length ? alertsCardHtml() : ''}
+    <div id="followfeed"></div>
+    ${f.clubs.length ? `<div class="kicker" style="margin-top:14px">Clubs · ${f.clubs.length}</div><ul class="clublist">${clubRows}</ul>` : ''}
     ${f.players.length ? `<div class="kicker" style="margin-top:12px">Players · ${f.players.length}</div><ul class="clublist">${playerRows}</ul>` : ''}
     ${(f.clubs.length || f.players.length) ? '<p class="note">To unfollow, open the page and tap the star again.</p>' : ''}`;
+  wireAlertsCard();
+  if (f.clubs.length) renderFollowFeed(f);
 }
 
 let legendSort = 'apps';
@@ -1691,6 +1819,10 @@ document.getElementById('themebtn')?.addEventListener('click', () => {
 addEventListener('hashchange', route);
 route();
 wireSearch();
+/* follow updates: badge the tab with unseen results, and let the SW check
+   for fresh alerts once per visit (it no-ops unless alerts are on) */
+updateFollowBadge();
+if (alertsOn()) { syncAlertPrefs().catch(() => {}); pokeSw(false); }
 { const cc = document.getElementById('clubcount'); if (cc) cc.textContent = CLUBS.length.toLocaleString(); }
 /* prefetch rosters once the first view has painted so club taps are instant */
 (self.requestIdleCallback || (f => setTimeout(f, 2000)))(() => loadRosters().catch(() => {}));

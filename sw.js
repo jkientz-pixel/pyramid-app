@@ -75,3 +75,66 @@ self.addEventListener('fetch', e => {
     }).catch(() => caches.match(e.request, { ignoreSearch: true }))
   );
 });
+
+/* --- Match alerts for followed clubs -----------------------------------
+   Prefs live in IndexedDB, mirrored there by app.js — a service worker
+   cannot read localStorage. The check runs when the page posts a message
+   at boot and via periodic background sync where the platform offers it
+   (installed Chromium PWAs). `baseline` marks everything current as read
+   without notifying, so enabling alerts never replays season history.
+   The kv helper and teamKey duplicate app.js on purpose: this file stays
+   dependency-free so a broken import can never take down offline boot. */
+const kv = op => new Promise((res, rej) => {
+  const q = indexedDB.open('rankxi', 1);
+  q.onupgradeneeded = () => q.result.createObjectStore('kv');
+  q.onerror = () => rej(q.error);
+  q.onsuccess = () => {
+    const db = q.result, tx = db.transaction('kv', 'readwrite'), r = op(tx.objectStore('kv'));
+    tx.oncomplete = () => { db.close(); res(r.result); };
+    tx.onerror = () => { db.close(); rej(tx.error); };
+  };
+});
+const teamKey = nm => nm.toLowerCase().replace(/\b(fc|sc|cf|afc|club|the)\b/g, '').replace(/\s+/g, '');
+async function checkFollowUpdates(baseline) {
+  const prefs = await kv(s => s.get('alerts')).catch(() => null);
+  if (!prefs || !prefs.on || !(prefs.follows || []).length) return;
+  const grab = u => fetch(u, { cache: 'no-store' }).then(r => r.json()).catch(() => []);
+  const [npsl, asa] = await Promise.all([grab('/data/wire_npsl.json'), grab('/data/wire_asa.json')]);
+  const rows = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
+    .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
+  if (!rows.length) return;
+  const keys = new Set(prefs.follows.map(teamKey));
+  const fresh = rows.filter(w => w.d > (prefs.last || '')
+    && (keys.has(teamKey(w.t1)) || keys.has(teamKey(w.t2))));
+  if (fresh.length && !baseline && prefs.last) {
+    /* newest three as cards, the rest as one rollup — never forty pings */
+    for (const w of fresh.slice(-3).reverse()) {
+      await self.registration.showNotification(`${w.t1} ${w.s1}–${w.s2} ${w.t2}`, {
+        body: `Full time · Elo swing ±${Math.abs(w.dr)} · tap for your feed`,
+        tag: `rankxi-${w.d}-${teamKey(w.t1)}`, icon: '/icon-192.png', badge: '/icon-192.png',
+        data: { url: '/app.html#/following' },
+      }).catch(() => {});
+    }
+    if (fresh.length > 3) {
+      await self.registration.showNotification(`${fresh.length - 3} more results from your clubs`, {
+        body: 'Open the Following tab for the full list', tag: 'rankxi-more',
+        icon: '/icon-192.png', badge: '/icon-192.png', data: { url: '/app.html#/following' },
+      }).catch(() => {});
+    }
+  }
+  await kv(s => s.put({ ...prefs, last: rows[rows.length - 1].d }, 'alerts')).catch(() => {});
+}
+self.addEventListener('message', e => {
+  if (e.data && e.data.type === 'rankxi-check') e.waitUntil(checkFollowUpdates(e.data.baseline));
+});
+self.addEventListener('periodicsync', e => {
+  if (e.tag === 'rankxi-updates') e.waitUntil(checkFollowUpdates(false));
+});
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  const url = (e.notification.data && e.notification.data.url) || '/app.html#/following';
+  e.waitUntil(clients.matchAll({ type: 'window', includeUncontrolled: true }).then(ws => {
+    const w = ws.find(x => x.url.includes('/app.html'));
+    return w ? w.focus().catch(() => {}) : clients.openWindow(url);
+  }));
+});
