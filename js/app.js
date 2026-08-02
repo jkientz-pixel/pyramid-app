@@ -1216,7 +1216,7 @@ function screenPyramid() {
         ${tier.note ? `<div class="tier-note">${tier.note}</div>` : ''}
       </div>`).join('')}
     </div>
-    <a class="fa-card" href="#/cups"><b>&#127942; The Trophy Room</b><span>MLS Cup, Supporters' Shield, NWSL Championship, and the Open Cup — back to 1914.</span></a>
+    <a class="fa-card" href="#/cups"><b>&#127942; The Trophy Room</b><span>16 national trophies, every tier — MLS Cup to the NPSL, the College Cups, and the Open Cup back to 1914.</span></a>
     ${adSlot('tiers', 'The Pyramid')}
     <p class="note">Tiers are organizational, not sporting — US soccer has no promotion and relegation between most levels. The pathway runs through players, not clubs: youth to college to the amateur leagues to the pro game. Tap a league to visit its official site.</p>`;
   wireSexToggle();
@@ -1374,15 +1374,29 @@ async function screenCups() {
     const i = clubIdxByName(nm);
     return i >= 0 ? `<a href="#/club/${i}">${esc(nm)}</a>` : esc(nm);
   };
-  view.innerHTML = `
-    <div class="kicker">Professional & open competitions</div>
-    <h2 class="disp">The Trophy Room</h2>
-    ${!keys.length ? '<p class="note">Tournament histories are loading into the dataset.</p>' : ''}
-    ${keys.map(k => { const cup = cups[k]; return `
+  /* winner line: score + opponent when the source table records a final;
+     champions-list trophies (regular-season shields, older league lists)
+     carry the winner alone rather than inventing a beaten finalist */
+  const stat = f => f.s ? f.s + (f.ru ? ' v ' + esc(f.ru) : '') : f.ru ? 'def. ' + esc(f.ru) : '';
+  const SECTIONS = [
+    ['open', 'The open cups · any tier can enter'],
+    ['pro', 'Professional titles'],
+    ['am', 'Amateur national titles'],
+    ['college', 'The College Cups'],
+  ];
+  const cupBlock = k => { const cup = cups[k]; return `
       <details class="how" ${k === 'opencup' ? 'open' : ''}><summary>${cup.label} · ${cup.finals.length} editions${cup.kind === 'open' ? ' · open to the whole pyramid' : ''}</summary>
       <ul class="careerway" style="max-height:320px;overflow-y:auto">${cup.finals.map(f =>
-        `<li><span class="cw-years">${f.y}</span><span class="cw-club">${linkClub(f.w)}</span><span class="cw-stat">${f.s ? f.s + ' v ' : 'def. '}${f.ru ? esc(f.ru) : ''}</span></li>`).join('')}</ul></details>`; }).join('')}
-    <p class="note">The U.S. Open Cup is the pyramid's connective tissue — the one competition where any tier can play any other. Its results are what let cross-league ratings be measured instead of assumed. Histories from Wikipedia (CC BY-SA).</p>`;
+        `<li><span class="cw-years">${f.y}</span><span class="cw-club">${linkClub(f.w)}</span><span class="cw-stat">${stat(f)}</span></li>`).join('')}</ul></details>`; };
+  view.innerHTML = `
+    <div class="kicker">Every national trophy · pro, amateur, college & open</div>
+    <h2 class="disp">The Trophy Room</h2>
+    ${!keys.length ? '<p class="note">Tournament histories are loading into the dataset.</p>' : ''}
+    ${SECTIONS.map(([kind, label]) => {
+      const ks = keys.filter(k => cups[k].kind === kind);
+      return ks.length ? `<div class="kicker" style="margin-top:14px">${label}</div>` + ks.map(cupBlock).join('') : '';
+    }).join('')}
+    <p class="note">The U.S. Open Cup is the pyramid's connective tissue — the one competition where any tier can play any other. Its results are what let cross-league ratings be measured instead of assumed. A finished season's champion appears once the result lands on the record — never before the final is played. UPSL histories are omitted until a reliable source exists. Histories from Wikipedia (CC BY-SA).</p>`;
 }
 
 function screenFASample() {

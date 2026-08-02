@@ -62,6 +62,38 @@ for jf in re.findall(r"fetch\('(data/[^?']+)", (ROOT / 'js' / 'app.js').read_tex
         fail.append(f'{jf}: invalid JSON ({e})')
 print('  fetched data/*.json OK')
 
+# 4. cups.json structural sanity — the Wikipedia parser once shipped an MVP
+#    (a person) as an MLS Cup champion and future host cities as winners;
+#    these rules mirror fetch_cups.py's own filters so a bad refresh dies
+#    here instead of on the Trophy Room.
+try:
+    import datetime
+    this_year = datetime.date.today().year
+    cups = json.loads((ROOT / 'data' / 'cups.json').read_text())
+    if len(cups) < 4:
+        fail.append(f'cups.json: only {len(cups)} tournaments — refresh lost data')
+    for k, cup in cups.items():
+        if cup.get('kind') not in ('open', 'pro', 'am', 'college'):
+            fail.append(f'cups.json[{k}]: unknown kind {cup.get("kind")!r}')
+        finals = cup.get('finals') or []
+        if not finals:
+            fail.append(f'cups.json[{k}]: no finals'); continue
+        years = [f.get('y') for f in finals]
+        if len(set(years)) != len(years):
+            fail.append(f'cups.json[{k}]: duplicate years')
+        for f in finals:
+            y = int(f.get('y', 0))
+            if not 1900 <= y <= this_year:
+                fail.append(f'cups.json[{k}]: year {y} out of range (future host row?)'); break
+            if y == this_year and not f.get('s'):
+                fail.append(f'cups.json[{k}]: {y} champion without a score — final not played yet?'); break
+            if not f.get('w') or len(f['w']) < 3:
+                fail.append(f'cups.json[{k}]: empty winner in {y}'); break
+    print(f'  cups.json OK — {len(cups)} tournaments, '
+          f'{sum(len(c["finals"]) for c in cups.values())} editions')
+except Exception as e:
+    fail.append(f'cups.json: {e}')
+
 if fail:
     print('\nPREFLIGHT FAILED:', file=sys.stderr)
     for f in fail: print('  ✗', f, file=sys.stderr)
