@@ -21,7 +21,7 @@ const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
 const PROV_NAME = { QC:'Quebec', ON:'Ontario', BC:'British Columbia' };
 const REGION_LABEL = { northwest:'Northwest', southwest:'Southwest', midwest:'Midwest', south:'South', southeast:'Southeast', northeast:'Northeast' };
-const STATE_NAME = { AL:'Alabama',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',DC:'Washington DC',FL:'Florida',GA:'Georgia',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming' };
+const STATE_NAME = { AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',DC:'Washington DC',FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming' };
 
 let sex = 'm';
 const leaguesFor = s => Object.keys(LEAGUES).filter(k => LEAGUES[k].sex === s);
@@ -42,9 +42,16 @@ const CLUB_BY_ID = new Map(CLUBS.map((c, i) => [c.id, i]));
 /* accepts a slug or a legacy numeric index; -1 when neither resolves */
 const clubIdx = ref => CLUB_BY_ID.has(ref) ? CLUB_BY_ID.get(ref) : (/^\d+$/.test(String(ref)) && CLUBS[+ref] ? +ref : -1);
 const clubHref = i => '#/club/' + (CLUBS[i] ? CLUBS[i].id : i);
+/* one notice/report address, shared by legal, free-agent reporting, and claims */
+const NOTICE_MAIL = 'hello@rankedxi.com';
 const initials = n => n.split(/\s+/).filter(w => /^[A-Za-z]/.test(w)).slice(0, 2).map(w => w[0].toUpperCase()).join('') || 'FC';
 const gsearch = (n, extra) => `https://www.google.com/search?q=${encodeURIComponent(n + ' soccer ' + extra)}`;
 const dist2 = (a, b) => (a.la - b.la) ** 2 + (a.lo - b.lo) ** 2;
+/* straight-line miles for Rivalry Radar tags — discovery framing, no dates */
+const milesApart = (a, b) => {
+  const dLat = a.la - b.la, dLon = (a.lo - b.lo) * Math.cos((a.la + b.la) / 2 * Math.PI / 180);
+  return Math.max(1, Math.round(69 * Math.sqrt(dLat * dLat + dLon * dLon)));
+};
 const pool = () => CLUBS.filter(c => c.x === sex && !c.h);
 const visible = clubs => clubs.filter(c => leagueFilter.has(c.g));
 
@@ -334,9 +341,9 @@ const LEVELS = {
   youth: ['mlsnext', 'ecnlb', 'ga', 'ecnlg', 'ea', 'ecrlb', 'ecrlg', 'gaa']
 };
 let level = 'all';
-/* demo-data quarantine chip — pair with .badge.d so nothing demo ever
-   renders in the verified green */
-const DTAG = '<span class="dtag">Demo</span>';
+/* illustrative-data quarantine chip — pair with .badge.d so nothing
+   illustrative ever renders in the verified green */
+const DTAG = '<span class="dtag">Illustrative</span>';
 function levelChips() {
   return `<div class="chips" id="lvlchips">${Object.keys(LEVELS).map(k =>
     `<button class="chip solid" data-lvl="${k}" aria-pressed="${level === k}">${k === 'all' ? 'All levels' : k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div>`;
@@ -447,18 +454,21 @@ function screenState(st) {
   const clubs = pool().filter(c => c.st === st);
   const ranked = visible(clubs).filter(c => c.r).sort((a, b) => b.r - a.r);
   const concepts = visible(clubs).filter(c => !c.r);
+  /* AK/HI have no path in the Albers lower-48 SVG and their pins project
+     off-canvas — list-only beats a map with invisible pins */
+  const mappable = clubs.length > 0 && !['AK', 'HI'].includes(st);
   view.innerHTML = `
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/map'">&larr; Back</button>
     ${sexToggle()}
     <div class="kicker">State</div><h2 class="disp">${STATE_NAME[st]}</h2>
-    ${clubs.length ? renderMapSvg(visible(clubs), true) : ''}
+    ${mappable ? renderMapSvg(visible(clubs), true) : ''}
     ${clubs.length ? leagueChips() : ''}
     <div class="kicker" style="margin-top:10px">${clubs.length ? `Clubs · ${clubs.length}` : 'No clubs mapped yet'}</div>
     <ul class="clublist" id="statelist">${ranked.map((c, i) => clubRow(c, i + 1)).join('')}${concepts.map(c => clubRow(c)).join('')}</ul>
     ${adSlot('region', STATE_NAME[st])}
     ${clubs.length ? '' : '<p class="note">This is where league expansion starts — the dataset grows as leagues are added.</p>'}`;
   wireSexToggle();
-  if (clubs.length) {
+  if (mappable) {
     wireMap([st]);
   }
 }
@@ -484,7 +494,7 @@ function screenTable() {
   };
   view.innerHTML = `
     ${sexToggle()}
-    <div class="kicker">${tableMode === 'players' ? DTAG + 'Cross-league · demo stats' : 'Cross-league · Elo where results exist, demo elsewhere'}</div>
+    <div class="kicker">${tableMode === 'players' ? DTAG + 'Cross-league · illustrative stats' : 'Cross-league · Elo where results exist, illustrative elsewhere'}</div>
     <h2 class="disp">The National Table</h2>
     <div class="chips seg" id="modeseg">
       <button class="chip solid" data-mode="clubs" aria-pressed="${tableMode === 'clubs'}">Clubs</button>
@@ -497,11 +507,11 @@ function screenTable() {
       <p><b>Clubs.</b> Where we hold real results — USL Championship, USL League One, MLS Next Pro, NWSL, USL Super League (via American Soccer Analysis) and NPSL (league match reports), 1,470+ matches — ratings are Elo: everyone starts at 1500, winners take points from losers, more for upsets and big margins (log goal-margin; tier-tuned K and home edge — K=64/+30 amateur, K=32/+65 pro, set by backtest, not taste), each league anchored to its tier band. MLS ranks by the official league table, with an experimental results-Elo published on each club page. Where we hold standings but not results (UPSL), ratings derive from points and goal difference. Everywhere else the rating is an illustrative placeholder and says so.</p>
       <p><b>Calibration — the receipts.</b> Backtested walk-forward on 1,377 real 2026 matches (310 NPSL + 1,067 pro): weighted Brier 0.600 vs 0.667 uniform. On NPSL the tuned engine scores 0.531 and the buckets are honest — teams we called 40&ndash;49% won 52%, 50&ndash;59% won 67%, 60&ndash;69% won 69%, 70&ndash;79% won 71%, 80&ndash;89% won 86%. Pro parity leagues carry a thinner edge (that's real, we publish it anyway). Calibration re-runs as every league's results land.</p>
       <p><b>Across leagues.</b> Within a league, ratings are evidence. Between leagues, they're measured: league anchors come from ~600 cross-league U.S. Open Cup results across the last five editions (extra-time wins weighted 0.75, shootout wins 0.6, home edge fitted at +31 Elo). On top of that anchor, a club's own Cup results move its rating — beat a side from a higher tier and the points are yours, itemized on your club page. MLS ranks stay with the official league table.</p>
-      <p><b>Players.</b> The value rating weights production — goals ×4, assists ×3, appearances ×0.6, keeper clean sheets and saves — scaled by the strength of the club's opposition. Player stats are demo data until verified reporting is live; each profile's badge says which.</p>
+      <p><b>Players.</b> The value rating weights production — goals ×4, assists ×3, appearances ×0.6, keeper clean sheets and saves — scaled by the strength of the club's opposition. Player stats are illustrative until verified reporting is live; each profile's badge says which.</p>
     </details>
     <ul class="clublist" id="tablelist">${render()}</ul>
     <p class="note">${tableMode === 'players'
-      ? 'Player value ratings weight production by opposition strength — demo stats until verified reporting is live.'
+      ? 'Player value ratings weight production by opposition strength — illustrative until verified reporting is live.'
       : "USLC, USL1, MLS Next Pro, NWSL, USL Super League and NPSL ratings come from real results (Elo). MLS and UPSL rank by real 2026 standings — MLS club pages also show an experimental results-Elo. Other leagues remain illustrative until their feeds land. Men's and women's ranked separately."}</p>`;
   wireSexToggle();
   view.querySelector('#modeseg').addEventListener('click', e => {
@@ -648,20 +658,20 @@ function screenMatches(preH) {
   crumb.textContent = 'Matches';
   const rated = pool().filter(c => c.r).sort((a, b) => b.r - a.r);
   const groups = leaguesFor(sex).filter(k => !LEAGUES[k].hollow && k !== 'mnp');
-  const used = new Set(); const fixtures = [];
+  const used = new Set(); const pairs = [];
   groups.forEach(g => {
     const p = rated.filter(c => c.g === g);
     for (const home of p) {
-      if (used.has(home) || fixtures.length >= 12) break;
+      if (used.has(home) || pairs.length >= 12) break;
       /* vary which neighbor each club draws — always pairing nearest-with-
          nearest gives every card the same tiny Elo gap and near-identical
-         odds; a deterministic spread across the 6 closest keeps the demo
-         slate looking like a real weekend */
+         odds; a deterministic spread across the 6 closest keeps the radar
+         varied */
       const cand = neighbors(home, 6).filter(o => !used.has(o));
       if (!cand.length) continue;
-      const opp = cand[(home.n.length * 7 + fixtures.length * 3) % cand.length];
+      const opp = cand[(home.n.length * 7 + pairs.length * 3) % cand.length];
       used.add(home); used.add(opp);
-      fixtures.push([home, opp]);
+      pairs.push([home, opp]);
     }
   });
   const opts = sel => rated.map(c => `<option value="${CLUBS.indexOf(c)}" ${c === sel ? 'selected' : ''}>${esc(c.n)} (${c.r})</option>`).join('');
@@ -669,7 +679,7 @@ function screenMatches(preH) {
     ${sexToggle()}
     <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>This week's results, upsets and rating swings &mdash; generated from real data.</span></a>
     <div id="realfx"></div>
-    <div class="kicker">${DTAG}Any club v any club · demo odds</div>
+    <div class="kicker">Predictor · any club v any club · model estimate</div>
     <h2 class="disp">Matchup Machine</h2>
     <div class="pickrow">
       <select id="pickH" aria-label="Home club">${opts(CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0])}</select>
@@ -677,10 +687,11 @@ function screenMatches(preH) {
       <select id="pickA" aria-label="Away club">${opts(rated[1])}</select>
     </div>
     <div id="pickout">${matchCard(CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0], rated[1], 'HYPOTHETICAL')}</div>
-    <div class="kicker" style="margin-top:18px">${DTAG}Fixtures · generated from geography</div>
-    <h2 class="disp">This Weekend</h2>
-    ${fixtures.map(([h, a], i) => matchCard(h, a, `SAT ${i % 2 ? '5:00' : '7:30'} PM`)).join('')}
-    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Demo ratings — production uses live results. Predictions, not betting advice.</p>`;
+    <div class="kicker" style="margin-top:18px">Rivalry Radar · nearest matchups by geography</div>
+    <h2 class="disp">Rivalry Radar</h2>
+    <p class="note" style="margin:2px 0 10px">Who's closest to whom — and how the model thinks it would go. A discovery feature, not a schedule: these games aren't scheduled, so there are no dates. Verified fixtures appear above as league feeds connect.</p>
+    ${pairs.map(([h, a]) => matchCard(h, a, `${milesApart(h, a)} MI APART`)).join('')}
+    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Predictions, not betting advice.</p>`;
   wireSexToggle();
   const redo = () => {
     const h = CLUBS[+view.querySelector('#pickH').value];
@@ -689,12 +700,26 @@ function screenMatches(preH) {
   };
   view.querySelector('#pickH').addEventListener('change', redo);
   view.querySelector('#pickA').addEventListener('change', redo);
-  /* NPSL is a men's league: never render its fixtures into the women's view,
-     including late async resolution after the user toggles sex */
-  if (sex === 'm') fixturesDb().then(fx => {
+  /* NPSL is a men's league: its fixtures never render into the women's
+     view, including late async resolution after the user toggles sex —
+     the women's view gets the honest empty state instead */
+  const fxSex = sex;
+  fixturesDb().then(all => {
     const box = view.querySelector('#realfx');
-    if (!box || !fx.length || sex !== 'm') return;
-    box.innerHTML = `<div class="kicker">Real fixtures · NPSL playoffs · live from the league</div>
+    if (!box || sex !== fxSex) return;
+    /* verified fixtures only, and only inside a two-week window — a stale
+       feed must never present last month's games as upcoming */
+    const now = Date.now(), TWO_WEEKS = 14 * 864e5;
+    const fx = (sex === 'm' ? all : []).filter(f => {
+      const t = Date.parse(f.start);
+      return t > now - 6 * 36e5 && t < now + TWO_WEEKS;
+    });
+    if (!fx.length) {
+      box.innerHTML = `<div class="kicker">Verified fixtures · next two weeks</div>
+        <p class="note" style="margin:2px 0 14px">No verified fixtures in the next two weeks. Real fixtures land here straight from league feeds — nothing is ever invented to fill the space.</p>`;
+      return;
+    }
+    box.innerHTML = `<div class="kicker">Verified fixtures · NPSL · live from the league</div>
       <h2 class="disp">The Real Thing</h2>` + fx.map(f => {
         const hi = clubIdxByName(f.t1), ai = clubIdxByName(f.t2);
         const h = CLUBS[hi], a = CLUBS[ai];
@@ -898,9 +923,31 @@ async function profilesDb() {
   return _profiles;
 }
 const AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23EFF2EC'/%3E%3Ccircle cx='50' cy='38' r='19' fill='%23AAB8A8'/%3E%3Cpath d='M14 94c5-24 19-32 36-32s31 8 36 32z' fill='%23AAB8A8'/%3E%3C/svg%3E";
-function clubIdxByName(nm) {
-  const k = nm.toLowerCase().replace(/\b(fc|sc|cf|afc|club|the)\b/g, '').replace(/\s+/g, '');
-  return CLUBS.findIndex(c => c.n.toLowerCase().replace(/\b(fc|sc|cf|afc|club|the)\b/g, '').replace(/\s+/g, '') === k);
+/* names Wikipedia uses that differ from the dataset's canonical short names */
+const CLUB_NAME_ALIASES = {
+  'los angeles fc': 'LAFC',
+  'los angeles galaxy': 'LA Galaxy',
+};
+function clubIdxByName(nm, ok) {
+  /* exact name first — suffix-stripping folds "Los Angeles FC" and
+     "Los Angeles SC" (a different club, different sex) onto the same key,
+     so the fuzzy pass only stands when it is unambiguous; two candidates =
+     no link, because a missing link beats a wrong club. `ok` narrows the
+     candidate pool (sex, tier) when the caller knows the context. */
+  nm = CLUB_NAME_ALIASES[nm.toLowerCase()] || nm;
+  const pass = c => !c.h && (!ok || ok(c));
+  const lower = nm.toLowerCase();
+  const exact = CLUBS.findIndex(c => pass(c) && c.n.toLowerCase() === lower);
+  if (exact >= 0) return exact;
+  const strip = s => s.toLowerCase().replace(/\b(fc|sc|cf|afc|club|the)\b/g, '').replace(/\s+/g, '');
+  const k = strip(nm);
+  let found = -1;
+  for (let i = 0; i < CLUBS.length; i++) {
+    if (!pass(CLUBS[i]) || strip(CLUBS[i].n) !== k) continue;
+    if (found >= 0) return -1;
+    found = i;
+  }
+  return found;
 }
 function careerRow(step) {
   const idx = clubIdxByName(step.club);
@@ -912,10 +959,10 @@ const PRO = new Set(['mls', 'uslc', 'usl1', 'mnp', 'nwsl', 'uslw']);
 function verifyBadge(c) {
   const ro = ROSTERS[rosterKey(c)];
   if (ro && ro.some(p => p.st)) return `<span class="badge v">Real ${c.g === 'uslw' ? '2025-26' : '2026'} stats · American Soccer Analysis · roster via Wikipedia/ASA</span>`;
-  if (ro) return '<span class="badge v">Roster: live from Wikipedia, refreshed every 2 days</span> <span class="badge d">Stats: demo</span>';
+  if (ro) return '<span class="badge v">Roster: live from Wikipedia, refreshed every 2 days</span> <span class="badge d">Stats: illustrative</span>';
   return PRO.has(c.g)
-    ? '<span class="badge d">Stats: demo · league match reports coming</span>'
-    : '<span class="badge d">Stats: demo · club-submitted reporting planned</span>';
+    ? '<span class="badge d">Stats: illustrative · league match reports coming</span>'
+    : '<span class="badge d">Stats: illustrative · club-submitted reporting planned</span>';
 }
 
 async function screenClub(ref) {
@@ -938,21 +985,6 @@ async function screenClub(ref) {
   let opps = neighbors(c, 7);
   if (opps.length < 2 && c.r) opps = CLUBS.filter(o => o !== c && o.x === c.x && o.r && !o.h)
     .sort((a2, b2) => dist2(a2, c) - dist2(b2, c)).slice(0, 7);
-  let seed = 0; for (const ch of c.n) seed = (seed * 31 + ch.charCodeAt(0)) % 233;
-  const PAST = ['JUL 19', 'JUL 12', 'JUL 5', 'JUN 28', 'JUN 21', 'JUN 14', 'JUN 7', 'MAY 31'];
-  const history = c.r ? PAST.map((date, i) => {
-    const o = opps[i % Math.min(opps.length, 5)];
-    if (!o) return null;
-    const home = i % 2 === 0;
-    const od = home ? oddsFor(c, o) : oddsFor(o, c);
-    const pWin = home ? od.pH : od.pA;
-    const r2 = ((seed * 7 + i * 61) % 100) / 100;
-    const wl = r2 < pWin * 0.85 ? 'W' : r2 < pWin * 0.85 + 0.22 ? 'D' : 'L';
-    const uw = wl === 'W' && pWin < 0.42, bl = wl === 'L' && pWin > 0.62;
-    const score = wl === 'W' ? (pWin > 0.6 ? '3–1' : '2–1') : wl === 'L' ? (pWin > 0.5 ? '1–2' : '0–2') : '1–1';
-    const delta = wl === 'W' ? '+' + Math.round(24 * (1 - pWin)) : wl === 'L' ? '-' + Math.round(24 * pWin) : (pWin < 0.5 ? '+' : '-') + Math.round(Math.abs(0.5 - pWin) * 20);
-    return { o, home, wl, uw, bl, score, delta, date, pWin };
-  }).filter(Boolean) : [];
   view.innerHTML = `
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/map'">&larr; Back</button>
     <div class="clubhead">${crestHtml(c)}
@@ -974,16 +1006,9 @@ async function screenClub(ref) {
     }).join('')}</ul></div>
     <p class="note">${c.g === 'mls' ? 'Shown for the record — MLS ranks by the official league table, so Cup results never move an MLS rating here.' : 'These matches move the rating. Cross-tier cup results are where the levels actually meet; extra-time and shootout wins count at reduced weight.'}${c.pv ? " Marked provisional: most of this club's cup movement came against opponents outside our database, valued at league average." : ''}</p>` : ''}
     ${c.re ? `<p class="note" style="margin:2px 0 10px;font-size:.78rem">Results-only Elo: <b>${c.re}</b> · experimental — computed from every 2026 match and published for transparency; the headline rating and ranks above stay with the official league table.</p>` : ''}
-    ${c.r ? `<div class="kicker">${DTAG}Upcoming fixtures</div>
-    ${(opps.length > 6 ? opps.slice(5, 7) : opps.slice(0, 2)).map((o, i) => matchCard(i === 0 ? c : o, i === 0 ? o : c, i === 0 ? 'SAT JUL 26' : 'SAT AUG 2')).join('') || '<p class="note">No rated opponents in the dataset yet.</p>'}
-    <div class="kicker" style="margin-top:14px">${DTAG}Results</div>
-    <ul class="results">${history.map(h =>
-      `<li class="${h.uw ? 'uw' : ''}${h.bl ? 'bl' : ''}"><span class="wl ${h.wl}">${h.wl}</span>
-       <span class="res-opp">${h.score} ${h.home ? 'v' : '@'} <a class="opp-link" href="#/club/${h.o.id}">${esc(h.o.n)}</a>
-       ${h.uw ? '<span class="res-tag tag-uw">upset win — ' + (h.pWin * 100).toFixed(0) + '% to win</span>' : ''}
-       ${h.bl ? '<span class="res-tag tag-bl">bad loss — ' + (h.pWin * 100).toFixed(0) + '% to win</span>' : ''}</span>
-       <span class="res-delta">${h.date} · ${h.delta} Elo</span></li>`).join('')}</ul>
-    <p class="note">Green rows are wins as the underdog; red rows are losses as the favorite — form versus expectation, the number a straight table hides.</p>
+    ${c.r ? `<div class="kicker">Rivalry Radar · nearest rated rivals</div>
+    <p class="note" style="margin:2px 0 8px">Who's nearby, and how the model thinks it would go — a discovery feature, not a schedule. Verified fixtures appear when this league's feed connects.</p>
+    ${(opps.length > 6 ? opps.slice(5, 7) : opps.slice(0, 2)).map((o, i) => matchCard(i === 0 ? c : o, i === 0 ? o : c, `${milesApart(c, o)} MI APART`)).join('') || '<p class="note">No rated opponents in the dataset yet.</p>'}
     <details class="how"><summary>How is this club's rating made?</summary><p>${c.rr === 1
       ? "From real results: Elo over this season's matches — everyone starts at 1500, winners take points from losers, weighted by upset size and goal margin, with a backtested tier-tuned home edge (+30 amateur, +65 pro)."
       : c.rr === 2
@@ -1040,12 +1065,12 @@ async function screenClub(ref) {
 function screenAbout() {
   crumb.textContent = 'About';
   view.innerHTML = `<div class="about">
-    <div class="kicker">Concept</div>
+    <div class="kicker">About</div>
     <h2 class="disp">One pyramid, one table</h2>
     <p>American soccer has no single place to see every club, how they rank, and how the levels connect. <b>Ranked XI</b> maps all of it: MLS to the grassroots, with men's and women's tables ranked separately.</p>
     <p><b>How rankings work.</b> League results feed a weekly Elo rating. Cup competitions — Open Cup qualifying, the National Amateur Cup — are where leagues actually meet, and those matches calibrate the cross-league scale. Every rating change is published with the match that caused it.</p>
     <p><b>World context.</b> Each club page projects the club onto a hypothetical global ladder against European reference sides — a conversation-starter, clearly labeled, never presented as measurement.</p>
-    <p><b>What's real in this demo.</b> All ${CLUBS.length} clubs and locations come from the project dataset. Ratings, records and fixtures are illustrative until the results pipeline is live.</p>
+    <p><b>What's real.</b> All ${CLUBS.length} clubs and locations come from what the leagues publish. Ratings label their basis on every page — real results, real standings, an independent results model, or an illustrative placeholder until that league's feed connects. Fixtures and results are never invented: match data appears only where a real feed provides it.</p>
     <p><b>Pricing.</b> The app is free; paid extras are listed plainly at <a href="#/pricing" style="color:var(--accent)">Pricing</a>.</p>
     <p><b>Roadmap.</b> Amateur league layers (UPSL, NPSL, USL League Two) from live feeds · claimed club pages · player profiles · clean crest art · youth club directory layer.</p>
     <div class="kicker" style="margin-top:14px">The leagues</div>
@@ -1071,7 +1096,7 @@ function screenAbout() {
     <p class="note">NISA is currently unsanctioned by U.S. Soccer (Dec 2024); its clubs are shown for completeness. UPSL layer holds the clubs mapped so far — the full league is 400+ clubs.</p>
     <p class="fine" style="font-size:.75rem">Data last refreshed: ${BUILD_DATE} &middot; rosters and stats auto-refresh every 12 hours &middot; <a href="#/legal" style="color:var(--accent)">Terms &amp; Privacy</a></p>
     <p class="fine" style="font-size:.75rem">Data: Wikipedia (CC BY-SA — rosters, profiles, photos, crests), league sites and public feeds (NPSL/Squadi, UPSL), OpenStreetMap Nominatim geocoding. Club and league marks belong to their owners.</p>
-    <p class="fine" style="font-size:.75rem">Concept by Jeremy Kientz · 2026</p>
+    <p class="fine" style="font-size:.75rem">Built by Jeremy Kientz · 2026</p>
   </div>`;
 }
 
@@ -1136,7 +1161,7 @@ async function screenPlayer(ci, pi) {
              <div class="stat"><b>${pl.assists}</b><span>Assists</span></div>
              <div class="stat"><b>${pl.mins.toLocaleString()}</b><span>Minutes</span></div>`)}
     </div>
-    <p class="note">Value rating weights goals, assists, minutes and keeper actions by the strength of the team's opposition (demo formula on demo stats). ${pl.yc == null ? '' : `Cards: ${pl.yc} yellow${pl.rc ? ', 1 red' : ''}.`}</p>
+    <p class="note">Value rating weights goals, assists, minutes and keeper actions by the strength of the team's opposition (model formula over illustrative stats). ${pl.yc == null ? '' : `Cards: ${pl.yc} yellow${pl.rc ? ', 1 red' : ''}.`}</p>
     ${pl.rs && rank ? `<p class="pheadline">${ord(rank)}-best ${({GK:'goalkeeper',DF:'defender',MF:'midfielder',FW:'forward'})[pl.pos]} in the nation <span>real 2026 stats · pro pool</span></p>` : ''}
     ${favBtn('players', ci + '/' + pi)}
     ${playerLadder(pl, c)}
@@ -1152,7 +1177,7 @@ async function screenPlayer(ci, pi) {
       `<li><span class="cw-years">${esc(n2.years || '')}</span><span class="cw-club">${esc(n2.team)}</span><span class="cw-stat">${n2.caps ? n2.caps + ' caps' + (n2.goals ? ' · ' + n2.goals + ' gls' : '') : ''}</span></li>`).join('')}</ul>`
     : `<p class="note">${pl.real
       ? `Nationality: <b>${pl.nat || 'unlisted'}</b>. No national-team record listed.`
-      : `Demo player — international records shown only for real rosters.`}</p>`}
+      : `Illustrative player — international records shown only for real rosters.`}</p>`}
     ${(prof.honours && prof.honours.length) ? `<div class="kicker" style="margin-top:10px">Honours</div>
     <ul class="honours">${prof.honours.map(h2 => `<li><b>${esc(h2.t)}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>`
     : (pl.real && pl.wiki ? `<div class="kicker" style="margin-top:10px">Honours</div>
@@ -1166,7 +1191,6 @@ async function screenPlayer(ci, pi) {
       <a href="https://www.transfermarkt.us/schnellsuche/ergebnis/schnellsuche?query=${encodeURIComponent(pl.name)}" target="_blank" rel="noopener">Transfermarkt</a>
     </div>
     ${(prof.ig || prof.x || prof.site) ? '' : '<p class="note">Socials appear when listed on the player\'s Wikipedia article or once the player claims the profile — no guessed links.</p>'}
-    <div class="fifaid"><span>FIFA Connect ID</span><b>USA-${String(1000 + (clubSeed(c) * 7) % 9000)}-${String(10000 + (clubSeed(c) * 31 + +pi * 977) % 90000)}</b><i>demo format — real IDs come from US Soccer registration data</i></div>
     <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Player profile: ' + pl.name + ' (' + c.n + ')')}">Is this you? Claim your profile</a>
     <p class="note">Claimed player profiles add film links, verified stats history, and recruiting visibility.</p>
     ${reportLink('Fix', pl.name)}`;
@@ -1240,10 +1264,11 @@ function screenFreeAgents() {
         <img class="crest imgcrest" src="${AVATAR}" alt="">
         <span class="cl-name"><b>${f.name}</b><span>${f.pos} · ${f.age} · ${f.region} · last: ${f.last}</span></span>
         <span class="cl-rt" style="font-size:.7rem;color:var(--ink-dim)">${f.seeks}${f.video ? ' · film' : ''}</span></a></li>`).join('')}</ul>
-    <p class="note">Sample listings — the real board opens with player claims.</p>
+    <p class="note">Sample listings — the real board opens with player claims. Listings are for players <b>18 and older</b>, arrive by email, and every one is human-reviewed before it publishes — nothing posts to this board automatically.</p>
     ${adSlot('freeagents', 'Free Agents board')}
-    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent listing request')}&body=${encodeURIComponent('Name:\nPosition:\nAge:\nRegion:\nLast club/level:\nLevel seeking:\nHighlight film link:\n')}">List yourself — $25 per season</a>
-    <p class="note">Flat listing fee. No commissions, no placement cuts — your deal is yours. Clubs: browsing is free, and posting open-tryout dates is coming. <a href="#/pricing" style="color:var(--accent)">See all pricing &rarr;</a></p>`;
+    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent listing request')}&body=${encodeURIComponent('I confirm I am 18 or older: \nName:\nPosition:\nAge:\nRegion:\nLast club/level:\nLevel seeking:\nHighlight film link:\n')}">List yourself — $25 per season</a>
+    <p class="note">Flat listing fee. No commissions, no placement cuts — your deal is yours. Clubs: browsing is free, and posting open-tryout dates is coming. <a href="#/pricing" style="color:var(--accent)">See all pricing &rarr;</a></p>
+    <p class="note"><a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('Report a free agent listing')}&body=${encodeURIComponent('Listing (name shown):\nWhat is wrong (impersonation, inaccurate, inappropriate, other):\n')}" style="color:var(--accent)">Report a listing</a> — reports are reviewed within days; a listing that misrepresents someone comes down first, questions after.</p>`;
 }
 
 function screenAdvertise() {
@@ -1370,9 +1395,17 @@ async function screenCups() {
   crumb.textContent = 'Trophies';
   const cups = await cupsDb();
   const keys = Object.keys(cups);
-  const linkClub = nm => {
-    const i = clubIdxByName(nm);
-    return i >= 0 ? `<a href="#/club/${i}">${esc(nm)}</a>` : esc(nm);
+  /* each trophy knows who can hold it: a men's cup must never link a
+     women's club, and a college cup's short names ("North Carolina",
+     "San Diego") must never resolve to pro or amateur sides */
+  const WOMENS_CUPS = new Set(['nwsl', 'nwslshield', 'uslsuper', 'wpsl', 'uws', 'ncaaw']);
+  const COLLEGE_CUPS = new Set(['ncaam', 'ncaaw']);
+  const okFor = k => c =>
+    c.x === (WOMENS_CUPS.has(k) ? 'w' : 'm') &&
+    (COLLEGE_CUPS.has(k) ? LEVELS.college.includes(c.g) : !LEVELS.college.includes(c.g));
+  const linkClub = (nm, k) => {
+    const i = clubIdxByName(nm, okFor(k));
+    return i >= 0 ? `<a href="#/club/${CLUBS[i].id}">${esc(nm)}</a>` : esc(nm);
   };
   /* winner line: score + opponent when the source table records a final;
      champions-list trophies (regular-season shields, older league lists)
@@ -1387,7 +1420,7 @@ async function screenCups() {
   const cupBlock = k => { const cup = cups[k]; return `
       <details class="how" ${k === 'opencup' ? 'open' : ''}><summary>${cup.label} · ${cup.finals.length} editions${cup.kind === 'open' ? ' · open to the whole pyramid' : ''}</summary>
       <ul class="careerway" style="max-height:320px;overflow-y:auto">${cup.finals.map(f =>
-        `<li><span class="cw-years">${f.y}</span><span class="cw-club">${linkClub(f.w)}</span><span class="cw-stat">${stat(f)}</span></li>`).join('')}</ul></details>`; };
+        `<li><span class="cw-years">${f.y}</span><span class="cw-club">${linkClub(f.w, k)}</span><span class="cw-stat">${stat(f)}</span></li>`).join('')}</ul></details>`; };
   view.innerHTML = `
     <div class="kicker">Every national trophy · pro, amateur, college & open</div>
     <h2 class="disp">The Trophy Room</h2>
@@ -1449,7 +1482,8 @@ function screenFASample() {
       <a href="#/freeagent/sample">Hudl</a>
     </div>
     <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent listing request')}">Get your page — $25 per season</a>
-    <p class="note">Every element above is included: film slot, physicals, verified season history, awards, coach references, direct contact. Clubs browse free.</p>`;
+    <p class="note">Every element above is included: film slot, physicals, verified season history, awards, coach references, direct contact. Clubs browse free. Listings are for players 18+, submitted by email and human-reviewed before publication.</p>
+    <p class="note"><a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('Report a free agent listing')}" style="color:var(--accent)">Report this listing</a></p>`;
 }
 
 function openPredict(ci) {
@@ -1541,8 +1575,6 @@ function screenClubTools() {
 
 function screenLegal() {
   crumb.textContent = 'Legal';
-  /* NOTE: contact address swaps to the branded domain once the name is decided */
-  const NOTICE_MAIL = 'hello@rankedxi.com';
   const rmClub = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankedXI Removal: club / crest')}&body=${encodeURIComponent('Club:\nYour role (owner / club officer / league staff):\nWhat should come down (crest / the whole club page / something specific):\n')}`;
   const rmPlayer = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankedXI Removal: player')}&body=${encodeURIComponent('Player:\nClub:\nI am (the player / a parent or guardian / a club officer):\nWhat should come down (the whole profile / something specific):\n')}`;
   const fixNotice = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankedXI Notice: correction')}&body=${encodeURIComponent("Page or club:\nWhat's missing or incorrect:\nA source we can check (league page, match report):\n")}`;
@@ -1564,15 +1596,15 @@ function screenLegal() {
     </div>
     <p style="margin-top:14px"><b>Privacy.</b> No accounts, no tracking cookies, no analytics identifiers. Your favorites live in your browser's local storage and never leave your device. Email us and we see your email — that's it.</p>
     <p><b>Predictions.</b> Probabilities are statistical estimates for entertainment and analysis. They are not betting advice, and Ranked XI takes no wagers and no commissions on anything. Ratings and probabilities describe teams and organizations, never individual athletes.</p>
-    <p><b>Demo data.</b> Anything wearing the dashed <span class="dtag">Demo</span> tag is illustrative — it demonstrates the product, not the club. Real results, standings, and stats always say what they're based on.</p>
+    <p><b>Illustrative data.</b> Anything wearing the dashed <span class="dtag">Illustrative</span> tag demonstrates the product, not the club. Real results, standings, and stats always say what they're based on.</p>
     <p><b>Youth clubs.</b> Youth league entries are organization listings only — name, league, and location from what the league publishes. Youth clubs carry no ratings, no fixtures, and no player data, and we never publish personal information about minors.</p>
-    <p><b>Free agents &amp; claims.</b> Listings are self-reported by players; verified badges mark only what we can check against league data. Clubs contact players directly — Ranked XI is never party to any deal.</p>
+    <p><b>Free agents &amp; claims.</b> Listings are self-reported by players; verified badges mark only what we can check against league data. Clubs contact players directly — Ranked XI is never party to any deal. Listings are restricted to players 18 and older, are submitted by email, and are human-reviewed before publication. Any listing can be reported from its page; reported listings come down pending review.</p>
     <div class="kicker" style="margin-top:14px">Accessibility</div>
     <p>Ranked XI aims for WCAG 2.1 AA. The app is built to work with keyboards and screen readers: every club is reachable through search, the National Table, and the Tiers pages — never only through the map — and anything the map does has a text equivalent. If you hit a barrier, tell us the page and what got in the way; accessibility reports get fixed like any other correction, usually within days.</p>
     <div class="linkrow">
       <a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankedXI Accessibility barrier')}&body=${encodeURIComponent('Page or screen:\nWhat got in the way (keyboard, screen reader, contrast, motion):\nAssistive tech used, if any:\n')}"><b>Report an accessibility barrier</b></a>
     </div>
-    <p class="fine" style="font-size:.75rem">Independent project by Jeremy Kientz &middot; 2026. This summary is the policy; a formal version lands with accounts.</p>
+    <p class="fine" style="font-size:.75rem">Independent project by Jeremy Kientz &middot; 2026. This page is the policy; material changes are dated here.</p>
   </div>`;
 }
 

@@ -10,7 +10,7 @@ from _datajs import load_clubs, write_clubs, ROOT
 import json, re, os, subprocess, sys, time, unicodedata, urllib.parse, urllib.request
 
 API = 'https://en.wikipedia.org/w/api.php'
-UA = {'User-Agent': 'RankXI/1.0 (https://rank-xi.pages.dev; crest pipeline) python-urllib'}
+UA = {'User-Agent': 'RankXI/1.0 (https://www.rankedxi.com; crest pipeline) python-urllib'}
 
 # club name -> article title, where the plain name doesn't resolve
 OVERRIDES = {

@@ -18,11 +18,32 @@ def api(params):
             raise
     raise RuntimeError('rate limited')
 
+# <ref> elements must go BEFORE the generic tag strip: stripping only the
+# tags leaves the citation text behind, and its digits then concatenate into
+# caps/goals numbers (Messi's U23 caps rendered as "523").
+REF = re.compile(r'<ref[^>/]*/>|<ref[^>]*>.*?</ref>', re.S | re.I)
+CMT = re.compile(r'<!--.*?-->', re.S)
+
+def strip_markup(v):
+    v = REF.sub('', CMT.sub('', v))
+    for _ in range(3):
+        v = re.sub(r'\{\{[^{}]*\}\}', '', v)
+    return re.sub(r'<[^>]+>', '', v)
+
 def field(text, name):
     m = re.search(r'\|\s*' + name + r'\s*=\s*(.*)', text)
     if not m: return None
-    v = re.sub(r'<[^>]+>', '', m.group(1)).strip()
+    v = strip_markup(m.group(1)).strip()
     return v or None
+
+def firstnum(v):
+    """First whole number in a field — never digit-concatenation across
+    neighboring params or leftover markup. Wikilinks resolve to display
+    text first: [[List of ... 100 or more caps|207]] must read 207, not 100."""
+    if not v: return None
+    v = LINK.sub(lambda m: m.group(2) or m.group(1), v)
+    m = re.search(r'\d+', v.split('|')[0])
+    return m.group(0)[:3] if m else None
 
 LINK = re.compile(r'\[\[([^\]|]+)(?:\|([^\]]+))?\]\]')
 def linktext(v):
@@ -48,8 +69,7 @@ def parse_player(text):
         yrs = re.sub(r'\{\{[^}]*\}\}|<[^>]+>', '', field(text, f'years{i}') or '').strip()
         caps = field(text, f'caps{i}'); goals = field(text, f'goals{i}')
         career.append({'club': club, 'years': yrs,
-                       'apps': re.sub(r'\D', '', caps or '')[:3] or None,
-                       'goals': re.sub(r'\D', '', goals or '')[:3] or None})
+                       'apps': firstnum(caps), 'goals': firstnum(goals)})
     if career: p['career'] = career
     youth = []
     for i in range(1, 5):
@@ -67,8 +87,7 @@ def parse_player(text):
         ncaps = field(text, f'nationalcaps{i}'); ngoals = field(text, f'nationalgoals{i}')
         yrsn = re.sub(r'\{\{[^}]*\}\}|<[^>]+>', '', field(text, f'nationalyears{i}') or '').strip()
         nat.append({'team': team, 'years': yrsn,
-                    'caps': re.sub(r'\D', '', ncaps or '')[:3] or None,
-                    'goals': re.sub(r'\D', '', ngoals or '')[:3] or None})
+                    'caps': firstnum(ncaps), 'goals': firstnum(ngoals)})
     if nat: p['nat'] = nat
     tw = re.search(r'\{\{\s*Twitter\s*\|\s*(?:id\s*=\s*)?([^}|]+)', text, re.I)
     ig = re.search(r'\{\{\s*Instagram\s*\|\s*(?:id\s*=\s*)?([^}|]+)', text, re.I)
@@ -83,10 +102,16 @@ def parse_player(text):
     if hm:
         for line in hm.group(1).split('\n'):
             if not line.lstrip().startswith('*'): continue
-            lt = LINK.search(line.replace("'''", ''))
+            # refs/templates carry stray years (access-dates read as honours);
+            # [[2004–05 La Liga|2004–05]] holds the season twice (target +
+            # display), so extraction must dedupe while preserving order
+            line = strip_markup(line).replace("'''", '')
+            lt = LINK.search(line)
             if not lt: continue
             comp = (lt.group(2) or lt.group(1)).strip()
-            years = re.findall(r'(?:19|20)\d\d(?:–\d\d)?', line)
+            years = []
+            for y in re.findall(r'(?:19|20)\d\d(?:–\d\d)?', line):
+                if y not in years: years.append(y)
             if comp and len(comp) < 60:
                 hon.append({'t': comp, 'y': years[:8]})
     if hon: p['honours'] = hon[:10]

@@ -59,6 +59,13 @@ NAME_NOISE = re.compile(r"\b(fc|sc|cf|afc|ac|club|soccer)\b", re.I)
 TEAM_QUALIFIER = {'white', 'black', 'blue', 'red', 'gold', 'silver', 'ii'}
 # source typos that break geocoding ('Middle Villages, NY' in the wiki table)
 CITY_FIX = {'Middle Villages': 'Middle Village', 'Cinncinati': 'Cincinnati'}
+# league-side placeholder rows that are not clubs (TGS shipped 'Test Club';
+# UPSL standings carry 'TBD' slots) — never let them into the dataset
+PLACEHOLDER_NAMES = {'test club', 'tbd', 'tbd fc', 'test'}
+# continental North America incl. AK/HI: a geocode outside this box is a
+# resolver mistake ('MN, MN' once resolved to Mongolia), never a real pin
+LAT_OK = (14.0, 72.0)
+LON_OK = (-180.0, -60.0)
 
 
 def norm(n):
@@ -174,6 +181,8 @@ def geocode(city, st, cache):
             urllib.request.Request(url, headers=UA), timeout=30))
         if r:
             ll = (round(float(r[0]['lat']), 3), round(float(r[0]['lon']), 3))
+            if not (LAT_OK[0] <= ll[0] <= LAT_OK[1] and LON_OK[0] <= ll[1] <= LON_OK[1]):
+                ll = None
     except Exception:
         pass
     cache[key] = list(ll) if ll else None
@@ -219,6 +228,14 @@ def main():
         rows = drop_second_teams(rows, log['second_teams'])
         for r in rows:
             key = norm(r['name'])
+            if r['name'].strip().lower() in PLACEHOLDER_NAMES:
+                log['no_geocode'].append(f"{r['name']} (placeholder row, skipped)")
+                continue
+            # a 'city' that is just the state code ('MN, MN') is no city at
+            # all — same policy as a missing one: log, never guess a pin
+            if r.get('city') and r['city'].strip().upper() == (r.get('st') or '').strip().upper():
+                log['no_geocode'].append(f"{r['name']} (city == state code)")
+                continue
             if r['st'] in adult_states.get(key, ()):
                 log['folded'].append(r['name'])
                 continue

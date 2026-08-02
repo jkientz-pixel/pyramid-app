@@ -27,9 +27,9 @@ for g, fname, title, desc in PAGES:
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
-<link rel="canonical" href="https://rank-xi.pages.dev/{fname}">
-<meta property="og:title" content="{html.escape(title)}"><meta property="og:image" content="https://rank-xi.pages.dev/og.png">
-<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Dataset","name":"{html.escape(title)}","dateModified":"{today}","url":"https://rank-xi.pages.dev/{fname}","creator":{{"@type":"Organization","name":"Rank XI"}}}}</script>
+<link rel="canonical" href="https://www.rankedxi.com/{fname}">
+<meta property="og:title" content="{html.escape(title)}"><meta property="og:image" content="https://www.rankedxi.com/og.png">
+<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Dataset","name":"{html.escape(title)}","dateModified":"{today}","url":"https://www.rankedxi.com/{fname}","creator":{{"@type":"Organization","name":"Rank XI"}}}}</script>
 <style>body{{margin:0;background:#0C1512;color:#E8EFEA;font:16px/1.55 -apple-system,"Segoe UI",Roboto,sans-serif;padding:24px clamp(16px,4vw,48px)}}
 h1{{font-family:"Avenir Next Condensed","Arial Narrow",sans-serif;text-transform:uppercase;font-size:clamp(1.6rem,4vw,2.6rem);margin:.3em 0}}
 a{{color:#7FD1A8}}table{{border-collapse:collapse;width:100%;max-width:720px;margin:18px 0}}
