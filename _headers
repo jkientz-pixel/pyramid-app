@@ -27,6 +27,8 @@
 # generated per deploy, no version tokens — must revalidate
 /club/*
   Cache-Control: no-cache
+/sitemap.xml
+  Cache-Control: no-cache
 /methodology
   Cache-Control: no-cache
 /methodology.html
