@@ -45,6 +45,16 @@ h1{font-size:clamp(2.6rem,6vw,5rem);line-height:.95;margin:.2em 0}
 .feat b{font-size:1.05rem}
 .feat p{color:var(--dim);font-size:.92rem;margin:.4em 0 0}
 footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;border-top:1px solid var(--line)}
+.join{max-width:680px;margin:0 auto;padding:8px clamp(20px,5vw,64px) 72px;text-align:center}
+.join h2{font-size:1.7rem;margin:0 0 6px}
+.join-sub{color:var(--dim);margin:0 0 18px}
+.joinform{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.joinform input,.joinform select{padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--raise);color:var(--ink);font:inherit;font-size:.95rem;min-width:0}
+.joinform input[name=name]{flex:1 1 140px}
+.joinform input[name=email]{flex:2 1 200px}
+.joinform select{flex:1 1 120px}
+.joinform button{background:var(--accent);color:#1D1509;font-weight:700;border:0;border-radius:12px;padding:13px 26px;font:inherit;cursor:pointer}
+.join-msg{min-height:1.4em;margin:12px 0 0;font-size:.9rem;color:var(--dim)}
 </style>
 </head>
 <body>
@@ -57,7 +67,7 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
     <div class="cta-row">
       <a class="primary" href="/app.html">Open the app</a>
       <a class="ghost" href="/app.html#/table">See the national table</a>
-      <a class="ghost" href="mailto:hello@rankedxi.com?subject=Subscribe%3A%20Rank%20XI%20updates">Get launch updates</a>
+      <a class="ghost" href="#join">Get launch updates</a>
     </div>
     <div class="stats">
       <span><b data-stat="clubs">1,726</b>clubs mapped</span>
@@ -72,13 +82,32 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
   <div><b>Odds &amp; the Matchup Machine</b><p>Any club against any club: predicted score, three-way odds, and how a US side stacks up against Europe — hypothetically.</p></div>
   <div><b>Players, pathways, honours</b><p>Real MLS and USL Super League rosters refreshed from Wikipedia every two days, trophy cabinets, second-team pathways, and player pages built for the climb.</p></div>
 </section>
+<section class="join" id="join">
+  <h2 class="disp">Get launch updates</h2>
+  <p class="join-sub">Be first to know when new leagues, claimed pages, and player profiles go live. No spam — one email to leave the list.</p>
+  <form class="joinform" novalidate>
+    <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+    <input type="text" name="name" placeholder="Name (optional)" autocomplete="name" maxlength="80">
+    <input type="email" name="email" placeholder="Email" required autocomplete="email" maxlength="254">
+    <select name="role" aria-label="I am a">
+      <option value="">I'm a…</option>
+      <option value="fan">Fan</option>
+      <option value="player">Player</option>
+      <option value="club">Club / coach</option>
+      <option value="league">League staff</option>
+      <option value="other">Other</option>
+    </select>
+    <button type="submit">Join the list</button>
+  </form>
+  <p class="join-msg" role="status" aria-live="polite"></p>
+</section>
 </main>
-<footer>By Jeremy Kientz · every rating and stat labels its basis · club and league marks belong to their owners · <a href="/app.html#/legal" style="color:inherit">corrections &amp; removal requests</a></footer>
+<footer>By Jeremy Kientz · every rating and stat labels its basis · club and league marks belong to their owners · <a href="/methodology.html" style="color:inherit">methodology &amp; disclaimer</a> · <a href="/app.html#/legal" style="color:inherit">corrections &amp; removal requests</a></footer>
 <script type="module">
-import { CLUBS, LEAGUES } from './js/data.js?v=20260801n';
-import { ROSTERS } from './js/rosters.js?v=20260801n';
+import { CLUBS, LEAGUES } from './js/data.js?v=20260801p';
+import { ROSTERS } from './js/rosters.js?v=20260801p';
 const counts = {
-  clubs: CLUBS.length,
+  clubs: CLUBS.filter(c => !c.h).length,
   statlines: Object.values(ROSTERS).flat().filter(p => p.st).length,
   leagues: Object.keys(LEAGUES).length
 };
@@ -86,6 +115,25 @@ for (const el of document.querySelectorAll('[data-stat]')) {
   const value = counts[el.dataset.stat];
   if (value) el.textContent = value.toLocaleString('en-US');
 }
+const joinForm = document.querySelector('.joinform');
+const joinMsg = document.querySelector('.join-msg');
+joinForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = new FormData(joinForm);
+  const email = (f.get('email') || '').trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { joinMsg.textContent = 'A real email address is required.'; return; }
+  joinMsg.textContent = 'Saving…';
+  try {
+    const r = await fetch('/api/signup', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ kind: 'updates', source: 'landing', email,
+        name: f.get('name'), role: f.get('role'), website: f.get('website') })
+    });
+    const d = await r.json();
+    if (d.ok) { joinForm.reset(); joinMsg.textContent = "You're on the list — see you at launch."; }
+    else joinMsg.textContent = d.error || 'Could not save right now — please try again.';
+  } catch { joinMsg.textContent = 'Could not save right now — please try again.'; }
+});
 </script>
 </body>
 </html>

@@ -1,19 +1,19 @@
-import { PROJ, USMAP } from './usmap.js?v=20260801n';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260801n';
+import { PROJ, USMAP } from './usmap.js?v=20260801p';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260801p';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260801n')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260801p')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260801n';
+const BUILDV = '20260801p';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -634,7 +634,7 @@ function matchCard(h, a, when) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260801n')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260801p')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -643,7 +643,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260801n'), grab('data/wire_asa.json?v=20260801n')]);
+    grab('data/wire_npsl.json?v=20260801p'), grab('data/wire_asa.json?v=20260801p')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -897,28 +897,28 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260801n')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260801p')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260801n')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260801p')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260801n')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260801p')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260801n')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260801p')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
@@ -1070,13 +1070,22 @@ function screenAbout() {
     <p>American soccer has no single place to see every club, how they rank, and how the levels connect. <b>Ranked XI</b> maps all of it: MLS to the grassroots, with men's and women's tables ranked separately.</p>
     <p><b>How rankings work.</b> League results feed a weekly Elo rating. Cup competitions — Open Cup qualifying, the National Amateur Cup — are where leagues actually meet, and those matches calibrate the cross-league scale. Every rating change is published with the match that caused it.</p>
     <p><b>World context.</b> Each club page projects the club onto a hypothetical global ladder against European reference sides — a conversation-starter, clearly labeled, never presented as measurement.</p>
-    <p><b>What's real.</b> All ${CLUBS.length} clubs and locations come from what the leagues publish. Ratings label their basis on every page — real results, real standings, an independent results model, or an illustrative placeholder until that league's feed connects. Fixtures and results are never invented: match data appears only where a real feed provides it.</p>
+    <p><b>What's real.</b> All ${CLUBS.filter(c => !c.h).length.toLocaleString()} clubs and locations come from what the leagues publish. Ratings label their basis on every page — real results, real standings, an independent results model, or an illustrative placeholder until that league's feed connects. Fixtures and results are never invented: match data appears only where a real feed provides it.</p>
     <p><b>Pricing.</b> The app is free; paid extras are listed plainly at <a href="#/pricing" style="color:var(--accent)">Pricing</a>.</p>
     <p><b>Roadmap.</b> Amateur league layers (UPSL, NPSL, USL League Two) from live feeds · claimed club pages · player profiles · clean crest art · youth club directory layer.</p>
     <div class="kicker" style="margin-top:14px">The leagues</div>
     <ul class="lglist">${Object.entries(LEAGUES).filter(([k, m]) => m.url).map(([k, m]) =>
       `<li><a href="${m.url}" target="_blank" rel="noopener">${m.img ? `<img src="${m.img}" alt="" loading="lazy">` : `<span class="dot" style="background:${m.color};width:12px;height:12px;border-radius:50%"></span>`}<b>${m.label}</b><span>${m.url.replace('https://', '').replace('www.', '')}</span></a></li>`).join('')}</ul>
-    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Subscribe: Ranked XI updates')}&body=${encodeURIComponent('Sign me up. I am a (player / club / coach / fan):\nState:\n')}">Get launch updates &mdash; join the list</a>
+    <div class="kicker" style="margin-top:14px">Get launch updates</div>
+    <form class="joinform" novalidate>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+      <input type="text" name="name" placeholder="Name (optional)" autocomplete="name" maxlength="80">
+      <input type="email" name="email" placeholder="Email" required autocomplete="email" maxlength="254">
+      <select name="role" aria-label="I am a"><option value="">I'm a&hellip;</option><option value="fan">Fan</option><option value="player">Player</option><option value="club">Club / coach</option><option value="league">League staff</option><option value="other">Other</option></select>
+      <input type="text" name="state" placeholder="State (optional)" maxlength="40">
+      <button type="submit" class="joinbtn">Join the list</button>
+    </form>
+    <p class="join-msg" role="status" aria-live="polite"></p>
     <div class="kicker" style="margin-top:14px">Help us get it right</div>
     <div class="linkrow">
       <a href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('RankedXI Fix: ')}&body=${encodeURIComponent('Page or club:\nWhat is wrong:\n')}"><b>Report an error</b></a>
@@ -1094,10 +1103,34 @@ function screenAbout() {
     <ul class="lglist">${ROADMAP.map(r =>
       `<li><a href="${r.url}" target="_blank" rel="noopener"><span class="dot" style="background:var(--ink-dim);width:12px;height:12px;border-radius:50%;opacity:.4"></span><b>${r.label}</b><span>~${r.teams} teams · ${r.sex === 'w' ? "women's" : "men's"}</span></a></li>`).join('')}</ul>
     <p class="note">NISA is currently unsanctioned by U.S. Soccer (Dec 2024); its clubs are shown for completeness. UPSL layer holds the clubs mapped so far — the full league is 400+ clubs.</p>
-    <p class="fine" style="font-size:.75rem">Data last refreshed: ${BUILD_DATE} &middot; rosters and stats auto-refresh every 12 hours &middot; <a href="#/legal" style="color:var(--accent)">Terms &amp; Privacy</a></p>
+    <p class="fine" style="font-size:.75rem">Data last refreshed: ${BUILD_DATE} &middot; rosters and stats auto-refresh every 12 hours &middot; <a href="#/legal" style="color:var(--accent)">Terms &amp; Privacy</a> &middot; <a href="/methodology.html" style="color:var(--accent)">Methodology &amp; Disclaimer</a></p>
     <p class="fine" style="font-size:.75rem">Data: Wikipedia (CC BY-SA — rosters, profiles, photos, crests), league sites and public feeds (NPSL/Squadi, UPSL), OpenStreetMap Nominatim geocoding. Club and league marks belong to their owners.</p>
     <p class="fine" style="font-size:.75rem">Built by Jeremy Kientz · 2026</p>
   </div>`;
+  wireJoinForm();
+}
+
+function wireJoinForm() {
+  const form = view.querySelector('.joinform');
+  if (!form) return;
+  const msg = view.querySelector('.join-msg');
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = new FormData(form);
+    const email = (f.get('email') || '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { msg.textContent = 'A real email address is required.'; return; }
+    msg.textContent = 'Saving…';
+    try {
+      const r = await fetch('/api/signup', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ kind: 'updates', source: 'app-about', email,
+          name: f.get('name'), role: f.get('role'), state: f.get('state'), website: f.get('website') })
+      });
+      const d = await r.json();
+      if (d.ok) { form.reset(); msg.textContent = "You're on the list — see you at launch."; }
+      else msg.textContent = d.error || 'Could not save right now — please try again.';
+    } catch { msg.textContent = 'Could not save right now — please try again.'; }
+  });
 }
 
 function playerLadder(pl, c) {
@@ -1387,7 +1420,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260801n')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260801p')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -1604,7 +1637,7 @@ function screenLegal() {
     <div class="linkrow">
       <a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankedXI Accessibility barrier')}&body=${encodeURIComponent('Page or screen:\nWhat got in the way (keyboard, screen reader, contrast, motion):\nAssistive tech used, if any:\n')}"><b>Report an accessibility barrier</b></a>
     </div>
-    <p class="fine" style="font-size:.75rem">Independent project by Jeremy Kientz &middot; 2026. This page is the policy; material changes are dated here.</p>
+    <p class="fine" style="font-size:.75rem">Independent project by Jeremy Kientz &middot; 2026. This page and <a href="/methodology.html" style="color:var(--accent)">Methodology &amp; Disclaimer</a> are the policy; material changes are dated there.</p>
   </div>`;
 }
 
@@ -1737,6 +1770,6 @@ document.getElementById('themebtn')?.addEventListener('click', () => {
 addEventListener('hashchange', route);
 route();
 wireSearch();
-{ const cc = document.getElementById('clubcount'); if (cc) cc.textContent = CLUBS.length.toLocaleString(); }
+{ const cc = document.getElementById('clubcount'); if (cc) cc.textContent = CLUBS.filter(c => !c.h).length.toLocaleString(); }
 /* prefetch rosters once the first view has painted so club taps are instant */
 (self.requestIdleCallback || (f => setTimeout(f, 2000)))(() => loadRosters().catch(() => {}));

@@ -109,6 +109,13 @@ svg.usmap{width:100%;height:auto;max-height:72vh;display:block;touch-action:mani
 .linkrow{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .linkrow a{border:1px solid var(--line);border-radius:999px;padding:7px 14px;color:var(--ink);text-decoration:none;font-size:.78rem;background:var(--raise)}
 .claim{display:block;text-align:center;background:var(--accent);color:#fff;font-weight:700;border-radius:12px;padding:13px;text-decoration:none;margin:16px 0 4px}
+.joinform{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}
+.joinform input,.joinform select{padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--raise);color:var(--ink);font:inherit;font-size:.88rem;min-width:0}
+.joinform input[name=name]{flex:1 1 130px}
+.joinform input[name=email]{flex:2 1 170px}
+.joinform select,.joinform input[name=state]{flex:1 1 110px}
+.joinform .joinbtn{flex:1 1 100%;background:var(--accent);color:#fff;font-weight:700;border:0;border-radius:10px;padding:12px;font:inherit;cursor:pointer}
+.join-msg{min-height:1.3em;margin:6px 0 0;font-size:.84rem;color:var(--ink-dim)}
 
 /* world ladder */
 .ladder{list-style:none;margin:6px 0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--raise)}
