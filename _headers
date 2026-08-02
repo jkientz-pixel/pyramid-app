@@ -24,6 +24,14 @@
 /sw.js
   Cache-Control: no-cache
 
+# generated per deploy, no version tokens — must revalidate
+/club/*
+  Cache-Control: no-cache
+/methodology
+  Cache-Control: no-cache
+/methodology.html
+  Cache-Control: no-cache
+
 # Everything below is referenced with a ?v= token that deploy.sh re-stamps on
 # every deploy (scripts/bump_version.py), so the URL changes whenever content
 # can change — safe to cache for a year. Crests are content-addressed by name.

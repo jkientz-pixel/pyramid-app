@@ -7,6 +7,11 @@ cd "$(dirname "$0")"
 # replaces the manual ?v= sed ritual; preflight still verifies consistency
 NEWV=$(python3 scripts/bump_version.py | tail -1 | awk '{print $NF}')
 
+# regenerate the static SEO surface from current data: league landing pages,
+# per-club pages (club/), and the full sitemap
+python3 scripts/gen_seo_pages.py
+python3 scripts/gen_club_pages.py
+
 python3 scripts/preflight.py
 
 git diff --quiet app.html index.html js/app.js sw.js || \
@@ -25,7 +30,7 @@ trap 'rm -rf "$STAGE"' EXIT
 # 404.html must ship: its presence is what turns off the Pages SPA fallback,
 # so bad URLs return a real 404 instead of the homepage with HTTP 200
 cp -R app.html index.html 404.html npsl-rankings.html upsl-rankings.html \
-      methodology.html \
+      methodology.html club \
       manifest.webmanifest sw.js robots.txt sitemap.xml _headers \
       js css crests \
       icon-192.png icon-512.png apple-touch-icon.png og.png "$STAGE/"

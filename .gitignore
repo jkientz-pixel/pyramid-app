@@ -22,3 +22,4 @@ playwright-report/
 .playwright-mcp/
 .deploy-stage/
 .wrangler/
+club/
