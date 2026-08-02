@@ -1,4 +1,4 @@
-import { PROJ, USMAP } from './usmap.js?v=20260801q';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260801q';
 import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260801q';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
@@ -28,11 +28,13 @@ const leaguesFor = s => Object.keys(LEAGUES).filter(k => LEAGUES[k].sex === s);
 let leagueFilter = new Set(leaguesFor(sex));
 
 function XY(lat, lon) {
+  /* AK and HI live in inset boxes with their own Albers params */
+  const P = (lat > 49.5 && lon < -129) ? PROJ_AK : (lat < 24.5 && lon < -154) ? PROJ_HI : PROJ;
   const f = lat * Math.PI / 180, l = lon * Math.PI / 180;
-  const rho = Math.sqrt(PROJ.C - 2 * PROJ.n * Math.sin(f)) / PROJ.n;
-  const th = PROJ.n * (l - PROJ.l0);
-  return [(rho * Math.sin(th) - PROJ.minx) * PROJ.s + PROJ.ox,
-          (PROJ.maxy - (PROJ.r0 - rho * Math.cos(th))) * PROJ.s + PROJ.oy];
+  const rho = Math.sqrt(P.C - 2 * P.n * Math.sin(f)) / P.n;
+  const th = P.n * (l - P.l0);
+  return [(rho * Math.sin(th) - P.minx) * P.s + P.ox,
+          (P.maxy - (P.r0 - rho * Math.cos(th))) * P.s + P.oy];
 }
 
 const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
@@ -140,7 +142,7 @@ function renderMapSvg(clubs, useCrests) {
       ? `<circle ${base} fill="none" stroke="${m.color}" stroke-width="1.6"></circle>`
       : `<circle ${base} fill="${m.color}" fill-opacity=".9"></circle>`;
   }).join('');
-  return `<div class="mapbox"><svg class="usmap" viewBox="0 -20 980 580" role="img" aria-label="US and Canada soccer club map">${USMAP}<g id="pins">${pins}</g></svg>
+  return `<div class="mapbox"><svg class="usmap" viewBox="0 -20 980 580" role="img" aria-label="US and Canada soccer club map">${USMAP}${INSETS}<g id="pins">${pins}</g></svg>
     <div class="mapctl"><button data-z="in" aria-label="Zoom in">+</button><button data-z="out" aria-label="Zoom out">&minus;</button><button data-z="reset" aria-label="Reset zoom">&#8634;</button></div>
     <div class="maptip" hidden></div></div>`;
 }
@@ -454,9 +456,7 @@ function screenState(st) {
   const clubs = pool().filter(c => c.st === st);
   const ranked = visible(clubs).filter(c => c.r).sort((a, b) => b.r - a.r);
   const concepts = visible(clubs).filter(c => !c.r);
-  /* AK/HI have no path in the Albers lower-48 SVG and their pins project
-     off-canvas — list-only beats a map with invisible pins */
-  const mappable = clubs.length > 0 && !['AK', 'HI'].includes(st);
+  const mappable = clubs.length > 0;
   view.innerHTML = `
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/map'">&larr; Back</button>
     ${sexToggle()}
