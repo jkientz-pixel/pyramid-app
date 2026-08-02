@@ -51,7 +51,7 @@ const visible = clubs => clubs.filter(c => leagueFilter.has(c.g));
 function reportLink(kind, what) {
   const subj = encodeURIComponent(`RankedXI ${kind}: ${what}`);
   const body = encodeURIComponent(`Page: ${location.hash}\nWhat's wrong / your suggestion:\n\n`);
-  return `<a class="reportlink" href="mailto:jkientz@gmail.com?subject=${subj}&body=${body}">&#9873; See an error? Send us a note</a>
+  return `<a class="reportlink" href="mailto:hello@rankedxi.com?subject=${subj}&body=${body}">&#9873; See an error? Send us a note</a>
     <a class="reportlink" href="#/legal">Corrections &amp; removal requests</a>`;
 }
 /* crest-content generation: bump when crest PIXELS change under the same
@@ -284,21 +284,44 @@ function wireMap(scopeStates) {
 function wireSearch() {
   const q = document.querySelector('#q'), res = document.querySelector('#qres');
   if (!q) return;
+  /* combobox semantics + roving arrow-key focus + polite result count so
+     the picker works eyes-free (WCAG 4.1.2 / 2.1.1) */
+  q.setAttribute('role', 'combobox');
+  q.setAttribute('aria-expanded', 'false');
+  q.setAttribute('aria-controls', 'qres');
+  q.setAttribute('aria-autocomplete', 'list');
+  const live = document.createElement('div');
+  live.className = 'sr-only'; live.setAttribute('aria-live', 'polite');
+  q.parentNode.appendChild(live);
+  const setOpen = open => q.setAttribute('aria-expanded', String(open));
   q.addEventListener('input', () => {
     const term = q.value.trim().toLowerCase();
-    if (term.length < 2) { res.hidden = true; return; }
+    if (term.length < 2) { res.hidden = true; setOpen(false); live.textContent = ''; return; }
     const clubs = CLUBS.map((c, i) => ({ c, i })).filter(o => !o.c.h)
       .filter(o => o.c.n.toLowerCase().includes(term)).slice(0, 7);
     const players = allPlayers('m').concat(allPlayers('w'))
       .filter(p => p.real && p.name.toLowerCase().includes(term)).slice(0, 5);
-    if (!clubs.length && !players.length) { res.innerHTML = '<div class="qrow qnone">No matches</div>'; res.hidden = false; return; }
+    if (!clubs.length && !players.length) { res.innerHTML = '<div class="qrow qnone">No matches</div>'; res.hidden = false; setOpen(true); live.textContent = 'No matches'; return; }
     res.innerHTML =
       clubs.map(o => `<a class="qrow" href="${clubHref(o.i)}">${crestHtml(o.c)}<span><b>${esc(o.c.n)}</b><i>${LEAGUES[o.c.g].label} · ${o.c.st}</i></span></a>`).join('') +
       players.map(p => `<a class="qrow" href="#/player/${p.c.id}/${p.i}"><img class="crest imgcrest" src="${AVATAR}" alt=""><span><b>${esc(p.name)}</b><i>${p.pos} · ${esc(p.c.n)}</i></span></a>`).join('');
-    res.hidden = false;
+    res.hidden = false; setOpen(true);
+    const n = clubs.length + players.length;
+    live.textContent = `${n} result${n === 1 ? '' : 's'} — press down arrow to browse`;
   });
-  res.addEventListener('click', () => { res.hidden = true; q.value = ''; });
-  q.addEventListener('keydown', e => { if (e.key === 'Escape') { res.hidden = true; q.blur(); } });
+  res.addEventListener('click', () => { res.hidden = true; setOpen(false); q.value = ''; });
+  q.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { res.hidden = true; setOpen(false); q.blur(); }
+    else if (e.key === 'ArrowDown' && !res.hidden) { const first = res.querySelector('a.qrow'); if (first) { e.preventDefault(); first.focus(); } }
+  });
+  res.addEventListener('keydown', e => {
+    const rows = [...res.querySelectorAll('a.qrow')];
+    const i = rows.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown' && i > -1 && i < rows.length - 1) { e.preventDefault(); rows[i + 1].focus(); }
+    else if (e.key === 'ArrowUp' && i > 0) { e.preventDefault(); rows[i - 1].focus(); }
+    else if (e.key === 'ArrowUp' && i === 0) { e.preventDefault(); q.focus(); }
+    else if (e.key === 'Escape') { res.hidden = true; setOpen(false); q.focus(); }
+  });
 }
 
 /* ---- screens ---- */
@@ -379,13 +402,23 @@ function screenMap() {
     <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>Upsets, rating swings, golden-boot races &mdash; generated live from real results.</span></a>
     <a class="fa-card" href="#/freeagents"><b>&#9733; Free Agents</b><span>No club right now? Get seen by every club on this map.</span></a>
     ${adSlot('map', 'National map')}
-    <p class="note">Tap a state to zoom in. Tap a pin for the club. Pinch, scroll, or use +/&minus; to zoom further.</p>`;
+    <p class="note">Tap a state to zoom in. Tap a pin for the club. Pinch, scroll, or use +/&minus; to zoom further.</p>
+    <label class="sr-only" for="statejump">Jump to a state or province</label>
+    <select id="statejump">
+      <option value="">Jump to a state or province&hellip;</option>
+      ${Object.entries({ ...STATE_NAME, ...PROV_NAME }).sort((a, b) => a[1].localeCompare(b[1])).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
+    </select>`;
   wireSexToggle();
   wireLevelChips();
   wireMap(null);
   view.querySelector('#regionchips').addEventListener('click', e => {
     const b = e.target.closest('[data-region]'); if (!b) return;
     location.hash = b.dataset.region === 'all' ? '#/map' : `#/region/${b.dataset.region}`;
+  });
+  /* keyboard-equivalent path to state zoom — the SVG map is presented as an
+     image (role=img), so state navigation must not require a pointer */
+  view.querySelector('#statejump').addEventListener('change', e => {
+    if (e.target.value) location.hash = '#/state/' + e.target.value;
   });
 }
 
@@ -935,7 +968,7 @@ async function screenClub(ref) {
       <div class="stat"><b>#${natl.indexOf(c) + 1}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
     </div>
     ${cupRec.length ? `<div class="kicker" style="margin-top:10px">U.S. Open Cup &middot; real results, last 5 editions</div>
-    <div class="histwrap"><ul class="careerway">${cupRec.slice().reverse().map(e => {
+    <div class="histwrap" tabindex="0" role="region" aria-label="U.S. Open Cup match history"><ul class="careerway">${cupRec.slice().reverse().map(e => {
       const wl = e.gf > e.ga ? 'W' : e.gf < e.ga ? 'L' : (e.pens ? (e.pens[0] > e.pens[1] ? 'W' : 'L') + ' pens' : 'D');
       return `<li><span class="cw-years">${e.y}</span><span class="cw-club">${e.ha === 'H' ? 'v' : 'at'} ${esc(e.opp)} &middot; ${e.gf}&ndash;${e.ga}${e.aet ? ' aet' : ''}${e.pens ? ` (${e.pens[0]}&ndash;${e.pens[1]}p)` : ''}</span><span class="cw-stat">${wl}${e.d ? ` &middot; ${e.d > 0 ? '+' : ''}${e.d}` : ''}</span></li>`;
     }).join('')}</ul></div>
@@ -963,7 +996,7 @@ async function screenClub(ref) {
       `<li><span class="sq-num">${st2.tag}</span><span class="sq-name">${esc(st2.name)}</span><span class="sq-pos">${st2.role}</span><span class="sq-age">${st2.age}</span><span class="sq-form"></span></li>`).join('')}</ul>
     <ul class="squad">${squadFor(c).map((pl, pi) =>
       `<li><a href="#/player/${c.id}/${pi}"><span class="sq-num">${pl.num}</span><span class="sq-name">${esc(pl.name)}</span><span class="sq-pos">${pl.pos}</span><span class="sq-age">${pl.real ? (pl.nat || '') : ''}</span><span class="sq-ga">${pl.pos === 'GK' ? pl.cs + ' CS' : pl.goals + 'g ' + pl.assists + 'a'}</span><span class="sq-form">${pl.pvr}</span></a></li>`).join('')}</ul>
-    ` : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p><a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim club: ' + c.n)}" style="margin-top:6px">Run this club? Add your roster</a>`}
+    ` : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p><a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim club: ' + c.n)}" style="margin-top:6px">Run this club? Add your roster</a>`}
     ${worldLadder(c)}` : LEVELS.youth.includes(c.g) ? `<p class="note" style="font-size:.9rem">Youth directory listing — an active ${LEAGUES[c.g].label} member club. Youth organizations carry no ratings, fixtures, or player data here; the entry is name, league, and league-stated location only.</p>` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
     ${(() => {
       if (!hist) return '';
@@ -976,7 +1009,7 @@ async function screenClub(ref) {
       rows.sort((a, b) => b.yr - a.yr);
       return `<div class="kicker" style="margin-top:14px">League finish by season · since ${rows[rows.length - 1].yr}</div>
       ${rankChart(rows, LEAGUES[c.g].color)}
-      <div class="histwrap"><ul class="careerway">${rows.map(r =>
+      <div class="histwrap" tabindex="0" role="region" aria-label="League finish by season"><ul class="careerway">${rows.map(r =>
         `<li><span class="cw-years">${r.yr}</span><span class="cw-club">${r.w}-${r.d}-${r.l} · ${r.pts} pts</span><span class="cw-stat">${ord(r.pos)} of ${r.of}</span></li>`).join('')}</ul></div>
       <p class="note">Overall league finish by points, from Wikipedia season records back to the club's first season${rows.some(r => +r.yr < 2000) ? ' (shootout-era seasons scored as modern 3-1-0)' : ''}.</p>`;
     })()}
@@ -996,7 +1029,7 @@ async function screenClub(ref) {
         `</ul><p class="note">The route a player climbs: second team to first team, tier to tier.</p>`;
     })()}
     <p class="note">${(c.si || c.sx || c.url) ? 'Official site and social links above come from Wikidata and league sources — they go exactly where they say.' : 'Club website and socials appear at the top once the club claims its page — links always go exactly where they say.'}</p>
-    <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim club: ' + c.n)}">Run this club? Claim this page</a>
+    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim club: ' + c.n)}">Run this club? Claim this page</a>
     <p class="note">Claimed clubs manage their crest, links, roster and schedule.</p>
     ${reportLink('Fix', c.n)}`;
   wireFav();
@@ -1018,11 +1051,11 @@ function screenAbout() {
     <div class="kicker" style="margin-top:14px">The leagues</div>
     <ul class="lglist">${Object.entries(LEAGUES).filter(([k, m]) => m.url).map(([k, m]) =>
       `<li><a href="${m.url}" target="_blank" rel="noopener">${m.img ? `<img src="${m.img}" alt="" loading="lazy">` : `<span class="dot" style="background:${m.color};width:12px;height:12px;border-radius:50%"></span>`}<b>${m.label}</b><span>${m.url.replace('https://', '').replace('www.', '')}</span></a></li>`).join('')}</ul>
-    <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Subscribe: Ranked XI updates')}&body=${encodeURIComponent('Sign me up. I am a (player / club / coach / fan):\nState:\n')}">Get launch updates &mdash; join the list</a>
+    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Subscribe: Ranked XI updates')}&body=${encodeURIComponent('Sign me up. I am a (player / club / coach / fan):\nState:\n')}">Get launch updates &mdash; join the list</a>
     <div class="kicker" style="margin-top:14px">Help us get it right</div>
     <div class="linkrow">
-      <a href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('RankedXI Fix: ')}&body=${encodeURIComponent('Page or club:\nWhat is wrong:\n')}"><b>Report an error</b></a>
-      <a href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('RankedXI Suggest: league or team')}&body=${encodeURIComponent('League or team name:\nLevel and region:\nWebsite if known:\n')}">Suggest a league or team</a>
+      <a href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('RankedXI Fix: ')}&body=${encodeURIComponent('Page or club:\nWhat is wrong:\n')}"><b>Report an error</b></a>
+      <a href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('RankedXI Suggest: league or team')}&body=${encodeURIComponent('League or team name:\nLevel and region:\nWebsite if known:\n')}">Suggest a league or team</a>
     </div>
     <p class="note">Reports route straight into the fix queue — most data corrections ship within a couple of days.</p>
     <div class="kicker" style="margin-top:14px">Fair questions</div>
@@ -1134,7 +1167,7 @@ async function screenPlayer(ci, pi) {
     </div>
     ${(prof.ig || prof.x || prof.site) ? '' : '<p class="note">Socials appear when listed on the player\'s Wikipedia article or once the player claims the profile — no guessed links.</p>'}
     <div class="fifaid"><span>FIFA Connect ID</span><b>USA-${String(1000 + (clubSeed(c) * 7) % 9000)}-${String(10000 + (clubSeed(c) * 31 + +pi * 977) % 90000)}</b><i>demo format — real IDs come from US Soccer registration data</i></div>
-    <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Player profile: ' + pl.name + ' (' + c.n + ')')}">Is this you? Claim your profile</a>
+    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Player profile: ' + pl.name + ' (' + c.n + ')')}">Is this you? Claim your profile</a>
     <p class="note">Claimed player profiles add film links, verified stats history, and recruiting visibility.</p>
     ${reportLink('Fix', pl.name)}`;
   wireFav();
@@ -1209,13 +1242,13 @@ function screenFreeAgents() {
         <span class="cl-rt" style="font-size:.7rem;color:var(--ink-dim)">${f.seeks}${f.video ? ' · film' : ''}</span></a></li>`).join('')}</ul>
     <p class="note">Sample listings — the real board opens with player claims.</p>
     ${adSlot('freeagents', 'Free Agents board')}
-    <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Free agent listing request')}&body=${encodeURIComponent('Name:\nPosition:\nAge:\nRegion:\nLast club/level:\nLevel seeking:\nHighlight film link:\n')}">List yourself — $25 per season</a>
+    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent listing request')}&body=${encodeURIComponent('Name:\nPosition:\nAge:\nRegion:\nLast club/level:\nLevel seeking:\nHighlight film link:\n')}">List yourself — $25 per season</a>
     <p class="note">Flat listing fee. No commissions, no placement cuts — your deal is yours. Clubs: browsing is free, and posting open-tryout dates is coming. <a href="#/pricing" style="color:var(--accent)">See all pricing &rarr;</a></p>`;
 }
 
 function screenAdvertise() {
   crumb.textContent = 'Advertise';
-  const mail = s => `mailto:jkientz@gmail.com?subject=${encodeURIComponent('Ad space inquiry — ' + s)}`;
+  const mail = s => `mailto:hello@rankedxi.com?subject=${encodeURIComponent('Ad space inquiry — ' + s)}`;
   const SLOTS = [
     ['National map', '$299/mo', 'The home surface. Every session starts on the map — your creative sits directly beneath it, on every visit.', 'National map'],
     ['Free Agents board', '$149/mo', 'The recruiting audience: players looking for clubs and the clubs scouting them. Boots, fitness, training — this is your buyer.', 'Free Agents board'],
@@ -1258,13 +1291,13 @@ function screenPricing() {
       <a class="claim" href="#/clubtools/sample">See the club recruiting tools</a></div>
     <div class="pricecard paid"><b>Claimed player profile · $30/year</b>
       <p>Verify your page: photo, film, socials, corrected history — and recruiting visibility.</p>
-      <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Claim my player profile')}">Claim yours</a></div>
+      <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim my player profile')}">Claim yours</a></div>
     <div class="pricecard paid"><b>Sponsorships · from $99/mo</b>
       <p>Four direct-sold placements — map, free-agent board, pyramid, wire. Static creative + link, no ad networks, no trackers.</p>
       <a class="claim" href="#/advertise">See placements &amp; rates</a></div>
     <div class="pricecard paid"><b>Youth club directory placement · $99/year</b>
       <p>Your youth club on the national map with a pathway line to the pros above you.</p>
-      <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Youth club directory interest')}">Join the waitlist</a></div>
+      <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Youth club directory interest')}">Join the waitlist</a></div>
     <p class="note">Honesty policy: paid tiers switch on only after the marketplace demonstrably works — players getting contacted, clubs filling spots. Reserving is free and locks founding rates. No commissions, ever: your deals are yours.</p>`;
 }
 function screenFollowing() {
@@ -1401,7 +1434,7 @@ function screenFASample() {
       <a href="#/freeagent/sample">Instagram</a>
       <a href="#/freeagent/sample">Hudl</a>
     </div>
-    <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Free agent listing request')}">Get your page — $25 per season</a>
+    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent listing request')}">Get your page — $25 per season</a>
     <p class="note">Every element above is included: film slot, physicals, verified season history, awards, coach references, direct contact. Clubs browse free.</p>`;
 }
 
@@ -1488,14 +1521,14 @@ function screenClubTools() {
     </ul>
     <div class="kicker">Your tryout listing</div>
     <div class="pricecard"><b>Open tryout · Aug 15 · 6 PM</b><p>Promoted to every free agent within 75 miles — 241 views, 19 RSVPs so far.</p></div>
-    <a class="claim" href="mailto:jkientz@gmail.com?subject=${encodeURIComponent('Club Recruiting Pro — founding interest')}">Reserve founding club pricing — $99/season</a>
+    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Club Recruiting Pro — founding interest')}">Reserve founding club pricing — $99/season</a>
     <p class="note">Everything above is included: alerts, unlimited contact, shortlists, promoted tryouts. Browsing free agents stays free for every club, forever.</p>`;
 }
 
 function screenLegal() {
   crumb.textContent = 'Legal';
   /* NOTE: contact address swaps to the branded domain once the name is decided */
-  const NOTICE_MAIL = 'jkientz@gmail.com';
+  const NOTICE_MAIL = 'hello@rankedxi.com';
   const rmClub = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankedXI Removal: club / crest')}&body=${encodeURIComponent('Club:\nYour role (owner / club officer / league staff):\nWhat should come down (crest / the whole club page / something specific):\n')}`;
   const rmPlayer = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankedXI Removal: player')}&body=${encodeURIComponent('Player:\nClub:\nI am (the player / a parent or guardian / a club officer):\nWhat should come down (the whole profile / something specific):\n')}`;
   const fixNotice = `mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankedXI Notice: correction')}&body=${encodeURIComponent("Page or club:\nWhat's missing or incorrect:\nA source we can check (league page, match report):\n")}`;
@@ -1520,6 +1553,11 @@ function screenLegal() {
     <p><b>Demo data.</b> Anything wearing the dashed <span class="dtag">Demo</span> tag is illustrative — it demonstrates the product, not the club. Real results, standings, and stats always say what they're based on.</p>
     <p><b>Youth clubs.</b> Youth league entries are organization listings only — name, league, and location from what the league publishes. Youth clubs carry no ratings, no fixtures, and no player data, and we never publish personal information about minors.</p>
     <p><b>Free agents &amp; claims.</b> Listings are self-reported by players; verified badges mark only what we can check against league data. Clubs contact players directly — Ranked XI is never party to any deal.</p>
+    <div class="kicker" style="margin-top:14px">Accessibility</div>
+    <p>Ranked XI aims for WCAG 2.1 AA. The app is built to work with keyboards and screen readers: every club is reachable through search, the National Table, and the Tiers pages — never only through the map — and anything the map does has a text equivalent. If you hit a barrier, tell us the page and what got in the way; accessibility reports get fixed like any other correction, usually within days.</p>
+    <div class="linkrow">
+      <a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankedXI Accessibility barrier')}&body=${encodeURIComponent('Page or screen:\nWhat got in the way (keyboard, screen reader, contrast, motion):\nAssistive tech used, if any:\n')}"><b>Report an accessibility barrier</b></a>
+    </div>
     <p class="fine" style="font-size:.75rem">Independent project by Jeremy Kientz &middot; 2026. This summary is the policy; a formal version lands with accounts.</p>
   </div>`;
 }
@@ -1602,6 +1640,11 @@ async function screenWire() {
   box.querySelector('#wiremore')?.addEventListener('click', () => { wireLimit += 30; screenWire(); });
 }
 
+/* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
+   and focus moves to <main> after navigation so screen readers hear the new
+   screen (first paint keeps browser default focus) */
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', freeagents: 'Free Agents', freeagent: 'Free Agent', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
+let routedOnce = false;
 function route() {
   const h = location.hash || '#/map';
   const parts = h.slice(2).split('/');
@@ -1634,6 +1677,9 @@ function route() {
   else if (parts[0] === 'club') screenClub(parts[1]);
   else if (parts[0] === 'player') screenPlayer(parts[1], parts[2]);
   else screenMap();
+  document.title = `${ROUTE_TITLES[parts[0]] || 'Map'} — Ranked XI`;
+  if (routedOnce) view.focus({ preventScroll: true });
+  routedOnce = true;
   }
 }
 document.documentElement.dataset.theme = localStorage.getItem('pyr-theme') || 'dark';
