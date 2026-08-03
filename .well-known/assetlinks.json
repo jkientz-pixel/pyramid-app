@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.rankedxi.app",
+      "sha256_cert_fingerprints": [
+        "01:D1:B9:67:0B:CF:15:24:93:30:AA:C1:B9:20:35:8A:0B:6B:85:62:AE:A5:52:24:0B:C2:65:C0:E0:E7:7B:7B"
+      ]
+    }
+  }
+]
