@@ -103,7 +103,7 @@ ul{{padding-left:20px;line-height:1.9}}p.note{{color:#8FA598;font-size:.85rem;ma
 # extensionless URLs only: the .html forms 308 to these, so listing .html in
 # the sitemap sent every crawler entry through a redirect (external audit #5)
 urls = [f'{SITE}/', f'{SITE}/app', f'{SITE}/upsl-rankings',
-        f'{SITE}/npsl-rankings', f'{SITE}/methodology'] + \
+        f'{SITE}/npsl-rankings', f'{SITE}/methodology', f'{SITE}/privacy'] + \
        [f'{SITE}/club/{c["id"]}' for c in rated]
 sm = ['<?xml version="1.0" encoding="UTF-8"?>',
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'] + \

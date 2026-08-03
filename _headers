@@ -27,6 +27,10 @@
   Cache-Control: no-cache
 /upsl-rankings.html
   Cache-Control: no-cache
+/privacy
+  Cache-Control: no-cache
+/privacy.html
+  Cache-Control: no-cache
 /sw.js
   Cache-Control: no-cache
 

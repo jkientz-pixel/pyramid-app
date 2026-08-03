@@ -73,7 +73,9 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
       <a class="primary" href="/app">Open the app</a>
       <a class="ghost" href="/app#/table">See the national table</a>
       <a class="ghost" href="#join">Get launch updates</a>
+      <a class="ghost" href="#" id="installbtn" hidden>Install the app</a>
     </div>
+    <p id="ioshowto" hidden style="margin:-14px 0 26px;font-size:.85rem;color:var(--dim);border:1px solid var(--line);border-radius:12px;padding:10px 14px;max-width:520px">On iPhone or iPad: open this page in <b>Safari</b>, tap the <b>Share</b> button, then <b>"Add to Home Screen."</b> Ranked XI installs with its own icon, opens full-screen, and works offline — no app store needed.</p>
     <div class="stats">
       <span><b data-stat="clubs">3,965</b>clubs mapped</span>
       <span><b data-stat="statlines">2,997</b>real player stat lines</span>
@@ -110,7 +112,7 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
   <p class="join-msg" role="status" aria-live="polite"></p>
 </section>
 </main>
-<footer>By Jeremy Kientz · every rating and stat labels its basis · club and league marks belong to their owners · <a href="/methodology" style="color:inherit">methodology &amp; disclaimer</a> · <a href="/app#/legal" style="color:inherit">corrections &amp; removal requests</a></footer>
+<footer>By Jeremy Kientz · every rating and stat labels its basis · club and league marks belong to their owners · <a href="/methodology" style="color:inherit">methodology &amp; disclaimer</a> · <a href="/privacy" style="color:inherit">privacy</a> · <a href="/app#/legal" style="color:inherit">corrections &amp; removal requests</a></footer>
 <script>
 /* Headline counts are baked into the [data-stat] spans by scripts/gen_seo_pages.py
    on every deploy. This page used to import data.js + rosters.js (240KB wire,
@@ -134,6 +136,26 @@ joinForm.addEventListener('submit', async e => {
     else joinMsg.textContent = d.error || 'Could not save right now — please try again.';
   } catch { joinMsg.textContent = 'Could not save right now — please try again.'; }
 });
+
+/* Install affordance: Chrome/Android fires beforeinstallprompt for a one-tap
+   install; iOS never does, so Safari-on-iOS gets Share→Add-to-Home-Screen
+   instructions instead. Hidden entirely when already running installed. */
+(() => {
+  const btn = document.getElementById('installbtn');
+  const howto = document.getElementById('ioshowto');
+  if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) return;
+  let deferred = null;
+  addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; btn.hidden = false; });
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (isIOS) btn.hidden = false;
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    if (deferred) { deferred.prompt(); deferred = null; btn.hidden = true; }
+    else howto.hidden = !howto.hidden;
+  });
+  addEventListener('appinstalled', () => { btn.hidden = true; });
+})();
 </script>
 </body>
 </html>
