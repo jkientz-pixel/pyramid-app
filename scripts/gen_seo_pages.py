@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 """Generate static SEO landing pages (upsl-rankings.html, npsl-rankings.html)
-from js/data.js — the exact queries that autocomplete today. Re-run each deploy."""
+from js/data.js — the exact queries that autocomplete today — and bake the
+landing page's headline counts into index.html. Re-run each deploy."""
 import json, re, os, html, datetime
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', open(os.path.join(ROOT,'js','data.js')).read(), re.S).group(1))
+src = open(os.path.join(ROOT, 'js', 'data.js')).read()
+clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', src, re.S).group(1))
+leagues = json.loads(re.search(r'export const LEAGUES=(\{.*?\});', src, re.S).group(1))
+
+FONT_FACE = ('@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:700;'
+             'font-display:swap;src:url(/fonts/barlow-condensed-latin-700.woff2) format("woff2")}')
+DISP_STACK = '"Barlow Condensed","Avenir Next Condensed","Arial Narrow",sans-serif'
 
 PAGES = [
     ('upsl', 'upsl-rankings.html', 'UPSL Rankings & Standings 2026 — all 660+ clubs, one national table',
@@ -22,16 +29,21 @@ for g, fname, title, desc in PAGES:
                 if g == 'upsl' else
                 'Ratings from a match-by-match Elo walk over every scored 2026 NPSL result — backtested and calibrated (Brier 0.531 vs 0.667 uniform baseline).')
     today = datetime.date.today().isoformat()
+    # canonical/URLs are extensionless: Cloudflare Pages 308s the .html form to
+    # the extensionless one, so pointing canonicals at .html split every signal
+    # through a redirect (external audit #5)
+    stem = fname[:-len('.html')]
     page = f"""<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
-<link rel="canonical" href="https://www.rankedxi.com/{fname}">
+<link rel="canonical" href="https://www.rankedxi.com/{stem}">
 <meta property="og:title" content="{html.escape(title)}"><meta property="og:image" content="https://www.rankedxi.com/og.png">
-<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Dataset","name":"{html.escape(title)}","dateModified":"{today}","url":"https://www.rankedxi.com/{fname}","creator":{{"@type":"Organization","name":"Rank XI"}}}}</script>
-<style>body{{margin:0;background:#0C1512;color:#E8EFEA;font:16px/1.55 -apple-system,"Segoe UI",Roboto,sans-serif;padding:24px clamp(16px,4vw,48px)}}
-h1{{font-family:"Avenir Next Condensed","Arial Narrow",sans-serif;text-transform:uppercase;font-size:clamp(1.6rem,4vw,2.6rem);margin:.3em 0}}
+<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Dataset","name":"{html.escape(title)}","dateModified":"{today}","url":"https://www.rankedxi.com/{stem}","creator":{{"@type":"Organization","name":"Rank XI"}}}}</script>
+<style>{FONT_FACE}
+body{{margin:0;background:#0C1512;color:#E8EFEA;font:16px/1.55 -apple-system,"Segoe UI",Roboto,sans-serif;padding:24px clamp(16px,4vw,48px)}}
+h1{{font-family:{DISP_STACK};text-transform:uppercase;font-size:clamp(1.6rem,4vw,2.6rem);margin:.3em 0}}
 a{{color:#7FD1A8}}table{{border-collapse:collapse;width:100%;max-width:720px;margin:18px 0}}
 td,th{{padding:7px 10px;border-bottom:1px solid #24352C;text-align:left;font-size:.92rem}}
 th{{color:#8FA598;text-transform:uppercase;font-size:.72rem;letter-spacing:.06em}}
@@ -40,10 +52,29 @@ p.note{{color:#8FA598;font-size:.85rem;max-width:60em}}</style></head><body>
 <p><a href="/">Rank XI</a> · updated {today}</p>
 <h1>{html.escape(title.split('—')[0].strip())}</h1>
 <p>{html.escape(desc)}</p>
-<a class="cta" href="/app.html#/table">Open the full interactive table →</a>
+<a class="cta" href="/app#/table">Open the full interactive table →</a>
 <table><thead><tr><th>#</th><th>Club</th><th>State</th><th>Rating</th></tr></thead><tbody>{rows}</tbody></table>
 <p class="note">{src_note} Top 100 shown — the app has every club, the map, head-to-head predictions and player stats. Not affiliated with the league; data from public sources with attribution in the app.</p>
-<a class="cta" href="/app.html#/map">Explore the national map →</a>
+<a class="cta" href="/app#/map">Explore the national map →</a>
 </body></html>"""
     open(os.path.join(ROOT, fname), 'w').write(page)
     print(f'{fname}: {len(pool)} clubs, top 100 rendered')
+
+# ---- bake headline counts into index.html (external audit #6) ----
+# The landing page used to import data.js + rosters.js at runtime — 240KB over
+# the wire and ~1.25MB parsed — to print three numbers. Baking them here keeps
+# the landing payload near zero and gives every surface the same figures.
+rosters = json.loads(re.search(r'export const ROSTERS=(\{.*?\});',
+                               open(os.path.join(ROOT, 'js', 'rosters.js')).read(), re.S).group(1))
+counts = {
+    'clubs': sum(1 for c in clubs if not c.get('h')),
+    'statlines': sum(1 for arr in rosters.values() for p in arr if p.get('st')),
+    'leagues': len(leagues),
+}
+index_path = os.path.join(ROOT, 'index.html')
+idx = open(index_path).read()
+for key, value in counts.items():
+    idx = re.sub(f'(data-stat="{key}">)[^<]*', lambda m, v=value: m.group(1) + format(v, ','), idx)
+open(index_path, 'w').write(idx)
+print(f"index.html counts baked: {counts['clubs']:,} clubs · "
+      f"{counts['statlines']:,} stat lines · {counts['leagues']} leagues")

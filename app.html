@@ -17,12 +17,15 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"Ranked XI","url":"https://www.rankedxi.com/app.html","applicationCategory":"SportsApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Every US soccer club on one map — cross-league rankings from MLS to the grassroots, with calibrated match predictions."}
+{"@context":"https://schema.org","@type":"WebApplication","name":"Ranked XI","url":"https://www.rankedxi.com/app","applicationCategory":"SportsApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Every US soccer club on one map — cross-league rankings from MLS to the grassroots, with calibrated match predictions."}
 </script>
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js'));</script>
-<link rel="canonical" href="https://www.rankedxi.com/app.html">
+<script>/* layout must be set before first paint or desktop flashes the phone bezel */
+try{document.documentElement.dataset.layout=localStorage.getItem('rxi-layout')==='phone'?'phone':'wide'}catch(e){document.documentElement.dataset.layout='wide'}</script>
+<link rel="canonical" href="https://www.rankedxi.com/app">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
-<link rel="stylesheet" href="css/app.css?v=20260802b">
+<link rel="preload" href="/fonts/barlow-condensed-latin-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/app.css?v=20260802c">
 </head>
 <body>
 <div class="stage">
@@ -30,8 +33,8 @@
     <h1 class="disp">Ranked XI</h1>
     <p>Every club in American soccer — MLS to the grassroots — on one map, with one national ranking. Real clubs, real locations, real ratings where the results exist — labeled everywhere else.</p>
     <ul>
-      <li>Tap a state to zoom to its clubs</li>
-      <li>Browse by region, league, or the national table</li>
+      <li>The map, the tiers, and one national table</li>
+      <li>Filter by state, region, or league</li>
       <li>Every club links out to its own site and socials</li>
     </ul>
     <p class="fine">By Jeremy Kientz · <span id="clubcount">3,900+</span> clubs loaded · every rating labels its basis</p>
@@ -40,7 +43,7 @@
     <div class="screen">
       <header class="appbar">
         <span class="disp brand">Ranked XI</span>
-        <span style="display:flex;gap:8px;align-items:center"><button class="themebtn" id="themebtn" aria-label="Toggle dark mode">&#9681;</button><span class="sub" id="crumb">USA</span></span>
+        <span style="display:flex;gap:8px;align-items:center"><button id="layoutbtn" type="button">Phone view</button><button class="themebtn" id="themebtn" aria-label="Toggle dark mode">&#9681;</button><span class="sub" id="crumb">USA</span></span>
       </header>
       <div class="searchwrap global" role="search"><input id="q" type="search" placeholder="Search clubs and players" autocomplete="off" aria-label="Search clubs and players"><div id="qres" class="qres" hidden></div></div>
       <main id="view" tabindex="-1"></main>
@@ -55,6 +58,6 @@
     </div>
   </div>
 </div>
-<script type="module" src="js/app.js?v=20260802b"></script>
+<script type="module" src="js/app.js?v=20260802c"></script>
 </body>
 </html>

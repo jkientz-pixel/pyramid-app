@@ -18,11 +18,13 @@
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js'));</script>
 <link rel="canonical" href="https://www.rankedxi.com/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
-<script>if (location.hash.startsWith('#/')) location.replace('/app.html' + location.hash);</script>
+<link rel="preload" href="/fonts/barlow-condensed-latin-700.woff2" as="font" type="font/woff2" crossorigin>
+<script>if (location.hash.startsWith('#/')) location.replace('/app' + location.hash);</script>
 <style>
+@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/barlow-condensed-latin-700.woff2) format("woff2")}
 :root{--ground:#FAFBF8;--ink:#16211B;--dim:#61705F;--line:#DCE2D8;--accent:#C77F1E;--raise:#fff}
 *{box-sizing:border-box}body{margin:0;background:var(--ground);color:var(--ink);font:17px/1.6 -apple-system,"Segoe UI",Roboto,sans-serif}
-.disp{font-family:"Avenir Next Condensed","Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.02em}
+.disp{font-family:"Barlow Condensed","Avenir Next Condensed","Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.02em}
 header{display:flex;justify-content:space-between;align-items:center;padding:22px clamp(20px,5vw,64px)}
 .mark{font-weight:700;font-size:1.4rem}
 header a.cta{background:var(--ink);color:var(--ground);padding:10px 22px;border-radius:999px;text-decoration:none;font-size:.85rem;font-weight:600}
@@ -48,34 +50,37 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
 .join{max-width:680px;margin:0 auto;padding:8px clamp(20px,5vw,64px) 72px;text-align:center}
 .join h2{font-size:1.7rem;margin:0 0 6px}
 .join-sub{color:var(--dim);margin:0 0 18px}
-.joinform{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.joinform input,.joinform select{padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--raise);color:var(--ink);font:inherit;font-size:.95rem;min-width:0}
-.joinform input[name=name]{flex:1 1 140px}
-.joinform input[name=email]{flex:2 1 200px}
-.joinform select{flex:1 1 120px}
+.joinform{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:flex-end;text-align:left}
+/* visible labels, not placeholder-only — field names must survive typing */
+.joinform .field{display:flex;flex-direction:column;gap:5px}
+.joinform label{font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--dim)}
+.joinform .field.f-name{flex:1 1 140px}
+.joinform .field.f-email{flex:2 1 200px}
+.joinform .field.f-role{flex:1 1 120px}
+.joinform input,.joinform select{padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--raise);color:var(--ink);font:inherit;font-size:.95rem;min-width:0;width:100%}
 .joinform button{background:var(--accent);color:#1D1509;font-weight:700;border:0;border-radius:12px;padding:13px 26px;font:inherit;cursor:pointer}
 .join-msg{min-height:1.4em;margin:12px 0 0;font-size:.9rem;color:var(--dim)}
 </style>
 </head>
 <body>
-<header><span class="mark disp">Ranked XI</span><a class="cta" href="/app.html">Open the app</a></header>
+<header><span class="mark disp">Ranked XI</span><a class="cta" href="/app">Open the app</a></header>
 <main>
 <section class="hero">
   <div>
     <h1 class="disp">Every club in American soccer.<br>One map. One table.</h1>
-    <p class="sub">MLS to the grassroots, men's and women's — <span data-stat="clubs">1,726</span> real clubs mapped, ranked on one scale, with real pro rosters and stats, club honours, player pages and the pathway between every level. The national table American soccer never had.</p>
+    <p class="sub">MLS to the grassroots, men's and women's — <span data-stat="clubs">3,965</span> real clubs mapped, ranked on one scale, with real pro rosters and stats, club honours, player pages and the pathway between every level. The national table American soccer never had.</p>
     <div class="cta-row">
-      <a class="primary" href="/app.html">Open the app</a>
-      <a class="ghost" href="/app.html#/table">See the national table</a>
+      <a class="primary" href="/app">Open the app</a>
+      <a class="ghost" href="/app#/table">See the national table</a>
       <a class="ghost" href="#join">Get launch updates</a>
     </div>
     <div class="stats">
-      <span><b data-stat="clubs">1,726</b>clubs mapped</span>
-      <span><b data-stat="statlines">2,748</b>real player stat lines</span>
-      <span><b data-stat="leagues">12</b>leagues today, more coming</span>
+      <span><b data-stat="clubs">3,965</b>clubs mapped</span>
+      <span><b data-stat="statlines">2,997</b>real player stat lines</span>
+      <span><b data-stat="leagues">36</b>leagues today, more coming</span>
     </div>
   </div>
-  <div class="phone-wrap"><div class="bezel"><iframe src="/app.html" title="Ranked XI app preview" loading="lazy"></iframe></div></div>
+  <div class="phone-wrap"><div class="bezel"><iframe src="/app" title="Ranked XI app preview" loading="lazy"></iframe></div></div>
 </section>
 <section class="feat">
   <div><b>The map is the front door</b><p>Tap any state for its clubs, filter by league or region, men's and women's game ranked separately.</p></div>
@@ -87,34 +92,29 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
   <p class="join-sub">Be first to know when new leagues, claimed pages, and player profiles go live. No spam — one email to leave the list.</p>
   <form class="joinform" novalidate>
     <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
-    <input type="text" name="name" placeholder="Name (optional)" autocomplete="name" maxlength="80">
-    <input type="email" name="email" placeholder="Email" required autocomplete="email" maxlength="254">
-    <select name="role" aria-label="I am a">
-      <option value="">I'm a…</option>
-      <option value="fan">Fan</option>
-      <option value="player">Player</option>
-      <option value="club">Club / coach</option>
-      <option value="league">League staff</option>
-      <option value="other">Other</option>
-    </select>
+    <div class="field f-name"><label for="join-name">Name <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
+      <input id="join-name" type="text" name="name" autocomplete="name" maxlength="80"></div>
+    <div class="field f-email"><label for="join-email">Email</label>
+      <input id="join-email" type="email" name="email" placeholder="you@example.com" required autocomplete="email" maxlength="254"></div>
+    <div class="field f-role"><label for="join-role">I'm a…</label>
+      <select id="join-role" name="role">
+        <option value="">Choose one</option>
+        <option value="fan">Fan</option>
+        <option value="player">Player</option>
+        <option value="club">Club / coach</option>
+        <option value="league">League staff</option>
+        <option value="other">Other</option>
+      </select></div>
     <button type="submit">Join the list</button>
   </form>
   <p class="join-msg" role="status" aria-live="polite"></p>
 </section>
 </main>
-<footer>By Jeremy Kientz · every rating and stat labels its basis · club and league marks belong to their owners · <a href="/methodology.html" style="color:inherit">methodology &amp; disclaimer</a> · <a href="/app.html#/legal" style="color:inherit">corrections &amp; removal requests</a></footer>
-<script type="module">
-import { CLUBS, LEAGUES } from './js/data.js?v=20260802b';
-import { ROSTERS } from './js/rosters.js?v=20260802b';
-const counts = {
-  clubs: CLUBS.filter(c => !c.h).length,
-  statlines: Object.values(ROSTERS).flat().filter(p => p.st).length,
-  leagues: Object.keys(LEAGUES).length
-};
-for (const el of document.querySelectorAll('[data-stat]')) {
-  const value = counts[el.dataset.stat];
-  if (value) el.textContent = value.toLocaleString('en-US');
-}
+<footer>By Jeremy Kientz · every rating and stat labels its basis · club and league marks belong to their owners · <a href="/methodology" style="color:inherit">methodology &amp; disclaimer</a> · <a href="/app#/legal" style="color:inherit">corrections &amp; removal requests</a></footer>
+<script>
+/* Headline counts are baked into the [data-stat] spans by scripts/gen_seo_pages.py
+   on every deploy. This page used to import data.js + rosters.js (240KB wire,
+   ~1.25MB parse) just to recount them at runtime — external audit #6. */
 const joinForm = document.querySelector('.joinform');
 const joinMsg = document.querySelector('.join-msg');
 joinForm.addEventListener('submit', async e => {

@@ -13,7 +13,9 @@ module.exports = defineConfig({
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
-    command: 'python3 -m http.server 8080',
+    // dev_server.py resolves extensionless URLs (/app -> app.html) the way
+    // Cloudflare Pages does; a bare http.server 404s the new internal links
+    command: 'python3 scripts/dev_server.py 8080',
     port: 8080,
     reuseExistingServer: !process.env.CI,
   },

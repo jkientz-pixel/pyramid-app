@@ -79,8 +79,9 @@ for c in rated:
 <meta property="og:description" content="{html.escape(desc)}">
 <meta property="og:image" content="{SITE}/og.png"><meta property="og:type" content="website">
 <script type="application/ld+json">{ld}</script>
-<style>body{{margin:0;background:#0C1512;color:#E8EFEA;font:16px/1.55 -apple-system,"Segoe UI",Roboto,sans-serif;padding:24px clamp(16px,4vw,48px)}}
-h1{{font-family:"Avenir Next Condensed","Arial Narrow",sans-serif;text-transform:uppercase;font-size:clamp(1.5rem,4vw,2.4rem);margin:.3em 0}}
+<style>@font-face{{font-family:"Barlow Condensed";font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/barlow-condensed-latin-700.woff2) format("woff2")}}
+body{{margin:0;background:#0C1512;color:#E8EFEA;font:16px/1.55 -apple-system,"Segoe UI",Roboto,sans-serif;padding:24px clamp(16px,4vw,48px)}}
+h1{{font-family:"Barlow Condensed","Avenir Next Condensed","Arial Narrow",sans-serif;text-transform:uppercase;font-size:clamp(1.5rem,4vw,2.4rem);margin:.3em 0}}
 a{{color:#7FD1A8}}.stats{{display:flex;gap:26px;flex-wrap:wrap;margin:16px 0}}
 .stats b{{display:block;font-size:1.5rem}}.stats span{{color:#8FA598;font-size:.85rem}}
 .cta{{display:inline-block;background:#C77F1E;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;margin:12px 0}}
@@ -93,14 +94,16 @@ ul{{padding-left:20px;line-height:1.9}}p.note{{color:#8FA598;font-size:.85rem;ma
 <div><b>#{lg_rank[c['id']]}</b><span>{lg_label}</span></div>
 <div><b>#{nat_rank[c['id']]}</b><span>National ({'women’s' if sexw else 'men’s'}, of {len(by_sex[c.get('x', 'm')]):,} rated)</span></div>
 </div>
-<a class="cta" href="/app.html#/club/{c['id']}">Full profile in the app — map, matchups, players →</a>
+<a class="cta" href="/app#/club/{c['id']}">Full profile in the app — map, matchups, players →</a>
 {f'<h2 style="font-size:1rem;color:#8FA598;text-transform:uppercase;letter-spacing:.06em">Nearest rated rivals</h2><ul>{riv_rows}</ul>' if riv_rows else ''}
-<p class="note">Every Ranked XI rating labels its basis; this one is {html.escape(basis)}. Cross-league placement is calibrated on ~600 U.S. Open Cup results — <a href="/methodology">how the ratings work</a>. Not affiliated with any league or club; marks belong to their owners. <a href="/app.html#/legal">Corrections &amp; removal</a>.</p>
+<p class="note">Every Ranked XI rating labels its basis; this one is {html.escape(basis)}. Cross-league placement is calibrated on ~600 U.S. Open Cup results — <a href="/methodology">how the ratings work</a>. Not affiliated with any league or club; marks belong to their owners. <a href="/app#/legal">Corrections &amp; removal</a>.</p>
 </body></html>"""
     open(os.path.join(out_dir, f"{c['id']}.html"), 'w').write(page)
 
-urls = [f'{SITE}/', f'{SITE}/app.html', f'{SITE}/upsl-rankings.html',
-        f'{SITE}/npsl-rankings.html', f'{SITE}/methodology.html'] + \
+# extensionless URLs only: the .html forms 308 to these, so listing .html in
+# the sitemap sent every crawler entry through a redirect (external audit #5)
+urls = [f'{SITE}/', f'{SITE}/app', f'{SITE}/upsl-rankings',
+        f'{SITE}/npsl-rankings', f'{SITE}/methodology'] + \
        [f'{SITE}/club/{c["id"]}' for c in rated]
 sm = ['<?xml version="1.0" encoding="UTF-8"?>',
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'] + \
