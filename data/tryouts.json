@@ -1,0 +1,5 @@
+[
+  { "sample": 1, "club": "Riverheim FC", "x": "m", "league": "NPSL", "date": "2026-08-22", "time": "6 PM", "city": "Riverheim", "st": "CA", "details": "Open tryout · $20 · ages 18+ · bring both kits", "link": "" },
+  { "sample": 1, "club": "Riverheim FC Women", "x": "w", "league": "WPSL", "date": "2026-08-29", "time": "10 AM", "city": "Riverheim", "st": "CA", "details": "Preseason ID session · free · college players welcome", "link": "" },
+  { "sample": 1, "club": "Sample City SC", "x": "m", "league": "UPSL Premier", "date": "2026-09-05", "time": "9 AM", "city": "Sample City", "st": "TX", "details": "Two-day open trial · $25 · GKs free", "link": "" }
+]

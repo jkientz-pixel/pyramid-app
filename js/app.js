@@ -923,6 +923,13 @@ async function profilesDb() {
   catch { _profiles = {}; }
   return _profiles;
 }
+let _tryouts = null;
+async function tryoutsDb() {
+  if (_tryouts) return _tryouts;
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260802c')).json(); }
+  catch { _tryouts = []; }
+  return _tryouts;
+}
 const AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23EFF2EC'/%3E%3Ccircle cx='50' cy='38' r='19' fill='%23AAB8A8'/%3E%3Cpath d='M14 94c5-24 19-32 36-32s31 8 36 32z' fill='%23AAB8A8'/%3E%3C/svg%3E";
 /* names Wikipedia uses that differ from the dataset's canonical short names */
 const CLUB_NAME_ALIASES = {
@@ -1171,6 +1178,7 @@ async function screenPlayer(ci, pi) {
       <span class="sub">#${pl.num} · ${pl.pos}${pl.real ? (pl.nat ? ' · ' + pl.nat : '') : ' · ' + pl.age + ' yrs'} · ${esc(c.n)}</span></div>
     </div>
     ${verifyBadge(c)}
+    ${prof.claimed ? '<span class="badge v">&#10003; Claimed profile</span> ' : ''}${prof.fa ? '<span class="badge c">Free agent &middot; available</span>' : ''}
     <div class="statgrid">
       <div class="stat"><b>${pl.pvr}</b><span>Value rating</span></div>
       <div class="stat"><b>#${rank}</b><span>${pl.pos} · ${pl.rs ? 'pro pool (real stats)' : (c.x === 'w' ? "women's" : "men's") + ' pool'}</span></div>
@@ -1225,10 +1233,47 @@ async function screenPlayer(ci, pi) {
       <a href="https://www.transfermarkt.us/schnellsuche/ergebnis/schnellsuche?query=${encodeURIComponent(pl.name)}" target="_blank" rel="noopener">Transfermarkt</a>
     </div>
     ${(prof.ig || prof.x || prof.site) ? '' : '<p class="note">Socials appear when listed on the player\'s Wikipedia article or once the player claims the profile — no guessed links.</p>'}
-    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Player profile: ' + pl.name + ' (' + c.n + ')')}">Is this you? Claim your profile</a>
-    <p class="note">Claimed player profiles add film links, verified stats history, and recruiting visibility.</p>
+    ${pl.real ? `<details class="how" style="margin-top:14px"><summary><b>Is this you? Claim your profile — free</b></summary>
+      <p class="note">Claimed profiles add film links, socials, corrected history, and recruiting visibility — and claiming is how you join the <a href="#/freeagents" style="color:var(--accent)">Free Agents board</a>. Every claim is verified with the club or league before anything changes; nothing publishes automatically.</p>
+      <form class="joinform claimform" novalidate>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+        <input type="text" name="name" placeholder="Your name" autocomplete="name" maxlength="80">
+        <input type="email" name="email" placeholder="Email" required autocomplete="email" maxlength="254">
+        <select name="role" aria-label="I am"><option value="player">I'm this player</option><option value="agent">Agent / representative</option><option value="club">Club officer</option></select>
+        <input type="text" name="note" placeholder="Anything to add? Film link, correction… (optional)" maxlength="200">
+        <label class="ck"><input type="checkbox" name="fa" value="1"> Also list me on the Free Agents board — I confirm I'm 18 or older</label>
+        <button type="submit" class="joinbtn">Claim this profile</button>
+      </form>
+      <p class="join-msg claim-msg" role="status" aria-live="polite"></p>
+    </details>` : ''}
     ${reportLink('Fix', pl.name)}`;
   wireFav();
+  wireClaimForm(pl, c);
+}
+
+function wireClaimForm(pl, c) {
+  const form = view.querySelector('.claimform');
+  if (!form) return;
+  const msg = view.querySelector('.claim-msg');
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = new FormData(form);
+    const email = (f.get('email') || '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { msg.textContent = 'A real email address is required.'; return; }
+    msg.textContent = 'Saving…';
+    const note = String(f.get('note') || '').slice(0, 200);
+    const message = `claim: ${pl.name} @ ${c.n} [${c.id}] · fa:${f.get('fa') ? 'yes' : 'no'}${note ? ' · ' + note : ''}`;
+    try {
+      const r = await fetch('/api/signup', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ kind: 'claim', source: 'player-page', email,
+          name: f.get('name'), role: f.get('role'), message, website: f.get('website') })
+      });
+      const d = await r.json();
+      if (d.ok) { form.reset(); msg.textContent = 'Claim received — we verify with the club or league and reply within a few days.'; }
+      else msg.textContent = d.error || 'Could not save right now — please try again.';
+    } catch { msg.textContent = 'Could not save right now — please try again.'; }
+  });
 }
 
 let tableMode = 'clubs', posFilter = 'all', tableLimit = 40;
@@ -1293,6 +1338,7 @@ function screenFreeAgents() {
     <h2 class="disp">Free Agents</h2>
     <p class="note" style="font-size:.88rem">Players without a club list themselves here: position, region, level sought, film. Clubs browse free and reach out directly — Ranked XI never sits in the middle of a deal. Listings are self-reported; players with match history in our data carry a verified badge.</p>
     <a class="fa-card" href="#/freeagent/sample"><b>See a complete profile &rarr;</b><span>Film, physicals, verified history, awards, references — the full page a listing buys.</span></a>
+    <a class="fa-card" href="#/tryouts"><b>&#128197; Open Tryouts board &rarr;</b><span>Every posted tryout date, one calendar — free for clubs to post, free for players to browse.</span></a>
     <ul class="clublist">${FREE_AGENTS.map(f => `
       <li><a href="#/freeagent/sample">
         <img class="crest imgcrest" src="${AVATAR}" alt="">
@@ -1301,8 +1347,84 @@ function screenFreeAgents() {
     <p class="note">Sample listings — the real board opens with player claims. Listings are for players <b>18 and older</b>, arrive by email, and every one is human-reviewed before it publishes — nothing posts to this board automatically.</p>
     ${adSlot('freeagents', 'Free Agents board')}
     <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent listing request')}&body=${encodeURIComponent('I confirm I am 18 or older: \nName:\nPosition:\nAge:\nRegion:\nLast club/level:\nLevel seeking:\nHighlight film link:\n')}">List yourself — $25 per season</a>
-    <p class="note">Flat listing fee. No commissions, no placement cuts — your deal is yours. Clubs: browsing is free, and posting open-tryout dates is coming. <a href="#/pricing" style="color:var(--accent)">See all pricing &rarr;</a></p>
+    <p class="note">Flat listing fee. No commissions, no placement cuts — your deal is yours. Clubs: browsing is free, and posting open-tryout dates is free too — <a href="#/tryouts" style="color:var(--accent)">post on the Tryouts board</a>. <a href="#/pricing" style="color:var(--accent)">See all pricing &rarr;</a></p>
     <p class="note"><a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('Report a free agent listing')}&body=${encodeURIComponent('Listing (name shown):\nWhat is wrong (impersonation, inaccurate, inappropriate, other):\n')}" style="color:var(--accent)">Report a listing</a> — reports are reviewed within days; a listing that misrepresents someone comes down first, questions after.</p>`;
+}
+
+let tryoutSex = 'all';
+async function screenTryouts() {
+  crumb.textContent = 'Tryouts';
+  const all = await tryoutsDb();
+  if (location.hash !== '#/tryouts') return;
+  const today = new Date().toISOString().slice(0, 10);
+  const upcoming = all.filter(t => t.date >= today).sort((a, b) => a.date < b.date ? -1 : 1);
+  const list = tryoutSex === 'all' ? upcoming : upcoming.filter(t => t.x === tryoutSex);
+  const fmtDay = d => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  const card = t => {
+    const ci = t.clubId ? clubIdx(t.clubId) : -1;
+    const meta = [t.city && t.st ? `${esc(t.city)}, ${esc(t.st)}` : esc(t.st || t.city || ''), t.league ? esc(t.league) : '', t.details ? esc(t.details) : ''].filter(Boolean).join(' · ');
+    return `<div class="pricecard"><b>${esc(t.club)} · ${fmtDay(t.date)}${t.time ? ' · ' + esc(t.time) : ''}</b>${t.sample ? ' <span class="badge d">Sample</span>' : ''}
+      <p>${meta}</p>
+      ${(ci >= 0 || t.link) ? `<div class="linkrow">${ci >= 0 ? `<a href="#/club/${CLUBS[ci].id}"><b>Club page</b></a>` : ''}${t.link ? `<a href="${safeHref(t.link)}" target="_blank" rel="noopener">Tryout details</a>` : ''}</div>` : ''}
+    </div>`;
+  };
+  view.innerHTML = `
+    <div class="kicker">Fill your roster · find your club</div>
+    <h2 class="disp">Open Tryouts</h2>
+    <p class="note" style="font-size:.88rem">Every open tryout in one place — the amateur leagues, one calendar. Posting is <b>free for every club</b>, and every listing is human-reviewed before it publishes. Players: tryouts listed here are for players <b>18 and older</b> unless the club's own page says otherwise.</p>
+    <div class="chips seg" id="tsex">
+      ${[['all', 'All'], ['m', "Men's"], ['w', "Women's"]].map(([k, lb]) =>
+        `<button class="chip solid" data-tsx="${k}" aria-pressed="${tryoutSex === k}">${lb}</button>`).join('')}
+    </div>
+    ${list.length ? list.map(card).join('') : '<p class="note">No upcoming tryouts in this filter yet — check back, or post the first one below.</p>'}
+    ${list.some(t => t.sample) ? '<p class="note">Sample listings show the format — they clear out as real dates land. The board is new: clubs, the first posts are yours.</p>' : ''}
+    <div class="kicker" style="margin-top:16px">Post a tryout · free</div>
+    <form class="joinform tryform" novalidate>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+      <input type="text" name="club" placeholder="Club name" required maxlength="80">
+      <input type="text" name="league" placeholder="League / level" maxlength="60">
+      <input type="date" name="date" required aria-label="Tryout date">
+      <input type="text" name="city" placeholder="City" maxlength="60">
+      <input type="text" name="state" placeholder="State" maxlength="40">
+      <input type="url" name="link" placeholder="Details link (optional)" maxlength="300">
+      <input type="text" name="details" placeholder="Fee, ages, what to bring (optional)" maxlength="200">
+      <input type="email" name="email" placeholder="Contact email (not published)" required maxlength="254">
+      <button type="submit" class="joinbtn">Submit for review</button>
+    </form>
+    <p class="join-msg try-msg" role="status" aria-live="polite"></p>
+    <p class="note">Your contact email is for verification only — it is never published. Free agents: <a href="#/freeagents" style="color:var(--accent)">list yourself</a> so clubs can find you between tryout dates.</p>
+    <p class="note"><a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('Report a tryout listing')}&body=${encodeURIComponent('Listing (club and date shown):\nWhat is wrong (fake, outdated, inappropriate, other):\n')}" style="color:var(--accent)">Report a listing</a> — outdated or fake tryouts come down first, questions after.</p>`;
+  view.querySelector('#tsex').addEventListener('click', e => {
+    const b = e.target.closest('[data-tsx]'); if (!b || b.dataset.tsx === tryoutSex) return;
+    tryoutSex = b.dataset.tsx; screenTryouts();
+  });
+  wireTryoutForm();
+}
+
+function wireTryoutForm() {
+  const form = view.querySelector('.tryform');
+  if (!form) return;
+  const msg = view.querySelector('.try-msg');
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = new FormData(form);
+    const email = (f.get('email') || '').trim();
+    if (!(f.get('club') || '').trim()) { msg.textContent = 'Club name is required.'; return; }
+    if (!f.get('date')) { msg.textContent = 'A tryout date is required.'; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { msg.textContent = 'A real contact email is required.'; return; }
+    msg.textContent = 'Saving…';
+    try {
+      const r = await fetch('/api/tryouts', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ source: 'app-tryouts', email,
+          club: f.get('club'), league: f.get('league'), date: f.get('date'), city: f.get('city'),
+          state: f.get('state'), link: f.get('link'), details: f.get('details'), website: f.get('website') })
+      });
+      const d = await r.json();
+      if (d.ok) { form.reset(); msg.textContent = 'Got it — your tryout goes live after a quick human review, usually within a day.'; }
+      else msg.textContent = d.error || 'Could not save right now — please try again.';
+    } catch { msg.textContent = 'Could not save right now — please try again.'; }
+  });
 }
 
 function screenAdvertise() {
@@ -1346,7 +1468,7 @@ function screenPricing() {
       <p>Everything in the listing, plus <b>you make the first move</b>: send direct intro requests to clubs from inside Ranked XI — your verified profile and film attached — with <b>5 intros a month</b> and priority placement in club searches. Privacy holds both ways: no emails or numbers exposed until both sides accept the intro.</p>
       <a class="claim" href="#/freeagent/sample">See how intros work</a></div>
     <div class="pricecard paid"><b>Club Recruiting · Free browse for all clubs · Pro tools $99/season</b>
-      <p>Browsing free agents costs nothing, ever. The paid tier is speed: <b>saved-search alerts</b> ("verified GK within 50 miles"), <b>unlimited direct contact</b>, <b>shortlists</b>, and <b>promoted tryout listings</b>. Fill your roster in a week, not a month.</p>
+      <p>Browsing free agents costs nothing, ever — and so is <a href="#/tryouts" style="color:var(--accent)">posting open tryouts</a>. The paid tier is speed: <b>saved-search alerts</b> ("verified GK within 50 miles"), <b>unlimited direct contact</b>, <b>shortlists</b>, and <b>promoted tryout listings</b>. Fill your roster in a week, not a month.</p>
       <a class="claim" href="#/clubtools/sample">See the club recruiting tools</a></div>
     <div class="pricecard paid"><b>Claimed player profile · $30/year</b>
       <p>Verify your page: photo, film, socials, corrected history — and recruiting visibility.</p>
@@ -1602,7 +1724,8 @@ function screenClubTools() {
       <li><a href="#/freeagent/sample"><img class="crest imgcrest" src="${AVATAR}" alt=""><span class="cl-name"><b>Sample: T. Nguyen</b><span>GK · 25 · NPSL history &#10003;</span></span><span class="cl-rt" style="font-size:.7rem;color:var(--ink-dim)">New</span></a></li>
     </ul>
     <div class="kicker">Your tryout listing</div>
-    <div class="pricecard"><b>Open tryout · Aug 15 · 6 PM</b><p>Promoted to every free agent within 75 miles — 241 views, 19 RSVPs so far.</p></div>
+    <div class="pricecard"><b>Open tryout · Aug 15 · 6 PM</b><p>Promoted to every free agent within 75 miles — 241 views, 19 RSVPs so far.</p>
+      <a class="claim" href="#/tryouts">Post your real tryout — free</a></div>
     <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Club Recruiting Pro — founding interest')}">Reserve founding club pricing — $99/season</a>
     <p class="note">Everything above is included: alerts, unlimited contact, shortlists, promoted tryouts. Browsing free agents stays free for every club, forever.</p>`;
 }
@@ -1723,7 +1846,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', freeagents: 'Free Agents', freeagent: 'Free Agent', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
 let routedOnce = false;
 function route() {
   const h = location.hash || '#/map';
@@ -1740,6 +1863,7 @@ function route() {
   function dispatch() {
   if (parts[0] === 'tiers') screenPyramid();
   else if (parts[0] === 'freeagents') screenFreeAgents();
+  else if (parts[0] === 'tryouts') screenTryouts();
   else if (parts[0] === 'pricing') screenPricing();
   else if (parts[0] === 'advertise') screenAdvertise();
   else if (parts[0] === 'following') screenFollowing();
