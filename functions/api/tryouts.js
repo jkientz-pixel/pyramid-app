@@ -41,8 +41,8 @@ export async function onRequestPost({ request, env }) {
 
   try {
     await env.DB.prepare(
-      `INSERT INTO tryouts (ts, club, league, date, city, state, details, link, email, source, ua)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?)`
+      `INSERT INTO tryouts (ts, club, league, date, city, state, details, link, email, source, ua, status)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,'pending')`
     ).bind(
       new Date().toISOString(),
       club,

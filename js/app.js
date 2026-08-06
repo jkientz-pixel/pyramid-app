@@ -1361,6 +1361,8 @@ async function screenTryouts() {
   const list = tryoutSex === 'all' ? upcoming : upcoming.filter(t => t.x === tryoutSex);
   const fmtDay = d => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   const card = t => {
+    /* clubId is never submitted — it's added by hand during moderation when
+       the club already exists in CLUBS, so the card can link its page */
     const ci = t.clubId ? clubIdx(t.clubId) : -1;
     const meta = [t.city && t.st ? `${esc(t.city)}, ${esc(t.st)}` : esc(t.st || t.city || ''), t.league ? esc(t.league) : '', t.details ? esc(t.details) : ''].filter(Boolean).join(' · ');
     return `<div class="pricecard"><b>${esc(t.club)} · ${fmtDay(t.date)}${t.time ? ' · ' + esc(t.time) : ''}</b>${t.sample ? ' <span class="badge d">Sample</span>' : ''}

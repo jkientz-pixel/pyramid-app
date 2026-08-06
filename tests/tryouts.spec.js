@@ -25,6 +25,13 @@ test('tryout form validates before posting', async ({ page }) => {
   await gotoRoute(page, '#/tryouts');
   await page.click('.tryform .joinbtn');
   await expect(page.locator('.try-msg')).toContainText('Club name is required');
+  await page.fill('.tryform input[name=club]', 'Testville FC');
+  await page.click('.tryform .joinbtn');
+  await expect(page.locator('.try-msg')).toContainText('date is required');
+  await page.fill('.tryform input[name=date]', '2027-01-15');
+  await page.fill('.tryform input[name=email]', 'not-an-email');
+  await page.click('.tryform .joinbtn');
+  await expect(page.locator('.try-msg')).toContainText('real contact email');
   expect(errors).toEqual([]);
 });
 
