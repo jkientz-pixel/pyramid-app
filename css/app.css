@@ -13,7 +13,9 @@
   --font-disp:"Barlow Condensed","Avenir Next Condensed","Arial Narrow",Impact,sans-serif;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
+/* overscroll-behavior-y on the root kills Chrome's pull-to-refresh in the TWA:
+   a drag starting on the appbar (outside main's own contain) reloaded the app */
+html,body{margin:0;height:100%;overscroll-behavior-y:none}
 body{background:#E8ECE5;color:var(--ink);font:15px/1.5 -apple-system,"Segoe UI",Roboto,sans-serif}
 .disp{font-family:var(--font-disp);text-transform:uppercase;letter-spacing:.03em}
 
