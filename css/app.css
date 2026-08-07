@@ -13,7 +13,9 @@
   --font-disp:"Barlow Condensed","Avenir Next Condensed","Arial Narrow",Impact,sans-serif;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
+/* overscroll-behavior-y on the root kills Chrome's pull-to-refresh in the TWA:
+   a drag starting on the appbar (outside main's own contain) reloaded the app */
+html,body{margin:0;height:100%;overscroll-behavior-y:none}
 body{background:#E8ECE5;color:var(--ink);font:15px/1.5 -apple-system,"Segoe UI",Roboto,sans-serif}
 .disp{font-family:var(--font-disp);text-transform:uppercase;letter-spacing:.03em}
 
@@ -125,6 +127,11 @@ svg.usmap{width:100%;height:auto;max-height:72vh;display:block;touch-action:mani
 .joinform select,.joinform input[name=state]{flex:1 1 110px}
 .joinform .joinbtn{flex:1 1 100%;background:var(--accent);color:#fff;font-weight:700;border:0;border-radius:10px;padding:12px;font:inherit;cursor:pointer}
 .join-msg{min-height:1.3em;margin:6px 0 0;font-size:.84rem;color:var(--ink-dim)}
+.joinform label.ck{flex:1 1 100%;display:flex;gap:8px;align-items:center;font-size:.84rem;color:var(--ink-dim)}
+.joinform label.ck input{min-width:0;padding:0;flex:0 0 auto}
+.tryform input{flex:1 1 130px}
+.tryform input[name=link],.tryform input[name=details]{flex:2 1 100%}
+.claimform input[name=note]{flex:2 1 100%}
 
 /* world ladder */
 .ladder{list-style:none;margin:6px 0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--raise)}
