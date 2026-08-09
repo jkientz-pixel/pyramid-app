@@ -16,8 +16,17 @@ Outputs: new CLUBS entries in js/data.js (g=ncaa3 / g=naia, x=m, unrated —
 
 Idempotent: existing ncaa3/naia clubs are rebuilt from scratch each run.
 """
-import json, os, re, sys, time, urllib.request, urllib.parse
+import html, json, os, re, sys, time, urllib.request, urllib.parse
 from _datajs import write_clubs
+
+def clean_name(s):
+    """Wikipedia cells leak markup into names: entity-encoded footnote refs
+    (&#91;p&#93; = [p]), raw <br> tags, and tag-stripping that glues words
+    together. Decode, strip, and collapse before a name becomes a club."""
+    s = html.unescape(s)
+    s = re.sub(r'<[^>]+>', ' ', s)
+    s = re.sub(r'\[[a-zA-Z0-9]{1,3}\]', '', s)
+    return re.sub(r'\s+', ' ', s).strip()
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UA = {'User-Agent': 'RankXI/0.1 (jkientz@gmail.com; college layer build)'}
@@ -325,7 +334,7 @@ def main():
                 misses.append({'team': mteam, 'nearest': s['school'] + ' (no coords)'})
                 continue
             disp = re.sub(r'\s*\([^)]*\)$', '', s['school'])
-            n = f"{disp} {s['nick']}"
+            n = clean_name(f"{disp} {s['nick']}")
             cid = slugify(n)
             if cid in taken:
                 misses.append({'team': mteam, 'nearest': s['school'] + ' (slug collision)'})

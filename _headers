@@ -7,21 +7,41 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'
 
 # HTML and the service worker must revalidate on every load — a long-cached
 # document would pin users to old asset URLs after a deploy.
 /
   Cache-Control: no-cache
+/app
+  Cache-Control: no-cache
 /app.html
   Cache-Control: no-cache
 /index.html
   Cache-Control: no-cache
+/npsl-rankings
+  Cache-Control: no-cache
 /npsl-rankings.html
+  Cache-Control: no-cache
+/upsl-rankings
   Cache-Control: no-cache
 /upsl-rankings.html
   Cache-Control: no-cache
+/privacy
+  Cache-Control: no-cache
+/privacy.html
+  Cache-Control: no-cache
 /sw.js
+  Cache-Control: no-cache
+
+# generated per deploy, no version tokens — must revalidate
+/club/*
+  Cache-Control: no-cache
+/sitemap.xml
+  Cache-Control: no-cache
+/methodology
+  Cache-Control: no-cache
+/methodology.html
   Cache-Control: no-cache
 
 # Everything below is referenced with a ?v= token that deploy.sh re-stamps on
@@ -34,4 +54,7 @@
 /data/*
   Cache-Control: public, max-age=31536000, immutable
 /crests/*
+  Cache-Control: public, max-age=31536000, immutable
+# fonts are content-addressed by filename — a changed font gets a new name
+/fonts/*
   Cache-Control: public, max-age=31536000, immutable

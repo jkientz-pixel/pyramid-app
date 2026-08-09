@@ -1,0 +1,35 @@
+[
+  {
+    "club": "Mint Hill FC",
+    "x": "m",
+    "league": "UPSL",
+    "date": "2026-08-08",
+    "time": "9:30 AM",
+    "city": "Pineville",
+    "st": "NC",
+    "details": "Open tryout · free · ages 15+ · OrthoCarolina Sportsplex · first team plays UPSL Premier, MHFC2 plays UPSL Division 1",
+    "link": "https://www.eventbrite.com/e/mint-hill-fc-open-tryouts-registration-1994387652155"
+  },
+  {
+    "club": "Oaklyn United FC",
+    "x": "m",
+    "league": "APSL",
+    "date": "2026-08-15",
+    "time": "10 AM",
+    "city": "Marlton",
+    "st": "NJ",
+    "details": "Open tryout · $20 tryout pass · Evesham Rec Center Field M1 · DIII college level or equivalent preferred for first team",
+    "link": "https://www.oaklynunitedfc.com/tryouts",
+    "clubId": "oaklyn-united-fc"
+  },
+  {
+    "club": "MASL Player Combine",
+    "x": "m",
+    "league": "MASL",
+    "date": "2026-10-08",
+    "city": "Fairfield",
+    "st": "OH",
+    "details": "3-day pro arena combine (Oct 8–10) · ages 18+ · $50 application, $299 if accepted · Game Time Training Center",
+    "link": "https://www.maslsoccer.com/news/2026-masl-player-combine-to-soccer-crazed-cincinna"
+  }
+]

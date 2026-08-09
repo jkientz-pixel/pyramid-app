@@ -7,6 +7,11 @@ cd "$(dirname "$0")"
 # replaces the manual ?v= sed ritual; preflight still verifies consistency
 NEWV=$(python3 scripts/bump_version.py | tail -1 | awk '{print $NF}')
 
+# regenerate the static SEO surface from current data: league landing pages,
+# per-club pages (club/), and the full sitemap
+python3 scripts/gen_seo_pages.py
+python3 scripts/gen_club_pages.py
+
 python3 scripts/preflight.py
 
 git diff --quiet app.html index.html js/app.js sw.js || \
@@ -16,14 +21,18 @@ git push
 # Ship a staged tree, not the repo root. `wrangler pages deploy .` uploaded the
 # scrapers and every raw scrape dump — including per-player names and birth years
 # that the app never fetches — to public URLs. Only runtime assets go out.
-STAGE="$(mktemp -d)"
+# Stage path is fixed (not mktemp): wrangler.toml's pages_build_output_dir must
+# name it so deploys pick up the functions/ dir and the D1 signups binding.
+STAGE=".deploy-stage"
+rm -rf "$STAGE"; mkdir -p "$STAGE"
 trap 'rm -rf "$STAGE"' EXIT
 
 # 404.html must ship: its presence is what turns off the Pages SPA fallback,
 # so bad URLs return a real 404 instead of the homepage with HTTP 200
 cp -R app.html index.html 404.html npsl-rankings.html upsl-rankings.html \
+      methodology.html privacy.html club .well-known \
       manifest.webmanifest sw.js robots.txt sitemap.xml _headers \
-      js css crests \
+      js css crests fonts \
       icon-192.png icon-512.png apple-touch-icon.png og.png "$STAGE/"
 # local editor/backup droppings must not reach production
 find "$STAGE/js" "$STAGE/css" \( -name '*.bak' -o -name '*.tmp' \) -delete
@@ -35,5 +44,7 @@ for f in $(grep -ohE "fetch\('data/[a-z0-9_.-]+" js/app.js | sed "s/.*'//"); do
 done
 
 echo "staged $(find "$STAGE" -type f | wc -l | tr -d ' ') files ($(du -sh "$STAGE" | cut -f1))"
-npx -y wrangler@4.114.0 pages deploy "$STAGE" --project-name=rank-xi --branch=master --commit-dirty=true
+# No directory arg: wrangler.toml supplies project name, output dir, functions/,
+# and the D1 signups binding (bindings only apply when deploying via config).
+npx -y wrangler@4.114.0 pages deploy --branch=master --commit-dirty=true
 echo "Deployed: https://rank-xi.pages.dev"

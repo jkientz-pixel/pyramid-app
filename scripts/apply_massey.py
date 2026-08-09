@@ -119,13 +119,20 @@ def sig(s):
     t = toks(pre(s)) - {'university', 'college', 'of', 'the', 'at', 'in'}
     return (t - STATE_SUFFIX) or t
 
-def main(band_d1=(1500, 1755), band_d2=(1430, 1650),
-         band_d3=(1350, 1555), band_naia=(1370, 1575)):
-    # women's D1/D2 reuse the men's bands: same relative position in the
-    # women's pyramid (below the USL Super League floor ~1660, overlapping
-    # the top of USL W / WPSL amateur play)
-    # D3/NAIA bands sit below D2 with deliberate overlap — the top of both
-    # (~1555/1575) lands mid-D2, matching how those programs actually fare.
+def main(band_d1=(1355, 1610), band_d2=(1285, 1505),
+         band_d3=(1205, 1410), band_naia=(1225, 1430),
+         band_d1w=(1500, 1755), band_d2w=(1430, 1650)):
+    # MEN'S RE-BAND 2026-08-01 (uniform -145 from the original bands): the old
+    # D1 ceiling (1755) put top college programs above 24 of 25 professional
+    # USL Championship clubs. No varsity side plays in the Open Cup, so college
+    # has no cross-league results anchoring it — the band IS the editorial
+    # placement. New ceiling 1610 sits below the USL-C floor (~1628) and a
+    # notch above the best USL League Two sides (~1536), whose summer rosters
+    # are these same college players. D2-D3-NAIA keep their relative overlaps.
+    # WOMEN'S BANDS UNCHANGED and now separate: college is the women's game's
+    # development tier (NWSL drafts straight from it) — top D1w (~1755) just
+    # under the NWSL floor (~1761), D2w interlocking with USL W/WPSL, is the
+    # intended placement.
     dpath = os.path.join(ROOT, 'js', 'data.js')
     cur = open(dpath).read()
     clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', cur, re.S).group(1))
@@ -136,7 +143,7 @@ def main(band_d1=(1500, 1755), band_d2=(1430, 1650),
 
     for div, fname, band in [('ncaa1', 'massey_d1.json', band_d1), ('ncaa2', 'massey_d2.json', band_d2),
                              ('ncaa3', 'massey_d3.json', band_d3), ('naia', 'massey_naia.json', band_naia),
-                             ('ncaa1w', 'massey_d1w.json', band_d1), ('ncaa2w', 'massey_d2w.json', band_d2)]:
+                             ('ncaa1w', 'massey_d1w.json', band_d1w), ('ncaa2w', 'massey_d2w.json', band_d2w)]:
         path = os.path.join(ROOT, 'data', fname)
         if not os.path.exists(path):
             print(f'{div}: {fname} missing, skipped', file=sys.stderr); continue
