@@ -648,6 +648,13 @@ async function wireDb() {
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
 }
+let _natTeams = null;
+async function natTeamsDb() {
+  if (_natTeams) return _natTeams;
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260809b')).json(); }
+  catch { _natTeams = { teams: [] }; }
+  return _natTeams;
+}
 function fmtKick(iso) {
   const d = new Date(iso);
   const et = d.toLocaleString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
@@ -678,6 +685,7 @@ function screenMatches(preH) {
   view.innerHTML = `
     ${sexToggle()}
     <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>This week's results, upsets and rating swings &mdash; generated from real data.</span></a>
+    <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>USA youth national teams &mdash; Concacaf championship fixtures, where they play, how to watch.</span></a>
     <div id="realfx"></div>
     <div class="kicker">Predictor · any club v any club · model estimate</div>
     <h2 class="disp">Matchup Machine</h2>
@@ -730,6 +738,44 @@ function screenMatches(preH) {
         return matchCard(h, a, f.round.toUpperCase()) .replace('<div class="meta"><span>Elo', `<div class="meta"><span>${when} · ${esc(f.venue || '')}</span><span></span></div><div class="meta"><span>Elo`);
       }).join('') + `<p class="note">Times shown in Eastern and your local time. Odds from real-results Elo.</p>`;
   });
+}
+
+/* USA youth national teams — tournament fixtures, results and how to watch.
+   National sides are not clubs: they stay out of CLUBS (the map, the table,
+   the counts) and live in their own dataset. Watch links are per-match and
+   render only on games that haven't finished — a played game must never
+   advertise a broadcast (same rule as audit #7 on watchRow). */
+async function screenNationalTeams() {
+  crumb.textContent = 'National Teams';
+  const db = await natTeamsDb();
+  const teams = db.teams || [];
+  const fmtDay = iso => new Date(iso).toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', year: 'numeric' });
+  const row = m => {
+    const ended = m.status === 'ENDED';
+    const res = !ended ? '' : m.us > m.them ? 'W ' : m.us < m.them ? 'L ' : 'D ';
+    const watch = !ended && (m.tv || []).length
+      ? `<div class="meta" style="margin-top:6px">${m.tv.map(t =>
+          `<a class="watchlink" href="${t.url}" target="_blank" rel="noopener">&#9655; Watch: ${esc(t.label)}</a>`).join('')}</div>`
+      : '';
+    return `<div class="match">
+      <div class="mrow"><span class="side"><span class="sn">USA</span></span><span class="vs">${ended ? res + m.us + '–' + m.them : 'V'}</span><span class="side away"><span class="sn">${esc(m.opp)}</span></span></div>
+      <div class="meta"><span>${esc(m.round)}</span><span>${ended ? fmtDay(m.start) : fmtKick(m.start)}</span></div>
+      <div class="meta"><span>${esc(m.venue || '')}</span><span>${esc(m.city || '')}</span></div>
+      ${watch}
+    </div>`;
+  };
+  const block = t => `
+    <div class="kicker" style="margin-top:22px">${esc(t.comp)} · ${esc(t.compDates)}</div>
+    <h2 class="disp">${esc(t.name)}</h2>
+    ${t.note ? `<p class="note" style="margin:2px 0 8px">${esc(t.note)}</p>` : ''}
+    ${(t.achievements || []).map(a => `<span class="badge c" style="margin:0 6px 8px 0;display:inline-block">${esc(a)}</span>`).join('')}
+    ${(t.matches || []).map(row).join('')}
+    ${t.next ? `<p class="note" style="margin:6px 0 0">${esc(t.next)}</p>` : ''}`;
+  view.innerHTML = `
+    <div class="kicker">USA youth national teams · Concacaf &amp; FIFA competitions</div>
+    <h2 class="disp">National Teams</h2>
+    ${teams.length ? teams.map(block).join('') : '<p class="note">National-team fixtures are loading into the dataset.</p>'}
+    <p class="note">Kickoffs shown in Eastern and your local time. Results, venues and broadcasts from U.S. Soccer and Concacaf — nothing is invented. Watch links appear only on upcoming games.</p>`;
 }
 
 function worldLadder(c) {
@@ -1241,6 +1287,7 @@ function screenPyramid() {
       </div>`).join('')}
     </div>
     <a class="fa-card" href="#/cups"><b>&#127942; The Trophy Room</b><span>16 national trophies, every tier — MLS Cup to the NPSL, the College Cups, and the Open Cup back to 1914.</span></a>
+    <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>Above the pyramid — USA youth national teams in Concacaf and FIFA competition, with fixtures and how to watch.</span></a>
     ${adSlot('tiers', 'The Pyramid')}
     <p class="note">Tiers are organizational, not sporting — US soccer has no promotion and relegation between most levels. The pathway runs through players, not clubs: youth to college to the amateur leagues to the pro game. Tap a league to visit its official site.</p>`;
   wireSexToggle();
@@ -1689,7 +1736,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', freeagents: 'Free Agents', freeagent: 'Free Agent', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', freeagents: 'Free Agents', freeagent: 'Free Agent', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
 let routedOnce = false;
 function route() {
   const h = location.hash || '#/map';
@@ -1711,6 +1758,7 @@ function route() {
   else if (parts[0] === 'following') screenFollowing();
   else if (parts[0] === 'legends') screenLegends(parts[1]);
   else if (parts[0] === 'cups') screenCups();
+  else if (parts[0] === 'nt') screenNationalTeams();
   else if (parts[0] === 'freeagent') screenFASample();
   else if (parts[0] === 'clubtools') screenClubTools();
   else if (parts[0] === 'legal') screenLegal();
