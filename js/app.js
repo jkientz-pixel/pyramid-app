@@ -13,7 +13,7 @@ const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260809c')
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260809a';
+const BUILDV = '20260809c';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
