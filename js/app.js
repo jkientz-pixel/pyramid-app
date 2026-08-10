@@ -66,7 +66,7 @@ function reportLink(kind, what) {
 /* crest-content generation: bump when crest PIXELS change under the same
    filename (e.g. a strip_crest_bg.py run) — crest URLs are cached immutable
    and cache-first, so only a new ?cv= reaches returning browsers */
-const CRESTV = '3';
+const CRESTV = '4';
 function crestHtml(c) {
   /* a failed crest load must degrade to the initials chip, never the
      browser's broken-image glyph with overflowing alt text */
@@ -411,19 +411,30 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     const pts = mapClubs.filter(c => isFinite(c.la) && isFinite(c.lo));
     leafMap = L.map(leafEl, { zoomSnap: 0.25, wheelPxPerZoomLevel: 90, preferCanvas: true, zoomControl: false });
     L.control.zoom({ position: 'topright' }).addTo(leafMap);
-    /* the .basetiles pane is restyled in CSS (invert + grain) into a dark
-       textured cartography: ocean reads near-black, roads become light
-       threads, offshore admin lines fade, and crest pins pop */
+    /* two-layer dark relief cartography: Esri hillshade gives the embossed
+       charcoal terrain (the look Jeremy asked for), and a faint inverted OSM
+       overlay adds state lines, roads, and town labels on top. CSS handles
+       both restyles per tile (WebKit blanks filters on the layer container). */
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade_Dark/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19, maxNativeZoom: 13, className: 'relieftiles',
+      attribution: 'Esri, Maxar, Earthstar Geographics',
+    }).addTo(leafMap);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19, className: 'basetiles',
+      maxZoom: 19, opacity: 0.5, className: 'basetiles',
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(leafMap);
     /* frame the scoped clubs (state/region) but plot everything, so panning
        past a border reveals the neighbors instead of empty map */
     const frame = frameClubs.filter(c => isFinite(c.la) && isFinite(c.lo));
-    if (frame.length) leafMap.fitBounds(L.latLngBounds(frame.map(c => [c.la, c.lo])).pad(0.08));
-    else if (pts.length) leafMap.fitBounds(L.latLngBounds(pts.map(c => [c.la, c.lo])).pad(0.08));
-    else leafMap.setView([39.5, -98.35], 4);
+    const fitFrame = () => {
+      if (frame.length) leafMap.fitBounds(L.latLngBounds(frame.map(c => [c.la, c.lo])).pad(0.08));
+      else if (pts.length) leafMap.fitBounds(L.latLngBounds(pts.map(c => [c.la, c.lo])).pad(0.08));
+      else leafMap.setView([39.5, -98.35], 4);
+    };
+    fitFrame();
+    /* if the container had no layout size yet, fitBounds degenerates to
+       max zoom at the bounds center (the Kansas bug) — re-fit next frame */
+    requestAnimationFrame(() => { leafMap.invalidateSize(); fitFrame(); });
     pts.forEach(c => {
       const lg = LEAGUES[c.g];
       L.circleMarker([c.la, c.lo], {
