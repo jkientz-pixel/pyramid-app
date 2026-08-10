@@ -416,3 +416,23 @@ a.wirelink:hover .side{color:var(--accent)}
   [data-layout="wide"] .sheet{align-items:center;justify-content:center;padding:24px}
   [data-layout="wide"] .sheet-panel{max-width:600px;border-radius:22px}
 }
+
+/* Detailed basemap mode (Leaflet + OSM) */
+.leafmap{height:min(72vh,540px);width:100%}
+.leafmap[hidden]{display:none}
+.mapbox[data-mode="street"] svg.usmap,.mapbox[data-mode="street"] .mapctl,.mapbox[data-mode="street"] .maptip{display:none}
+.mapmode{position:absolute;top:10px;left:10px;z-index:800;display:flex;border:1px solid var(--line);border-radius:10px;overflow:clip;box-shadow:0 2px 8px rgba(30,40,32,.18)}
+.mapmode button{padding:7px 12px;border:0;background:var(--raise);color:var(--ink);font:inherit;font-size:.8rem;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mapmode button+button{border-left:1px solid var(--line)}
+.mapmode button[aria-pressed="true"]{background:var(--accent,#2f6e4f);color:#fff}
+.leafmap .leaflet-tooltip{font:inherit;font-size:.8rem}
+.leafmap.leaflet-container{background:#0c1013}
+/* dark textured cartography: invert flips OSM's light ocean to deep navy and
+   turns roads into light threads; desaturate + retune keeps it from looking
+   like a photo negative. Grain overlay sits above tiles, below markers. */
+.leafmap .basetiles{filter:invert(1) hue-rotate(200deg) saturate(.38) brightness(.92) contrast(1.06)}
+.leafmap::after{content:'';position:absolute;inset:0;z-index:350;pointer-events:none;opacity:.16;mix-blend-mode:soft-light;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="180" height="180" filter="url(%23n)"/></svg>')}
+.leafmap::before{content:'';position:absolute;inset:0;z-index:351;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(5,8,10,.38) 100%)}
+.leafmap .leaflet-marker-icon{filter:drop-shadow(0 0 3px rgba(0,0,0,.85)) drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.leafmap.leaflet-container .leaflet-control-attribution{background:rgba(12,16,19,.7);color:#9aa7b0}
+.leafmap.leaflet-container .leaflet-control-attribution a{color:#c7d2da}
