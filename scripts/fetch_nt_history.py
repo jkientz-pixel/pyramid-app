@@ -250,6 +250,12 @@ def build_team(editions):
 def apply_policy_and_bios(editions, bios):
     for ed in editions:
         for p in ed['squad']:
+            # a template variant could make parse_birth slice the wrong numbers
+            # into a plausible-looking date; an implausible age at tournament
+            # (youth squads run ~13-23) must fall back to the cautious path,
+            # never be trusted by the minors gate below
+            if 'dob' in p and not (13 <= ed['year'] - int(p['dob'][:4]) <= 23):
+                del p['dob']
             by = int(p['dob'][:4]) if 'dob' in p else None
             minor_risk = (by >= MINOR_BIRTH_CUTOFF) if by is not None else \
                 ed['year'] >= datetime.date.today().year - 3  # unknown DOB on a recent edition: assume cautious
@@ -275,6 +281,10 @@ def main():
     for v in teams.values():
         apply_policy_and_bios(v['editions'], bios)
         v['editions'].sort(key=lambda e: -e['year'])
+    # partial scrapes must fail loudly, not overwrite good data with gaps
+    for tid, v in teams.items():
+        if len(v['editions']) < 15:
+            sys.exit(f'FATAL: only {len(v["editions"])} editions scraped for {tid} — refusing to write')
     out = {'updated': datetime.date.today().isoformat(),
            'source': 'Wikipedia per-tournament squads pages',
            'teams': teams}
