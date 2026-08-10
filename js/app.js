@@ -229,33 +229,60 @@ function wireMap(scopeStates) {
     try { sessionStorage.removeItem('rxi-vb:#/map'); } catch {}
     location.hash = '#/map';
   }
-  function zoom(factor) {
+  /* one rAF owner for button-zoom easing and pan glide; any new gesture or
+     wheel tick takes the frame back so animation never fights fingers */
+  let anim = null;
+  const stopAnim = () => { if (anim) { cancelAnimationFrame(anim); anim = null; } };
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function animVB(target, ms = 200) {
+    stopAnim();
+    if (reducedMotion) { setVB(target); return; }
+    const from = getVB(), t0 = performance.now();
+    const step = now => {
+      const t = Math.min(1, (now - t0) / ms), k = 1 - Math.pow(1 - t, 3);
+      setVB(from.map((v, i) => v + (target[i] - v) * k));
+      anim = t < 1 ? requestAnimationFrame(step) : null;
+    };
+    anim = requestAnimationFrame(step);
+  }
+  /* zoom anchored at a screen point (cx,cy): the map spot under the
+     cursor/tap stays under it, matching embedded-map behavior */
+  function zoom(factor, cx, cy, animate) {
     const [x, y, w, h] = getVB();
     const nw = w * factor, nh = h * factor;
     if (nw > homeVB[2]) {
       if (scopeStates && w >= homeVB[2] - 0.5) { exitToNational(); return; }
-      setVB(homeVB); return;
+      animate ? animVB(homeVB) : setVB(homeVB); return;
     }
     if (nw < homeVB[2] / 24) return;
-    setVB([x + (w - nw) / 2, y + (h - nh) / 2, nw, nh]);
+    const r = svg.getBoundingClientRect();
+    const fx = cx == null ? 0.5 : (cx - r.left) / r.width;
+    const fy = cy == null ? 0.5 : (cy - r.top) / r.height;
+    const t = [x + (w - nw) * fx, y + (h - nh) * fy, nw, nh];
+    animate ? animVB(t) : setVB(t);
   }
   const ctl = view.querySelector('.mapctl');
   if (ctl) ctl.addEventListener('click', e => {
     const b = e.target.closest('[data-z]'); if (!b) return;
-    if (b.dataset.z === 'in') zoom(1 / 1.6);
-    else if (b.dataset.z === 'out') zoom(1.6);
-    else setVB(homeVB);
+    if (b.dataset.z === 'in') zoom(1 / 1.6, null, null, true);
+    else if (b.dataset.z === 'out') zoom(1.6, null, null, true);
+    else animVB(homeVB);
   });
   svg.addEventListener('wheel', e => {
     e.preventDefault();
-    zoom(e.deltaY > 0 ? 1.25 : 1 / 1.25);
+    stopAnim();
+    /* ctrl+wheel is a trackpad pinch: continuous 1:1 scaling, not steps */
+    const factor = e.ctrlKey ? Math.exp(e.deltaY * 0.01)
+      : (e.deltaY > 0 ? 1.25 : 1 / 1.25);
+    zoom(factor, e.clientX, e.clientY);
   }, { passive: false });
   const ptrs = new Map();
   let gest = null;
   svg.addEventListener('pointerdown', e => {
+    stopAnim();
     ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
     const pts = [...ptrs.values()];
-    if (pts.length === 1) gest = { mode: 'pan', x: e.clientX, y: e.clientY, vb: getVB() };
+    if (pts.length === 1) gest = { mode: 'pan', x: e.clientX, y: e.clientY, vb: getVB(), vx: 0, vy: 0, t: null };
     else if (pts.length === 2) {
       const dx = pts[0].x - pts[1].x, dy = pts[0].y - pts[1].y;
       gest = { mode: 'pinch', d0: Math.hypot(dx, dy) || 1,
@@ -270,8 +297,8 @@ function wireMap(scopeStates) {
     if (gest.mode === 'pinch' && pts.length >= 2) {
       dragged = true;
       const dx = pts[0].x - pts[1].x, dy = pts[0].y - pts[1].y;
-      /* exponent < 1 dampens pinch so a full-screen spread ≈ 2x, not 4x+ */
-      let scale = Math.pow(gest.d0 / (Math.hypot(dx, dy) || 1), 0.55);
+      /* 1:1 pinch: the map tracks the fingers exactly */
+      let scale = gest.d0 / (Math.hypot(dx, dy) || 1);
       let nw = gest.vb[2] * scale;
       if (nw > homeVB[2]) {
         /* pinch-out well past a scoped extent exits to the national map;
@@ -284,22 +311,67 @@ function wireMap(scopeStates) {
       if (nw < homeVB[2] / 24) scale = (homeVB[2] / 24) / gest.vb[2];
       nw = gest.vb[2] * scale;
       const nh = gest.vb[3] * scale;
-      const fx = (gest.mx - r.left) / r.width, fy = (gest.my - r.top) / r.height;
-      setVB([gest.vb[0] + gest.vb[2] * fx - nw * fx, gest.vb[1] + gest.vb[3] * fy - nh * fy, nw, nh]);
+      /* anchor the map spot that was under the initial midpoint to the CURRENT
+         midpoint, so two fingers moving together pan while they zoom */
+      const mx = (pts[0].x + pts[1].x) / 2, my = (pts[0].y + pts[1].y) / 2;
+      const fx0 = (gest.mx - r.left) / r.width, fy0 = (gest.my - r.top) / r.height;
+      const fx1 = (mx - r.left) / r.width, fy1 = (my - r.top) / r.height;
+      setVB([gest.vb[0] + gest.vb[2] * fx0 - nw * fx1, gest.vb[1] + gest.vb[3] * fy0 - nh * fy1, nw, nh]);
     } else if (gest.mode === 'pan' && pts.length === 1) {
       const dx = e.clientX - gest.x, dy = e.clientY - gest.y;
       if (Math.abs(dx) + Math.abs(dy) > 6) dragged = true;
       if (!dragged) return;
+      const now = performance.now();
+      if (gest.t != null) {
+        const dt = Math.max(now - gest.t, 1);
+        /* EMA smooths release velocity so glide direction matches the last flick */
+        gest.vx = 0.75 * gest.vx + 0.25 * (e.clientX - gest.px) / dt;
+        gest.vy = 0.75 * gest.vy + 0.25 * (e.clientY - gest.py) / dt;
+      }
+      gest.px = e.clientX; gest.py = e.clientY; gest.t = now;
       setVB([gest.vb[0] - dx * gest.vb[2] / r.width, gest.vb[1] - dy * gest.vb[3] / r.height, gest.vb[2], gest.vb[3]]);
     }
   });
+  function glide(vx, vy) {
+    stopAnim();
+    if (reducedMotion) return;
+    let last = performance.now();
+    const step = now => {
+      const dt = Math.min(now - last, 64); last = now;
+      const vb = getVB(), r = svg.getBoundingClientRect();
+      setVB([vb[0] - vx * dt * vb[2] / r.width, vb[1] - vy * dt * vb[3] / r.height, vb[2], vb[3]]);
+      const decay = Math.pow(0.92, dt / 16);
+      vx *= decay; vy *= decay;
+      anim = Math.hypot(vx, vy) > 0.02 ? requestAnimationFrame(step) : null;
+    };
+    anim = requestAnimationFrame(step);
+  }
   const endPtr = e => {
     ptrs.delete(e.pointerId);
-    if (ptrs.size === 1) { const p1 = [...ptrs.values()][0]; gest = { mode: 'pan', x: p1.x, y: p1.y, vb: getVB() }; }
-    else if (!ptrs.size) gest = null;
+    if (ptrs.size === 1) { const p1 = [...ptrs.values()][0]; gest = { mode: 'pan', x: p1.x, y: p1.y, vb: getVB(), vx: 0, vy: 0, t: null }; }
+    else if (!ptrs.size) {
+      if (gest && gest.mode === 'pan' && dragged && gest.t != null
+          && performance.now() - gest.t < 90 && Math.hypot(gest.vx, gest.vy) > 0.25) {
+        glide(gest.vx, gest.vy);
+      }
+      gest = null;
+    }
   };
   svg.addEventListener('pointerup', endPtr);
   svg.addEventListener('pointercancel', endPtr);
+  /* double-tap zoom (touch only): mouse gets the anchored wheel instead, and
+     a first tap on a state already navigates, so this only fires where a
+     second tap is reachable — scoped views and re-taps of the same state */
+  let lastTap = null;
+  svg.addEventListener('pointerup', e => {
+    if (e.pointerType !== 'touch' || dragged) { lastTap = null; return; }
+    const now = performance.now();
+    if (lastTap && now - lastTap.t < 350 && !e.target.closest('.pin')
+        && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 30) {
+      zoom(0.5, e.clientX, e.clientY, true);
+      lastTap = null;
+    } else lastTap = { t: now, x: e.clientX, y: e.clientY };
+  });
   const chips = view.querySelector('#lgchips');
   if (chips) chips.addEventListener('click', e => {
     const b = e.target.closest('.chip'); if (!b) return;
