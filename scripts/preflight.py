@@ -106,9 +106,14 @@ try:
         fail.append('national_teams.json: no teams')
     for t in teams:
         tid = t.get('id', '?')
-        for req in ('id', 'label', 'name', 'comp', 'matches'):
+        for req in ('id', 'label', 'name', 'comp'):
             if not t.get(req):
                 fail.append(f'national_teams.json[{tid}]: missing {req}')
+        # camp-cycle teams may have no published fixtures, but never a bare card
+        if not (t.get('matches') or t.get('note') or t.get('next')):
+            fail.append(f'national_teams.json[{tid}]: no matches and no note — empty team card')
+        if t.get('g') not in (None, 'men', 'women'):
+            fail.append(f'national_teams.json[{tid}]: unknown g {t.get("g")!r}')
         for m in t.get('matches') or []:
             tag = f'national_teams.json[{tid}] v {m.get("opp", "?")}'
             try:

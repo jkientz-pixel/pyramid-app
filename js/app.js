@@ -741,11 +741,13 @@ function screenMatches(preH) {
   });
 }
 
-/* USA youth national teams — tournament fixtures, results and how to watch.
-   National sides are not clubs: they stay out of CLUBS (the map, the table,
-   the counts) and live in their own dataset. Watch links are per-match and
-   render only on games that haven't finished — a played game must never
-   advertise a broadcast (same rule as audit #7 on watchRow). */
+/* USA national teams — senior and youth, men's and women's, with tournament
+   fixtures, results and how to watch. National sides are not clubs: they stay
+   out of CLUBS (the map, the table, the counts) and live in their own dataset.
+   Teams whose year is camps and unpublished friendlies carry a note instead of
+   match rows — no row ships without a verified date, opponent and venue.
+   Watch links are per-match and render only on games that haven't finished —
+   a played game must never advertise a broadcast (same rule as audit #7). */
 async function screenNationalTeams() {
   crumb.textContent = 'National Teams';
   const db = await natTeamsDb();
@@ -754,29 +756,36 @@ async function screenNationalTeams() {
   const row = m => {
     const ended = m.status === 'ENDED';
     const res = !ended ? '' : m.us > m.them ? 'W ' : m.us < m.them ? 'L ' : 'D ';
+    const when = ended ? fmtDay(m.start) : m.timeTBD ? fmtDay(m.start) + ' · time TBA' : fmtKick(m.start);
     const watch = !ended && (m.tv || []).length
       ? `<div class="meta" style="margin-top:6px">${m.tv.map(t =>
           `<a class="watchlink" href="${t.url}" target="_blank" rel="noopener">&#9655; Watch: ${esc(t.label)}</a>`).join('')}</div>`
       : '';
     return `<div class="match">
       <div class="mrow"><span class="side"><span class="sn">USA</span></span><span class="vs">${ended ? res + m.us + '–' + m.them : 'V'}</span><span class="side away"><span class="sn">${esc(m.opp)}</span></span></div>
-      <div class="meta"><span>${esc(m.round)}</span><span>${ended ? fmtDay(m.start) : fmtKick(m.start)}</span></div>
-      <div class="meta"><span>${esc(m.venue || '')}</span><span>${esc(m.city || '')}</span></div>
+      <div class="meta"><span>${esc(m.round)}</span><span>${when}</span></div>
+      ${m.venue || m.city ? `<div class="meta"><span>${esc(m.venue || '')}</span><span>${esc(m.city || '')}</span></div>` : ''}
       ${watch}
     </div>`;
   };
   const block = t => `
-    <div class="kicker" style="margin-top:22px">${esc(t.comp)} · ${esc(t.compDates)}</div>
+    <div class="kicker" style="margin-top:22px">${esc(t.comp)}${t.compDates ? ' · ' + esc(t.compDates) : ''}</div>
     <h2 class="disp">${esc(t.name)}</h2>
     ${t.note ? `<p class="note" style="margin:2px 0 8px">${esc(t.note)}</p>` : ''}
     ${(t.achievements || []).map(a => `<span class="badge c" style="margin:0 6px 8px 0;display:inline-block">${esc(a)}</span>`).join('')}
     ${(t.matches || []).map(row).join('')}
     ${t.next ? `<p class="note" style="margin:6px 0 0">${esc(t.next)}</p>` : ''}`;
+  const section = (title, list) => list.length ? `
+    <div class="kicker" style="margin-top:30px;font-size:1rem;letter-spacing:.08em">${title}</div>
+    <hr style="border:none;border-top:1px solid var(--line,#24352C);margin:4px 0 0">
+    ${list.map(block).join('')}` : '';
   view.innerHTML = `
-    <div class="kicker">USA youth national teams · Concacaf &amp; FIFA competitions</div>
+    <div class="kicker">USA national teams · senior through U-15 · Concacaf &amp; FIFA competitions</div>
     <h2 class="disp">National Teams</h2>
-    ${teams.length ? teams.map(block).join('') : '<p class="note">National-team fixtures are loading into the dataset.</p>'}
-    <p class="note">Kickoffs shown in Eastern and your local time. Results, venues and broadcasts from U.S. Soccer and Concacaf — nothing is invented. Watch links appear only on upcoming games.</p>`;
+    ${teams.length
+      ? section('Men', teams.filter(t => t.g !== 'women')) + section('Women', teams.filter(t => t.g === 'women'))
+      : '<p class="note">National-team fixtures are loading into the dataset.</p>'}
+    <p class="note">Kickoffs shown in Eastern and your local time. Results, venues and broadcasts from U.S. Soccer, Concacaf and FIFA — nothing is invented. Teams shown without match rows are in camp-and-friendly cycles with no published fixture data. Watch links appear only on upcoming games.</p>`;
 }
 
 function worldLadder(c) {
