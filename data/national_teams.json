@@ -1,405 +1,677 @@
 {
-  "updated": "2026-08-09",
-  "teams": [
+ "updated": "2026-08-09",
+ "teams": [
+  {
+   "id": "usmnt",
+   "g": "men",
+   "label": "USMNT",
+   "name": "U.S. Men's National Team",
+   "note": "Topped its home World Cup group with wins over Paraguay and Australia before falling to Belgium in the Round of 16.",
+   "comp": "2026 FIFA World Cup & fall friendlies",
+   "compDates": "World Cup on home soil · Jun 12 – Jul 6 run",
+   "achievements": [
+    "Won Group D at the 2026 FIFA World Cup",
+    "First World Cup knockout win since 2002",
+    "Reached the Round of 16 on home soil"
+   ],
+   "matches": [
     {
-      "id": "usmnt",
-      "g": "men",
-      "label": "USMNT",
-      "name": "U.S. Men's National Team",
-      "note": "Topped its home World Cup group with wins over Paraguay and Australia before falling to Belgium in the Round of 16.",
-      "comp": "2026 FIFA World Cup & fall friendlies",
-      "compDates": "World Cup on home soil · Jun 12 – Jul 6 run",
-      "achievements": [
-        "Won Group D at the 2026 FIFA World Cup",
-        "First World Cup knockout win since 2002",
-        "Reached the Round of 16 on home soil"
-      ],
-      "matches": [
-        {
-          "round": "Group D",
-          "start": "2026-06-12T16:00:00.000Z",
-          "opp": "Paraguay",
-          "us": 4, "them": 1, "status": "ENDED",
-          "venue": "SoFi Stadium", "city": "Inglewood, CA"
-        },
-        {
-          "round": "Group D",
-          "start": "2026-06-19T16:00:00.000Z",
-          "opp": "Australia",
-          "us": 2, "them": 0, "status": "ENDED",
-          "venue": "Lumen Field", "city": "Seattle, WA"
-        },
-        {
-          "round": "Group D",
-          "start": "2026-06-25T16:00:00.000Z",
-          "opp": "Türkiye",
-          "us": 2, "them": 3, "status": "ENDED",
-          "venue": "SoFi Stadium", "city": "Inglewood, CA"
-        },
-        {
-          "round": "Round of 32",
-          "start": "2026-07-01T16:00:00.000Z",
-          "opp": "Bosnia and Herzegovina",
-          "us": 2, "them": 0, "status": "ENDED",
-          "venue": "Levi's Stadium", "city": "Santa Clara, CA"
-        },
-        {
-          "round": "Round of 16",
-          "start": "2026-07-06T16:00:00.000Z",
-          "opp": "Belgium",
-          "us": 1, "them": 4, "status": "ENDED",
-          "venue": "Lumen Field", "city": "Seattle, WA"
-        },
-        {
-          "round": "Friendly",
-          "start": "2026-09-26T20:30:00.000Z",
-          "opp": "Peru",
-          "us": null, "them": null, "status": "SCHEDULED",
-          "venue": "Inter&Co Stadium", "city": "Orlando, FL"
-        },
-        {
-          "round": "Friendly",
-          "start": "2026-09-29T23:00:00.000Z",
-          "opp": "Chile",
-          "us": null, "them": null, "status": "SCHEDULED",
-          "venue": "Energizer Park", "city": "St. Louis, MO"
-        },
-        {
-          "round": "Friendly",
-          "start": "2026-10-04T02:00:00.000Z",
-          "opp": "Mexico",
-          "us": null, "them": null, "status": "SCHEDULED",
-          "venue": "State Farm Stadium", "city": "Glendale, AZ"
-        },
-        {
-          "round": "Friendly",
-          "start": "2026-10-07T00:00:00.000Z",
-          "opp": "Canada",
-          "us": null, "them": null, "status": "SCHEDULED",
-          "venue": "Allianz Field", "city": "St. Paul, MN"
-        }
-      ],
-      "next": "Broadcast details for the fall friendlies land here once U.S. Soccer announces them. The Concacaf Nations League quarterfinals follow in November."
+     "round": "Group D",
+     "start": "2026-06-12T16:00:00.000Z",
+     "opp": "Paraguay",
+     "us": 4,
+     "them": 1,
+     "status": "ENDED",
+     "venue": "SoFi Stadium",
+     "city": "Inglewood, CA"
     },
     {
-      "id": "u20mnt",
-      "g": "men",
-      "label": "U-20 Men",
-      "name": "U.S. Under-20 Men's National Team",
-      "note": "U.S. Soccer fields its under-19 age group in this championship cycle, playing up a year against full U-20 sides.",
-      "comp": "2026 Concacaf U-20 Championship",
-      "compDates": "Jul 24 – Aug 9, 2026 · Puebla & Mexico City, Mexico",
-      "achievements": [
-        "Qualified for the 2027 FIFA U-20 World Cup",
-        "Qualified for the 2027 Pan American Games"
-      ],
-      "matches": [
-        {
-          "round": "Group A",
-          "start": "2026-07-26T02:00:00.000Z",
-          "opp": "Haiti",
-          "us": 3, "them": 0, "status": "ENDED",
-          "venue": "Estadio Universitario BUAP", "city": "Puebla, Mexico"
-        },
-        {
-          "round": "Group A",
-          "start": "2026-07-29T02:00:00.000Z",
-          "opp": "El Salvador",
-          "us": 3, "them": 0, "status": "ENDED",
-          "venue": "Estadio Universitario BUAP", "city": "Puebla, Mexico"
-        },
-        {
-          "round": "Group A",
-          "start": "2026-08-01T02:00:00.000Z",
-          "opp": "Cuba",
-          "us": 5, "them": 0, "status": "ENDED",
-          "venue": "Estadio Universitario BUAP", "city": "Puebla, Mexico"
-        },
-        {
-          "round": "Quarterfinal",
-          "start": "2026-08-05T01:00:00.000Z",
-          "opp": "Guatemala",
-          "us": 3, "them": 1, "status": "ENDED",
-          "venue": "Estadio Universitario BUAP", "city": "Puebla, Mexico"
-        },
-        {
-          "round": "Semifinal",
-          "start": "2026-08-07T21:00:00.000Z",
-          "opp": "Costa Rica",
-          "us": 2, "them": 0, "status": "ENDED",
-          "venue": "Estadio Banorte", "city": "Mexico City, Mexico"
-        },
-        {
-          "round": "Final",
-          "start": "2026-08-09T23:00:00.000Z",
-          "opp": "Mexico",
-          "us": null, "them": null, "status": "SCHEDULED",
-          "venue": "Estadio Banorte", "city": "Mexico City, Mexico",
-          "tv": [
-            { "label": "FS2 (English)", "url": "https://www.foxsports.com/live/fs2" },
-            { "label": "ViX (Spanish)", "url": "https://vix.com" }
-          ]
-        }
-      ]
+     "round": "Group D",
+     "start": "2026-06-19T16:00:00.000Z",
+     "opp": "Australia",
+     "us": 2,
+     "them": 0,
+     "status": "ENDED",
+     "venue": "Lumen Field",
+     "city": "Seattle, WA"
     },
     {
-      "id": "u19mnt",
-      "g": "men",
-      "label": "U-19 Men",
-      "name": "U.S. Under-19 Men's National Team",
-      "note": "This cycle's U-19s are the squad playing up at the 2026 Concacaf U-20 Championship — the tournament run lives under U-20 Men above. Camps in Mesa in January, Alicante in March (with a friendly against Wales) and Atlanta in June (against Japan) built that roster.",
-      "comp": "2026 camps & friendlies"
+     "round": "Group D",
+     "start": "2026-06-25T16:00:00.000Z",
+     "opp": "Türkiye",
+     "us": 2,
+     "them": 3,
+     "status": "ENDED",
+     "venue": "SoFi Stadium",
+     "city": "Inglewood, CA"
     },
     {
-      "id": "u18mnt",
-      "g": "men",
-      "label": "U-18 Men",
-      "name": "U.S. Under-18 Men's National Team",
-      "note": "Faced Iceland, Morocco and hosts Portugal at the Torneio Internacional de Lisboa in late March — a dozen of the squad won their group at the 2025 FIFA U-17 World Cup — then reconvened for a June training camp in Spain.",
-      "comp": "2026 Torneio Internacional de Lisboa & camps"
+     "round": "Round of 32",
+     "start": "2026-07-01T16:00:00.000Z",
+     "opp": "Bosnia and Herzegovina",
+     "us": 2,
+     "them": 0,
+     "status": "ENDED",
+     "venue": "Levi's Stadium",
+     "city": "Santa Clara, CA"
     },
     {
-      "id": "u17mnt",
-      "g": "men",
-      "label": "U-17 Men",
-      "name": "U.S. Under-17 Men's National Team",
-      "note": "Swept through the Concacaf qualifiers in Kingstown unbeaten — 19 goals scored, 1 conceded — to book a record 20th FIFA U-17 World Cup appearance.",
-      "comp": "2026 Concacaf U-17 Qualifiers",
-      "compDates": "Feb 5–10, 2026 · Kingstown, St. Vincent and the Grenadines",
-      "achievements": [
-        "Qualified for the 2026 FIFA U-17 World Cup · Qatar, Nov 19 – Dec 13"
-      ],
-      "next": "The U.S. group and match schedule for the FIFA U-17 World Cup in Qatar land here once the draw is made.",
-      "matches": [
-        {
-          "round": "Qualifier",
-          "start": "2026-02-05T23:00:00.000Z",
-          "opp": "St. Vincent and the Grenadines",
-          "us": 8, "them": 0, "status": "ENDED",
-          "venue": "Arnos Vale Stadium", "city": "Kingstown, SVG"
-        },
-        {
-          "round": "Qualifier",
-          "start": "2026-02-08T00:00:00.000Z",
-          "opp": "St. Kitts and Nevis",
-          "us": 10, "them": 0, "status": "ENDED",
-          "venue": "Arnos Vale Stadium", "city": "Kingstown, SVG"
-        },
-        {
-          "round": "Qualifier",
-          "start": "2026-02-10T23:00:00.000Z",
-          "opp": "Dominican Republic",
-          "us": 1, "them": 1, "status": "ENDED",
-          "venue": "Arnos Vale Stadium", "city": "Kingstown, SVG"
-        }
-      ]
+     "round": "Round of 16",
+     "start": "2026-07-06T16:00:00.000Z",
+     "opp": "Belgium",
+     "us": 1,
+     "them": 4,
+     "status": "ENDED",
+     "venue": "Lumen Field",
+     "city": "Seattle, WA"
     },
     {
-      "id": "u16bnt",
-      "g": "men",
-      "label": "U-16 Boys",
-      "name": "U.S. Under-16 Boys' National Team",
-      "note": "Launched U.S. Soccer's new Futures program with a joint U-15/U-16 camp in Fayetteville, Georgia in February, and competes at the 2026 Vertex Cup in Miami.",
-      "comp": "2026 camps & tournaments"
+     "round": "Friendly",
+     "start": "2026-09-26T20:30:00.000Z",
+     "opp": "Peru",
+     "us": null,
+     "them": null,
+     "status": "SCHEDULED",
+     "venue": "Inter&Co Stadium",
+     "city": "Orlando, FL",
+     "tv": [
+      {
+       "label": "TNT (English)",
+       "url": "https://www.tntdrama.com/watchtnt"
+      },
+      {
+       "label": "truTV",
+       "url": "https://www.trutv.com/watchtrutv"
+      },
+      {
+       "label": "HBO Max",
+       "url": "https://www.hbomax.com"
+      },
+      {
+       "label": "Telemundo (Spanish)",
+       "url": "https://www.telemundo.com"
+      },
+      {
+       "label": "Universo (Spanish)",
+       "url": "https://www.nbc.com/live?brand=universo"
+      },
+      {
+       "label": "Peacock",
+       "url": "https://www.peacocktv.com"
+      }
+     ]
     },
     {
-      "id": "u15bnt",
-      "g": "men",
-      "label": "U-15 Boys",
-      "name": "U.S. Under-15 Boys' National Team",
-      "note": "Training camps in February (international), March (West Palm Beach) and April in Chula Vista, where the squad played Mexico twice. Concacaf's biennial U-15 championship pauses in 2026 as the region transitions to an annual U-16 tournament from 2027.",
-      "comp": "2026 camps & friendlies"
+     "round": "Friendly",
+     "start": "2026-09-29T23:00:00.000Z",
+     "opp": "Chile",
+     "us": null,
+     "them": null,
+     "status": "SCHEDULED",
+     "venue": "Energizer Park",
+     "city": "St. Louis, MO",
+     "tv": [
+      {
+       "label": "TNT (English)",
+       "url": "https://www.tntdrama.com/watchtnt"
+      },
+      {
+       "label": "truTV",
+       "url": "https://www.trutv.com/watchtrutv"
+      },
+      {
+       "label": "HBO Max",
+       "url": "https://www.hbomax.com"
+      },
+      {
+       "label": "Universo (Spanish)",
+       "url": "https://www.nbc.com/live?brand=universo"
+      },
+      {
+       "label": "Peacock",
+       "url": "https://www.peacocktv.com"
+      }
+     ]
     },
     {
-      "id": "uswnt",
-      "g": "women",
-      "label": "USWNT",
-      "name": "U.S. Women's National Team",
-      "note": "Won an eighth SheBelieves Cup in March and split a June series in Brazil. The Concacaf W Championship — the road to the 2027 World Cup — starts in November.",
-      "comp": "2026 friendlies & Concacaf W Championship",
-      "compDates": "W Championship opens Nov 27",
-      "achievements": [
-        "2026 SheBelieves Cup champions — eighth title"
-      ],
-      "matches": [
-        {
-          "round": "Friendly",
-          "start": "2026-01-24T17:00:00.000Z",
-          "opp": "Paraguay",
-          "us": 6, "them": 0, "status": "ENDED"
-        },
-        {
-          "round": "Friendly",
-          "start": "2026-01-27T17:00:00.000Z",
-          "opp": "Chile",
-          "us": 5, "them": 0, "status": "ENDED"
-        },
-        {
-          "round": "SheBelieves Cup",
-          "start": "2026-03-01T17:00:00.000Z",
-          "opp": "Argentina",
-          "us": 2, "them": 0, "status": "ENDED",
-          "city": "Nashville, TN"
-        },
-        {
-          "round": "SheBelieves Cup",
-          "start": "2026-03-04T17:00:00.000Z",
-          "opp": "Canada",
-          "us": 1, "them": 0, "status": "ENDED",
-          "city": "Columbus, OH"
-        },
-        {
-          "round": "SheBelieves Cup",
-          "start": "2026-03-07T17:00:00.000Z",
-          "opp": "Colombia",
-          "us": 1, "them": 0, "status": "ENDED",
-          "city": "Harrison, NJ"
-        },
-        {
-          "round": "Friendly",
-          "start": "2026-04-11T16:00:00.000Z",
-          "opp": "Japan",
-          "us": 2, "them": 1, "status": "ENDED"
-        },
-        {
-          "round": "Friendly",
-          "start": "2026-04-15T16:00:00.000Z",
-          "opp": "Japan",
-          "us": 0, "them": 1, "status": "ENDED"
-        },
-        {
-          "round": "Friendly",
-          "start": "2026-04-18T16:00:00.000Z",
-          "opp": "Japan",
-          "us": 3, "them": 0, "status": "ENDED"
-        },
-        {
-          "round": "Friendly",
-          "start": "2026-06-06T16:00:00.000Z",
-          "opp": "Brazil",
-          "us": 1, "them": 2, "status": "ENDED",
-          "city": "São Paulo, Brazil"
-        },
-        {
-          "round": "Friendly",
-          "start": "2026-06-09T16:00:00.000Z",
-          "opp": "Brazil",
-          "us": 1, "them": 0, "status": "ENDED",
-          "venue": "Arena Castelão", "city": "Fortaleza, Brazil"
-        },
-        {
-          "round": "Friendly",
-          "start": "2026-10-10T18:30:00.000Z",
-          "opp": "Spain",
-          "us": null, "them": null, "status": "SCHEDULED",
-          "venue": "Audi Field", "city": "Washington, D.C."
-        },
-        {
-          "round": "Friendly",
-          "start": "2026-10-13T23:00:00.000Z",
-          "opp": "Spain",
-          "us": null, "them": null, "status": "SCHEDULED",
-          "venue": "Subaru Park", "city": "Chester, PA"
-        },
-        {
-          "round": "Concacaf W Championship",
-          "start": "2026-11-27T17:00:00.000Z",
-          "opp": "El Salvador",
-          "us": null, "them": null, "status": "SCHEDULED", "timeTBD": true,
-          "venue": "Texas Health Mansfield Stadium", "city": "Mansfield, TX"
-        }
-      ],
-      "next": "Kickoff and broadcast details for the fall matches land here once announced."
+     "round": "Friendly",
+     "start": "2026-10-04T02:00:00.000Z",
+     "opp": "Mexico",
+     "us": null,
+     "them": null,
+     "status": "SCHEDULED",
+     "venue": "State Farm Stadium",
+     "city": "Glendale, AZ",
+     "tv": [
+      {
+       "label": "TNT (English)",
+       "url": "https://www.tntdrama.com/watchtnt"
+      },
+      {
+       "label": "HBO Max",
+       "url": "https://www.hbomax.com"
+      },
+      {
+       "label": "Telemundo (Spanish)",
+       "url": "https://www.telemundo.com"
+      },
+      {
+       "label": "Universo (Spanish)",
+       "url": "https://www.nbc.com/live?brand=universo"
+      },
+      {
+       "label": "Peacock",
+       "url": "https://www.peacocktv.com"
+      }
+     ]
     },
     {
-      "id": "u20wnt",
-      "g": "women",
-      "label": "U-20 Women",
-      "name": "U.S. Under-20 Women's National Team",
-      "note": "Drawn into Group D with Italy, Japan and New Zealand at the World Cup in Poland.",
-      "comp": "2026 FIFA U-20 Women's World Cup",
-      "compDates": "Sep 5–27, 2026 · Poland",
-      "achievements": [
-        "Qualified via the 2025 Concacaf W U-20 Championship (runners-up)"
-      ],
-      "matches": [
-        {
-          "round": "Group D",
-          "start": "2026-09-06T16:00:00.000Z",
-          "opp": "Italy",
-          "us": null, "them": null, "status": "SCHEDULED",
-          "venue": "Stadion Miejski ŁKS Łódź", "city": "Łódź, Poland"
-        },
-        {
-          "round": "Group D",
-          "start": "2026-09-09T13:00:00.000Z",
-          "opp": "Japan",
-          "us": null, "them": null, "status": "SCHEDULED",
-          "venue": "Stadion Miejski ŁKS Łódź", "city": "Łódź, Poland"
-        },
-        {
-          "round": "Group D",
-          "start": "2026-09-12T13:00:00.000Z",
-          "opp": "New Zealand",
-          "us": null, "them": null, "status": "SCHEDULED",
-          "venue": "Arena Sosnowiec", "city": "Sosnowiec, Poland"
-        }
-      ],
-      "next": "US broadcast details for Poland land here once announced."
-    },
-    {
-      "id": "u19wnt",
-      "g": "women",
-      "label": "U-19 Women",
-      "name": "U.S. Under-19 Women's National Team",
-      "note": "Held a June–July camp at the Arthur M. Blank National Training Center in Fayetteville, Georgia — 24 players, all born in 2007 and all collegians — running concurrently with the U-18s as the program builds toward the next U-20 cycle.",
-      "comp": "2026 camps"
-    },
-    {
-      "id": "u18wnt",
-      "g": "women",
-      "label": "U-18 Women",
-      "name": "U.S. Under-18 Women's National Team",
-      "note": "Traveled to Spain for matches against Sweden and Hungary, held an April camp in West Palm Beach and a June camp in Fayetteville, Georgia. Seven of the June call-ups played at the 2025 FIFA U-17 Women's World Cup.",
-      "comp": "2026 camps & friendlies"
-    },
-    {
-      "id": "u17wnt",
-      "g": "women",
-      "label": "U-17 Women",
-      "name": "U.S. Under-17 Women's National Team",
-      "note": "Won its qualifying group in Costa Rica, clinching the World Cup berth with a 4–0 win over Puerto Rico.",
-      "comp": "2026 Concacaf Women's U-17 Qualifiers",
-      "compDates": "Final round · San Rafael, Costa Rica",
-      "achievements": [
-        "Qualified for the 2026 FIFA U-17 Women's World Cup · Rabat, Morocco, Oct–Nov 2026"
-      ],
-      "matches": [
-        {
-          "round": "Qualifier",
-          "start": "2026-03-22T20:00:00.000Z",
-          "opp": "Puerto Rico",
-          "us": 4, "them": 0, "status": "ENDED",
-          "city": "San Rafael, Costa Rica"
-        }
-      ],
-      "next": "Group E at the World Cup: Samoa, China PR and an African qualifier — match dates and broadcasts land here when FIFA confirms them."
-    },
-    {
-      "id": "u16gnt",
-      "g": "women",
-      "label": "U-16 Girls",
-      "name": "U.S. Under-16 Girls' National Team",
-      "note": "Comes together for a training camp and matches against Mexico at the Arthur M. Blank National Training Center in Fayetteville, Georgia (announced July 2026).",
-      "comp": "2026 camps & friendlies"
-    },
-    {
-      "id": "u15gnt",
-      "g": "women",
-      "label": "U-15 Girls",
-      "name": "U.S. Under-15 Girls' National Team",
-      "note": "Played matches in England in April and in Germany and the Netherlands in May, then held its first domestic camp at the Blank National Training Center — 24 players born in 2011, the group building toward 2028 U-17 World Cup qualifying. U.S. Soccer says the squad returns to the Concacaf Girls' U-15 Championship this summer; dates land here when confirmed.",
-      "comp": "2026 camps & Concacaf Girls' U-15 Championship"
+     "round": "Friendly",
+     "start": "2026-10-07T00:00:00.000Z",
+     "opp": "Canada",
+     "us": null,
+     "them": null,
+     "status": "SCHEDULED",
+     "venue": "Allianz Field",
+     "city": "St. Paul, MN",
+     "tv": [
+      {
+       "label": "TNT (English)",
+       "url": "https://www.tntdrama.com/watchtnt"
+      },
+      {
+       "label": "truTV",
+       "url": "https://www.trutv.com/watchtrutv"
+      },
+      {
+       "label": "HBO Max",
+       "url": "https://www.hbomax.com"
+      },
+      {
+       "label": "Universo (Spanish)",
+       "url": "https://www.nbc.com/live?brand=universo"
+      },
+      {
+       "label": "Peacock",
+       "url": "https://www.peacocktv.com"
+      }
+     ]
     }
-  ]
+   ],
+   "next": "The Concacaf Nations League quarterfinals follow in November.",
+   "url": "https://www.ussoccer.com/teams/usmnt"
+  },
+  {
+   "id": "u20mnt",
+   "g": "men",
+   "label": "U-20 Men",
+   "name": "U.S. Under-20 Men's National Team",
+   "note": "U.S. Soccer fields its under-19 age group in this championship cycle, playing up a year against full U-20 sides.",
+   "comp": "2026 Concacaf U-20 Championship",
+   "compDates": "Jul 24 – Aug 9, 2026 · Puebla & Mexico City, Mexico",
+   "achievements": [
+    "Qualified for the 2027 FIFA U-20 World Cup",
+    "Qualified for the 2027 Pan American Games"
+   ],
+   "matches": [
+    {
+     "round": "Group A",
+     "start": "2026-07-26T02:00:00.000Z",
+     "opp": "Haiti",
+     "us": 3,
+     "them": 0,
+     "status": "ENDED",
+     "venue": "Estadio Universitario BUAP",
+     "city": "Puebla, Mexico"
+    },
+    {
+     "round": "Group A",
+     "start": "2026-07-29T02:00:00.000Z",
+     "opp": "El Salvador",
+     "us": 3,
+     "them": 0,
+     "status": "ENDED",
+     "venue": "Estadio Universitario BUAP",
+     "city": "Puebla, Mexico"
+    },
+    {
+     "round": "Group A",
+     "start": "2026-08-01T02:00:00.000Z",
+     "opp": "Cuba",
+     "us": 5,
+     "them": 0,
+     "status": "ENDED",
+     "venue": "Estadio Universitario BUAP",
+     "city": "Puebla, Mexico"
+    },
+    {
+     "round": "Quarterfinal",
+     "start": "2026-08-05T01:00:00.000Z",
+     "opp": "Guatemala",
+     "us": 3,
+     "them": 1,
+     "status": "ENDED",
+     "venue": "Estadio Universitario BUAP",
+     "city": "Puebla, Mexico"
+    },
+    {
+     "round": "Semifinal",
+     "start": "2026-08-07T21:00:00.000Z",
+     "opp": "Costa Rica",
+     "us": 2,
+     "them": 0,
+     "status": "ENDED",
+     "venue": "Estadio Banorte",
+     "city": "Mexico City, Mexico"
+    },
+    {
+     "round": "Final",
+     "start": "2026-08-09T23:00:00.000Z",
+     "opp": "Mexico",
+     "us": null,
+     "them": null,
+     "status": "SCHEDULED",
+     "venue": "Estadio Banorte",
+     "city": "Mexico City, Mexico",
+     "tv": [
+      {
+       "label": "FS2 (English)",
+       "url": "https://www.foxsports.com/live/fs2"
+      },
+      {
+       "label": "ViX (Spanish)",
+       "url": "https://vix.com"
+      }
+     ]
+    }
+   ],
+   "url": "https://www.ussoccer.com/teams/u-20-mens-national-team"
+  },
+  {
+   "id": "u19mnt",
+   "g": "men",
+   "label": "U-19 Men",
+   "name": "U.S. Under-19 Men's National Team",
+   "note": "This cycle's U-19s are the squad playing up at the 2026 Concacaf U-20 Championship — the tournament run lives under U-20 Men above. Camps in Mesa in January, Alicante in March (with a friendly against Wales) and Atlanta in June (against Japan) built that roster.",
+   "comp": "2026 camps & friendlies",
+   "url": "https://www.ussoccer.com/teams/u-19-mens-national-team"
+  },
+  {
+   "id": "u18mnt",
+   "g": "men",
+   "label": "U-18 Men",
+   "name": "U.S. Under-18 Men's National Team",
+   "note": "Faced Iceland, Morocco and hosts Portugal at the Torneio Internacional de Lisboa in late March — a dozen of the squad won their group at the 2025 FIFA U-17 World Cup — then reconvened for a June training camp in Spain.",
+   "comp": "2026 Torneio Internacional de Lisboa & camps",
+   "url": "https://www.ussoccer.com/teams/u-18-mens-national-team"
+  },
+  {
+   "id": "u17mnt",
+   "g": "men",
+   "label": "U-17 Men",
+   "name": "U.S. Under-17 Men's National Team",
+   "note": "Swept through the Concacaf qualifiers in Kingstown unbeaten — 19 goals scored, 1 conceded — to book a record 20th FIFA U-17 World Cup appearance.",
+   "comp": "2026 Concacaf U-17 Qualifiers",
+   "compDates": "Feb 5–10, 2026 · Kingstown, St. Vincent and the Grenadines",
+   "achievements": [
+    "Qualified for the 2026 FIFA U-17 World Cup · Qatar, Nov 19 – Dec 13"
+   ],
+   "next": "The U.S. group and match schedule for the FIFA U-17 World Cup in Qatar land here once the draw is made.",
+   "matches": [
+    {
+     "round": "Qualifier",
+     "start": "2026-02-05T23:00:00.000Z",
+     "opp": "St. Vincent and the Grenadines",
+     "us": 8,
+     "them": 0,
+     "status": "ENDED",
+     "venue": "Arnos Vale Stadium",
+     "city": "Kingstown, SVG"
+    },
+    {
+     "round": "Qualifier",
+     "start": "2026-02-08T00:00:00.000Z",
+     "opp": "St. Kitts and Nevis",
+     "us": 10,
+     "them": 0,
+     "status": "ENDED",
+     "venue": "Arnos Vale Stadium",
+     "city": "Kingstown, SVG"
+    },
+    {
+     "round": "Qualifier",
+     "start": "2026-02-10T23:00:00.000Z",
+     "opp": "Dominican Republic",
+     "us": 1,
+     "them": 1,
+     "status": "ENDED",
+     "venue": "Arnos Vale Stadium",
+     "city": "Kingstown, SVG"
+    }
+   ],
+   "url": "https://www.ussoccer.com/teams/u-17-mens-national-team"
+  },
+  {
+   "id": "u16bnt",
+   "g": "men",
+   "label": "U-16 Boys",
+   "name": "U.S. Under-16 Boys' National Team",
+   "note": "Launched U.S. Soccer's new Futures program with a joint U-15/U-16 camp in Fayetteville, Georgia in February, and competes at the 2026 Vertex Cup in Miami.",
+   "comp": "2026 camps & tournaments",
+   "url": "https://www.ussoccer.com/teams/u-16-boys-national-team"
+  },
+  {
+   "id": "u15bnt",
+   "g": "men",
+   "label": "U-15 Boys",
+   "name": "U.S. Under-15 Boys' National Team",
+   "note": "Training camps in February (international), March (West Palm Beach) and April in Chula Vista, where the squad played Mexico twice. Concacaf's biennial U-15 championship pauses in 2026 as the region transitions to an annual U-16 tournament from 2027.",
+   "comp": "2026 camps & friendlies",
+   "url": "https://www.ussoccer.com/teams/u-15-boys-national-team"
+  },
+  {
+   "id": "uswnt",
+   "g": "women",
+   "label": "USWNT",
+   "name": "U.S. Women's National Team",
+   "note": "Won an eighth SheBelieves Cup in March and split a June series in Brazil. The Concacaf W Championship — the road to the 2027 World Cup — starts in November.",
+   "comp": "2026 friendlies & Concacaf W Championship",
+   "compDates": "W Championship opens Nov 27",
+   "achievements": [
+    "2026 SheBelieves Cup champions — eighth title"
+   ],
+   "matches": [
+    {
+     "round": "Friendly",
+     "start": "2026-01-24T17:00:00.000Z",
+     "opp": "Paraguay",
+     "us": 6,
+     "them": 0,
+     "status": "ENDED"
+    },
+    {
+     "round": "Friendly",
+     "start": "2026-01-27T17:00:00.000Z",
+     "opp": "Chile",
+     "us": 5,
+     "them": 0,
+     "status": "ENDED"
+    },
+    {
+     "round": "SheBelieves Cup",
+     "start": "2026-03-01T17:00:00.000Z",
+     "opp": "Argentina",
+     "us": 2,
+     "them": 0,
+     "status": "ENDED",
+     "city": "Nashville, TN"
+    },
+    {
+     "round": "SheBelieves Cup",
+     "start": "2026-03-04T17:00:00.000Z",
+     "opp": "Canada",
+     "us": 1,
+     "them": 0,
+     "status": "ENDED",
+     "city": "Columbus, OH"
+    },
+    {
+     "round": "SheBelieves Cup",
+     "start": "2026-03-07T17:00:00.000Z",
+     "opp": "Colombia",
+     "us": 1,
+     "them": 0,
+     "status": "ENDED",
+     "city": "Harrison, NJ"
+    },
+    {
+     "round": "Friendly",
+     "start": "2026-04-11T16:00:00.000Z",
+     "opp": "Japan",
+     "us": 2,
+     "them": 1,
+     "status": "ENDED"
+    },
+    {
+     "round": "Friendly",
+     "start": "2026-04-15T16:00:00.000Z",
+     "opp": "Japan",
+     "us": 0,
+     "them": 1,
+     "status": "ENDED"
+    },
+    {
+     "round": "Friendly",
+     "start": "2026-04-18T16:00:00.000Z",
+     "opp": "Japan",
+     "us": 3,
+     "them": 0,
+     "status": "ENDED"
+    },
+    {
+     "round": "Friendly",
+     "start": "2026-06-06T16:00:00.000Z",
+     "opp": "Brazil",
+     "us": 1,
+     "them": 2,
+     "status": "ENDED",
+     "city": "São Paulo, Brazil"
+    },
+    {
+     "round": "Friendly",
+     "start": "2026-06-09T16:00:00.000Z",
+     "opp": "Brazil",
+     "us": 1,
+     "them": 0,
+     "status": "ENDED",
+     "venue": "Arena Castelão",
+     "city": "Fortaleza, Brazil"
+    },
+    {
+     "round": "Friendly",
+     "start": "2026-10-10T18:30:00.000Z",
+     "opp": "Spain",
+     "us": null,
+     "them": null,
+     "status": "SCHEDULED",
+     "venue": "Audi Field",
+     "city": "Washington, D.C.",
+     "tv": [
+      {
+       "label": "TBS (English)",
+       "url": "https://www.tbs.com/watchtbs"
+      },
+      {
+       "label": "HBO Max",
+       "url": "https://www.hbomax.com"
+      },
+      {
+       "label": "Telemundo (Spanish)",
+       "url": "https://www.telemundo.com"
+      },
+      {
+       "label": "Universo (Spanish)",
+       "url": "https://www.nbc.com/live?brand=universo"
+      },
+      {
+       "label": "Peacock",
+       "url": "https://www.peacocktv.com"
+      }
+     ]
+    },
+    {
+     "round": "Friendly",
+     "start": "2026-10-13T23:00:00.000Z",
+     "opp": "Spain",
+     "us": null,
+     "them": null,
+     "status": "SCHEDULED",
+     "venue": "Subaru Park",
+     "city": "Chester, PA",
+     "tv": [
+      {
+       "label": "TNT (English)",
+       "url": "https://www.tntdrama.com/watchtnt"
+      },
+      {
+       "label": "HBO Max",
+       "url": "https://www.hbomax.com"
+      },
+      {
+       "label": "Universo (Spanish)",
+       "url": "https://www.nbc.com/live?brand=universo"
+      },
+      {
+       "label": "Peacock",
+       "url": "https://www.peacocktv.com"
+      }
+     ]
+    },
+    {
+     "round": "Concacaf W Championship",
+     "start": "2026-11-27T17:00:00.000Z",
+     "opp": "El Salvador",
+     "us": null,
+     "them": null,
+     "status": "SCHEDULED",
+     "timeTBD": true,
+     "venue": "Texas Health Mansfield Stadium",
+     "city": "Mansfield, TX",
+     "tv": [
+      {
+       "label": "Paramount+",
+       "url": "https://www.paramountplus.com"
+      }
+     ]
+    }
+   ],
+   "next": "Kickoff and broadcast details for the fall matches land here once announced.",
+   "url": "https://www.ussoccer.com/teams/uswnt"
+  },
+  {
+   "id": "u20wnt",
+   "g": "women",
+   "label": "U-20 Women",
+   "name": "U.S. Under-20 Women's National Team",
+   "note": "Drawn into Group D with Italy, Japan and New Zealand at the World Cup in Poland.",
+   "comp": "2026 FIFA U-20 Women's World Cup",
+   "compDates": "Sep 5–27, 2026 · Poland",
+   "achievements": [
+    "Qualified via the 2025 Concacaf W U-20 Championship (runners-up)"
+   ],
+   "matches": [
+    {
+     "round": "Group D",
+     "start": "2026-09-06T16:00:00.000Z",
+     "opp": "Italy",
+     "us": null,
+     "them": null,
+     "status": "SCHEDULED",
+     "venue": "Stadion Miejski ŁKS Łódź",
+     "city": "Łódź, Poland",
+     "tv": [
+      {
+       "label": "FOX Sports (US TV schedule)",
+       "url": "https://www.foxsports.com/soccer/fifa-u20-womens-world-cup/schedule"
+      }
+     ]
+    },
+    {
+     "round": "Group D",
+     "start": "2026-09-09T13:00:00.000Z",
+     "opp": "Japan",
+     "us": null,
+     "them": null,
+     "status": "SCHEDULED",
+     "venue": "Stadion Miejski ŁKS Łódź",
+     "city": "Łódź, Poland",
+     "tv": [
+      {
+       "label": "FOX Sports (US TV schedule)",
+       "url": "https://www.foxsports.com/soccer/fifa-u20-womens-world-cup/schedule"
+      }
+     ]
+    },
+    {
+     "round": "Group D",
+     "start": "2026-09-12T13:00:00.000Z",
+     "opp": "New Zealand",
+     "us": null,
+     "them": null,
+     "status": "SCHEDULED",
+     "venue": "Arena Sosnowiec",
+     "city": "Sosnowiec, Poland",
+     "tv": [
+      {
+       "label": "FOX Sports (US TV schedule)",
+       "url": "https://www.foxsports.com/soccer/fifa-u20-womens-world-cup/schedule"
+      }
+     ]
+    }
+   ],
+   "next": "US broadcast details for Poland land here once announced.",
+   "url": "https://www.ussoccer.com/teams/u-20-womens-national-team"
+  },
+  {
+   "id": "u19wnt",
+   "g": "women",
+   "label": "U-19 Women",
+   "name": "U.S. Under-19 Women's National Team",
+   "note": "Held a June–July camp at the Arthur M. Blank National Training Center in Fayetteville, Georgia — 24 players, all born in 2007 and all collegians — running concurrently with the U-18s as the program builds toward the next U-20 cycle.",
+   "comp": "2026 camps",
+   "url": "https://www.ussoccer.com/teams/u-19-womens-national-team"
+  },
+  {
+   "id": "u18wnt",
+   "g": "women",
+   "label": "U-18 Women",
+   "name": "U.S. Under-18 Women's National Team",
+   "note": "Traveled to Spain for matches against Sweden and Hungary, held an April camp in West Palm Beach and a June camp in Fayetteville, Georgia. Seven of the June call-ups played at the 2025 FIFA U-17 Women's World Cup.",
+   "comp": "2026 camps & friendlies",
+   "url": "https://www.ussoccer.com/teams/u-18-womens-national-team"
+  },
+  {
+   "id": "u17wnt",
+   "g": "women",
+   "label": "U-17 Women",
+   "name": "U.S. Under-17 Women's National Team",
+   "note": "Won its qualifying group in Costa Rica, clinching the World Cup berth with a 4–0 win over Puerto Rico.",
+   "comp": "2026 Concacaf Women's U-17 Qualifiers",
+   "compDates": "Final round · San Rafael, Costa Rica",
+   "achievements": [
+    "Qualified for the 2026 FIFA U-17 Women's World Cup · Rabat, Morocco, Oct–Nov 2026"
+   ],
+   "matches": [
+    {
+     "round": "Qualifier",
+     "start": "2026-03-22T20:00:00.000Z",
+     "opp": "Puerto Rico",
+     "us": 4,
+     "them": 0,
+     "status": "ENDED",
+     "city": "San Rafael, Costa Rica"
+    }
+   ],
+   "next": "Group E at the World Cup: Samoa, China PR and an African qualifier — match dates and broadcasts land here when FIFA confirms them.",
+   "url": "https://www.ussoccer.com/teams/u-17-womens-national-team"
+  },
+  {
+   "id": "u16gnt",
+   "g": "women",
+   "label": "U-16 Girls",
+   "name": "U.S. Under-16 Girls' National Team",
+   "note": "Comes together for a training camp and matches against Mexico at the Arthur M. Blank National Training Center in Fayetteville, Georgia (announced July 2026).",
+   "comp": "2026 camps & friendlies",
+   "url": "https://www.ussoccer.com/teams/u-16-girls-national-team"
+  },
+  {
+   "id": "u15gnt",
+   "g": "women",
+   "label": "U-15 Girls",
+   "name": "U.S. Under-15 Girls' National Team",
+   "note": "Played matches in England in April and in Germany and the Netherlands in May, then held its first domestic camp at the Blank National Training Center — 24 players born in 2011, the group building toward 2028 U-17 World Cup qualifying. U.S. Soccer says the squad returns to the Concacaf Girls' U-15 Championship this summer; dates land here when confirmed.",
+   "comp": "2026 camps & Concacaf Girls' U-15 Championship",
+   "url": "https://www.ussoccer.com/teams/u-15-girls-national-team"
+  }
+ ]
 }

@@ -703,7 +703,7 @@ function screenMatches(preH) {
   view.innerHTML = `
     ${sexToggle()}
     <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>This week's results, upsets and rating swings &mdash; generated from real data.</span></a>
-    <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>USA youth national teams &mdash; Concacaf championship fixtures, where they play, how to watch.</span></a>
+    <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>USA youth national teams &mdash; fixtures, how to watch, and every World Cup squad back to 1981.</span></a>
     <div id="realfx"></div>
     <div class="kicker">Predictor · any club v any club · model estimate</div>
     <h2 class="disp">Matchup Machine</h2>
@@ -765,37 +765,69 @@ function screenMatches(preH) {
    match rows — no row ships without a verified date, opponent and venue.
    Watch links are per-match and render only on games that haven't finished —
    a played game must never advertise a broadcast (same rule as audit #7). */
-async function screenNationalTeams() {
-  crumb.textContent = 'National Teams';
-  const db = await natTeamsDb();
-  const teams = db.teams || [];
-  const fmtDay = iso => new Date(iso).toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', year: 'numeric' });
-  const row = m => {
-    const ended = m.status === 'ENDED';
-    const res = !ended ? '' : m.us > m.them ? 'W ' : m.us < m.them ? 'L ' : 'D ';
-    const when = ended ? fmtDay(m.start) : m.timeTBD ? fmtDay(m.start) + ' · time TBA' : fmtKick(m.start);
-    const watch = !ended && (m.tv || []).length
-      ? `<div class="meta" style="margin-top:6px">${m.tv.map(t =>
-          `<a class="watchlink" href="${t.url}" target="_blank" rel="noopener">&#9655; Watch: ${esc(t.label)}</a>`).join('')}</div>`
-      : '';
-    return `<div class="match">
-      <div class="mrow"><span class="side"><span class="sn">USA</span></span><span class="vs">${ended ? res + m.us + '–' + m.them : 'V'}</span><span class="side away"><span class="sn">${esc(m.opp)}</span></span></div>
-      <div class="meta"><span>${esc(m.round)}</span><span>${when}</span></div>
-      ${m.venue || m.city ? `<div class="meta"><span>${esc(m.venue || '')}</span><span>${esc(m.city || '')}</span></div>` : ''}
-      ${watch}
-    </div>`;
-  };
-  const block = t => `
+const ntFmtDay = iso => new Date(iso).toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', year: 'numeric' });
+/* teams with scraped tournament-squad history in data/nt_history.json — only
+   these get a "Squad history" link (camp-cycle age groups have no FIFA/world
+   tournament record to show) */
+const NT_HISTORY_IDS = ['usmnt', 'uswnt', 'u20mnt', 'u17mnt', 'u20wnt', 'u17wnt'];
+/* every match row names its team — "USMNT", "USA U-17W" — never a bare USA:
+   the overview shows many teams' games on one page */
+function ntTag(t) {
+  const m = t && t.label ? t.label.match(/^U-(\d+)\s+(Men|Boys|Women|Girls)$/i) : null;
+  if (m) return `USA U-${m[1]}${/^(women|girls)$/i.test(m[2]) ? 'W' : ''}`;
+  return (t && t.label) || 'USA';
+}
+const ntTagFromId = tid => tid === 'usmnt' ? 'USMNT' : tid === 'uswnt' ? 'USWNT'
+  : /^u\d+[mwbg]nt$/.test(tid) ? 'USA ' + tid.replace(/^u(\d+)([mwbg])nt$/, (s, n, g) => `U-${n}${(g === 'w' || g === 'g') ? 'W' : ''}`)
+  : tid.toUpperCase();
+function ntMatchRow(m, tag) {
+  const ended = m.status === 'ENDED';
+  const res = !ended ? '' : m.us > m.them ? 'W ' : m.us < m.them ? 'L ' : 'D ';
+  const when = ended ? ntFmtDay(m.start) : m.timeTBD ? ntFmtDay(m.start) + ' · time TBA' : fmtKick(m.start);
+  const watch = !ended && (m.tv || []).length
+    ? `<div class="meta" style="margin-top:6px">${m.tv.map(t =>
+        `<a class="watchlink" href="${t.url}" target="_blank" rel="noopener">&#9655; Watch: ${esc(t.label)}</a>`).join('')}</div>`
+    : '';
+  return `<div class="match">
+    <div class="mrow"><span class="side"><span class="sn">${esc(tag || 'USA')}</span></span><span class="vs">${ended ? res + m.us + '–' + m.them : 'V'}</span><span class="side away"><span class="sn">${esc(m.opp)}</span></span></div>
+    <div class="meta"><span>${esc(m.round)}</span><span>${when}</span></div>
+    ${m.venue || m.city ? `<div class="meta"><span>${esc(m.venue || '')}</span><span>${esc(m.city || '')}</span></div>` : ''}
+    ${watch}
+  </div>`;
+}
+function ntTeamBlock(t, withHistoryLink) {
+  const tag = ntTag(t);
+  const links = [
+    withHistoryLink && NT_HISTORY_IDS.includes(t.id)
+      ? `<a class="watchlink" href="#/nt/${esc(t.id)}">Squad history &amp; player bios &rarr;</a>` : '',
+    t.url ? `<a class="watchlink" href="${t.url}" target="_blank" rel="noopener">Official team site &#8599;</a>` : ''
+  ].filter(Boolean).join('<span style="color:var(--ink-dim)"> &nbsp;·&nbsp; </span>');
+  return `
     <div class="kicker" style="margin-top:22px">${esc(t.comp)}${t.compDates ? ' · ' + esc(t.compDates) : ''}</div>
     <h2 class="disp">${esc(t.name)}</h2>
     ${t.note ? `<p class="note" style="margin:2px 0 8px">${esc(t.note)}</p>` : ''}
     ${(t.achievements || []).map(a => `<span class="badge c" style="margin:0 6px 8px 0;display:inline-block">${esc(a)}</span>`).join('')}
-    ${(t.matches || []).map(row).join('')}
-    ${t.next ? `<p class="note" style="margin:6px 0 0">${esc(t.next)}</p>` : ''}`;
+    ${(t.matches || []).map(m => ntMatchRow(m, tag)).join('')}
+    ${t.next ? `<p class="note" style="margin:6px 0 0">${esc(t.next)}</p>` : ''}
+    ${links ? `<p style="margin:8px 0 0">${links}</p>` : ''}`;
+}
+let _ntHist = null;
+async function ntHistoryDb() {
+  if (_ntHist) return _ntHist;
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260809d')).json(); }
+  catch { _ntHist = { teams: {}, players: {} }; }
+  return _ntHist;
+}
+async function screenNationalTeams(sub, sub2) {
+  if (sub === 'p') return screenNTPlayer(sub2);
+  if (sub) return screenNationalTeam(sub);
+  crumb.textContent = 'National Teams';
+  const db = await natTeamsDb();
+  const teams = db.teams || [];
   const section = (title, list) => list.length ? `
     <div class="kicker" style="margin-top:30px;font-size:1rem;letter-spacing:.08em">${title}</div>
     <hr style="border:none;border-top:1px solid var(--line,#24352C);margin:4px 0 0">
-    ${list.map(block).join('')}` : '';
+    ${list.map(t => ntTeamBlock(t, true)).join('')}` : '';
   view.innerHTML = `
     <div class="kicker">USA national teams · senior through U-15 · Concacaf &amp; FIFA competitions</div>
     <h2 class="disp">National Teams</h2>
@@ -803,6 +835,92 @@ async function screenNationalTeams() {
       ? section('Men', teams.filter(t => t.g !== 'women')) + section('Women', teams.filter(t => t.g === 'women'))
       : '<p class="note">National-team fixtures are loading into the dataset.</p>'}
     <p class="note">Kickoffs shown in Eastern and your local time. Results, venues and broadcasts from U.S. Soccer, Concacaf and FIFA — nothing is invented. Teams shown without match rows are in camp-and-friendly cycles with no published fixture data. Watch links appear only on upcoming games.</p>`;
+}
+
+/* age at a June 15 midpoint of the tournament year — squads pages span
+   spring and winter editions, so this is a display approximation */
+const ntAgeAt = (dob, y) => Math.floor((Date.UTC(y, 5, 15) - new Date(dob + 'T00:00:00Z')) / 31557600000);
+
+/* per-team page: current campaign plus every world-tournament squad the USA
+   has fielded, browsable by year. Squad data is scraped from per-tournament
+   Wikipedia squads pages (scripts/fetch_nt_history.py). Minors policy: a
+   player who could still be under 18 shows name, position and club only —
+   no birth date, no bio. */
+async function screenNationalTeam(id) {
+  const [db, hist] = await Promise.all([natTeamsDb(), ntHistoryDb()]);
+  const t = (db.teams || []).find(x => x.id === id);
+  const h = (hist.teams || {})[id];
+  if (!t && !h) { location.hash = '#/nt'; return; }
+  crumb.textContent = (t && t.label) || 'National Team';
+  const eds = (h && h.editions) || [];
+  let year = eds.length ? eds[0].year : 0;
+  const rosterHtml = ed => {
+    const meta = [ed.host, ed.coach ? 'Head coach: ' + ed.coach : ''].filter(Boolean).join(' · ');
+    return `
+      <div class="kicker" style="margin-top:14px">${ed.year} ${esc(ed.comp)}${meta ? ' · ' + esc(meta) : ''}</div>
+      <ul class="clublist ntroster">${ed.squad.map(p => {
+        const club = p.club ? esc(p.club) + (p.clubnat && p.clubnat !== 'USA' ? ` (${esc(p.clubnat)})` : '') : '';
+        const stats = [p.caps ? p.caps + ' caps' : '', p.goals ? p.goals + ' goals' : ''].filter(Boolean).join(' · ');
+        const sub = [esc(p.pos), club, p.dob ? 'age ' + ntAgeAt(p.dob, ed.year) : '', stats].filter(Boolean).join(' · ');
+        const inner = `<span class="rk">${p.no || ''}</span>
+          <span class="cl-name"><b>${esc(p.name)}${p.captain ? ' <span class="ntcap" title="captain">&copy;</span>' : ''}</b><span>${sub}</span></span>`;
+        return p.pid
+          ? `<li><a class="ntrow" href="#/nt/p/${esc(p.pid)}">${inner}<span class="ntmore">Profile</span></a></li>`
+          : `<li><div class="ntrow">${inner}</div></li>`;
+      }).join('')}</ul>`;
+  };
+  const render = () => {
+    const ed = eds.find(e => e.year === year);
+    view.innerHTML = `
+      <button class="backbtn" onclick="location.hash='#/nt'">&larr; National Teams</button>
+      ${t ? ntTeamBlock(t, false) : `<h2 class="disp">${esc(h.name)}</h2>`}
+      ${eds.length ? `
+        <div class="kicker" style="margin-top:22px">Squad history · ${eds.length} world tournaments</div>
+        <div class="chips" id="ntyears">${eds.map(e =>
+          `<button class="chip solid" data-y="${e.year}" aria-pressed="${e.year === year}">${e.year}</button>`).join('')}</div>
+        ${ed ? rosterHtml(ed) : ''}
+        <p class="note">Squads as officially named for each tournament; clubs are each player's club at the time. Tap a player for their profile and bio (sourced from Wikipedia). Players who may be under 18 show name, position and club only.</p>`
+        : '<p class="note">Historical squads land here as tournament data is added.</p>'}`;
+    const yc = view.querySelector('#ntyears');
+    if (yc) yc.addEventListener('click', e => {
+      const b = e.target.closest('[data-y]'); if (!b) return;
+      year = +b.dataset.y; render();
+    });
+  };
+  render();
+}
+
+/* nt player profile: bio plus every world-tournament appearance across all
+   national teams (a U-17 alum often reappears on the U-20s and seniors) */
+async function screenNTPlayer(pid) {
+  const hist = await ntHistoryDb();
+  const rows = [];
+  for (const [tid, team] of Object.entries(hist.teams || {})) {
+    for (const ed of team.editions || []) {
+      for (const p of ed.squad || []) if (p.pid === pid) rows.push({ tid, ed, p });
+    }
+  }
+  if (!rows.length) { location.hash = '#/nt'; return; }
+  rows.sort((a, b) => b.ed.year - a.ed.year);
+  const p0 = rows[0].p;
+  const info = (hist.players || {})[pid] || {};
+  crumb.textContent = p0.name;
+  const dob = (rows.find(r => r.p.dob) || {}).p ? (rows.find(r => r.p.dob) || {}).p.dob : null;
+  view.innerHTML = `
+    <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/nt'">&larr; Back</button>
+    <div class="kicker">USA national teams · player</div>
+    <h2 class="disp">${esc(p0.name)}</h2>
+    <p class="note" style="margin:2px 0 8px">${[p0.pos, dob ? 'born ' + dob : ''].filter(Boolean).map(esc).join(' · ')}</p>
+    ${info.bio ? `<p style="margin:6px 0 10px;line-height:1.55">${esc(info.bio)}</p>` : ''}
+    <div class="kicker" style="margin-top:14px">World tournaments · ${rows.length}</div>
+    <ul class="clublist ntroster">${rows.map(r => {
+      const club = r.p.club ? esc(r.p.club) + (r.p.clubnat && r.p.clubnat !== 'USA' ? ` (${esc(r.p.clubnat)})` : '') : '';
+      const sub = [club, r.p.dob ? 'age ' + ntAgeAt(r.p.dob, r.ed.year) : '', r.ed.host ? esc(r.ed.host) : ''].filter(Boolean).join(' · ');
+      return `<li><a class="ntrow" href="#/nt/${esc(r.tid)}"><span class="rk">${r.p.no || ''}</span>
+        <span class="cl-name"><b>${r.ed.year} ${esc(r.ed.comp)}</b><span>${sub}</span></span>
+        <span class="ntmore">${esc(ntTagFromId(r.tid))}</span></a></li>`;
+    }).join('')}</ul>
+    <p class="note">Appearances from officially named tournament squads; clubs are as of each tournament. Bio from Wikipedia.</p>`;
 }
 
 function worldLadder(c) {
@@ -1944,7 +2062,7 @@ function route() {
   else if (parts[0] === 'following') screenFollowing();
   else if (parts[0] === 'legends') screenLegends(parts[1]);
   else if (parts[0] === 'cups') screenCups();
-  else if (parts[0] === 'nt') screenNationalTeams();
+  else if (parts[0] === 'nt') screenNationalTeams(parts[1], parts[2]);
   else if (parts[0] === 'freeagent') screenFASample();
   else if (parts[0] === 'clubtools') screenClubTools();
   else if (parts[0] === 'legal') screenLegal();
