@@ -67,8 +67,10 @@ def main():
     schools = crawl_index()
     for s in schools:
         s['_toks'] = toks(s['name'])
+    groups = tuple(sys.argv[1].split(',')) if len(sys.argv) > 1 else (
+        'ncaa1', 'ncaa2', 'ncaa3', 'ncaa1w', 'ncaa2w')
     clubs = load_clubs()
-    todo = [c for c in clubs if c['g'] in ('ncaa1', 'ncaa2') and not c.get('img')]
+    todo = [c for c in clubs if c['g'] in groups and not c.get('img')]
     print(f'{len(todo)} NCAA clubs missing crests')
     got = miss = amb = 0
     svgdir = os.path.join(ROOT, 'crests', '_svg_tmp')

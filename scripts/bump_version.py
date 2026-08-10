@@ -21,8 +21,14 @@ if len(sys.argv) > 1:
     new = sys.argv[1]
 else:
     today = datetime.date.today().strftime('%Y%m%d')
-    new = today + ('a' if old[:8] != today
-                   else string.ascii_lowercase[string.ascii_lowercase.index(old[8]) + 1])
+    # never mint a token <= the current one: scheduled jobs run on UTC dates,
+    # so a local-date bump after a UTC rollover restarts at 'a' and reissues an
+    # already-used token (v20260809a shipped twice on 2026-08-09; returning
+    # clients kept stale cached assets). If the file token's date is ahead of
+    # today, keep that date and advance its letter instead.
+    base = max(today, old[:8])
+    new = base + ('a' if old[:8] != base
+                  else string.ascii_lowercase[string.ascii_lowercase.index(old[8]) + 1])
 
 for f in FILES:
     t = f.read_text()
