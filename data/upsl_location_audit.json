@@ -1,0 +1,2305 @@
+{
+ "repinned": [
+  {
+   "club": "NY Renegades FC",
+   "from": "Jefferson, WV",
+   "to": "Hicksville, NY"
+  },
+  {
+   "club": "OSNER'S FC",
+   "from": "Sandy Springs, GA",
+   "to": "Brooklyn, NY"
+  },
+  {
+   "club": "Kelmendi FC NY",
+   "from": "Berkeley, WV",
+   "to": "Yorktown Heights, NY"
+  },
+  {
+   "club": "AFC Academy",
+   "from": "Shenandoah, VA",
+   "to": "New York, NY"
+  },
+  {
+   "club": "Bulldogs SC",
+   "from": "Artesia, NM",
+   "to": "East Brunswick, NJ"
+  },
+  {
+   "club": "Five Rivers SC",
+   "from": "Lincoln, OR",
+   "to": "Carteret, NJ"
+  },
+  {
+   "club": "UCFSC Warriors",
+   "from": "Montgomery, IL",
+   "to": "Rahway, NJ"
+  },
+  {
+   "club": "Olympians FC",
+   "from": "Springfield, VA",
+   "to": "El Mirage, AZ"
+  },
+  {
+   "club": "Next Level Soccer Premier",
+   "from": "Blaine, OK",
+   "to": "Gilbert, AZ"
+  },
+  {
+   "club": "State 48 Sporting FC",
+   "from": "Dewey, OK",
+   "to": "El Mirage, AZ"
+  },
+  {
+   "club": "Arizona Arsenal SC",
+   "from": "?, AZ",
+   "to": "Mesa, AZ"
+  },
+  {
+   "club": "RSL AZ Monarch",
+   "from": "Dewey, OK",
+   "to": "Tucson, AZ"
+  },
+  {
+   "club": "RSL Arizona",
+   "from": "Mesa, AZ",
+   "to": "Scottsdale, AZ"
+  },
+  {
+   "club": "Los Toros",
+   "from": "McKinley, NM",
+   "to": "Reston, VA"
+  },
+  {
+   "club": "MSI",
+   "from": "Amarillo, TX",
+   "to": "Rockville, MD"
+  },
+  {
+   "club": "Hybrid Football Club",
+   "from": "Washington, IN",
+   "to": "Oxon Hill, MD"
+  },
+  {
+   "club": "Ocala Soccer Institute",
+   "from": "Laurens, GA",
+   "to": "Ocala, FL"
+  },
+  {
+   "club": "Florida Badgers FC",
+   "from": "Hernando, FL",
+   "to": "Boynton Beach, FL"
+  },
+  {
+   "club": "Empire SC",
+   "from": "Tallahassee, FL",
+   "to": "Weston, FL"
+  },
+  {
+   "club": "Elevate Soccer Project ESP Miami",
+   "from": "Pasco, FL",
+   "to": "Miami, FL"
+  },
+  {
+   "club": "Twin Rivers United",
+   "from": "Martin, FL",
+   "to": "Charlotte County, FL"
+  },
+  {
+   "club": "Chattanooga Red Wolves 2",
+   "from": "East Ridge, TN",
+   "to": "Chattanooga, TN"
+  },
+  {
+   "club": "LSA Mustangs",
+   "from": "Hall, GA",
+   "to": "Norcross, GA"
+  },
+  {
+   "club": "Scenic City Soccer Club",
+   "from": "Columbus, GA",
+   "to": "Chattanooga, GA"
+  },
+  {
+   "club": "Potros FC",
+   "from": "Petersburg, VA",
+   "to": "Marietta, GA"
+  },
+  {
+   "club": "Pachuca Georgia",
+   "from": "Mulberry, GA",
+   "to": "Lilburn, GA"
+  },
+  {
+   "club": "Soccer Saves Lives FC",
+   "from": "Banks, GA",
+   "to": "Norcross, GA"
+  },
+  {
+   "club": "Atlanta Fire United",
+   "from": "Atlanta, GA",
+   "to": "Duluth, GA"
+  },
+  {
+   "club": "Kalonji Pro-Profile",
+   "from": "Tunica, MS",
+   "to": "Lawrenceville, GA"
+  },
+  {
+   "club": "FC Columbus Elite",
+   "from": "Tunica, MS",
+   "to": "Columbus, GA"
+  },
+  {
+   "club": "UMA FC",
+   "from": "Yuma, AZ",
+   "to": "LaGrange, GA"
+  },
+  {
+   "club": "Angelus",
+   "from": "Sheridan, KS",
+   "to": "Warner Robins, GA"
+  },
+  {
+   "club": "Red Top Soccer Club",
+   "from": "Bartow, GA",
+   "to": "Cartersville, GA"
+  },
+  {
+   "club": "UFA Lawrenceville",
+   "from": "Phillips, AR",
+   "to": "Lawrenceville, GA"
+  },
+  {
+   "club": "LSA Norcross Pro",
+   "from": "St. Francis, AR",
+   "to": "Norcross, GA"
+  },
+  {
+   "club": "Chattanooga Kaistorms FC",
+   "from": "Baxter, AR",
+   "to": "Chattanooga, TN"
+  },
+  {
+   "club": "Tennessee United SC",
+   "from": "Knoxville, TN",
+   "to": "Hendersonville, TN"
+  },
+  {
+   "club": "Midwest Hooligans",
+   "from": "Sharp, AR",
+   "to": "Evansville, IN"
+  },
+  {
+   "club": "Real Henderson",
+   "from": "Sunnyvale, CA",
+   "to": "Henderson, KY"
+  },
+  {
+   "club": "Bowling Green FC",
+   "from": "Warren, TN",
+   "to": "Bowling Green, KY"
+  },
+  {
+   "club": "Morazan ZLA FC",
+   "from": "Izard, AR",
+   "to": "Nashville, TN"
+  },
+  {
+   "club": "Pumas Premier",
+   "from": "Stone, AR",
+   "to": "Paducah, KY"
+  },
+  {
+   "club": "AC Raleigh",
+   "from": "Pittsburgh, PA",
+   "to": "Raleigh, NC"
+  },
+  {
+   "club": "Sporting Soccer Academy",
+   "from": "Hampden, PA",
+   "to": "Johnson City, TN"
+  },
+  {
+   "club": "Briar United FC",
+   "from": "Briar Creek, PA",
+   "to": "Raleigh, NC"
+  },
+  {
+   "club": "Rush United FC",
+   "from": "Rush, PA",
+   "to": "Radford, VA"
+  },
+  {
+   "club": "North Carolina FC Academy",
+   "from": "Cary, NC",
+   "to": "Raleigh, NC"
+  },
+  {
+   "club": "Emory FC",
+   "from": "Wayne, PA",
+   "to": "Emory, VA"
+  },
+  {
+   "club": "Pro-finish Management FC",
+   "from": "Greene, PA",
+   "to": "Harrisburg, NC"
+  },
+  {
+   "club": "North Carolina Lions",
+   "from": "Wilmington, NC",
+   "to": "Winston Salem, NC"
+  },
+  {
+   "club": "Tar Devils SC",
+   "from": "Upper Mifflin, PA",
+   "to": "Chapel Hill, NC"
+  },
+  {
+   "club": "Wake Futbol Club",
+   "from": "Washington, MD",
+   "to": "Holly Springs, NC"
+  },
+  {
+   "club": "Rush United FC II",
+   "from": "Rush, PA",
+   "to": "Radford, VA"
+  },
+  {
+   "club": "South Carolina Surf",
+   "from": "Horry, SC",
+   "to": "Mount Pleasant, SC"
+  },
+  {
+   "club": "Electric City FC",
+   "from": "Scranton, PA",
+   "to": "Anderson, SC"
+  },
+  {
+   "club": "Mint Hill FC",
+   "from": "Oil City, PA",
+   "to": "Mint Hill, NC"
+  },
+  {
+   "club": "Combine Academy",
+   "from": "Lower Makefield, PA",
+   "to": "Lincolnton, NC"
+  },
+  {
+   "club": "Charlotte Soccer Academy",
+   "from": "Pittsburgh, PA",
+   "to": "Charlotte, NC"
+  },
+  {
+   "club": "Gastonia FC Strikers",
+   "from": "Fayette, WV",
+   "to": "Mount Holly, NC"
+  },
+  {
+   "club": "Coastal Kings FC",
+   "from": "San Luis Obispo, CA",
+   "to": "Savannah, GA"
+  },
+  {
+   "club": "Pre-College DA",
+   "from": "Boone, WV",
+   "to": "Pineville, NC"
+  },
+  {
+   "club": "NC Ballers FC",
+   "from": "Kanawha, WV",
+   "to": "Charlotte, NC"
+  },
+  {
+   "club": "Chicago Nation FC",
+   "from": "Kay, OK",
+   "to": "Chicago, IL"
+  },
+  {
+   "club": "KS Wisloka Chicago",
+   "from": "Cowley, KS",
+   "to": "Elk Grove Village, IL"
+  },
+  {
+   "club": "Round Lake Evolution FC",
+   "from": "Cowley, KS",
+   "to": "Round Lake, IL"
+  },
+  {
+   "club": "Berber City FC",
+   "from": "San Francisco, CA",
+   "to": "Chicago, IL"
+  },
+  {
+   "club": "TBD FC",
+   "from": "Dorchester, SC",
+   "to": "Madison, WI"
+  },
+  {
+   "club": "Diverse City FC Pro Academy",
+   "from": "Kay, OK",
+   "to": "Schaumburg, IL"
+  },
+  {
+   "club": "Chicago Strikers",
+   "from": "Kay, OK",
+   "to": "Oswego, IL"
+  },
+  {
+   "club": "Fc 1974 Libertyville",
+   "from": "Sumner, KS",
+   "to": "Libertyville, IL"
+  },
+  {
+   "club": "Chicago KICS FC",
+   "from": "Kay, OK",
+   "to": "Chicago, IL"
+  },
+  {
+   "club": "Drita SC",
+   "from": "Elkhart, IN",
+   "to": "Rochester Hills, MI"
+  },
+  {
+   "club": "Detroit United",
+   "from": "Detroit, IL",
+   "to": "Farmington Hills, MI"
+  },
+  {
+   "club": "Detroit Arsenal",
+   "from": "Warren, MI",
+   "to": "Rochester, MI"
+  },
+  {
+   "club": "Victory Soccer",
+   "from": "Chicago, IL",
+   "to": "Livonia, MI"
+  },
+  {
+   "club": "Detroit Metro FC",
+   "from": "Pontiac, MI",
+   "to": "Metro Detroit, MI"
+  },
+  {
+   "club": "Metro Detroit Wheels FC",
+   "from": "Cass, IN",
+   "to": "Macomb, MI"
+  },
+  {
+   "club": "Pinnacle FC",
+   "from": "Jefferson, IL",
+   "to": "Auburn Hills, MI"
+  },
+  {
+   "club": "Chivas Kansas",
+   "from": "?, KS",
+   "to": "Lenexa, KS"
+  },
+  {
+   "club": "Fountain City Athletic",
+   "from": "Chicago, IL",
+   "to": "Kansas City, KS"
+  },
+  {
+   "club": "Central Kansas United",
+   "from": "Anderson, KS",
+   "to": "Salina, KS"
+  },
+  {
+   "club": "Dodge City Toros FC",
+   "from": "Pettis, MO",
+   "to": "Dodge City, KS"
+  },
+  {
+   "club": "Al Madinah Wichita Football Club",
+   "from": "Johnson, MO",
+   "to": "Wichita, KS"
+  },
+  {
+   "club": "Emporia FC",
+   "from": "Springfield, IL",
+   "to": "Emporia, KS"
+  },
+  {
+   "club": "Ryogoku Soccer Academy",
+   "from": "Ray, MO",
+   "to": "Kansas City, MO"
+  },
+  {
+   "club": "Granite City FC",
+   "from": "Granite City, IL",
+   "to": "St. Cloud, MN"
+  },
+  {
+   "club": "St. Croix SC",
+   "from": "Aurora, IL",
+   "to": "Stillwater, MN"
+  },
+  {
+   "club": "Vlora FC",
+   "from": "Knox, IL",
+   "to": "Burnsville, MN"
+  },
+  {
+   "club": "Karen Football Association",
+   "from": "Knox, IL",
+   "to": "St. Paul, MN"
+  },
+  {
+   "club": "1826 Academy",
+   "from": "Big Wells, TX",
+   "to": "Minneapolis, MN"
+  },
+  {
+   "club": "Manitou FC",
+   "from": "McHenry, IL",
+   "to": "White Bear Lake, MN"
+  },
+  {
+   "club": "St. Paul Blackhawks",
+   "from": "Knox, IL",
+   "to": "St. Paul, MN"
+  },
+  {
+   "club": "Minnesota Twinstars FC",
+   "from": "?, MN",
+   "to": "Brooklyn Park, MN"
+  },
+  {
+   "club": "Union Des Bateaux FC",
+   "from": "Fulton, IL",
+   "to": "Eau Claire, WI"
+  },
+  {
+   "club": "Superior City FC",
+   "from": "Chicago, IL",
+   "to": "Superior, WI"
+  },
+  {
+   "club": "Provo Utah FC",
+   "from": "Utah, UT",
+   "to": "Provo, UT"
+  },
+  {
+   "club": "Utah Athletic",
+   "from": "Kane, UT",
+   "to": "Provo, UT"
+  },
+  {
+   "club": "Boise Timbers",
+   "from": "Ada, ID",
+   "to": "Boise, ID"
+  },
+  {
+   "club": "Uni\u00f3n Latina FC",
+   "from": "Salisbury, MD",
+   "to": "Provo, UT"
+  },
+  {
+   "club": "Utah Rangers FC",
+   "from": "?, UT",
+   "to": "Ogden, UT"
+  },
+  {
+   "club": "Yuta Kickers FC",
+   "from": "Eagle, CO",
+   "to": "Provo, UT"
+  },
+  {
+   "club": "Viva CV",
+   "from": "Eagle, CO",
+   "to": "Logan, UT"
+  },
+  {
+   "club": "River Mountain FC",
+   "from": "Larimer, CO",
+   "to": "West Jordan, UT"
+  },
+  {
+   "club": "Worthington Community FC",
+   "from": "Baltimore, MD",
+   "to": "Worthington, MN"
+  },
+  {
+   "club": "Omaha Street Futbol Club",
+   "from": "Boone, IN",
+   "to": "Omaha, NE"
+  },
+  {
+   "club": "Club Atletico Omaha",
+   "from": "West Lafayette, IN",
+   "to": "Omaha, NE"
+  },
+  {
+   "club": "Super Stars FC",
+   "from": "Marlborough, MA",
+   "to": "Omaha, NE"
+  },
+  {
+   "club": "Reapers FC",
+   "from": "Sheridan, IN",
+   "to": "Lincoln, NE"
+  },
+  {
+   "club": "Bana Mboka FC",
+   "from": "Carroll, IN",
+   "to": "Omaha, NE"
+  },
+  {
+   "club": "Capital City Roots FC",
+   "from": "Boone, IN",
+   "to": "Des Moines, IA"
+  },
+  {
+   "club": "Garwo United FC",
+   "from": "Clinton, IN",
+   "to": "Sioux Falls, SD"
+  },
+  {
+   "club": "Heartland United FC",
+   "from": "Kaufman, TX",
+   "to": "Bellevue, NE"
+  },
+  {
+   "club": "CB Captains FC",
+   "from": "Decorah, IA",
+   "to": "Council Bluffs, IA"
+  },
+  {
+   "club": "Lightning Stars FC",
+   "from": "Woodstock, CT",
+   "to": "Fitchburg, MA"
+  },
+  {
+   "club": "Mighty Mainers",
+   "from": "Southbridge, MA",
+   "to": "Portland, ME"
+  },
+  {
+   "club": "Southwest Futbol Club",
+   "from": "Appomattox, VA",
+   "to": "Bridgeport, CT"
+  },
+  {
+   "club": "FC Bandera",
+   "from": "Newport Beach, CA",
+   "to": "Sacramento, CA"
+  },
+  {
+   "club": "Placer United",
+   "from": "Placer, CA",
+   "to": "Rocklin, CA"
+  },
+  {
+   "club": "Reno United FC",
+   "from": "Lassen, CA",
+   "to": "Reno, NV"
+  },
+  {
+   "club": "Butte United Soccer Club",
+   "from": "Butte, CA",
+   "to": "Chico, CA"
+  },
+  {
+   "club": "Bay Area United FC",
+   "from": "Merced, CA",
+   "to": "Oakland, CA"
+  },
+  {
+   "club": "Acoreano Sport",
+   "from": "Clark, NV",
+   "to": "Hilmar, CA"
+  },
+  {
+   "club": "Valley 559 FC",
+   "from": "San Diego, CA",
+   "to": "Fresno, CA"
+  },
+  {
+   "club": "East County Revolution FC",
+   "from": "Greensboro, NC",
+   "to": "Brentwood, CA"
+  },
+  {
+   "club": "Azteca FC",
+   "from": "Lancaster, CA",
+   "to": "Merced, CA"
+  },
+  {
+   "club": "Atletico San Jose FC",
+   "from": "Clark, NV",
+   "to": "San Jose, CA"
+  },
+  {
+   "club": "Bay Valley Suns",
+   "from": "Boulder City, NV",
+   "to": "Pleasanton, CA"
+  },
+  {
+   "club": "FC Bartlesville Buffaloes",
+   "from": "Chariton, MO",
+   "to": "Bartlesville, OK"
+  },
+  {
+   "club": "Arkansas Wolves 2",
+   "from": "?, AR",
+   "to": "Alexander, AR"
+  },
+  {
+   "club": "Hot Springs Wolves",
+   "from": "Cooper, MO",
+   "to": "Hot Springs, AR"
+  },
+  {
+   "club": "Arkansas FC - Benton",
+   "from": "Bentonville, AR",
+   "to": "Benton, AR"
+  },
+  {
+   "club": "Benton AFC",
+   "from": "Big Grove, IA",
+   "to": "Benton, AR"
+  },
+  {
+   "club": "Lions Football Club",
+   "from": "Olyphant, PA",
+   "to": "Columbus, OH"
+  },
+  {
+   "club": "Leal United FC",
+   "from": "Upper Arlington, OH",
+   "to": "Reynoldsburg, OH"
+  },
+  {
+   "club": "Columbus Astray",
+   "from": "Beaver, OH",
+   "to": "Columbus, OH"
+  },
+  {
+   "club": "Fut Ohio SC",
+   "from": "?, OH",
+   "to": "Columbus, OH"
+  },
+  {
+   "club": "Indy Gladiators SC",
+   "from": "Columbiana, OH",
+   "to": "Indianapolis, IN"
+  },
+  {
+   "club": "Manu Ledesma Academy",
+   "from": "Moon, PA",
+   "to": "Cincinnati, OH"
+  },
+  {
+   "club": "Ohio International FC",
+   "from": "Muskingum, OH",
+   "to": "Columbus, OH"
+  },
+  {
+   "club": "Lightning SC",
+   "from": "Brimfield, OH",
+   "to": "Canton, OH"
+  },
+  {
+   "club": "Deportivo Rose City",
+   "from": "Marion, OR",
+   "to": "Gresham, OR"
+  },
+  {
+   "club": "Valle Verde FC",
+   "from": "Salem, OR",
+   "to": "Springfield, OR"
+  },
+  {
+   "club": "BFC Lightning",
+   "from": "Portland, OR",
+   "to": "Vancouver, WA"
+  },
+  {
+   "club": "Cascadia United",
+   "from": "Linn, OR",
+   "to": "Hillsboro, OR"
+  },
+  {
+   "club": "Vancouver Colima FC",
+   "from": "?, WA",
+   "to": "Vancouver, WA"
+  },
+  {
+   "club": "Salem Panthers FC",
+   "from": "Mount Angel, OR",
+   "to": "Salem, OR"
+  },
+  {
+   "club": "Inter PDX FC",
+   "from": "Marion, OR",
+   "to": "Wilsonville, OR"
+  },
+  {
+   "club": "Westside Metros FC",
+   "from": "Clackamas, OR",
+   "to": "Tigard, OR"
+  },
+  {
+   "club": "AV ALTA FC Academy",
+   "from": "Los Angeles, CA",
+   "to": "Palmdale, CA"
+  },
+  {
+   "club": "ASC Antelope Valley",
+   "from": "Tulare, CA",
+   "to": "Palmdale, CA"
+  },
+  {
+   "club": "Guadalajara",
+   "from": "Anaheim, CA",
+   "to": "Oxnard, CA"
+  },
+  {
+   "club": "L.A. Wolves FC",
+   "from": "Kern, CA",
+   "to": "Los Angeles, CA"
+  },
+  {
+   "club": "FC Scorpions",
+   "from": "Tempe, AZ",
+   "to": "Lynwood, CA"
+  },
+  {
+   "club": "Deportivo Olimpico",
+   "from": "Kern, CA",
+   "to": "Guadalupe, CA"
+  },
+  {
+   "club": "Ocelot Academy LA",
+   "from": "Placer, CA",
+   "to": "Los Angeles, CA"
+  },
+  {
+   "club": "Sporting FC",
+   "from": "Monterey, CA",
+   "to": "Westlake Village, CA"
+  },
+  {
+   "club": "Estudiantes",
+   "from": "San Francisco, CA",
+   "to": "Oxnard, CA"
+  },
+  {
+   "club": "LA Sol Athletics",
+   "from": "Tulare, CA",
+   "to": "Beverly Hills, CA"
+  },
+  {
+   "club": "SoCal United",
+   "from": "Camarillo, CA",
+   "to": "Tustin, CA"
+  },
+  {
+   "club": "Laguna United FC",
+   "from": "Elk Grove, CA",
+   "to": "Laguna Niguel, CA"
+  },
+  {
+   "club": "Ocelot Academy",
+   "from": "Placer, CA",
+   "to": "San Bernardino, CA"
+  },
+  {
+   "club": "AYSD D1 Academy Premier North",
+   "from": "Inyo, CA",
+   "to": "Irvine, CA"
+  },
+  {
+   "club": "88Thirty",
+   "from": "Fresno, CA",
+   "to": "Orange County, CA"
+  },
+  {
+   "club": "Apple Valley Storm",
+   "from": "Fresno, CA",
+   "to": "Apple Valley, CA"
+  },
+  {
+   "club": "Santa Ana Winds FC",
+   "from": "Bozeman, MT",
+   "to": "Santa Ana, CA"
+  },
+  {
+   "club": "Playmaker FC",
+   "from": "Battle Ground, WA",
+   "to": "Orange County, CA"
+  },
+  {
+   "club": "Nomads SC",
+   "from": "Monterey, CA",
+   "to": "San Diego, CA"
+  },
+  {
+   "club": "San Diego Internacional FC",
+   "from": "Kern, CA",
+   "to": "San Diego, CA"
+  },
+  {
+   "club": "City SC San Diego",
+   "from": "San Diego, CA",
+   "to": "Carlsbad., CA"
+  },
+  {
+   "club": "Rebels San Diego",
+   "from": "Kern, CA",
+   "to": "Chula Vista, CA"
+  },
+  {
+   "club": "Fullerton Disciples FC",
+   "from": "Los Angeles, CA",
+   "to": "Fullerton, CA"
+  },
+  {
+   "club": "AYSD D1 Academy Premier South",
+   "from": "Kern, CA",
+   "to": "Irvine, CA"
+  },
+  {
+   "club": "LTFC",
+   "from": "Hood, TX",
+   "to": "Lake Travis, TX"
+  },
+  {
+   "club": "ATX Blues",
+   "from": "Erath, TX",
+   "to": "Austin, TX"
+  },
+  {
+   "club": "Kingdom FC",
+   "from": "Palo Pinto, TX",
+   "to": "Killeen, TX"
+  },
+  {
+   "club": "Saint Stephen's Soccer Academy",
+   "from": "Wichita Falls, TX",
+   "to": "Austin, TX"
+  },
+  {
+   "club": "Stellar Football Club",
+   "from": "Erath, TX",
+   "to": "Lake Travis, TX"
+  },
+  {
+   "club": "Legends FC by JS",
+   "from": "Palo Pinto, TX",
+   "to": "Austin, TX"
+  },
+  {
+   "club": "Laredo Heat SC U23",
+   "from": "LeFlore, OK",
+   "to": "Laredo, TX"
+  },
+  {
+   "club": "210 FC",
+   "from": "Fannin, TX",
+   "to": "San Antonio, TX"
+  },
+  {
+   "club": "The Dreams FC",
+   "from": "New York, NY",
+   "to": "San Antonio, TX"
+  },
+  {
+   "club": "SA Athletic FC Wolves",
+   "from": "Tolton, SD",
+   "to": "San Antonio, TX"
+  },
+  {
+   "club": "SA City SC",
+   "from": "Texas City, TX",
+   "to": "San Antonio, TX"
+  },
+  {
+   "club": "Arsenal Futbol Club",
+   "from": "Haskell, OK",
+   "to": "San Antonio, TX"
+  },
+  {
+   "club": "Alpha Futbol USA",
+   "from": "LeFlore, OK",
+   "to": "San Antonio, TX"
+  },
+  {
+   "club": "Texas Spurs FC",
+   "from": "Fort Worth, TX",
+   "to": "Allen, TX"
+  },
+  {
+   "club": "Atletico Dallas II",
+   "from": "Stephens, TX",
+   "to": "Dallas, TX"
+  },
+  {
+   "club": "Tenfifteen FC",
+   "from": "Salt Lake City, UT",
+   "to": "Dallas, TX"
+  },
+  {
+   "club": "TAG Soccer",
+   "from": "Young, TX",
+   "to": "Fairview, TX"
+  },
+  {
+   "club": "Balboa FC",
+   "from": "Grand Prairie, TX",
+   "to": "Fort Worth, TX"
+  },
+  {
+   "club": "Dallas Deportivo FC",
+   "from": "Baylor, TX",
+   "to": "Dallas, TX"
+  },
+  {
+   "club": "DKSC Pro",
+   "from": "Archer, TX",
+   "to": "Dallas, TX"
+  },
+  {
+   "club": "Resolute Soccer",
+   "from": "Longview, TX",
+   "to": "Celina, TX"
+  },
+  {
+   "club": "Matias Almeyda FC",
+   "from": "Harris, TX",
+   "to": "Houston, TX"
+  },
+  {
+   "club": "SVD Beaumont",
+   "from": "Matagorda, TX",
+   "to": "Beaumont, TX"
+  },
+  {
+   "club": "Houston Dutch Lions FC",
+   "from": "Jackson, TX",
+   "to": "Conroe, TX"
+  },
+  {
+   "club": "Lightning Elite FC",
+   "from": "Calhoun, TX",
+   "to": "Katy, TX"
+  },
+  {
+   "club": "Katy Jaguars FC",
+   "from": "Matagorda, TX",
+   "to": "Katy, TX"
+  },
+  {
+   "club": "Aspire FC Lions",
+   "from": "Matagorda, TX",
+   "to": "Houston, TX"
+  },
+  {
+   "club": "Texas Hawks FC",
+   "from": "Jim Wells, TX",
+   "to": "Houston, TX"
+  },
+  {
+   "club": "North Stars FC",
+   "from": "Nogales, AZ",
+   "to": "McLean, VA"
+  },
+  {
+   "club": "The St James Football Club",
+   "from": "Seminole, OK",
+   "to": "Springfield, VA"
+  },
+  {
+   "club": "Summit Valley United",
+   "from": "Putnam, WV",
+   "to": "Winchester, VA"
+  },
+  {
+   "club": "Wave Futbol Club",
+   "from": "Buckingham, VA",
+   "to": "Norfolk, VA"
+  },
+  {
+   "club": "Seagam FC",
+   "from": "Uintah, UT",
+   "to": "Kent, WA"
+  },
+  {
+   "club": "3 Cities FC",
+   "from": "Santa Fe, NM",
+   "to": "Pasco, WA"
+  },
+  {
+   "club": "Tri-Cities Badgers FC",
+   "from": "Uintah, UT",
+   "to": "Pasco, WA"
+  },
+  {
+   "club": "United Sports FC",
+   "from": "Polk, TX",
+   "to": "Bellevue, WA"
+  },
+  {
+   "club": "Gala FC",
+   "from": "Botetourt, VA",
+   "to": "Everett, WA"
+  },
+  {
+   "club": "Thurston County SA",
+   "from": "Terrell, TX",
+   "to": "Olympia, WA"
+  },
+  {
+   "club": "West Texas Rush",
+   "from": "Houston, TX",
+   "to": "El Paso, TX"
+  },
+  {
+   "club": "New Mexico FC",
+   "from": "?, NM",
+   "to": "Albuquerque, NM"
+  },
+  {
+   "club": "Rio United",
+   "from": "Los Angeles, CA",
+   "to": "El Paso, TX"
+  },
+  {
+   "club": "Sun City Futbol Club",
+   "from": "Presidio, TX",
+   "to": "El Paso, TX"
+  },
+  {
+   "club": "United Elite Krajisnik FC",
+   "from": "Wells, IN",
+   "to": "Utica, NY"
+  },
+  {
+   "club": "New York Shockers",
+   "from": "?, NY",
+   "to": "Albany, NY"
+  },
+  {
+   "club": "Orange City FC",
+   "from": "Orange City, IA",
+   "to": "Liverpool, NY"
+  },
+  {
+   "club": "FCY New York",
+   "from": "?, NY",
+   "to": "Buffalo, NY"
+  },
+  {
+   "club": "Smugtown FC",
+   "from": "Wells, IN",
+   "to": "Rochester, NY"
+  },
+  {
+   "club": "Onondaga FC",
+   "from": "Onondaga, NY",
+   "to": "Syracuse, NY"
+  },
+  {
+   "club": "NFC",
+   "from": "Albemarle, NC",
+   "to": "Auburn, NY"
+  },
+  {
+   "club": "Torabora FC",
+   "from": "Adams, IN",
+   "to": "Utica, NY"
+  },
+  {
+   "club": "M'mbondo FC",
+   "from": "Van Wert, OH",
+   "to": "Buffalo, NY"
+  },
+  {
+   "club": "NY Renegades FC II",
+   "from": "Wise, VA",
+   "to": "Hicksville, NY"
+  },
+  {
+   "club": "New York Braveheart SC U23",
+   "from": "?, NY",
+   "to": "Central Islip, NY"
+  },
+  {
+   "club": "Long Island Premier FC",
+   "from": "Scott, VA",
+   "to": "Long Island, NY"
+  },
+  {
+   "club": "Latin Power FC",
+   "from": "Kern, CA",
+   "to": "Ridgewood, NY"
+  },
+  {
+   "club": "FC Ulqini",
+   "from": "Kern, CA",
+   "to": "Staten Island, NY"
+  },
+  {
+   "club": "Rosedale Soccer Club",
+   "from": "Kern, CA",
+   "to": "Queens, NY"
+  },
+  {
+   "club": "MD Sportiv FC",
+   "from": "Kern, CA",
+   "to": "New York, NY"
+  },
+  {
+   "club": "06 United FC",
+   "from": "Kern, CA",
+   "to": "Flushing, NY"
+  },
+  {
+   "club": "Allstars FC",
+   "from": "San Antonio, TX",
+   "to": "Clifton, NJ"
+  },
+  {
+   "club": "Milford FC",
+   "from": "Milford, CT",
+   "to": "West Milford, NJ"
+  },
+  {
+   "club": "Northeast PA FC",
+   "from": "Decatur, AL",
+   "to": "Scranton, PA"
+  },
+  {
+   "club": "UCFSC Warriors II",
+   "from": "New Baden, IL",
+   "to": "Rahway, NJ"
+  },
+  {
+   "club": "Pennsylvania Prime FC II",
+   "from": "?, PA",
+   "to": "Allentown, PA"
+  },
+  {
+   "club": "Tempe Inferno CF",
+   "from": "Custer, OK",
+   "to": "Tempe, AZ"
+  },
+  {
+   "club": "OJB FC",
+   "from": "Custer, OK",
+   "to": "Chino Valley, AZ"
+  },
+  {
+   "club": "Kings FC",
+   "from": "Phoenix, AZ",
+   "to": "Scottsdale, AZ"
+  },
+  {
+   "club": "DD8 Academy",
+   "from": "Saint Louis, MO",
+   "to": "Phoenix, AZ"
+  },
+  {
+   "club": "Next Level Soccer II",
+   "from": "Tempe, AZ",
+   "to": "Gilbert, AZ"
+  },
+  {
+   "club": "State 48 Sporting FC II",
+   "from": "Washita, OK",
+   "to": "El Mirage, AZ"
+  },
+  {
+   "club": "Virunga FC",
+   "from": "Baltimore, MD",
+   "to": "Phoenix, AZ"
+  },
+  {
+   "club": "Team Boca",
+   "from": "Elmore, AL",
+   "to": "Boca Raton, FL"
+  },
+  {
+   "club": "Chattanooga FC U20",
+   "from": "Walker, GA",
+   "to": "Chattanooga, TN"
+  },
+  {
+   "club": "Atlanta Ignite FC",
+   "from": "Forsyth, GA",
+   "to": "Atlanta, GA"
+  },
+  {
+   "club": "Georgia Athletic SC",
+   "from": "Athens, GA",
+   "to": "Lawrenceville, GA"
+  },
+  {
+   "club": "Cleveland United FC",
+   "from": "Cleveland, GA",
+   "to": "Cleveland, TN"
+  },
+  {
+   "club": "Club The Strongest Atlanta",
+   "from": "Banks, GA",
+   "to": "Gwinnett, GA"
+  },
+  {
+   "club": "Dalton United",
+   "from": "Dalton, GA",
+   "to": "Dalton, GA, GA"
+  },
+  {
+   "club": "North Georgia United",
+   "from": "Athens, GA",
+   "to": "Calhoun, GA"
+  },
+  {
+   "club": "Scenic City Soccer Club II",
+   "from": "Columbus, GA",
+   "to": "Chattanooga, GA"
+  },
+  {
+   "club": "LSA Mustangs II",
+   "from": "Winder, GA",
+   "to": "Norcross, GA"
+  },
+  {
+   "club": "Lake Country United FC",
+   "from": "Atlanta, GA",
+   "to": "Eatonton/Greensboro, GA"
+  },
+  {
+   "club": "Augusta Soccer Team",
+   "from": "Coahoma, MS",
+   "to": "Augusta, GA"
+  },
+  {
+   "club": "AFA Academy",
+   "from": "Colorado Springs, CO",
+   "to": "Decatur, GA"
+  },
+  {
+   "club": "Albion SC Atlanta U23",
+   "from": "Atlanta, GA",
+   "to": "Hampton, GA"
+  },
+  {
+   "club": "FC Columbus Elite II",
+   "from": "Phillips, AR",
+   "to": "Columbus, GA"
+  },
+  {
+   "club": "LSA Norcross Pro II",
+   "from": "Lee, AR",
+   "to": "Norcross, GA"
+  },
+  {
+   "club": "Columbus Knight Eagles FC",
+   "from": "Tunica, MS",
+   "to": "Columbus, GA"
+  },
+  {
+   "club": "Midwest Hooligans DA",
+   "from": "Izard, AR",
+   "to": "Evansville, IN"
+  },
+  {
+   "club": "Tennessee United SC II",
+   "from": "Knoxville, TN",
+   "to": "Hendersonville, TN"
+  },
+  {
+   "club": "Tango FC",
+   "from": "Monroe, TN",
+   "to": "Athens, TN"
+  },
+  {
+   "club": "Tennessee Tempo FC II",
+   "from": "?, TN",
+   "to": "Nashville, TN"
+  },
+  {
+   "club": "Cardinal FC",
+   "from": "Marple, PA",
+   "to": "Roanoke, VA"
+  },
+  {
+   "club": "Liberty Arsenal International SC Academy",
+   "from": "Quincy, PA",
+   "to": "Fayetteville, NC"
+  },
+  {
+   "club": "Carolina Football Club",
+   "from": "Westminster, MD",
+   "to": "Sanford, NC"
+  },
+  {
+   "club": "Briar United Castle FC",
+   "from": "New Castle, DE",
+   "to": "Raleigh, NC"
+  },
+  {
+   "club": "AC Raleigh II",
+   "from": "Pittsburgh, PA",
+   "to": "Raleigh, NC"
+  },
+  {
+   "club": "Football Club Roanoke",
+   "from": "Salem, VA",
+   "to": "Roanoke Rapids, NC"
+  },
+  {
+   "club": "Sporting Soccer Academy II",
+   "from": "Hampden, PA",
+   "to": "Johnson city, TN"
+  },
+  {
+   "club": "Kangoory Football Club",
+   "from": "Carroll, MD",
+   "to": "Clayton, NC"
+  },
+  {
+   "club": "Sanford Area Soccer League",
+   "from": "Kanawha, WV",
+   "to": "Sanford, NC"
+  },
+  {
+   "club": "Bragg FC",
+   "from": "Penn, PA",
+   "to": "Fayetteville, NC"
+  },
+  {
+   "club": "Mint Hill FC II",
+   "from": "Oil City, PA",
+   "to": "Mint Hill, NC"
+  },
+  {
+   "club": "North Carolina Lions II",
+   "from": "Wilmington, NC",
+   "to": "Winston Salem, NC"
+  },
+  {
+   "club": "Combine Academy II",
+   "from": "Lower Makefield, PA",
+   "to": "Charlotte, NC"
+  },
+  {
+   "club": "Electric City FC II",
+   "from": "Scranton, PA",
+   "to": "Anderson, SC"
+  },
+  {
+   "club": "ILM Football Club",
+   "from": "Fayette, WV",
+   "to": "Wilmington, NC"
+  },
+  {
+   "club": "Force Football Club",
+   "from": "Cowley, KS",
+   "to": "Crystal Lake, IL"
+  },
+  {
+   "club": "Asteras Tripolis Chicago FC",
+   "from": "Osage, OK",
+   "to": "Chicago, IL"
+  },
+  {
+   "club": "Round Lake Evolution II",
+   "from": "Cowley, KS",
+   "to": "Round Lake, IL"
+  },
+  {
+   "club": "KS Wisloka Chicago U23",
+   "from": "Kay, OK",
+   "to": "Elk Grove Village, IL"
+  },
+  {
+   "club": "Hodgepodge Heroes",
+   "from": "Kay, OK",
+   "to": "Rolling Meadow, IL"
+  },
+  {
+   "club": "Diverse City FC Pro Academy II",
+   "from": "Cowley, KS",
+   "to": "Schaumburg, IL"
+  },
+  {
+   "club": "Chicago KICS FC II",
+   "from": "Osage, OK",
+   "to": "Chicago, IL"
+  },
+  {
+   "club": "Dakota SC",
+   "from": "Dakota, IL",
+   "to": "South St. Paul, MN"
+  },
+  {
+   "club": "Wave SC",
+   "from": "Chicago, IL",
+   "to": "Eagan, MN"
+  },
+  {
+   "club": "Vlora FC II",
+   "from": "Fulton, IL",
+   "to": "Burnsville, MN"
+  },
+  {
+   "club": "Salvo SC",
+   "from": "Naperville, IL",
+   "to": "Eagan, MN"
+  },
+  {
+   "club": "North Star FC",
+   "from": "Champaign, IL",
+   "to": "Rochester, MN"
+  },
+  {
+   "club": "Skills FC",
+   "from": "Rockford, IL",
+   "to": "Burnsville, MN"
+  },
+  {
+   "club": "Boreal FC",
+   "from": "Caseyville, IL",
+   "to": "Elk River, MN"
+  },
+  {
+   "club": "Rochester FC II",
+   "from": "Rochester, IL",
+   "to": "Rochester, MN"
+  },
+  {
+   "club": "FC Minneapolis II",
+   "from": "Franklin Park, IL",
+   "to": "Minneapolis, MN"
+  },
+  {
+   "club": "Bowaze FC",
+   "from": "Grand, CO",
+   "to": "Boise, ID"
+  },
+  {
+   "club": "Utah Athletic II",
+   "from": "Kane, UT",
+   "to": "Salt Lake City, UT"
+  },
+  {
+   "club": "Utah Real FC",
+   "from": "Midvale, UT",
+   "to": "Roy, UT"
+  },
+  {
+   "club": "Future FC",
+   "from": "Aurora, CO",
+   "to": "Salt Lake City, UT"
+  },
+  {
+   "club": "Utah Real FC II",
+   "from": "Midvale, UT",
+   "to": "Roy, UT"
+  },
+  {
+   "club": "SEI Corvids FC",
+   "from": "Eagle, CO",
+   "to": "Pocatello, ID"
+  },
+  {
+   "club": "Valor SC",
+   "from": "Douglas, CO",
+   "to": "Logan, UT"
+  },
+  {
+   "club": "Boston Emeralds FC",
+   "from": "Calamus, WI",
+   "to": "Dorchester, MA"
+  },
+  {
+   "club": "Vermont Clover",
+   "from": "Strafford, VT",
+   "to": "Burlington, VT"
+  },
+  {
+   "club": "New England Combine FC",
+   "from": "Lewiston, WI",
+   "to": "Worcester, MA"
+  },
+  {
+   "club": "Reno United II",
+   "from": "Lassen, CA",
+   "to": "Reno, NV"
+  },
+  {
+   "club": "FC Patria",
+   "from": "Orange, CA",
+   "to": "West Sacramento, CA"
+  },
+  {
+   "club": "Capitol City Futbol Club",
+   "from": "Esmeralda, NV",
+   "to": "Sacramento, CA"
+  },
+  {
+   "club": "Junction 29",
+   "from": "Redwood City, CA",
+   "to": "American Canyon, CA"
+  },
+  {
+   "club": "CCYSC Cobras",
+   "from": "Mineral, NV",
+   "to": "Pittsburg, CA"
+  },
+  {
+   "club": "Soccer Without Borders Academy",
+   "from": "Milwaukee, WI",
+   "to": "Oakland, CA"
+  },
+  {
+   "club": "Suisun City Rush",
+   "from": "Nye, NV",
+   "to": "Suisun City, CA"
+  },
+  {
+   "club": "Central Valley Premier FC",
+   "from": "Las Vegas, NV",
+   "to": "Visalia, CA"
+  },
+  {
+   "club": "Ballistic United Soccer Club",
+   "from": "El Paso, TX",
+   "to": "Pleasanton, CA"
+  },
+  {
+   "club": "Eclipse Soccer Academy",
+   "from": "Irvine, CA",
+   "to": "Santa Cruz, CA"
+  },
+  {
+   "club": "CV United",
+   "from": "Lincoln, OR",
+   "to": "Dublin, CA"
+  },
+  {
+   "club": "Golden State Futbol Club",
+   "from": "San Bernardino, CA",
+   "to": "Hughson, CA"
+  },
+  {
+   "club": "OV Toros FC",
+   "from": "Pico Rivera, CA",
+   "to": "Morgan Hill, CA"
+  },
+  {
+   "club": "Delhi Futbol Club",
+   "from": "Clark, NV",
+   "to": "Delhi, CA"
+  },
+  {
+   "club": "Columbus Rough Riders FC",
+   "from": "Clark, OH",
+   "to": "Columbus, OH"
+  },
+  {
+   "club": "Kettering FC",
+   "from": "Kettering, OH",
+   "to": "Dayton, OH"
+  },
+  {
+   "club": "Manu Ledesma Academy II",
+   "from": "Derby, OH",
+   "to": "Cincinnati, OH"
+  },
+  {
+   "club": "Ohio Eagles FC",
+   "from": "Xenia, OH",
+   "to": "Columbus, OH"
+  },
+  {
+   "club": "Ohio International FC II",
+   "from": "Muskingum, OH",
+   "to": "Columbus, OH"
+  },
+  {
+   "club": "Internacionales CVSL",
+   "from": "Riverside, CA",
+   "to": "Indio, CA"
+  },
+  {
+   "club": "ASC Antelope Valley II",
+   "from": "Fullerton, CA",
+   "to": "Palmdale, CA"
+  },
+  {
+   "club": "Montclair Academy FC II",
+   "from": "Montclair, CA",
+   "to": "Carson, CA"
+  },
+  {
+   "club": "Independent FC",
+   "from": "Los Angeles, CA",
+   "to": "Norco, CA"
+  },
+  {
+   "club": "Ocelot Academy III",
+   "from": "Montebello, CA",
+   "to": "San Bernardino, CA"
+  },
+  {
+   "club": "Titans FC",
+   "from": "Grand Terrace, CA",
+   "to": "Highland, CA"
+  },
+  {
+   "club": "Flash FC II",
+   "from": "Irwindale, CA",
+   "to": "Tustin, CA"
+  },
+  {
+   "club": "Pateadores Santa Clarita",
+   "from": "Fresno, CA",
+   "to": "Santa Clarita, CA"
+  },
+  {
+   "club": "South Bay Strikers",
+   "from": "Inyo, CA",
+   "to": "Torrance, CA"
+  },
+  {
+   "club": "Pasadena Cali Soccer Club",
+   "from": "Tulare, CA",
+   "to": "Pasadena, CA"
+  },
+  {
+   "club": "San Fernando Valley FC II",
+   "from": "Los Angeles, CA",
+   "to": "San Fernando, CA"
+  },
+  {
+   "club": "A.S. Los Angeles",
+   "from": "Los Angeles, CA",
+   "to": "Tujunga, CA"
+  },
+  {
+   "club": "Academia Futbol Central Los Angeles",
+   "from": "Fresno, CA",
+   "to": "Moreno Valley, CA"
+  },
+  {
+   "club": "OC Sporting FC White",
+   "from": "Inyo, CA",
+   "to": "Mission Viejo, CA"
+  },
+  {
+   "club": "Southern California FC",
+   "from": "South Gate, CA",
+   "to": "Los Angeles, CA"
+  },
+  {
+   "club": "IKON",
+   "from": "San Francisco, CA",
+   "to": "Irvine, CA"
+  },
+  {
+   "club": "Pateadores OC",
+   "from": "Los Angeles, CA",
+   "to": "Orange, CA"
+  },
+  {
+   "club": "Ocelot Academy II",
+   "from": "Placer, CA",
+   "to": "San Bernardino, CA"
+  },
+  {
+   "club": "Autobahn SC",
+   "from": "Riverside, CA",
+   "to": "Santa Monica, CA"
+  },
+  {
+   "club": "Leopardos Naranjas FC",
+   "from": "Los Angeles, CA",
+   "to": "Orange, CA"
+  },
+  {
+   "club": "FC Rockers",
+   "from": "San Juan, NM",
+   "to": "Irvine, CA"
+  },
+  {
+   "club": "Olympiacos CA",
+   "from": "Kern, CA",
+   "to": "Huntington Beach, CA"
+  },
+  {
+   "club": "OC Sporting FC Blue",
+   "from": "San Bernardino, CA",
+   "to": "Mission Viejo, CA"
+  },
+  {
+   "club": "Mixtum United",
+   "from": "Eastland, TX",
+   "to": "Killeen, TX"
+  },
+  {
+   "club": "Stellar Football Club II",
+   "from": "Palo Pinto, TX",
+   "to": "Lakeway, TX"
+  },
+  {
+   "club": "ATX Blues II",
+   "from": "Stephens, TX",
+   "to": "Austin, TX"
+  },
+  {
+   "club": "Centex Storm SC",
+   "from": "Parker, TX",
+   "to": "Temple, TX"
+  },
+  {
+   "club": "Bell County FC",
+   "from": "Bell, TX",
+   "to": "Belton, TX"
+  },
+  {
+   "club": "Forza Laredos",
+   "from": "LeFlore, OK",
+   "to": "Laredo, TX"
+  },
+  {
+   "club": "Quickplay FC",
+   "from": "Cherokee, OK",
+   "to": "San Antonio, TX"
+  },
+  {
+   "club": "SA Athletic FC Wolves II",
+   "from": "Tolton, SD",
+   "to": "San Antonio, TX"
+  },
+  {
+   "club": "SAFC Academy RL Red",
+   "from": "LeFlore, OK",
+   "to": "San Antonio, TX"
+  },
+  {
+   "club": "Alpha Futbol USA ll",
+   "from": "Sequoyah, OK",
+   "to": "San Antonio, TX"
+  },
+  {
+   "club": "SAFC Academy RL Black",
+   "from": "Sequoyah, OK",
+   "to": "San Antonio, TX"
+  },
+  {
+   "club": "HCYSA Tejanos",
+   "from": "Sequoyah, OK",
+   "to": "Kerrville, TX"
+  },
+  {
+   "club": "Allegiance Academy",
+   "from": "Dallas, TX",
+   "to": "Euless, TX"
+  },
+  {
+   "club": "Inter Fort Worth FC",
+   "from": "Guadalupe, NM",
+   "to": "Fort Worth, TX"
+  },
+  {
+   "club": "Henderson Cavalry FC",
+   "from": "Guadalupe, NM",
+   "to": "Athens, TX"
+  },
+  {
+   "club": "Ice FC/Black Ice",
+   "from": "Douglas, OR",
+   "to": "Dallas, TX"
+  },
+  {
+   "club": "Cosmos FC",
+   "from": "San Angelo, TX",
+   "to": "Fort Worth, TX"
+  },
+  {
+   "club": "DKSC Pro II",
+   "from": "San Miguel, NM",
+   "to": "Dallas, TX"
+  },
+  {
+   "club": "NTX Lions",
+   "from": "Jack, TX",
+   "to": "Prosper, TX"
+  },
+  {
+   "club": "Texas Spurs FC II",
+   "from": "Wise, TX",
+   "to": "Allen, TX"
+  },
+  {
+   "club": "Diversity FC",
+   "from": "Terry, TX",
+   "to": "Frisco, TX"
+  },
+  {
+   "club": "Resolute Soccer II",
+   "from": "Longview, TX",
+   "to": "Celina, TX"
+  },
+  {
+   "club": "Threat Football Club",
+   "from": "Wise, TX",
+   "to": "Dallas, TX"
+  },
+  {
+   "club": "Denton Diablos Estudiantes",
+   "from": "Wise, TX",
+   "to": "Denton, TX"
+  },
+  {
+   "club": "Texas International FC",
+   "from": "Hidalgo, TX",
+   "to": "Houston, TX"
+  },
+  {
+   "club": "Crossbar Elite FC",
+   "from": "Calhoun, TX",
+   "to": "Houston, TX"
+  },
+  {
+   "club": "GFI Academy South U19",
+   "from": "Jackson, TX",
+   "to": "Houston, TX"
+  },
+  {
+   "club": "SVD Beaumont II",
+   "from": "Matagorda, TX",
+   "to": "Beaumont, TX"
+  },
+  {
+   "club": "North Houston FC",
+   "from": "Harris, TX",
+   "to": "Hockley, TX"
+  },
+  {
+   "club": "Katy Jaguars FC II",
+   "from": "Burnet, TX",
+   "to": "Katy, TX"
+  },
+  {
+   "club": "Strangers United FC",
+   "from": "Lawrence, AR",
+   "to": "Bellevue, WA"
+  },
+  {
+   "club": "Holac FC Academy",
+   "from": "Uintah, UT",
+   "to": "Seattle, WA"
+  },
+  {
+   "club": "Seagam II",
+   "from": "Rio Blanco, CO",
+   "to": "Shoreline, WA"
+  },
+  {
+   "club": "United Sports FC II",
+   "from": "Polk, TX",
+   "to": "Bellevue, WA"
+  },
+  {
+   "club": "Thurston County SA II",
+   "from": "Terrell, TX",
+   "to": "Olympia, WA"
+  },
+  {
+   "club": "New Northerners Football Club",
+   "from": "Rio Blanco, CO",
+   "to": "Mountlake Terrace, WA"
+  },
+  {
+   "club": "Rayados Soccer Academy - Northwest",
+   "from": "Rio Blanco, CO",
+   "to": "Issaquah, WA"
+  },
+  {
+   "club": "Soaring Capital SC",
+   "from": "Big Flats, NY",
+   "to": "Elmira, NY"
+  },
+  {
+   "club": "Silver City Sharks FC",
+   "from": "Allen, IN",
+   "to": "Sherrill, NY"
+  },
+  {
+   "club": "Soaring Capital SC II",
+   "from": "Big Flats, NY",
+   "to": "Elmira, NY"
+  },
+  {
+   "club": "NFC II",
+   "from": "Van Wert, OH",
+   "to": "Auburn, NY"
+  },
+  {
+   "club": "Tanganyika FC",
+   "from": "San Benito, CA",
+   "to": "Buffalo, NY"
+  },
+  {
+   "club": "New York Dash FC",
+   "from": "New York, NY",
+   "to": "College Point, NY"
+  },
+  {
+   "club": "Amigos FC New York",
+   "from": "New York, NY",
+   "to": "Huntington Station, NY"
+  },
+  {
+   "club": "NY Renegades FC U23",
+   "from": "Montgomery, MD",
+   "to": "Hicksville, NY"
+  },
+  {
+   "club": "Whitestone FC",
+   "from": "New York, NY",
+   "to": "Queens, NY"
+  },
+  {
+   "club": "AFC Academy II",
+   "from": "Baltimore, MD",
+   "to": "New York, NY"
+  },
+  {
+   "club": "OSNER'S FC III",
+   "from": "Walkersville, MD",
+   "to": "Brooklyn, NY"
+  },
+  {
+   "club": "UCFSC Warriors III",
+   "from": "Reston, VA",
+   "to": "Rahway, NJ"
+  },
+  {
+   "club": "Northeast PA FC II",
+   "from": "Decatur, AL",
+   "to": "Scranton, PA"
+  },
+  {
+   "club": "River Miami FC",
+   "from": "Miami, FL",
+   "to": "Hollywood, FL"
+  },
+  {
+   "club": "United Stars Academy",
+   "from": "Bay Lake, FL",
+   "to": "Miami, FL"
+  },
+  {
+   "club": "Fort Training Academy",
+   "from": "New London, CT",
+   "to": "Miami, FL"
+  },
+  {
+   "club": "Penarol Miami FC",
+   "from": "Tarpon Springs, FL",
+   "to": "Hollywood, FL"
+  },
+  {
+   "club": "PSL Hurricanes FC",
+   "from": "Tarpon Springs, FL",
+   "to": "Port St. Lucie, FL"
+  },
+  {
+   "club": "FUTSOC",
+   "from": "Pasco, FL",
+   "to": "Weston, FL"
+  },
+  {
+   "club": "Havana FC",
+   "from": "Havana, FL",
+   "to": "Miami, FL"
+  },
+  {
+   "club": "Florida Wolves FC II",
+   "from": "Tarpon Springs, FL",
+   "to": "Broward, FL"
+  },
+  {
+   "club": "Alianza Miami",
+   "from": "Miami-Dade, FL",
+   "to": "Hallandale, FL"
+  },
+  {
+   "club": "ASA RESERVA",
+   "from": "Hillsborough, FL",
+   "to": "Miami, FL"
+  },
+  {
+   "club": "Ives Estates Thunder SC",
+   "from": "Tarpon Springs, FL",
+   "to": "Aventura, FL"
+  },
+  {
+   "club": "Deportivo Colonia",
+   "from": "Pinellas, FL",
+   "to": "Miami, FL"
+  },
+  {
+   "club": "St. Croix SC II",
+   "from": "Aurora, IL",
+   "to": "Stillwater, MN"
+  },
+  {
+   "club": "Tonka United",
+   "from": "Channahon, IL",
+   "to": "Minnetonka, MN"
+  },
+  {
+   "club": "1826 Academy 2",
+   "from": "Big Wells, TX",
+   "to": "Minneapolis, MN"
+  },
+  {
+   "club": "Manitou FC II",
+   "from": "McHenry, IL",
+   "to": "White Bear Lake, MN"
+  },
+  {
+   "club": "Vlora FC 3",
+   "from": "Canton, IL",
+   "to": "Burnsville, MN"
+  },
+  {
+   "club": "Dakota SC II",
+   "from": "Dakota, IL",
+   "to": "South St. Paul, MN"
+  },
+  {
+   "club": "NJP FC",
+   "from": "Knox, IL",
+   "to": "Minneapolis, MN"
+  },
+  {
+   "club": "Skills FC 2",
+   "from": "Rockford, IL",
+   "to": "Burnsville, MN"
+  },
+  {
+   "club": "Texas Havoc FC",
+   "from": "Baylor, TX",
+   "to": "Roanoke, TX"
+  },
+  {
+   "club": "Faith Family Academy",
+   "from": "Fort Worth, TX",
+   "to": "Dallas, TX"
+  },
+  {
+   "club": "Futbol Fever",
+   "from": "Archer, TX",
+   "to": "Dallas, TX"
+  },
+  {
+   "club": "Allegiance Academy II",
+   "from": "Dallas, TX",
+   "to": "Euless, TX"
+  },
+  {
+   "club": "Crystal Legacy FC",
+   "from": "Leander, TX",
+   "to": "Plano, TX"
+  },
+  {
+   "club": "Diversity FC II",
+   "from": "Terry, TX",
+   "to": "Frisco, TX"
+  },
+  {
+   "club": "DKSC Futuro",
+   "from": "Baylor, TX",
+   "to": "Dallas, TX"
+  },
+  {
+   "club": "Texas Spurs FC Futures",
+   "from": "Young, TX",
+   "to": "Allen, TX"
+  },
+  {
+   "club": "Ice FC/Blue ICE",
+   "from": "Abilene, TX",
+   "to": "Dallas, TX"
+  },
+  {
+   "club": "Denton Diablos DOS",
+   "from": "Throckmorton, TX",
+   "to": "Denton, TX"
+  }
+ ],
+ "verified_in_place": 61,
+ "unmatched": [
+  "Desert FC",
+  "Fallbrook",
+  "LA 10 FC",
+  "Casper Wyoming",
+  "Laramie SC",
+  "UDA New Mexico",
+  "Bellevue Athletic FC",
+  "Iowa Chargers",
+  "Rev Football",
+  "Southern Indiana",
+  "Stryker FC",
+  "Austin Sol",
+  "Houston Lions FC",
+  "FC Hudson United",
+  "Dream FC",
+  "Georgia Impact",
+  "Kalonji Pro",
+  "TECCE FC",
+  "Tennessee Tempo",
+  "United Soccer Alliance",
+  "Pensacola Rush",
+  "Red Hook Football Club",
+  "NY Empire FC",
+  "New York Braveheart SC",
+  "Haiti United FC",
+  "Brooklyn FC U20",
+  "Cosmos B",
+  "New Jersey Alliance FC",
+  "SFC 1924",
+  "Union SC",
+  "Ironbound SCP",
+  "Capital City Islanders",
+  "Pennsylvania Prime FC",
+  "Virginia Dream FC",
+  "Arlington SA",
+  "Bowleys Athletic",
+  "Doradus FC",
+  "MoCo 1776 FC",
+  "Bridge Sports Club",
+  "Grove United",
+  "Alexandria Reds",
+  "Alexandria United FC",
+  "Blue Ridge FC",
+  "Skyline Elite SC",
+  "Kissimmee SC",
+  "FC America Spurs",
+  "Emerald Football Club",
+  "Bold City SC",
+  "Harbor City FC",
+  "DME Academy",
+  "O.F.C Barca",
+  "GOSA YF Premier",
+  "First Coast Athletic",
+  "Inter Miami CF Academy",
+  "Rush Select Academy",
+  "Miami FC U20",
+  "Palm Beach Flames SC",
+  "Florida Soccer Soldiers",
+  "Florida Futbol Club",
+  "Florida Wolves FC",
+  "Plantation FC",
+  "Parkland Soccer Club",
+  "City Soccer FC",
+  "Inter City FC",
+  "PCU Pelicans SC",
+  "Sarasota Paradise",
+  "Florida Premier FC",
+  "DME Academy Sarasota",
+  "FC Tampa Rangers",
+  "West Florida Flames",
+  "Shock City FC",
+  "Clearwater Chargers SC",
+  "Florida Premier FC SWFL",
+  "IMG Academy",
+  "Beech Street Football Club",
+  "Brockton FC United",
+  "Boston Street FC",
+  "United Africa Boston FC",
+  "Jaguars United FC",
+  "GZS Bridgeport FC",
+  "Hartford Athletic II",
+  "Unations FC",
+  "Fall River FC",
+  "South Coast Union",
+  "Real Galt FC",
+  "Flash FC",
+  "NY Hota Bavarian SC",
+  "Club Deportivo Iberia",
+  "NY Crush SC",
+  "Leone Stars of New York",
+  "OSNER'S FC II",
+  "Real New York FC",
+  "Atlas FC NYC",
+  "Ironbound SCP II",
+  "Holger Soccer Club",
+  "New Jersey Alliance FC II",
+  "Philadelphia Lone Star FC U23",
+  "Princeton International FC",
+  "NJ Santos FC Rush",
+  "Coronado Athletic Club II",
+  "Golden Goal Soccer",
+  "Brian and Anthony\u2019s Football Club",
+  "Hunter's Creek Soccer Club",
+  "O.F.C Barca II",
+  "Bateria FC",
+  "Stetson FA",
+  "Merritt Island Soccer Club",
+  "Kissimmee FC II",
+  "Four Corners FC",
+  "FC Kanks",
+  "The Academy of Central Florida",
+  "The Power of Friendship FC",
+  "Jax United FC",
+  "Inter-United Soccer Club",
+  "Bold City SC II",
+  "Coastal Kings FC II",
+  "Bronson FC",
+  "CH4 Football Club",
+  "Ocala Soccer Institute II",
+  "Florida Celtic SC",
+  "PCU Pelicans SC II",
+  "Polk United FC",
+  "Dynamic Futbol",
+  "Players Club Tampa Bay",
+  "LASE Lions",
+  "Shock City FC II",
+  "Tampa Bay Mutiny",
+  "Aventura FC Bold Nation",
+  "Cyclones FC",
+  "Athletum FC",
+  "Strikers Miami First Team",
+  "Boca Jrs Miami FC",
+  "Miami Breakers FC",
+  "Hodler Miami FC II",
+  "Osheas FC",
+  "Impact City FC",
+  "ASA Primera",
+  "Hollywood FC Academy",
+  "Miami SA Reserve",
+  "Davie United SC",
+  "Miami FC U19",
+  "PSG Academy Miami City",
+  "Parkland Soccer Club II",
+  "Plantation FC II",
+  "Florida Futbol Club II",
+  "City Soccer FC II",
+  "Rush Select Academy II",
+  "Schulz Academy",
+  "Weston FC II",
+  "Estates FC",
+  "SWFL SC",
+  "Upper 90 FC",
+  "Sporting Impalas",
+  "Twin Rivers United II",
+  "CALUSA FC",
+  "Maine Mystics FC",
+  "Maine Legends FC",
+  "Boston Street FC II",
+  "Dorchester City FC",
+  "Unations FC II"
+ ],
+ "league_loc_unusable": [],
+ "geocode_failed": [],
+ "ran_at": "2026-08-09 21:00"
+}
