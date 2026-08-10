@@ -14,8 +14,9 @@ test('nt overview shows Men and Women sections with team links and TV links', as
   expect(await page.locator('#view a[href^="#/nt/u19"]').count()).toBe(0);
   /* every team links its official U.S. Soccer page */
   expect(await page.locator('#view a[href^="https://www.ussoccer.com/teams/"]').count()).toBeGreaterThanOrEqual(14);
-  /* every upcoming game with an announced broadcast must link it */
-  expect(await page.locator('#view .watchlink', { hasText: /Watch:/ }).count()).toBeGreaterThanOrEqual(5);
+  /* every upcoming game with an announced broadcast must link it — logo chips */
+  expect(await page.locator('#view .watchchip').count()).toBeGreaterThanOrEqual(5);
+  expect(await page.locator('#view .watchchip img').count()).toBeGreaterThanOrEqual(5);
   expect(errors).toEqual([]);
 });
 

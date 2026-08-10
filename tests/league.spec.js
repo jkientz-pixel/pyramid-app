@@ -8,7 +8,8 @@ test('league page shows about, watch links, official site and all clubs', async 
   await expect(page.locator('#view h2')).toContainText('MLS');
   await expect(page.locator('#view')).toContainText('Major League Soccer');
   await expect(page.locator('#view')).toContainText('Where to watch');
-  expect(await page.locator('#view .watchlink').count()).toBeGreaterThanOrEqual(1);
+  expect(await page.locator('#view .watchchip').count()).toBeGreaterThanOrEqual(1);
+  expect(await page.locator('#view .watchchip img').count()).toBeGreaterThanOrEqual(1);
   expect(await page.locator('#view a.hdrlink[href^="https://"]').count()).toBe(1);
   /* 30 MLS clubs — a thin list means the club join broke */
   expect(await page.locator('#view .clublist li').count()).toBeGreaterThanOrEqual(28);

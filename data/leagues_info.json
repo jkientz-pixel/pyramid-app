@@ -5,23 +5,43 @@
   "mls": {
    "about": "Major League Soccer is the top division of men's professional soccer in the United States and Canada. Founded in 1996 as part of the USA's 1994 World Cup bid commitments, it has grown into a 30-club league with purpose-built stadiums, designated-player stars and its own youth-to-first-team pipeline.",
    "watch": [
-    {"label": "Apple TV — every match (2026 on)", "url": "https://tv.apple.com"}
+    {
+     "label": "Apple TV — every match (2026 on)",
+     "url": "https://tv.apple.com",
+     "img": "crests/brand-appletv.png"
+    }
    ],
    "watchNote": "As of 2026, every MLS regular-season and playoff match streams worldwide with an Apple TV subscription — the separate MLS Season Pass ended after 2025."
   },
   "uslc": {
    "about": "The USL Championship is the second division of American men's professional soccer, with clubs coast to coast and a playoff format crowning a national champion each fall. It is the top level of the United Soccer League system.",
    "watch": [
-    {"label": "USL broadcast guide", "url": "https://www.uslchampionship.com/broadcast"},
-    {"label": "ESPN app", "url": "https://www.espn.com/watch"}
+    {
+     "label": "USL broadcast guide",
+     "url": "https://www.uslchampionship.com/broadcast",
+     "img": "crests/league-uslc.png"
+    },
+    {
+     "label": "ESPN app",
+     "url": "https://www.espn.com/watch",
+     "img": "crests/brand-espn.png"
+    }
    ],
    "watchNote": "Full-season coverage streams on CBS Sports Golazo Network and ESPN's platforms, with select national games on CBS, CBS Sports Network and ESPN2."
   },
   "usl1": {
    "about": "USL League One is a Division III professional league built around emerging American soccer markets — smaller cities getting their first professional club. It sits below the USL Championship in the USL structure.",
    "watch": [
-    {"label": "USL League One on CBS", "url": "https://www.uslleagueone.com/cbs"},
-    {"label": "ESPN app", "url": "https://www.espn.com/watch"}
+    {
+     "label": "USL League One on CBS",
+     "url": "https://www.uslleagueone.com/cbs",
+     "img": "crests/brand-cbssports.png"
+    },
+    {
+     "label": "ESPN app",
+     "url": "https://www.espn.com/watch",
+     "img": "crests/brand-espn.png"
+    }
    ],
    "watchNote": "Season coverage streams on CBS Sports Golazo Network and ESPN's platforms, with select games on CBS Sports Network."
   },
@@ -34,43 +54,83 @@
   "nwsl": {
    "about": "The National Women's Soccer League is the top division of women's professional soccer in the United States — the longest-running top-flight women's league in the country's history, drawing many of the world's best players.",
    "watch": [
-    {"label": "NWSL+ (free)", "url": "https://plus.nwslsoccer.com"},
-    {"label": "Paramount+", "url": "https://www.paramountplus.com"},
-    {"label": "ESPN app", "url": "https://www.espn.com/watch"}
+    {
+     "label": "NWSL+ (free)",
+     "url": "https://plus.nwslsoccer.com",
+     "img": "crests/league-nwsl.png"
+    },
+    {
+     "label": "Paramount+",
+     "url": "https://www.paramountplus.com",
+     "img": "crests/brand-paramountplus.png"
+    },
+    {
+     "label": "ESPN app",
+     "url": "https://www.espn.com/watch",
+     "img": "crests/brand-espn.png"
+    }
    ],
    "watchNote": "2026 games air across CBS/Paramount+, ESPN/ABC, Prime Video (Fridays), ION (Saturdays) and the free Victory+ app; every match not picked up nationally streams free on NWSL+."
   },
   "uslw": {
    "about": "The USL Super League (branded the Gainbridge Super League) is a Division I-sanctioned women's professional league that kicked off in 2024, running a fall-to-summer calendar aligned with the global women's game.",
    "watch": [
-    {"label": "Peacock — every match", "url": "https://www.peacocktv.com"},
-    {"label": "League watch guide", "url": "https://www.gainbridgesuperleague.com/watch/"}
+    {
+     "label": "Peacock — every match",
+     "url": "https://www.peacocktv.com",
+     "img": "crests/brand-peacock.png"
+    },
+    {
+     "label": "League watch guide",
+     "url": "https://www.gainbridgesuperleague.com/watch/",
+     "img": "crests/league-uslw.png"
+    }
    ],
    "watchNote": "Every regular-season and playoff match streams on Peacock under the league's NBCUniversal partnership."
   },
   "usl2": {
    "about": "USL League Two is the top pre-professional men's league — a summer proving ground where college players keep their eligibility while playing in front of pro scouts. Its alumni fill MLS and USL rosters every season.",
    "watch": [
-    {"label": "USL League Two streams", "url": "https://www.uslleaguetwo.com/watch"}
+    {
+     "label": "USL League Two streams",
+     "url": "https://www.uslleaguetwo.com/watch",
+     "img": "crests/league-usl2.png"
+    }
    ]
   },
   "uslwl": {
    "about": "The USL W League is the pre-professional women's counterpart to League Two — a summer league connecting college stars, returning pros and top amateurs on the pathway to the professional game.",
    "watch": [
-    {"label": "USL W League streams", "url": "https://www.uslwleague.com/watch"}
+    {
+     "label": "USL W League streams",
+     "url": "https://www.uslwleague.com/watch",
+     "img": "crests/league-uslwl.png"
+    }
    ]
   },
   "npsl": {
    "about": "The National Premier Soccer League is one of the country's largest national amateur leagues, with community-owned and independent clubs competing in regional conferences toward a national championship every summer.",
    "watch": [
-    {"label": "NPSL TV", "url": "https://npsl.tv"},
-    {"label": "League watch page", "url": "https://www.npsl.com/watch/"}
+    {
+     "label": "NPSL TV",
+     "url": "https://npsl.tv",
+     "img": "crests/league-npsl.png"
+    },
+    {
+     "label": "League watch page",
+     "url": "https://www.npsl.com/watch/",
+     "img": "crests/league-npsl.png"
+    }
    ]
   },
   "upsl": {
    "about": "The United Premier Soccer League is the largest amateur league in the United States by club count, with promotion and relegation inside its regional conferences and national playoffs each season.",
    "watch": [
-    {"label": "UPSL on YouTube", "url": "https://www.youtube.com/@UPSLsoccer"}
+    {
+     "label": "UPSL on YouTube",
+     "url": "https://www.youtube.com/@UPSLsoccer",
+     "img": "crests/brand-youtube.png"
+    }
    ],
    "watchNote": "Most UPSL matches are streamed by clubs and conferences; the league channel carries featured games and playoffs."
   },
@@ -80,7 +140,11 @@
   "wpsl": {
    "about": "The Women's Premier Soccer League is among the largest women's soccer leagues in the world, running summer seasons in regional conferences since 1998 — a longtime proving ground for players headed to the pro game.",
    "watch": [
-    {"label": "WPSL TV", "url": "https://wpsl.tv"}
+    {
+     "label": "WPSL TV",
+     "url": "https://wpsl.tv",
+     "img": "crests/league-wpsl.png"
+    }
    ]
   },
   "uws": {
@@ -113,55 +177,91 @@
   "ncaa1": {
    "about": "NCAA Division I is the top level of men's college soccer — the sport's main development route in the United States for decades, feeding the MLS SuperDraft and the professional leagues every year.",
    "watch": [
-    {"label": "NCAA live video hub", "url": "https://www.ncaa.com/live"}
+    {
+     "label": "NCAA live video hub",
+     "url": "https://www.ncaa.com/live",
+     "img": "crests/league-ncaa.png"
+    }
    ]
   },
   "ncaa2": {
    "about": "NCAA Division II men's soccer balances scholarship athletics with smaller campuses — a competitive tier that regularly produces professional players.",
    "watch": [
-    {"label": "NCAA live video hub", "url": "https://www.ncaa.com/live"}
+    {
+     "label": "NCAA live video hub",
+     "url": "https://www.ncaa.com/live",
+     "img": "crests/league-ncaa.png"
+    }
    ]
   },
   "ncaa3": {
    "about": "NCAA Division III is the largest division of college soccer by school count — no athletic scholarships, but deep rosters and serious regional rivalries.",
    "watch": [
-    {"label": "NCAA live video hub", "url": "https://www.ncaa.com/live"}
+    {
+     "label": "NCAA live video hub",
+     "url": "https://www.ncaa.com/live",
+     "img": "crests/league-ncaa.png"
+    }
    ]
   },
   "naia": {
    "about": "The NAIA is college soccer outside the NCAA — smaller schools with their own national championship, and a long history of overlooked talent reaching the pro game.",
    "watch": [
-    {"label": "NAIA Network", "url": "https://naianetwork.com"}
+    {
+     "label": "NAIA Network",
+     "url": "https://naianetwork.com",
+     "img": "crests/league-naia.png"
+    }
    ]
   },
   "ncaa1w": {
    "about": "NCAA Division I women's soccer is the deepest college competition in the women's game worldwide — the backbone of USWNT and NWSL rosters since the 1990s.",
    "watch": [
-    {"label": "NCAA live video hub", "url": "https://www.ncaa.com/live"}
+    {
+     "label": "NCAA live video hub",
+     "url": "https://www.ncaa.com/live",
+     "img": "crests/league-ncaa.png"
+    }
    ]
   },
   "ncaa2w": {
    "about": "NCAA Division II women's soccer pairs scholarship athletics with smaller campuses across every region of the country.",
    "watch": [
-    {"label": "NCAA live video hub", "url": "https://www.ncaa.com/live"}
+    {
+     "label": "NCAA live video hub",
+     "url": "https://www.ncaa.com/live",
+     "img": "crests/league-ncaa.png"
+    }
    ]
   },
   "mlsnext": {
    "about": "MLS NEXT is the elite boys' academy platform run by Major League Soccer — the primary development competition for MLS academies and top independent clubs.",
    "watch": [
-    {"label": "MLS NEXT hub", "url": "https://www.mlssoccer.com/mlsnext/"}
+    {
+     "label": "MLS NEXT hub",
+     "url": "https://www.mlssoccer.com/mlsnext/",
+     "img": "crests/league-mlsnext.png"
+    }
    ]
   },
   "ecnlb": {
    "about": "The ECNL Boys is a national elite youth platform run by the Elite Clubs National League, competing with MLS NEXT at the top of the boys' development landscape.",
    "watch": [
-    {"label": "ECNL watch hub", "url": "https://theecnl.com/watch"}
+    {
+     "label": "ECNL watch hub",
+     "url": "https://theecnl.com/watch",
+     "img": "crests/league-ecnl.svg"
+    }
    ]
   },
   "ecnlg": {
    "about": "The ECNL Girls is the leading elite platform in girls' youth soccer, the primary college-recruiting showcase environment in the women's game.",
    "watch": [
-    {"label": "ECNL watch hub", "url": "https://theecnl.com/watch"}
+    {
+     "label": "ECNL watch hub",
+     "url": "https://theecnl.com/watch",
+     "img": "crests/league-ecnl.svg"
+    }
    ]
   },
   "ecrlb": {

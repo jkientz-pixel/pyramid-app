@@ -103,6 +103,19 @@ svg.usmap{width:100%;height:auto;max-height:72vh;display:block;touch-action:mani
 .ntroster .rk{font-size:.95rem}
 .ntmore{color:var(--ink-dim);font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:3px 10px;flex:none;white-space:nowrap}
 .ntcap{color:var(--ink-dim);font-weight:400;font-size:.85em}
+/* broadcaster chips: white pill so network wordmarks read in both themes;
+   the logo links out — outgoing credit to the broadcaster */
+.watchrow{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.watchchip{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 12px;text-decoration:none;color:#16211B;font-weight:600;font-size:.78rem}
+.watchchip img{height:15px;width:auto;max-width:60px;object-fit:contain;display:block}
+.watchchip:hover{border-color:var(--accent)}
+/* matchup machine type-ahead */
+.pickwrap{position:relative;flex:1;min-width:0}
+.pickq{width:100%;box-sizing:border-box;background:var(--raise);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:inherit;padding:9px 12px}
+.pickq:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.pickres{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:40;background:var(--raise);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 12px 30px rgba(10,18,12,.25)}
+.pickres .qrow{width:100%;background:none;border:0;font:inherit;text-align:left;cursor:pointer}
+.pickres .qrow:hover{background:var(--ground2)}
 
 /* club detail */
 .clubhead{display:flex;gap:14px;align-items:center;margin:8px 0 4px}

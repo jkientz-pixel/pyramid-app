@@ -699,18 +699,19 @@ function screenMatches(preH) {
       pairs.push([home, opp]);
     }
   });
-  const opts = sel => rated.map(c => `<option value="${CLUBS.indexOf(c)}" ${c === sel ? 'selected' : ''}>${esc(c.n)} (${c.r})</option>`).join('');
+  const pickBox = (id, sel) => `<span class="pickwrap"><input class="pickq" id="${id}" role="combobox" aria-expanded="false" aria-label="${id === 'pickH' ? 'Home' : 'Away'} club" autocomplete="off" spellcheck="false" data-idx="${CLUBS.indexOf(sel)}" value="${esc(sel.n)}"><div class="pickres" hidden></div></span>`;
   view.innerHTML = `
     ${sexToggle()}
     <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>This week's results, upsets and rating swings &mdash; generated from real data.</span></a>
-    <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>USA youth national teams &mdash; fixtures, how to watch, and every World Cup squad back to 1981.</span></a>
+    <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>USA national teams, senior through U-15 &mdash; fixtures, how to watch, squad history and player bios back to 1930.</span></a>
     <div id="realfx"></div>
     <div class="kicker">Predictor · any club v any club · model estimate</div>
     <h2 class="disp">Matchup Machine</h2>
+    <p class="note" style="margin:2px 0 6px">Type to search any rated club &mdash; ${rated.length.toLocaleString()} to choose from.</p>
     <div class="pickrow">
-      <select id="pickH" aria-label="Home club">${opts(CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0])}</select>
+      ${pickBox('pickH', CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0])}
       <span class="vs">V</span>
-      <select id="pickA" aria-label="Away club">${opts(rated[1])}</select>
+      ${pickBox('pickA', rated[1])}
     </div>
     <div id="pickout">${matchCard(CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0], rated[1], 'HYPOTHETICAL')}</div>
     <div class="kicker" style="margin-top:18px">Rivalry Radar · nearest matchups by geography</div>
@@ -720,12 +721,34 @@ function screenMatches(preH) {
     <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Predictions, not betting advice.</p>`;
   wireSexToggle();
   const redo = () => {
-    const h = CLUBS[+view.querySelector('#pickH').value];
-    const a = CLUBS[+view.querySelector('#pickA').value];
-    view.querySelector('#pickout').innerHTML = matchCard(h, a, 'HYPOTHETICAL');
+    const h = CLUBS[+view.querySelector('#pickH').dataset.idx];
+    const a = CLUBS[+view.querySelector('#pickA').dataset.idx];
+    if (h && a) view.querySelector('#pickout').innerHTML = matchCard(h, a, 'HYPOTHETICAL');
   };
-  view.querySelector('#pickH').addEventListener('change', redo);
-  view.querySelector('#pickA').addEventListener('change', redo);
+  /* type-ahead picker — a 1,500-option dropdown made clubs impossible to
+     find; substring search over rated clubs, tap a result to lock it in */
+  const wirePick = id => {
+    const q = view.querySelector('#' + id), res = q.parentElement.querySelector('.pickres');
+    const close = () => { res.hidden = true; q.setAttribute('aria-expanded', 'false'); };
+    q.addEventListener('focus', () => q.select());
+    q.addEventListener('input', () => {
+      const term = q.value.trim().toLowerCase();
+      if (term.length < 2) { close(); return; }
+      const hits = rated.filter(c => c.n.toLowerCase().includes(term)).slice(0, 8);
+      if (!hits.length) { res.innerHTML = '<div class="qrow qnone">No rated club matches</div>'; res.hidden = false; return; }
+      res.innerHTML = hits.map(c => `<button class="qrow" data-i="${CLUBS.indexOf(c)}">${crestHtml(c)}<span><b>${esc(c.n)}</b><i>${LEAGUES[c.g].label} &middot; ${c.r}</i></span></button>`).join('');
+      res.hidden = false; q.setAttribute('aria-expanded', 'true');
+    });
+    res.addEventListener('click', e => {
+      const b = e.target.closest('[data-i]'); if (!b) return;
+      q.dataset.idx = b.dataset.i;
+      q.value = CLUBS[+b.dataset.i].n;
+      close(); redo();
+    });
+    q.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+    q.addEventListener('blur', () => setTimeout(() => { if (!res.contains(document.activeElement)) close(); }, 150));
+  };
+  wirePick('pickH'); wirePick('pickA');
   /* NPSL is a men's league: its fixtures never render into the women's
      view, including late async resolution after the user toggles sex —
      the women's view gets the honest empty state instead */
@@ -765,6 +788,14 @@ function screenMatches(preH) {
    match rows — no row ships without a verified date, opponent and venue.
    Watch links are per-match and render only on games that haven't finished —
    a played game must never advertise a broadcast (same rule as audit #7). */
+/* country flags for national-team opponents — name-keyed emoji so match rows
+   read "USA v 🇲🇽 Mexico" with zero image assets. Unknown names simply get no
+   flag; extend as new opponents appear in the dataset. */
+const NT_FLAG = { 'United States': '\u{1F1FA}\u{1F1F8}', Mexico: '\u{1F1F2}\u{1F1FD}', Canada: '\u{1F1E8}\u{1F1E6}', Peru: '\u{1F1F5}\u{1F1EA}', Chile: '\u{1F1E8}\u{1F1F1}', Spain: '\u{1F1EA}\u{1F1F8}', Italy: '\u{1F1EE}\u{1F1F9}', Japan: '\u{1F1EF}\u{1F1F5}', 'New Zealand': '\u{1F1F3}\u{1F1FF}', Haiti: '\u{1F1ED}\u{1F1F9}', 'El Salvador': '\u{1F1F8}\u{1F1FB}', Cuba: '\u{1F1E8}\u{1F1FA}', Guatemala: '\u{1F1EC}\u{1F1F9}', 'Costa Rica': '\u{1F1E8}\u{1F1F7}', 'St. Vincent and the Grenadines': '\u{1F1FB}\u{1F1E8}', 'Saint Vincent and the Grenadines': '\u{1F1FB}\u{1F1E8}', 'St. Kitts and Nevis': '\u{1F1F0}\u{1F1F3}', 'Dominican Republic': '\u{1F1E9}\u{1F1F4}', Honduras: '\u{1F1ED}\u{1F1F3}', Panama: '\u{1F1F5}\u{1F1E6}', Jamaica: '\u{1F1EF}\u{1F1F2}', 'Trinidad and Tobago': '\u{1F1F9}\u{1F1F9}', Nicaragua: '\u{1F1F3}\u{1F1EE}', Brazil: '\u{1F1E7}\u{1F1F7}', Argentina: '\u{1F1E6}\u{1F1F7}', Colombia: '\u{1F1E8}\u{1F1F4}', Ecuador: '\u{1F1EA}\u{1F1E8}', Uruguay: '\u{1F1FA}\u{1F1FE}', Venezuela: '\u{1F1FB}\u{1F1EA}', Germany: '\u{1F1E9}\u{1F1EA}', France: '\u{1F1EB}\u{1F1F7}', England: '\u{1F3F4}\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}', Netherlands: '\u{1F1F3}\u{1F1F1}', Portugal: '\u{1F1F5}\u{1F1F9}', Belgium: '\u{1F1E7}\u{1F1EA}', Poland: '\u{1F1F5}\u{1F1F1}', Morocco: '\u{1F1F2}\u{1F1E6}', Qatar: '\u{1F1F6}\u{1F1E6}', 'South Korea': '\u{1F1F0}\u{1F1F7}', Australia: '\u{1F1E6}\u{1F1FA}', Nigeria: '\u{1F1F3}\u{1F1EC}', Ghana: '\u{1F1EC}\u{1F1ED}', 'T\u00fcrkiye': '\u{1F1F9}\u{1F1F7}', 'Bosnia and Herzegovina': '\u{1F1E7}\u{1F1E6}', Paraguay: '\u{1F1F5}\u{1F1FE}', 'Puerto Rico': '\u{1F1F5}\u{1F1F7}' };
+const ntFlag = name => NT_FLAG[name] ? NT_FLAG[name] + ' ' : '';
+/* broadcaster chip: logo + label, hyperlinked out — the logo IS the credit.
+   White pill so network wordmarks stay legible in both themes. */
+const watchChip = w => `<a class="watchchip" href="${w.url}" target="_blank" rel="noopener">${w.img ? `<img src="${w.img}" alt="" loading="lazy" onerror="this.style.display='none'">` : '&#9655; '}<span>${esc(w.label)}</span></a>`;
 const ntFmtDay = iso => new Date(iso).toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', year: 'numeric' });
 /* teams with scraped tournament-squad history in data/nt_history.json — only
    these get a "Squad history" link (camp-cycle age groups have no FIFA/world
@@ -785,11 +816,10 @@ function ntMatchRow(m, tag) {
   const res = !ended ? '' : m.us > m.them ? 'W ' : m.us < m.them ? 'L ' : 'D ';
   const when = ended ? ntFmtDay(m.start) : m.timeTBD ? ntFmtDay(m.start) + ' · time TBA' : fmtKick(m.start);
   const watch = !ended && (m.tv || []).length
-    ? `<div class="meta" style="margin-top:6px">${m.tv.map(t =>
-        `<a class="watchlink" href="${t.url}" target="_blank" rel="noopener">&#9655; Watch: ${esc(t.label)}</a>`).join('')}</div>`
+    ? `<div class="watchrow">${m.tv.map(watchChip).join('')}</div>`
     : '';
   return `<div class="match">
-    <div class="mrow"><span class="side"><span class="sn">${esc(tag || 'USA')}</span></span><span class="vs">${ended ? res + m.us + '–' + m.them : 'V'}</span><span class="side away"><span class="sn">${esc(m.opp)}</span></span></div>
+    <div class="mrow"><span class="side"><span class="sn">${NT_FLAG['United States']} ${esc(tag || 'USA')}</span></span><span class="vs">${ended ? res + m.us + '–' + m.them : 'V'}</span><span class="side away"><span class="sn">${ntFlag(m.opp)}${esc(m.opp)}</span></span></div>
     <div class="meta"><span>${esc(m.round)}</span><span>${when}</span></div>
     ${m.venue || m.city ? `<div class="meta"><span>${esc(m.venue || '')}</span><span>${esc(m.city || '')}</span></div>` : ''}
     ${watch}
@@ -1521,7 +1551,7 @@ async function screenLeague(key) {
     ${info.about ? `<p style="margin:10px 0 4px;line-height:1.55">${esc(info.about)}</p>` : ''}
     ${(info.watch || []).length ? `
       <div class="kicker" style="margin-top:14px">Where to watch</div>
-      <p style="margin:6px 0 0">${info.watch.map(w => `<a class="watchlink" href="${w.url}" target="_blank" rel="noopener">&#9655; ${esc(w.label)}</a>`).join('<span style="color:var(--ink-dim)"> &nbsp;&middot;&nbsp; </span>')}</p>
+      <div class="watchrow">${info.watch.map(watchChip).join('')}</div>
       ${info.watchNote ? `<p class="note" style="margin:6px 0 0">${esc(info.watchNote)}</p>` : ''}` : ''}
     ${adSlot('league', m.label)}
     <div class="kicker" style="margin-top:16px">All clubs${ranked.length ? ' &middot; ranked by rating' : ''}</div>
