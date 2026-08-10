@@ -77,27 +77,33 @@
      "tv": [
       {
        "label": "TNT (English)",
-       "url": "https://www.tntdrama.com/watchtnt"
+       "url": "https://www.tntdrama.com/watchtnt",
+       "img": "crests/brand-tnt.png"
       },
       {
        "label": "truTV",
-       "url": "https://www.trutv.com/watchtrutv"
+       "url": "https://www.trutv.com/watchtrutv",
+       "img": "crests/brand-trutv.png"
       },
       {
        "label": "HBO Max",
-       "url": "https://www.hbomax.com"
+       "url": "https://www.hbomax.com",
+       "img": "crests/brand-hbomax.png"
       },
       {
        "label": "Telemundo (Spanish)",
-       "url": "https://www.telemundo.com"
+       "url": "https://www.telemundo.com",
+       "img": "crests/brand-telemundo.png"
       },
       {
        "label": "Universo (Spanish)",
-       "url": "https://www.nbc.com/live?brand=universo"
+       "url": "https://www.nbc.com/live?brand=universo",
+       "img": "crests/brand-universo.png"
       },
       {
        "label": "Peacock",
-       "url": "https://www.peacocktv.com"
+       "url": "https://www.peacocktv.com",
+       "img": "crests/brand-peacock.png"
       }
      ]
     },
@@ -113,23 +119,28 @@
      "tv": [
       {
        "label": "TNT (English)",
-       "url": "https://www.tntdrama.com/watchtnt"
+       "url": "https://www.tntdrama.com/watchtnt",
+       "img": "crests/brand-tnt.png"
       },
       {
        "label": "truTV",
-       "url": "https://www.trutv.com/watchtrutv"
+       "url": "https://www.trutv.com/watchtrutv",
+       "img": "crests/brand-trutv.png"
       },
       {
        "label": "HBO Max",
-       "url": "https://www.hbomax.com"
+       "url": "https://www.hbomax.com",
+       "img": "crests/brand-hbomax.png"
       },
       {
        "label": "Universo (Spanish)",
-       "url": "https://www.nbc.com/live?brand=universo"
+       "url": "https://www.nbc.com/live?brand=universo",
+       "img": "crests/brand-universo.png"
       },
       {
        "label": "Peacock",
-       "url": "https://www.peacocktv.com"
+       "url": "https://www.peacocktv.com",
+       "img": "crests/brand-peacock.png"
       }
      ]
     },
@@ -145,23 +156,28 @@
      "tv": [
       {
        "label": "TNT (English)",
-       "url": "https://www.tntdrama.com/watchtnt"
+       "url": "https://www.tntdrama.com/watchtnt",
+       "img": "crests/brand-tnt.png"
       },
       {
        "label": "HBO Max",
-       "url": "https://www.hbomax.com"
+       "url": "https://www.hbomax.com",
+       "img": "crests/brand-hbomax.png"
       },
       {
        "label": "Telemundo (Spanish)",
-       "url": "https://www.telemundo.com"
+       "url": "https://www.telemundo.com",
+       "img": "crests/brand-telemundo.png"
       },
       {
        "label": "Universo (Spanish)",
-       "url": "https://www.nbc.com/live?brand=universo"
+       "url": "https://www.nbc.com/live?brand=universo",
+       "img": "crests/brand-universo.png"
       },
       {
        "label": "Peacock",
-       "url": "https://www.peacocktv.com"
+       "url": "https://www.peacocktv.com",
+       "img": "crests/brand-peacock.png"
       }
      ]
     },
@@ -177,23 +193,28 @@
      "tv": [
       {
        "label": "TNT (English)",
-       "url": "https://www.tntdrama.com/watchtnt"
+       "url": "https://www.tntdrama.com/watchtnt",
+       "img": "crests/brand-tnt.png"
       },
       {
        "label": "truTV",
-       "url": "https://www.trutv.com/watchtrutv"
+       "url": "https://www.trutv.com/watchtrutv",
+       "img": "crests/brand-trutv.png"
       },
       {
        "label": "HBO Max",
-       "url": "https://www.hbomax.com"
+       "url": "https://www.hbomax.com",
+       "img": "crests/brand-hbomax.png"
       },
       {
        "label": "Universo (Spanish)",
-       "url": "https://www.nbc.com/live?brand=universo"
+       "url": "https://www.nbc.com/live?brand=universo",
+       "img": "crests/brand-universo.png"
       },
       {
        "label": "Peacock",
-       "url": "https://www.peacocktv.com"
+       "url": "https://www.peacocktv.com",
+       "img": "crests/brand-peacock.png"
       }
      ]
     }
@@ -276,11 +297,13 @@
      "tv": [
       {
        "label": "FS2 (English)",
-       "url": "https://www.foxsports.com/live/fs2"
+       "url": "https://www.foxsports.com/live/fs2",
+       "img": "crests/brand-foxsports.png"
       },
       {
        "label": "ViX (Spanish)",
-       "url": "https://vix.com"
+       "url": "https://vix.com",
+       "img": "crests/brand-vix.png"
       }
      ]
     }
@@ -479,23 +502,28 @@
      "tv": [
       {
        "label": "TBS (English)",
-       "url": "https://www.tbs.com/watchtbs"
+       "url": "https://www.tbs.com/watchtbs",
+       "img": "crests/brand-tbs.png"
       },
       {
        "label": "HBO Max",
-       "url": "https://www.hbomax.com"
+       "url": "https://www.hbomax.com",
+       "img": "crests/brand-hbomax.png"
       },
       {
        "label": "Telemundo (Spanish)",
-       "url": "https://www.telemundo.com"
+       "url": "https://www.telemundo.com",
+       "img": "crests/brand-telemundo.png"
       },
       {
        "label": "Universo (Spanish)",
-       "url": "https://www.nbc.com/live?brand=universo"
+       "url": "https://www.nbc.com/live?brand=universo",
+       "img": "crests/brand-universo.png"
       },
       {
        "label": "Peacock",
-       "url": "https://www.peacocktv.com"
+       "url": "https://www.peacocktv.com",
+       "img": "crests/brand-peacock.png"
       }
      ]
     },
@@ -511,19 +539,23 @@
      "tv": [
       {
        "label": "TNT (English)",
-       "url": "https://www.tntdrama.com/watchtnt"
+       "url": "https://www.tntdrama.com/watchtnt",
+       "img": "crests/brand-tnt.png"
       },
       {
        "label": "HBO Max",
-       "url": "https://www.hbomax.com"
+       "url": "https://www.hbomax.com",
+       "img": "crests/brand-hbomax.png"
       },
       {
        "label": "Universo (Spanish)",
-       "url": "https://www.nbc.com/live?brand=universo"
+       "url": "https://www.nbc.com/live?brand=universo",
+       "img": "crests/brand-universo.png"
       },
       {
        "label": "Peacock",
-       "url": "https://www.peacocktv.com"
+       "url": "https://www.peacocktv.com",
+       "img": "crests/brand-peacock.png"
       }
      ]
     },
@@ -540,7 +572,8 @@
      "tv": [
       {
        "label": "Paramount+",
-       "url": "https://www.paramountplus.com"
+       "url": "https://www.paramountplus.com",
+       "img": "crests/brand-paramountplus.png"
       }
      ]
     }
@@ -572,7 +605,8 @@
      "tv": [
       {
        "label": "FOX Sports (US TV schedule)",
-       "url": "https://www.foxsports.com/soccer/fifa-u20-womens-world-cup/schedule"
+       "url": "https://www.foxsports.com/soccer/fifa-u20-womens-world-cup/schedule",
+       "img": "crests/brand-foxsports.png"
       }
      ]
     },
@@ -588,7 +622,8 @@
      "tv": [
       {
        "label": "FOX Sports (US TV schedule)",
-       "url": "https://www.foxsports.com/soccer/fifa-u20-womens-world-cup/schedule"
+       "url": "https://www.foxsports.com/soccer/fifa-u20-womens-world-cup/schedule",
+       "img": "crests/brand-foxsports.png"
       }
      ]
     },
@@ -604,7 +639,8 @@
      "tv": [
       {
        "label": "FOX Sports (US TV schedule)",
-       "url": "https://www.foxsports.com/soccer/fifa-u20-womens-world-cup/schedule"
+       "url": "https://www.foxsports.com/soccer/fifa-u20-womens-world-cup/schedule",
+       "img": "crests/brand-foxsports.png"
       }
      ]
     }
