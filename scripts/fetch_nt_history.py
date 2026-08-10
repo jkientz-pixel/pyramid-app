@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Build data/nt_history.json: historical USA squads for the youth national
-teams on #/nt, scraped from Wikipedia's per-tournament squads pages.
+"""Build data/nt_history.json: historical USA squads for the national teams
+on #/nt, scraped from Wikipedia's per-tournament squads pages.
 
-For every FIFA U-20 (World Youth Championship / U-20 World Cup) and U-17
-(U-16/U-17 World Championship / U-17 World Cup) edition, pull the United
-States section: shirt number, position, name, birth date, caps/goals where
+For every FIFA world-tournament edition each team has played — World Cup
+(USMNT), Women's World Cup (USWNT), U-20 and U-17 men's and women's world
+championships — pull the United States section: shirt number, position, name, birth date, caps/goals where
 the page carries them, club at the time, head coach — plus a one-line bio
 from the player's own Wikipedia article when one exists.
 
@@ -20,6 +20,11 @@ API = 'https://en.wikipedia.org/w/api.php'
 UA = 'RankedXI-bot/1.0 (https://rankedxi.com; jkientz@gmail.com)'
 MINOR_BIRTH_CUTOFF = datetime.date.today().year - 18  # born this year or later: could be <18
 BIO_MAX = 300
+
+def slug(s):
+    s = re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
+    return s or 'x'
+
 
 def api(params):
     q = urllib.parse.urlencode({**params, 'format': 'json'})
@@ -128,6 +133,51 @@ def parse_squad_section(section):
         players.append(p)
     return players
 
+POS_HEAD = {'goalkeepers': 'GK', 'defenders': 'DF', 'midfielders': 'MF',
+            'forwards': 'FW', 'strikers': 'FW', 'attackers': 'FW'}
+
+def parse_squad_table(section):
+    """Fallback for early-2000s squads pages that use raw wikitables
+    (# | Name | Club | DOB | Pld | Goals ...) with position header rows."""
+    players, pos = [], None
+    for line in section.split('\n'):
+        hm = re.search(r'!colspan[^|]*\|\s*([A-Za-z]+)', line)
+        if hm:
+            pos = POS_HEAD.get(hm.group(1).strip().lower(), pos if hm.group(1).lower() != 'coach' else None)
+            if hm.group(1).strip().lower() == 'coach':
+                pos = None
+            continue
+        if not line.startswith('|') or '||' not in line:
+            continue
+        cells = [c.strip() for c in line.lstrip('|').split('||')]
+        if len(cells) < 4 or not pos:
+            continue
+        no = re.sub(r'\D', '', cells[0])
+        target, display = player_name(re.sub(r'align=\w+\|', '', cells[1]))
+        if not display:
+            continue
+        clubcell = re.sub(r'align=\w+\|', '', cells[2])
+        cn = re.search(r'\{\{flagicon\|([A-Za-z]+)\}\}', clubcell)
+        _, club = wikilink(re.sub(r'\{\{flagicon\|[^}]*\}\}', '', clubcell))
+        p = {'name': display, 'pos': pos}
+        if no:
+            p['no'] = int(no)
+        dob = parse_birth(cells[3])
+        if dob:
+            p['dob'] = dob
+        if club:
+            p['club'] = club
+        if cn:
+            p['clubnat'] = cn.group(1).strip().upper()[:3]
+        if len(cells) > 5:
+            g = re.sub(r'\D', '', cells[5])
+            if g and int(g) > 0:
+                p['goals'] = int(g)
+        if target:
+            p['_wiki'] = target
+        players.append(p)
+    return players
+
 def usa_section(wikitext):
     """USA headings vary: '===United States===', '==={{fbu|20|USA}}===',
     '==={{flagicon|USA}} [[...|United States]]===' — match any level-2/3
@@ -186,6 +236,25 @@ def u17_editions():
             comp = 'FIFA U-17 World Cup'
         yield y, comp, f'{y} {comp} squads'
 
+def wc_editions():
+    for y in list(range(1930, 1939, 4)) + list(range(1950, 2027, 4)):
+        yield y, 'FIFA World Cup', f'{y} FIFA World Cup squads'
+
+def wwc_editions():
+    for y in range(1991, 2027, 4):
+        yield y, "FIFA Women's World Cup", f"{y} FIFA Women's World Cup squads"
+
+def u20w_editions():
+    for y in [2002, 2004]:
+        yield y, "FIFA U-19 Women's World Championship", f"{y} FIFA U-19 Women's World Championship squads"
+    yield 2006, "FIFA U-20 Women's World Championship", "2006 FIFA U-20 Women's World Championship squads"
+    for y in [2008, 2010, 2012, 2014, 2016, 2018, 2022, 2024, 2026]:
+        yield y, "FIFA U-20 Women's World Cup", f"{y} FIFA U-20 Women's World Cup squads"
+
+def u17w_editions():
+    for y in [2008, 2010, 2012, 2014, 2016, 2018, 2022, 2024, 2025, 2026]:
+        yield y, "FIFA U-17 Women's World Cup", f"{y} FIFA U-17 Women's World Cup squads"
+
 # ---- bios -------------------------------------------------------------------
 
 def fetch_bios(titles):
@@ -230,7 +299,7 @@ def build_team(editions):
         if not sec:
             print(f'  {year}: USA not present', file=sys.stderr)
             continue
-        squad = parse_squad_section(sec)
+        squad = parse_squad_section(sec) or parse_squad_table(sec)
         if not squad:
             print(f'  {year}: USA section but no parsed players', file=sys.stderr)
             continue
@@ -247,51 +316,71 @@ def build_team(editions):
         time.sleep(0.3)
     return out, wiki_titles
 
-def apply_policy_and_bios(editions, bios):
+def apply_policy(editions, age_lo, age_hi):
+    """Sanity-bound parsed birth dates, apply the minors policy, and stamp a
+    stable pid on every row (wiki-title slug when the player has an article,
+    name+birth-year slug otherwise) so the app can aggregate a player's
+    appearances across teams and link a profile page."""
+    minor_pids = set()
     for ed in editions:
         for p in ed['squad']:
             # a template variant could make parse_birth slice the wrong numbers
             # into a plausible-looking date; an implausible age at tournament
-            # (youth squads run ~13-23) must fall back to the cautious path,
-            # never be trusted by the minors gate below
-            if 'dob' in p and not (13 <= ed['year'] - int(p['dob'][:4]) <= 23):
+            # must fall back to the cautious path, never be trusted by the
+            # minors gate below
+            if 'dob' in p and not (age_lo <= ed['year'] - int(p['dob'][:4]) <= age_hi):
                 del p['dob']
             by = int(p['dob'][:4]) if 'dob' in p else None
             minor_risk = (by >= MINOR_BIRTH_CUTOFF) if by is not None else \
                 ed['year'] >= datetime.date.today().year - 3  # unknown DOB on a recent edition: assume cautious
+            p['pid'] = slug(p['_wiki']) if '_wiki' in p else \
+                slug(p['name']) + (f'-{by}' if by else '')
             if minor_risk:
                 p.pop('dob', None)  # minors policy: name only, birth year blanked
                 p.pop('_wiki', None)
-            if '_wiki' in p:
-                bio = bios.get(p.pop('_wiki'))
-                if bio:
-                    p['bio'] = bio
+                minor_pids.add(p['pid'])
+    return minor_pids
+
+TEAMS = (
+    #  id        name                                  editions        min  age range
+    ('usmnt',  "U.S. Men's National Team",             wc_editions,     8, (15, 45)),
+    ('u20mnt', "U.S. Under-20 Men's National Team",    u20_editions,   15, (13, 23)),
+    ('u17mnt', "U.S. Under-17 Men's National Team",    u17_editions,   15, (12, 20)),
+    ('uswnt',  "U.S. Women's National Team",           wwc_editions,    8, (15, 45)),
+    ('u20wnt', "U.S. Under-20 Women's National Team",  u20w_editions,   7, (13, 23)),
+    ('u17wnt', "U.S. Under-17 Women's National Team",  u17w_editions,   5, (12, 20)),
+)
 
 def main():
-    teams = {}
-    for tid, name, gen in (
-            ('u20mnt', "U.S. Under-20 Men's National Team", u20_editions()),
-            ('u17mnt', "U.S. Under-17 Men's National Team", u17_editions())):
+    teams, players, minor_pids = {}, {}, set()
+    for tid, name, gen, min_eds, (lo, hi) in TEAMS:
         print(f'== {tid}', file=sys.stderr)
-        editions, wiki_titles = build_team(gen)
+        editions, wiki_titles = build_team(gen())
+        # partial scrapes must fail loudly, not overwrite good data with gaps
+        if len(editions) < min_eds:
+            sys.exit(f'FATAL: only {len(editions)} editions scraped for {tid} (need {min_eds}) — refusing to write')
+        minor_pids |= apply_policy(editions, lo, hi)
+        editions.sort(key=lambda e: -e['year'])
         teams[tid] = {'name': name, 'editions': editions, '_titles': wiki_titles}
     all_titles = [t for v in teams.values() for t in v.pop('_titles')]
     print(f'== bios for {len(set(all_titles))} linked players', file=sys.stderr)
     bios = fetch_bios(all_titles)
+    # bios live once per player in a top-level map (a U-17 alum reappears on
+    # the U-20s and seniors); rows carry only the pid. A player flagged as a
+    # possible minor anywhere gets no bio at all.
     for v in teams.values():
-        apply_policy_and_bios(v['editions'], bios)
-        v['editions'].sort(key=lambda e: -e['year'])
-    # partial scrapes must fail loudly, not overwrite good data with gaps
-    for tid, v in teams.items():
-        if len(v['editions']) < 15:
-            sys.exit(f'FATAL: only {len(v["editions"])} editions scraped for {tid} — refusing to write')
+        for ed in v['editions']:
+            for p in ed['squad']:
+                w = p.pop('_wiki', None)
+                if w and p['pid'] not in minor_pids and bios.get(w):
+                    players.setdefault(p['pid'], {})['bio'] = bios[w]
     out = {'updated': datetime.date.today().isoformat(),
            'source': 'Wikipedia per-tournament squads pages',
-           'teams': teams}
+           'teams': teams, 'players': players}
     dst = ROOT / 'data' / 'nt_history.json'
     dst.write_text(json.dumps(out, ensure_ascii=False, separators=(',', ':')) + '\n')
     n = sum(len(e['squad']) for v in teams.values() for e in v['editions'])
-    print(f'wrote {dst} — {sum(len(v["editions"]) for v in teams.values())} editions, {n} player rows, {len(bios)} bios')
+    print(f'wrote {dst} — {sum(len(v["editions"]) for v in teams.values())} editions, {n} player rows, {len(players)} player bios')
 
 if __name__ == '__main__':
     main()
