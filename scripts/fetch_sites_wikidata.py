@@ -50,7 +50,7 @@ def main():
     for i, c in enumerate(targets):
         name = c['n']
         q = search(name)
-        if not q and c['g'] in ('ncaa1', 'ncaa2'):
+        if not q and c['g'] in ('ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w'):
             # try without trailing nickname words (last 2 tokens)
             words = name.split()
             if len(words) > 3: q = search(' '.join(words[:-2]))
