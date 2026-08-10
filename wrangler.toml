@@ -1,0 +1,9 @@
+name = "rank-xi"
+pages_build_output_dir = ".deploy-stage"
+# pinned to deploy.sh's wrangler 4.114.0 runtime ceiling
+compatibility_date = "2026-07-29"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "rankxi-signups"
+database_id = "84e357ee-ed55-4546-a63f-9147120bfd6d"

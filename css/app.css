@@ -1,14 +1,23 @@
+/* Self-hosted display face: Avenir Next Condensed is Apple-only and Arial
+   Narrow is Windows-only, so Android (40%+ of US phones) fell back to Roboto
+   and lost the condensed identity. One latin 700 woff2, 15KB, fixes it. */
+@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:700;font-display:swap;
+  src:url(/fonts/barlow-condensed-latin-700.woff2) format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212,U+FEFF,U+FFFD}
 :root{
   --ground:#FAFBF8; --ground2:#EFF2EC; --raise:#FFFFFF; --line:#DCE2D8;
   --ink:#16211B; --ink-dim:#61705F; --accent:#C77F1E;
   --map-fill:#F1F4EE; --map-stroke:#9AA795; --map-hover:#E4EADF; --map-label:#7C8878; --bar:rgba(255,255,255,.92);
   --mls:#4D8FD1; --uslc:#D9534F; --usl1:#E07B54; --mnp:#2FA69E;
   --nisa:#DD9426; --wom:#9B7ED9; --loc:#4FA35B;
+  --font-disp:"Barlow Condensed","Avenir Next Condensed","Arial Narrow",Impact,sans-serif;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
+/* overscroll-behavior-y on the root kills Chrome's pull-to-refresh in the TWA:
+   a drag starting on the appbar (outside main's own contain) reloaded the app */
+html,body{margin:0;height:100%;overscroll-behavior-y:none}
 body{background:#E8ECE5;color:var(--ink);font:15px/1.5 -apple-system,"Segoe UI",Roboto,sans-serif}
-.disp{font-family:"Avenir Next Condensed","Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.03em}
+.disp{font-family:var(--font-disp);text-transform:uppercase;letter-spacing:.03em}
 
 /* desktop stage + phone frame */
 .stage{min-height:100dvh}
@@ -38,9 +47,11 @@ body{background:#E8ECE5;color:var(--ink);font:15px/1.5 -apple-system,"Segoe UI",
 .brand{font-size:1.25rem;font-weight:700}
 .sub{color:var(--ink-dim);font-size:.75rem;text-transform:uppercase;letter-spacing:.14em}
 main{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:14px 16px 76px}
+/* programmatic focus target for route changes — never draw the UA ring on it */
+main:focus{outline:none}
 .tabbar{position:absolute;bottom:0;left:0;right:0;display:flex;background:var(--bar);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);backdrop-filter:blur(10px);z-index:30}
 /* stays at .66rem: six labels must fit a 320px bar; icons carry the affordance */
-.tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 7px;color:var(--ink-dim);text-decoration:none;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase}
+.tabbar a{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 2px 7px;color:var(--ink-dim);text-decoration:none;font-size:.62rem;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tabbar a svg{width:22px;height:22px}
 .tabbar a.active{color:var(--accent)}
 
@@ -85,7 +96,7 @@ svg.usmap{width:100%;height:auto;max-height:72vh;display:block;touch-action:mani
 .cl-name b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cl-name span{color:var(--ink-dim);font-size:.75rem}
 .cl-rt{font-variant-numeric:tabular-nums;font-weight:600}
-.rk{font-family:"Avenir Next Condensed","Arial Narrow",sans-serif;font-size:1.15rem;font-weight:700;width:1.8em;color:var(--ink-dim);flex:none;text-align:right}
+.rk{font-family:var(--font-disp);font-size:1.15rem;font-weight:700;width:1.8em;color:var(--ink-dim);flex:none;text-align:right}
 
 /* club detail */
 .clubhead{display:flex;gap:14px;align-items:center;margin:8px 0 4px}
@@ -109,6 +120,18 @@ svg.usmap{width:100%;height:auto;max-height:72vh;display:block;touch-action:mani
 .linkrow{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .linkrow a{border:1px solid var(--line);border-radius:999px;padding:7px 14px;color:var(--ink);text-decoration:none;font-size:.78rem;background:var(--raise)}
 .claim{display:block;text-align:center;background:var(--accent);color:#fff;font-weight:700;border-radius:12px;padding:13px;text-decoration:none;margin:16px 0 4px}
+.joinform{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}
+.joinform input,.joinform select{padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--raise);color:var(--ink);font:inherit;font-size:.88rem;min-width:0}
+.joinform input[name=name]{flex:1 1 130px}
+.joinform input[name=email]{flex:2 1 170px}
+.joinform select,.joinform input[name=state]{flex:1 1 110px}
+.joinform .joinbtn{flex:1 1 100%;background:var(--accent);color:#fff;font-weight:700;border:0;border-radius:10px;padding:12px;font:inherit;cursor:pointer}
+.join-msg{min-height:1.3em;margin:6px 0 0;font-size:.84rem;color:var(--ink-dim)}
+.joinform label.ck{flex:1 1 100%;display:flex;gap:8px;align-items:center;font-size:.84rem;color:var(--ink-dim)}
+.joinform label.ck input{min-width:0;padding:0;flex:0 0 auto}
+.tryform input{flex:1 1 130px}
+.tryform input[name=link],.tryform input[name=details]{flex:2 1 100%}
+.claimform input[name=note]{flex:2 1 100%}
 
 /* world ladder */
 .ladder{list-style:none;margin:6px 0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--raise)}
@@ -124,7 +147,7 @@ svg.usmap{width:100%;height:auto;max-height:72vh;display:block;touch-action:mani
 .match .side.away{text-align:right}
 .match .vs{color:var(--ink-dim);font-size:.7rem;flex:none}
 .match .meta{display:flex;justify-content:space-between;color:var(--ink-dim);font-size:.75rem;margin-top:6px}
-.scoreline{text-align:center;font-family:"Avenir Next Condensed","Arial Narrow",sans-serif;font-size:1.5rem;font-weight:700;margin:6px 0 2px}
+.scoreline{text-align:center;font-family:var(--font-disp);font-size:1.5rem;font-weight:700;margin:6px 0 2px}
 .oddsrow{display:flex;gap:6px;margin-top:8px}
 .odds{flex:1;text-align:center;background:var(--ground2);border-radius:8px;padding:6px 4px}
 .odds b{display:block;font-variant-numeric:tabular-nums;font-size:.9rem}
@@ -153,7 +176,7 @@ svg.usmap{width:100%;height:auto;max-height:72vh;display:block;touch-action:mani
 .squad{list-style:none;margin:8px 0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--raise)}
 .squad li{display:flex;align-items:center;gap:10px;padding:7px 12px;border-bottom:1px solid var(--line);font-size:.84rem}
 .squad li:last-child{border-bottom:none}
-.sq-num{width:1.6em;text-align:right;color:var(--ink-dim);font-variant-numeric:tabular-nums;font-family:"Avenir Next Condensed","Arial Narrow",sans-serif;font-weight:700}
+.sq-num{width:1.6em;text-align:right;color:var(--ink-dim);font-variant-numeric:tabular-nums;font-family:var(--font-disp);font-weight:700}
 .sq-name{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sq-pos{width:2.4em;color:var(--ink-dim);font-size:.7rem;letter-spacing:.06em}
 .sq-age{width:2em;color:var(--ink-dim);font-variant-numeric:tabular-nums;font-size:.78rem}
@@ -223,12 +246,12 @@ a.lgchip{text-decoration:none}
 .res-opp a.opp-link:hover{color:var(--accent)}
 .pphoto{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--line);background:#EFF2EC;flex:none}
 .careerway{list-style:none;margin:8px 0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--raise)}
-.careerway li{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:.85rem}
+.careerway li{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:.85rem}
 .careerway li:last-child{border-bottom:none}
 .cw-years{width:6.2em;flex:none;color:var(--ink-dim);font-size:.75rem;font-variant-numeric:tabular-nums}
-.cw-club{flex:1;min-width:0}
+.cw-club{flex:1 1 11em;min-width:0}
 .cw-club a{color:var(--accent);text-decoration:none}
-.cw-stat{color:var(--ink-dim);font-size:.76rem;font-variant-numeric:tabular-nums}
+.cw-stat{flex:0 1 auto;margin-left:auto;text-align:right;color:var(--ink-dim);font-size:.76rem;font-variant-numeric:tabular-nums}
 .searchwrap{position:relative;margin-bottom:10px}
 #q{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--raise);color:var(--ink);font:inherit;font-size:.9rem}
 #q:focus{outline:2px solid var(--accent);outline-offset:-1px}
@@ -261,6 +284,8 @@ image.pin{cursor:pointer}
 svg.usmap{cursor:grab;touch-action:none}
 details.how{border:1px solid var(--line);border-radius:12px;background:var(--raise);padding:9px 13px;margin:10px 0;font-size:.84rem}
 details.how summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:.8rem}
+details.how summary:focus{outline:none}
+details.how summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 details.how p{color:var(--ink-dim);margin:.5em 0 0}
 details.how b{color:var(--ink)}
 .fa-card{display:block;background:var(--raise);border:1px solid var(--accent);border-radius:12px;padding:12px 14px;margin:12px 0 4px;text-decoration:none;color:var(--ink)}
@@ -299,7 +324,7 @@ a.tierlg:hover{border-color:var(--accent)}
 .btnrow a.hdrlink:active{background:var(--accent);color:var(--ground);border-color:var(--accent)}
 /* dark ink on amber: white on var(--accent) was 2.15:1, below WCAG AA */
 .predictbtn2{border:none;background:var(--accent);color:#16211B;border-radius:999px;padding:8px 16px;font:inherit;font-size:.78rem;font-weight:700;cursor:pointer;margin:6px 0}
-.pheadline{font-family:"Avenir Next Condensed","Arial Narrow",Impact,sans-serif;text-transform:uppercase;font-size:1.15rem;font-weight:700;color:var(--accent);margin:6px 0 2px}
+.pheadline{font-family:var(--font-disp);text-transform:uppercase;font-size:1.15rem;font-weight:700;color:var(--accent);margin:6px 0 2px}
 .pheadline span{display:block;font-family:-apple-system,"Segoe UI",Roboto,sans-serif;text-transform:none;font-weight:400;font-size:.7rem;color:var(--ink-dim);letter-spacing:0}
 .reportlink{display:inline-block;color:var(--ink-dim);font-size:.75rem;text-decoration:none;margin-top:10px;border-bottom:1px dotted var(--line)}
 .reportlink:hover{color:var(--accent)}
@@ -339,3 +364,36 @@ a.wirelink:hover .side{color:var(--accent)}
 .adslot:hover{border-color:var(--accent)}
 .adslot.filled{border-style:solid;background:var(--raise)}
 .adslot.filled img{height:34px;width:auto}
+
+/* Full-browser layout — external audit #1: at 1440px the phone bezel left
+   1,050px of empty grey next to a 390px app. ≥1160px the app now defaults to
+   the whole screen (html[data-layout="wide"], set before first paint in
+   app.html; #layoutbtn toggles back to the bezel and persists the choice).
+   Below 1160px nothing here applies and the phone presentation stands. */
+#layoutbtn{display:none}
+@media (min-width:1160px){
+  #layoutbtn{display:inline-flex;align-items:center;border:1px solid var(--line);background:var(--raise);color:var(--ink);border-radius:999px;height:30px;padding:0 12px;cursor:pointer;font:inherit;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
+  #layoutbtn:hover{border-color:var(--accent);color:var(--accent)}
+  [data-layout="wide"] .stage{display:block;padding:0;background:var(--ground)}
+  [data-layout="wide"] .pitch-copy{display:none}
+  [data-layout="wide"] .phone{width:100%;height:100dvh;border:none;border-radius:0;box-shadow:none}
+  [data-layout="wide"] .phone::after{display:none}
+  [data-layout="wide"] .screen{border-radius:0}
+  [data-layout="wide"] .appbar{order:-2;padding:14px 28px 10px}
+  /* tab bar rides under the app bar as a top nav; labels sit beside icons */
+  [data-layout="wide"] .tabbar{position:static;order:-1;justify-content:center;gap:6px;padding:0 24px 0;border-top:none;border-bottom:1px solid var(--line);backdrop-filter:none}
+  [data-layout="wide"] .tabbar a{flex:0 0 auto;flex-direction:row;gap:8px;font-size:.78rem;padding:13px 16px}
+  [data-layout="wide"] .tabbar a.active{box-shadow:inset 0 -2px 0 var(--accent)}
+  [data-layout="wide"] .searchwrap.global{width:min(720px,60%);margin:14px auto 0}
+  [data-layout="wide"] main{padding:18px max(36px,calc((100% - 1120px)/2)) 48px}
+  [data-layout="wide"] svg.usmap{max-height:calc(100dvh - 270px)}
+  /* no bottom tab bar to clear in wide mode */
+  [data-layout="wide"] .mapctl{bottom:20px}
+  /* the audit could see 9 clubs on a 1440px screen; two columns shows ~30.
+     display:block — .clublist is a flex column, and flex ignores multicol */
+  [data-layout="wide"] #tablelist{display:block;columns:2;column-gap:48px}
+  [data-layout="wide"] #tablelist li{break-inside:avoid}
+  [data-layout="wide"] #tablelist li:has(.morebtn){column-span:all}
+  [data-layout="wide"] .sheet{align-items:center;justify-content:center;padding:24px}
+  [data-layout="wide"] .sheet-panel{max-width:600px;border-radius:22px}
+}

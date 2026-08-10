@@ -1,19 +1,19 @@
-import { PROJ, USMAP } from './usmap.js?v=20260809b';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260809b';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260809c';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260809c';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260809b')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260809c')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260809b';
+const BUILDV = '20260809a';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -28,11 +28,13 @@ const leaguesFor = s => Object.keys(LEAGUES).filter(k => LEAGUES[k].sex === s);
 let leagueFilter = new Set(leaguesFor(sex));
 
 function XY(lat, lon) {
+  /* AK and HI live in inset boxes with their own Albers params */
+  const P = (lat > 49.5 && lon < -129) ? PROJ_AK : (lat < 24.5 && lon < -154) ? PROJ_HI : PROJ;
   const f = lat * Math.PI / 180, l = lon * Math.PI / 180;
-  const rho = Math.sqrt(PROJ.C - 2 * PROJ.n * Math.sin(f)) / PROJ.n;
-  const th = PROJ.n * (l - PROJ.l0);
-  return [(rho * Math.sin(th) - PROJ.minx) * PROJ.s + PROJ.ox,
-          (PROJ.maxy - (PROJ.r0 - rho * Math.cos(th))) * PROJ.s + PROJ.oy];
+  const rho = Math.sqrt(P.C - 2 * P.n * Math.sin(f)) / P.n;
+  const th = P.n * (l - P.l0);
+  return [(rho * Math.sin(th) - P.minx) * P.s + P.ox,
+          (P.maxy - (P.r0 - rho * Math.cos(th))) * P.s + P.oy];
 }
 
 const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
@@ -140,7 +142,7 @@ function renderMapSvg(clubs, useCrests) {
       ? `<circle ${base} fill="none" stroke="${m.color}" stroke-width="1.6"></circle>`
       : `<circle ${base} fill="${m.color}" fill-opacity=".9"></circle>`;
   }).join('');
-  return `<div class="mapbox"><svg class="usmap" viewBox="0 -20 980 580" role="img" aria-label="US and Canada soccer club map">${USMAP}<g id="pins">${pins}</g></svg>
+  return `<div class="mapbox"><svg class="usmap" viewBox="0 -20 980 580" role="img" aria-label="US and Canada soccer club map">${USMAP}${INSETS}<g id="pins">${pins}</g></svg>
     <div class="mapctl"><button data-z="in" aria-label="Zoom in">+</button><button data-z="out" aria-label="Zoom out">&minus;</button><button data-z="reset" aria-label="Reset zoom">&#8634;</button></div>
     <div class="maptip" hidden></div></div>`;
 }
@@ -454,9 +456,7 @@ function screenState(st) {
   const clubs = pool().filter(c => c.st === st);
   const ranked = visible(clubs).filter(c => c.r).sort((a, b) => b.r - a.r);
   const concepts = visible(clubs).filter(c => !c.r);
-  /* AK/HI have no path in the Albers lower-48 SVG and their pins project
-     off-canvas — list-only beats a map with invisible pins */
-  const mappable = clubs.length > 0 && !['AK', 'HI'].includes(st);
+  const mappable = clubs.length > 0;
   view.innerHTML = `
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/map'">&larr; Back</button>
     ${sexToggle()}
@@ -566,7 +566,6 @@ function oddsFor(h, a, homeAdv) {
   const tot = pH + pD + pA;
   return { pH: pH / tot, pD: pD / tot, pA: pA / tot, score: best, ha };
 }
-const moneyline = p => p >= 0.5 ? '-' + Math.round(100 * p / (1 - p)) : '+' + Math.round(100 * (1 - p) / p);
 
 /* ico = crests/platform-<ico>.svg; 'inv' logos are dark-on-transparent
    wordmarks that invert under the dark theme */
@@ -602,7 +601,9 @@ const mcrest = c => c.img
 /* inv: 'd' = dark-art mark, invert under dark theme; 'l' = white mark,
    invert under light theme — one asset serves both themes either way */
 const lgIcon = g => { const m = LEAGUES[g]; return m.img ? `<img class="lgico${m.inv ? ' inv-' + m.inv : ''}" src="${m.img}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''; };
-function matchCard(h, a, when) {
+/* real=true only for verified fixtures — a watch link on a hypothetical
+   matchup advertised a broadcast for a game that doesn't exist (audit #7) */
+function matchCard(h, a, when, real) {
   const head = `<div class="mrow"><a class="side" href="#/club/${h.id}">${mcrest(h)}<span class="sn">${esc(h.n)}</span></a><span class="vs">${when || 'NEUTRAL'}</span><a class="side away" href="#/club/${a.id}">${mcrest(a)}<span class="sn">${esc(a.n)}</span></a></div>
     <div class="meta"><span>${lgIcon(h.g)}${LEAGUES[h.g].label}${h.g !== a.g ? ' v ' + LEAGUES[a.g].label : ''}</span><span>${h.st}${h.st !== a.st ? ' · ' + a.st : ''}</span></div>`;
   // a club with no Elo yet must never reach the Poisson math — that path is NaN
@@ -616,9 +617,9 @@ function matchCard(h, a, when) {
     <div class="scoreline">${o.score[0]}–${o.score[1]}</div>
     <div class="meta" style="justify-content:center;margin-top:0"><span>most likely score</span></div>
     <div class="oddsrow">
-      <div class="odds"><b>${(o.pH * 100).toFixed(1)}%</b><span>${esc(initials(h.n))} win · ${moneyline(o.pH)}</span></div>
-      <div class="odds"><b>${(o.pD * 100).toFixed(1)}%</b><span>Draw · ${moneyline(o.pD)}</span></div>
-      <div class="odds"><b>${(o.pA * 100).toFixed(1)}%</b><span>${esc(initials(a.n))} win · ${moneyline(o.pA)}</span></div>
+      <div class="odds"><b>${(o.pH * 100).toFixed(1)}%</b><span>${esc(initials(h.n))} win</span></div>
+      <div class="odds"><b>${(o.pD * 100).toFixed(1)}%</b><span>Draw</span></div>
+      <div class="odds"><b>${(o.pA * 100).toFixed(1)}%</b><span>${esc(initials(a.n))} win</span></div>
     </div>
     <div class="confmeter l${cf.n}" role="img" aria-label="Confidence: ${cf.tag} — ${cf.fav} at ${(cf.top * 100).toFixed(1)} percent">
       <span class="conf-label">Confidence</span>
@@ -627,14 +628,14 @@ function matchCard(h, a, when) {
     </div>
     <div class="prob"><i style="width:${(o.pH * 100).toFixed(1)}%;background:${LEAGUES[h.g].color}"></i><i style="width:${(o.pD * 100).toFixed(1)}%;background:var(--line)"></i><i style="flex:1;background:${LEAGUES[a.g].color};opacity:.55"></i></div>
     <div class="meta"><span>Elo ${h.r} v ${a.r}</span><span>home edge +${o.ha}</span></div>
-    ${watchRow(h, a)}
+    ${real ? watchRow(h, a) : ''}
   </div>`;
 }
 
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260809b')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260809c')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -643,7 +644,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260809b'), grab('data/wire_asa.json?v=20260809b')]);
+    grab('data/wire_npsl.json?v=20260809c'), grab('data/wire_asa.json?v=20260809c')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -651,7 +652,7 @@ async function wireDb() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260809b')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260809c')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -732,10 +733,10 @@ function screenMatches(preH) {
         const hi = clubIdxByName(f.t1), ai = clubIdxByName(f.t2);
         const h = CLUBS[hi], a = CLUBS[ai];
         const when = fmtKick(f.start);
-        if (!h || !a) return `<div class="match"><div class="mrow"><span class="side">${esc(f.t1)}</span><span class="vs">${f.round}</span><span class="side away">${esc(f.t2)}</span></div>
-          <div class="meta"><span>${when}</span><span>${esc(f.venue || 'Venue TBD')}</span></div>
+        if (!h || !a) return `<div class="match"><div class="mrow"><span class="side"><span class="sn">${esc(f.t1)}</span></span><span class="vs">v</span><span class="side away"><span class="sn">${esc(f.t2)}</span></span></div>
+          <div class="meta"><span>${when}</span><span>${esc(f.round)} · ${esc(f.venue || 'Venue TBD')}</span></div>
           <p class="note" style="margin:6px 0 0">Pairing set once the semifinals finish.</p></div>`;
-        return matchCard(h, a, f.round.toUpperCase()) .replace('<div class="meta"><span>Elo', `<div class="meta"><span>${when} · ${esc(f.venue || '')}</span><span></span></div><div class="meta"><span>Elo`);
+        return matchCard(h, a, f.round.toUpperCase(), true) .replace('<div class="meta"><span>Elo', `<div class="meta"><span>${when} · ${esc(f.venue || '')}</span><span></span></div><div class="meta"><span>Elo`);
       }).join('') + `<p class="note">Times shown in Eastern and your local time. Odds from real-results Elo.</p>`;
   });
 }
@@ -943,30 +944,37 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260809b')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260809c')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260809b')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260809c')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260809b')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260809c')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260809b')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260809c')).json(); }
   catch { _profiles = {}; }
   return _profiles;
+}
+let _tryouts = null;
+async function tryoutsDb() {
+  if (_tryouts) return _tryouts;
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260809c')).json(); }
+  catch { _tryouts = []; }
+  return _tryouts;
 }
 const AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23EFF2EC'/%3E%3Ccircle cx='50' cy='38' r='19' fill='%23AAB8A8'/%3E%3Cpath d='M14 94c5-24 19-32 36-32s31 8 36 32z' fill='%23AAB8A8'/%3E%3C/svg%3E";
 /* names Wikipedia uses that differ from the dataset's canonical short names */
@@ -1045,7 +1053,7 @@ async function screenClub(ref) {
       <div class="stat"><b>#${rank}</b><span>${m.label}</span></div>
       <div class="stat"><b>#${natl.indexOf(c) + 1}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
     </div>
-    ${cupRec.length ? `<div class="kicker" style="margin-top:10px">U.S. Open Cup &middot; real results, last 5 editions</div>
+    ${cupRec.length ? `<div class="kicker" style="margin-top:10px">U.S. Open Cup &middot; real results, ${Math.min(...cupRec.map(e => e.y))}&ndash;${Math.max(...cupRec.map(e => e.y))}</div>
     <div class="histwrap" tabindex="0" role="region" aria-label="U.S. Open Cup match history"><ul class="careerway">${cupRec.slice().reverse().map(e => {
       const wl = e.gf > e.ga ? 'W' : e.gf < e.ga ? 'L' : (e.pens ? (e.pens[0] > e.pens[1] ? 'W' : 'L') + ' pens' : 'D');
       return `<li><span class="cw-years">${e.y}</span><span class="cw-club">${e.ha === 'H' ? 'v' : 'at'} ${esc(e.opp)} &middot; ${e.gf}&ndash;${e.ga}${e.aet ? ' aet' : ''}${e.pens ? ` (${e.pens[0]}&ndash;${e.pens[1]}p)` : ''}</span><span class="cw-stat">${wl}${e.d ? ` &middot; ${e.d > 0 ? '+' : ''}${e.d}` : ''}</span></li>`;
@@ -1114,15 +1122,24 @@ function screenAbout() {
     <div class="kicker">About</div>
     <h2 class="disp">One pyramid, one table</h2>
     <p>American soccer has no single place to see every club, how they rank, and how the levels connect. <b>Ranked XI</b> maps all of it: MLS to the grassroots, with men's and women's tables ranked separately.</p>
-    <p><b>How rankings work.</b> League results feed a weekly Elo rating. Cup competitions — Open Cup qualifying, the National Amateur Cup — are where leagues actually meet, and those matches calibrate the cross-league scale. Every rating change is published with the match that caused it.</p>
+    <p><b>How rankings work.</b> League results feed a weekly Elo rating. Cup competitions — Open Cup qualifying, the National Amateur Cup — are where leagues actually meet, and those matches calibrate the cross-league scale. Every rating change is published with the match that caused it. College teams don't play in the Cups, so their layers are ordered by independent Massey ratings and placed in calibrated bands — men's capped below the pro leagues, women's higher (college is the women's development tier) — see <a href="/methodology" style="color:var(--accent)">Methodology</a>.</p>
     <p><b>World context.</b> Each club page projects the club onto a hypothetical global ladder against European reference sides — a conversation-starter, clearly labeled, never presented as measurement.</p>
-    <p><b>What's real.</b> All ${CLUBS.length} clubs and locations come from what the leagues publish. Ratings label their basis on every page — real results, real standings, an independent results model, or an illustrative placeholder until that league's feed connects. Fixtures and results are never invented: match data appears only where a real feed provides it.</p>
+    <p><b>What's real.</b> All ${CLUBS.filter(c => !c.h).length.toLocaleString()} clubs and locations come from what the leagues publish. Ratings label their basis on every page — real results, real standings, an independent results model, or an illustrative placeholder until that league's feed connects. Fixtures and results are never invented: match data appears only where a real feed provides it.</p>
     <p><b>Pricing.</b> The app is free; paid extras are listed plainly at <a href="#/pricing" style="color:var(--accent)">Pricing</a>.</p>
     <p><b>Roadmap.</b> Amateur league layers (UPSL, NPSL, USL League Two) from live feeds · claimed club pages · player profiles · clean crest art · youth club directory layer.</p>
     <div class="kicker" style="margin-top:14px">The leagues</div>
     <ul class="lglist">${Object.entries(LEAGUES).filter(([k, m]) => m.url).map(([k, m]) =>
       `<li><a href="${m.url}" target="_blank" rel="noopener">${m.img ? `<img src="${m.img}" alt="" loading="lazy">` : `<span class="dot" style="background:${m.color};width:12px;height:12px;border-radius:50%"></span>`}<b>${m.label}</b><span>${m.url.replace('https://', '').replace('www.', '')}</span></a></li>`).join('')}</ul>
-    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Subscribe: Ranked XI updates')}&body=${encodeURIComponent('Sign me up. I am a (player / club / coach / fan):\nState:\n')}">Get launch updates &mdash; join the list</a>
+    <div class="kicker" style="margin-top:14px">Get launch updates</div>
+    <form class="joinform" novalidate>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+      <input type="text" name="name" placeholder="Name (optional)" autocomplete="name" maxlength="80">
+      <input type="email" name="email" placeholder="Email" required autocomplete="email" maxlength="254">
+      <select name="role" aria-label="I am a"><option value="">I'm a&hellip;</option><option value="fan">Fan</option><option value="player">Player</option><option value="club">Club / coach</option><option value="league">League staff</option><option value="other">Other</option></select>
+      <input type="text" name="state" placeholder="State (optional)" maxlength="40">
+      <button type="submit" class="joinbtn">Join the list</button>
+    </form>
+    <p class="join-msg" role="status" aria-live="polite"></p>
     <div class="kicker" style="margin-top:14px">Help us get it right</div>
     <div class="linkrow">
       <a href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('RankedXI Fix: ')}&body=${encodeURIComponent('Page or club:\nWhat is wrong:\n')}"><b>Report an error</b></a>
@@ -1140,10 +1157,34 @@ function screenAbout() {
     <ul class="lglist">${ROADMAP.map(r =>
       `<li><a href="${r.url}" target="_blank" rel="noopener"><span class="dot" style="background:var(--ink-dim);width:12px;height:12px;border-radius:50%;opacity:.4"></span><b>${r.label}</b><span>~${r.teams} teams · ${r.sex === 'w' ? "women's" : "men's"}</span></a></li>`).join('')}</ul>
     <p class="note">NISA is currently unsanctioned by U.S. Soccer (Dec 2024); its clubs are shown for completeness. UPSL layer holds the clubs mapped so far — the full league is 400+ clubs.</p>
-    <p class="fine" style="font-size:.75rem">Data last refreshed: ${BUILD_DATE} &middot; rosters and stats auto-refresh every 12 hours &middot; <a href="#/legal" style="color:var(--accent)">Terms &amp; Privacy</a></p>
+    <p class="fine" style="font-size:.75rem">Data last refreshed: ${BUILD_DATE} &middot; rosters and stats auto-refresh every 12 hours &middot; <a href="#/legal" style="color:var(--accent)">Terms &amp; Privacy</a> &middot; <a href="/methodology" style="color:var(--accent)">Methodology &amp; Disclaimer</a></p>
     <p class="fine" style="font-size:.75rem">Data: Wikipedia (CC BY-SA — rosters, profiles, photos, crests), league sites and public feeds (NPSL/Squadi, UPSL), OpenStreetMap Nominatim geocoding. Club and league marks belong to their owners.</p>
     <p class="fine" style="font-size:.75rem">Built by Jeremy Kientz · 2026</p>
   </div>`;
+  wireJoinForm();
+}
+
+function wireJoinForm() {
+  const form = view.querySelector('.joinform');
+  if (!form) return;
+  const msg = view.querySelector('.join-msg');
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = new FormData(form);
+    const email = (f.get('email') || '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { msg.textContent = 'A real email address is required.'; return; }
+    msg.textContent = 'Saving…';
+    try {
+      const r = await fetch('/api/signup', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ kind: 'updates', source: 'app-about', email,
+          name: f.get('name'), role: f.get('role'), state: f.get('state'), website: f.get('website') })
+      });
+      const d = await r.json();
+      if (d.ok) { form.reset(); msg.textContent = "You're on the list — see you at launch."; }
+      else msg.textContent = d.error || 'Could not save right now — please try again.';
+    } catch { msg.textContent = 'Could not save right now — please try again.'; }
+  });
 }
 
 function playerLadder(pl, c) {
@@ -1183,6 +1224,7 @@ async function screenPlayer(ci, pi) {
       <span class="sub">#${pl.num} · ${pl.pos}${pl.real ? (pl.nat ? ' · ' + pl.nat : '') : ' · ' + pl.age + ' yrs'} · ${esc(c.n)}</span></div>
     </div>
     ${verifyBadge(c)}
+    ${prof.claimed ? '<span class="badge v">&#10003; Claimed profile</span> ' : ''}${prof.fa ? '<span class="badge c">Free agent &middot; available</span>' : ''}
     <div class="statgrid">
       <div class="stat"><b>${pl.pvr}</b><span>Value rating</span></div>
       <div class="stat"><b>#${rank}</b><span>${pl.pos} · ${pl.rs ? 'pro pool (real stats)' : (c.x === 'w' ? "women's" : "men's") + ' pool'}</span></div>
@@ -1237,10 +1279,47 @@ async function screenPlayer(ci, pi) {
       <a href="https://www.transfermarkt.us/schnellsuche/ergebnis/schnellsuche?query=${encodeURIComponent(pl.name)}" target="_blank" rel="noopener">Transfermarkt</a>
     </div>
     ${(prof.ig || prof.x || prof.site) ? '' : '<p class="note">Socials appear when listed on the player\'s Wikipedia article or once the player claims the profile — no guessed links.</p>'}
-    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Player profile: ' + pl.name + ' (' + c.n + ')')}">Is this you? Claim your profile</a>
-    <p class="note">Claimed player profiles add film links, verified stats history, and recruiting visibility.</p>
+    ${pl.real ? `<details class="how" style="margin-top:14px"><summary><b>Is this you? Claim your profile — free</b></summary>
+      <p class="note">Claimed profiles add film links, socials, corrected history, and recruiting visibility — and claiming is how you join the <a href="#/freeagents" style="color:var(--accent)">Free Agents board</a>. Every claim is verified with the club or league before anything changes; nothing publishes automatically.</p>
+      <form class="joinform claimform" novalidate>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+        <input type="text" name="name" placeholder="Your name" autocomplete="name" maxlength="80">
+        <input type="email" name="email" placeholder="Email" required autocomplete="email" maxlength="254">
+        <select name="role" aria-label="I am"><option value="player">I'm this player</option><option value="agent">Agent / representative</option><option value="club">Club officer</option></select>
+        <input type="text" name="note" placeholder="Anything to add? Film link, correction… (optional)" maxlength="200">
+        <label class="ck"><input type="checkbox" name="fa" value="1"> Also list me on the Free Agents board — I confirm I'm 18 or older</label>
+        <button type="submit" class="joinbtn">Claim this profile</button>
+      </form>
+      <p class="join-msg claim-msg" role="status" aria-live="polite"></p>
+    </details>` : ''}
     ${reportLink('Fix', pl.name)}`;
   wireFav();
+  wireClaimForm(pl, c);
+}
+
+function wireClaimForm(pl, c) {
+  const form = view.querySelector('.claimform');
+  if (!form) return;
+  const msg = view.querySelector('.claim-msg');
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = new FormData(form);
+    const email = (f.get('email') || '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { msg.textContent = 'A real email address is required.'; return; }
+    msg.textContent = 'Saving…';
+    const note = String(f.get('note') || '').slice(0, 200);
+    const message = `claim: ${pl.name} @ ${c.n} [${c.id}] · fa:${f.get('fa') ? 'yes' : 'no'}${note ? ' · ' + note : ''}`;
+    try {
+      const r = await fetch('/api/signup', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ kind: 'claim', source: 'player-page', email,
+          name: f.get('name'), role: f.get('role'), message, website: f.get('website') })
+      });
+      const d = await r.json();
+      if (d.ok) { form.reset(); msg.textContent = 'Claim received — we verify with the club or league and reply within a few days.'; }
+      else msg.textContent = d.error || 'Could not save right now — please try again.';
+    } catch { msg.textContent = 'Could not save right now — please try again.'; }
+  });
 }
 
 let tableMode = 'clubs', posFilter = 'all', tableLimit = 40;
@@ -1302,10 +1381,11 @@ const FREE_AGENTS = [
 function screenFreeAgents() {
   crumb.textContent = 'Free agents';
   view.innerHTML = `
-    <div class="kicker">Get seen by ${CLUBS.length.toLocaleString()} clubs</div>
+    <div class="kicker">Get seen by ${CLUBS.filter(c => !c.h).length.toLocaleString()} clubs</div>
     <h2 class="disp">Free Agents</h2>
     <p class="note" style="font-size:.88rem">Players without a club list themselves here: position, region, level sought, film. Clubs browse free and reach out directly — Ranked XI never sits in the middle of a deal. Listings are self-reported; players with match history in our data carry a verified badge.</p>
     <a class="fa-card" href="#/freeagent/sample"><b>See a complete profile &rarr;</b><span>Film, physicals, verified history, awards, references — the full page a listing buys.</span></a>
+    <a class="fa-card" href="#/tryouts"><b>&#128197; Open Tryouts board &rarr;</b><span>Every posted tryout date, one calendar — free for clubs to post, free for players to browse.</span></a>
     <ul class="clublist">${FREE_AGENTS.map(f => `
       <li><a href="#/freeagent/sample">
         <img class="crest imgcrest" src="${AVATAR}" alt="">
@@ -1314,8 +1394,86 @@ function screenFreeAgents() {
     <p class="note">Sample listings — the real board opens with player claims. Listings are for players <b>18 and older</b>, arrive by email, and every one is human-reviewed before it publishes — nothing posts to this board automatically.</p>
     ${adSlot('freeagents', 'Free Agents board')}
     <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent listing request')}&body=${encodeURIComponent('I confirm I am 18 or older: \nName:\nPosition:\nAge:\nRegion:\nLast club/level:\nLevel seeking:\nHighlight film link:\n')}">List yourself — $25 per season</a>
-    <p class="note">Flat listing fee. No commissions, no placement cuts — your deal is yours. Clubs: browsing is free, and posting open-tryout dates is coming. <a href="#/pricing" style="color:var(--accent)">See all pricing &rarr;</a></p>
+    <p class="note">Flat listing fee. No commissions, no placement cuts — your deal is yours. Clubs: browsing is free, and posting open-tryout dates is free too — <a href="#/tryouts" style="color:var(--accent)">post on the Tryouts board</a>. <a href="#/pricing" style="color:var(--accent)">See all pricing &rarr;</a></p>
     <p class="note"><a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('Report a free agent listing')}&body=${encodeURIComponent('Listing (name shown):\nWhat is wrong (impersonation, inaccurate, inappropriate, other):\n')}" style="color:var(--accent)">Report a listing</a> — reports are reviewed within days; a listing that misrepresents someone comes down first, questions after.</p>`;
+}
+
+let tryoutSex = 'all';
+async function screenTryouts() {
+  crumb.textContent = 'Tryouts';
+  const all = await tryoutsDb();
+  if (location.hash !== '#/tryouts') return;
+  const today = new Date().toISOString().slice(0, 10);
+  const upcoming = all.filter(t => t.date >= today).sort((a, b) => a.date < b.date ? -1 : 1);
+  const list = tryoutSex === 'all' ? upcoming : upcoming.filter(t => t.x === tryoutSex);
+  const fmtDay = d => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  const card = t => {
+    /* clubId is never submitted — it's added by hand during moderation when
+       the club already exists in CLUBS, so the card can link its page */
+    const ci = t.clubId ? clubIdx(t.clubId) : -1;
+    const meta = [t.city && t.st ? `${esc(t.city)}, ${esc(t.st)}` : esc(t.st || t.city || ''), t.league ? esc(t.league) : '', t.details ? esc(t.details) : ''].filter(Boolean).join(' · ');
+    return `<div class="pricecard"><b>${esc(t.club)} · ${fmtDay(t.date)}${t.time ? ' · ' + esc(t.time) : ''}</b>${t.sample ? ' <span class="badge d">Sample</span>' : ''}
+      <p>${meta}</p>
+      ${(ci >= 0 || t.link) ? `<div class="linkrow">${ci >= 0 ? `<a href="#/club/${CLUBS[ci].id}"><b>Club page</b></a>` : ''}${t.link ? `<a href="${safeHref(t.link)}" target="_blank" rel="noopener">Tryout details</a>` : ''}</div>` : ''}
+    </div>`;
+  };
+  view.innerHTML = `
+    <div class="kicker">Fill your roster · find your club</div>
+    <h2 class="disp">Open Tryouts</h2>
+    <p class="note" style="font-size:.88rem">Every open tryout in one place — the amateur leagues, one calendar. Posting is <b>free for every club</b>, and every listing is human-reviewed before it publishes. Players: tryouts listed here are for players <b>18 and older</b> unless the club's own page says otherwise.</p>
+    <div class="chips seg" id="tsex">
+      ${[['all', 'All'], ['m', "Men's"], ['w', "Women's"]].map(([k, lb]) =>
+        `<button class="chip solid" data-tsx="${k}" aria-pressed="${tryoutSex === k}">${lb}</button>`).join('')}
+    </div>
+    ${list.length ? list.map(card).join('') : '<p class="note">No upcoming tryouts in this filter yet — check back, or post the first one below.</p>'}
+    ${list.some(t => t.sample) ? '<p class="note">Sample listings show the format — they clear out as real dates land. The board is new: clubs, the first posts are yours.</p>' : ''}
+    <div class="kicker" style="margin-top:16px">Post a tryout · free</div>
+    <form class="joinform tryform" novalidate>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+      <input type="text" name="club" placeholder="Club name" required maxlength="80">
+      <input type="text" name="league" placeholder="League / level" maxlength="60">
+      <input type="date" name="date" required aria-label="Tryout date">
+      <input type="text" name="city" placeholder="City" maxlength="60">
+      <input type="text" name="state" placeholder="State" maxlength="40">
+      <input type="url" name="link" placeholder="Details link (optional)" maxlength="300">
+      <input type="text" name="details" placeholder="Fee, ages, what to bring (optional)" maxlength="200">
+      <input type="email" name="email" placeholder="Contact email (not published)" required maxlength="254">
+      <button type="submit" class="joinbtn">Submit for review</button>
+    </form>
+    <p class="join-msg try-msg" role="status" aria-live="polite"></p>
+    <p class="note">Your contact email is for verification only — it is never published. Free agents: <a href="#/freeagents" style="color:var(--accent)">list yourself</a> so clubs can find you between tryout dates.</p>
+    <p class="note"><a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('Report a tryout listing')}&body=${encodeURIComponent('Listing (club and date shown):\nWhat is wrong (fake, outdated, inappropriate, other):\n')}" style="color:var(--accent)">Report a listing</a> — outdated or fake tryouts come down first, questions after.</p>`;
+  view.querySelector('#tsex').addEventListener('click', e => {
+    const b = e.target.closest('[data-tsx]'); if (!b || b.dataset.tsx === tryoutSex) return;
+    tryoutSex = b.dataset.tsx; screenTryouts();
+  });
+  wireTryoutForm();
+}
+
+function wireTryoutForm() {
+  const form = view.querySelector('.tryform');
+  if (!form) return;
+  const msg = view.querySelector('.try-msg');
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = new FormData(form);
+    const email = (f.get('email') || '').trim();
+    if (!(f.get('club') || '').trim()) { msg.textContent = 'Club name is required.'; return; }
+    if (!f.get('date')) { msg.textContent = 'A tryout date is required.'; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { msg.textContent = 'A real contact email is required.'; return; }
+    msg.textContent = 'Saving…';
+    try {
+      const r = await fetch('/api/tryouts', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ source: 'app-tryouts', email,
+          club: f.get('club'), league: f.get('league'), date: f.get('date'), city: f.get('city'),
+          state: f.get('state'), link: f.get('link'), details: f.get('details'), website: f.get('website') })
+      });
+      const d = await r.json();
+      if (d.ok) { form.reset(); msg.textContent = 'Got it — your tryout goes live after a quick human review, usually within a day.'; }
+      else msg.textContent = d.error || 'Could not save right now — please try again.';
+    } catch { msg.textContent = 'Could not save right now — please try again.'; }
+  });
 }
 
 function screenAdvertise() {
@@ -1359,7 +1517,7 @@ function screenPricing() {
       <p>Everything in the listing, plus <b>you make the first move</b>: send direct intro requests to clubs from inside Ranked XI — your verified profile and film attached — with <b>5 intros a month</b> and priority placement in club searches. Privacy holds both ways: no emails or numbers exposed until both sides accept the intro.</p>
       <a class="claim" href="#/freeagent/sample">See how intros work</a></div>
     <div class="pricecard paid"><b>Club Recruiting · Free browse for all clubs · Pro tools $99/season</b>
-      <p>Browsing free agents costs nothing, ever. The paid tier is speed: <b>saved-search alerts</b> ("verified GK within 50 miles"), <b>unlimited direct contact</b>, <b>shortlists</b>, and <b>promoted tryout listings</b>. Fill your roster in a week, not a month.</p>
+      <p>Browsing free agents costs nothing, ever — and so is <a href="#/tryouts" style="color:var(--accent)">posting open tryouts</a>. The paid tier is speed: <b>saved-search alerts</b> ("verified GK within 50 miles"), <b>unlimited direct contact</b>, <b>shortlists</b>, and <b>promoted tryout listings</b>. Fill your roster in a week, not a month.</p>
       <a class="claim" href="#/clubtools/sample">See the club recruiting tools</a></div>
     <div class="pricecard paid"><b>Claimed player profile · $30/year</b>
       <p>Verify your page: photo, film, socials, corrected history — and recruiting visibility.</p>
@@ -1434,7 +1592,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260809b')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260809c')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -1615,7 +1773,8 @@ function screenClubTools() {
       <li><a href="#/freeagent/sample"><img class="crest imgcrest" src="${AVATAR}" alt=""><span class="cl-name"><b>Sample: T. Nguyen</b><span>GK · 25 · NPSL history &#10003;</span></span><span class="cl-rt" style="font-size:.7rem;color:var(--ink-dim)">New</span></a></li>
     </ul>
     <div class="kicker">Your tryout listing</div>
-    <div class="pricecard"><b>Open tryout · Aug 15 · 6 PM</b><p>Promoted to every free agent within 75 miles — 241 views, 19 RSVPs so far.</p></div>
+    <div class="pricecard"><b>Open tryout · Aug 15 · 6 PM</b><p>Promoted to every free agent within 75 miles — 241 views, 19 RSVPs so far.</p>
+      <a class="claim" href="#/tryouts">Post your real tryout — free</a></div>
     <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Club Recruiting Pro — founding interest')}">Reserve founding club pricing — $99/season</a>
     <p class="note">Everything above is included: alerts, unlimited contact, shortlists, promoted tryouts. Browsing free agents stays free for every club, forever.</p>`;
 }
@@ -1651,7 +1810,7 @@ function screenLegal() {
     <div class="linkrow">
       <a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('RankedXI Accessibility barrier')}&body=${encodeURIComponent('Page or screen:\nWhat got in the way (keyboard, screen reader, contrast, motion):\nAssistive tech used, if any:\n')}"><b>Report an accessibility barrier</b></a>
     </div>
-    <p class="fine" style="font-size:.75rem">Independent project by Jeremy Kientz &middot; 2026. This page is the policy; material changes are dated here.</p>
+    <p class="fine" style="font-size:.75rem">Independent project by Jeremy Kientz &middot; 2026. This page and <a href="/methodology" style="color:var(--accent)">Methodology &amp; Disclaimer</a> are the policy; material changes are dated there.</p>
   </div>`;
 }
 
@@ -1736,7 +1895,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', freeagents: 'Free Agents', freeagent: 'Free Agent', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
 let routedOnce = false;
 function route() {
   const h = location.hash || '#/map';
@@ -1753,6 +1912,7 @@ function route() {
   function dispatch() {
   if (parts[0] === 'tiers') screenPyramid();
   else if (parts[0] === 'freeagents') screenFreeAgents();
+  else if (parts[0] === 'tryouts') screenTryouts();
   else if (parts[0] === 'pricing') screenPricing();
   else if (parts[0] === 'advertise') screenAdvertise();
   else if (parts[0] === 'following') screenFollowing();
@@ -1782,9 +1942,23 @@ document.getElementById('themebtn')?.addEventListener('click', () => {
   document.documentElement.dataset.theme = next;
   localStorage.setItem('pyr-theme', next);
 });
+/* ≥1160px layout toggle (button hidden below that width). The default is the
+   full-browser layout; the phone bezel is the opt-in presentation. The
+   attribute itself is set pre-paint in app.html — this only wires the switch. */
+{
+  const lb = document.getElementById('layoutbtn');
+  const paint = () => { if (lb) lb.textContent = document.documentElement.dataset.layout === 'phone' ? 'Full view' : 'Phone view'; };
+  paint();
+  lb?.addEventListener('click', () => {
+    const next = document.documentElement.dataset.layout === 'phone' ? 'wide' : 'phone';
+    document.documentElement.dataset.layout = next;
+    localStorage.setItem('rxi-layout', next);
+    paint();
+  });
+}
 addEventListener('hashchange', route);
 route();
 wireSearch();
-{ const cc = document.getElementById('clubcount'); if (cc) cc.textContent = CLUBS.length.toLocaleString(); }
+{ const cc = document.getElementById('clubcount'); if (cc) cc.textContent = CLUBS.filter(c => !c.h).length.toLocaleString(); }
 /* prefetch rosters once the first view has painted so club taps are instant */
 (self.requestIdleCallback || (f => setTimeout(f, 2000)))(() => loadRosters().catch(() => {}));

@@ -18,6 +18,7 @@ const ROUTES = [
   '#/advertise',
   '#/freeagents',
   '#/freeagent',
+  '#/tryouts',
   '#/clubtools',
   '#/legal',
   '#/region/midwest',

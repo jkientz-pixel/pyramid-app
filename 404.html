@@ -7,9 +7,10 @@
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
 <style>
+@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/barlow-condensed-latin-700.woff2) format("woff2")}
 :root{--ground:#FAFBF8;--ink:#16211B;--dim:#61705F;--line:#DCE2D8;--accent:#C77F1E;--raise:#fff}
 *{box-sizing:border-box}body{margin:0;background:var(--ground);color:var(--ink);font:17px/1.6 -apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;display:flex;flex-direction:column}
-.disp{font-family:"Avenir Next Condensed","Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.02em}
+.disp{font-family:"Barlow Condensed","Avenir Next Condensed","Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.02em}
 header{display:flex;justify-content:space-between;align-items:center;padding:22px clamp(20px,5vw,64px)}
 .mark{font-weight:700;font-size:1.4rem}
 main{flex:1;display:flex;align-items:center;justify-content:center;padding:24px}
@@ -32,9 +33,9 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
     <h1 class="disp">That page isn't on the map</h1>
     <p>The address doesn't match a page here. Club and player pages live inside the app — the search box there will find any club by name.</p>
     <div class="cta-row">
-      <a class="primary" href="/app.html">Open the app</a>
+      <a class="primary" href="/app">Open the app</a>
       <a class="ghost" href="/">Home</a>
-      <a class="ghost" href="/app.html#/table">National table</a>
+      <a class="ghost" href="/app#/table">National table</a>
     </div>
   </div>
 </main>
