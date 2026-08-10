@@ -222,10 +222,20 @@ function wireMap(scopeStates) {
   });
   svg.addEventListener('pointerout', e => { if (tip && !e.target.closest('.pin')) tip.hidden = true; });
   svg.addEventListener('pointerleave', () => { if (tip) tip.hidden = true; });
+  /* on state/region screens, zooming out past the scoped extent exits to the
+     national map (first zoom-out snaps to the scope frame, the next one leaves)
+     so pinch/minus can always get back without the browser back button */
+  function exitToNational() {
+    try { sessionStorage.removeItem('rxi-vb:#/map'); } catch {}
+    location.hash = '#/map';
+  }
   function zoom(factor) {
     const [x, y, w, h] = getVB();
     const nw = w * factor, nh = h * factor;
-    if (nw > homeVB[2]) { setVB(homeVB); return; }
+    if (nw > homeVB[2]) {
+      if (scopeStates && w >= homeVB[2] - 0.5) { exitToNational(); return; }
+      setVB(homeVB); return;
+    }
     if (nw < homeVB[2] / 24) return;
     setVB([x + (w - nw) / 2, y + (h - nh) / 2, nw, nh]);
   }
@@ -263,7 +273,14 @@ function wireMap(scopeStates) {
       /* exponent < 1 dampens pinch so a full-screen spread ≈ 2x, not 4x+ */
       let scale = Math.pow(gest.d0 / (Math.hypot(dx, dy) || 1), 0.55);
       let nw = gest.vb[2] * scale;
-      if (nw > homeVB[2]) scale = homeVB[2] / gest.vb[2];
+      if (nw > homeVB[2]) {
+        /* pinch-out well past a scoped extent exits to the national map;
+           1.15 threshold keeps an at-the-edge pinch from exiting by accident */
+        if (scopeStates && !gest.exited && gest.vb[2] >= homeVB[2] - 0.5 && nw > homeVB[2] * 1.15) {
+          gest.exited = true; exitToNational(); return;
+        }
+        scale = homeVB[2] / gest.vb[2];
+      }
       if (nw < homeVB[2] / 24) scale = (homeVB[2] / 24) / gest.vb[2];
       nw = gest.vb[2] * scale;
       const nh = gest.vb[3] * scale;
