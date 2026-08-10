@@ -1,0 +1,546 @@
+{
+ "matched": [
+  {
+   "club": "Bellevue University Bruins",
+   "team": "Bellevue (NE)"
+  },
+  {
+   "club": "Benedictine University at Mesa Redhawks",
+   "team": "Benedictine Mesa"
+  },
+  {
+   "club": "Benedictine College Ravens",
+   "team": "Benedictine (KS)"
+  },
+  {
+   "club": "Briar Cliff University Chargers",
+   "team": "Briar Cliff (IA)"
+  },
+  {
+   "club": "Bushnell University Beacons",
+   "team": "Bushnell (OR)"
+  },
+  {
+   "club": "Calumet College of St. Joseph Crimson Wave",
+   "team": "Calumet (IN)"
+  },
+  {
+   "club": "Campbellsville University Tigers",
+   "team": "Campbellsville (KY)"
+  },
+  {
+   "club": "Central Baptist College Mustangs",
+   "team": "Central Baptist (Ark.)"
+  },
+  {
+   "club": "Central Christian College of Kansas Tigers",
+   "team": "Central Christian (KS)"
+  },
+  {
+   "club": "Clarke University Crusaders",
+   "team": "Clarke (IA)"
+  },
+  {
+   "club": "Columbia International University Rams",
+   "team": "Columbia (SC)"
+  },
+  {
+   "club": "Cornerstone University Golden Eagles",
+   "team": "Cornerstone"
+  },
+  {
+   "club": "Defiance College Yellow Jackets and Lady Jackets",
+   "team": "Defiance College (OH)"
+  },
+  {
+   "club": "Dordt University Defenders",
+   "team": "Dordt (IA)"
+  },
+  {
+   "club": "Evangel University Valor",
+   "team": "Evangel (Mo.)"
+  },
+  {
+   "club": "Faulkner University Eagles",
+   "team": "Faulkner (AL)"
+  },
+  {
+   "club": "Fisher College Falcons",
+   "team": "Fisher (MA)"
+  },
+  {
+   "club": "Georgia Gwinnett College Grizzlies",
+   "team": "Georgia Gwinnett"
+  },
+  {
+   "club": "Grace College & Seminary Lancers",
+   "team": "Grace (Ind.)"
+  },
+  {
+   "club": "Graceland University Yellowjackets",
+   "team": "Graceland"
+  },
+  {
+   "club": "Grand View University Vikings",
+   "team": "Grand View"
+  },
+  {
+   "club": "Hastings College Broncos",
+   "team": "Hastings"
+  },
+  {
+   "club": "Indiana Wesleyan University Wildcats",
+   "team": "Indiana Wesleyan"
+  },
+  {
+   "club": "Indiana University Northwest Redhawks",
+   "team": "Indiana Northwest"
+  },
+  {
+   "club": "Jarvis Christian University Bulldogs",
+   "team": "Jarvis Christian"
+  },
+  {
+   "club": "John Brown University Golden Eagles",
+   "team": "John Brown"
+  },
+  {
+   "club": "Louisiana Christian University Wildcats",
+   "team": "Louisiana Christian"
+  },
+  {
+   "club": "Missouri Baptist University Spartans",
+   "team": "Missouri Baptist"
+  },
+  {
+   "club": "Madonna University Crusaders",
+   "team": "Madonna (Mich.)"
+  },
+  {
+   "club": "Marian University Knights",
+   "team": "Marian"
+  },
+  {
+   "club": "Mission University Patriots",
+   "team": "Mission (Mo.)"
+  },
+  {
+   "club": "Missouri Valley College Vikings",
+   "team": "Missouri Valley"
+  },
+  {
+   "club": "University of Mobile Rams",
+   "team": "Mobile (Ala.)"
+  },
+  {
+   "club": "Morningside University Mustangs",
+   "team": "Morningside (Iowa)"
+  },
+  {
+   "club": "University of Northwestern Ohio Racers",
+   "team": "Northwestern Ohio"
+  },
+  {
+   "club": "Oklahoma City University Stars",
+   "team": "Oklahoma City"
+  },
+  {
+   "club": "Oklahoma Wesleyan University Eagles",
+   "team": "Oklahoma Wesleyan"
+  },
+  {
+   "club": "Oakwood University Ambassadors & Lady Ambassadors",
+   "team": "Oakwood (AL)"
+  },
+  {
+   "club": "Our Lady of the Lake University Saints",
+   "team": "Our Lady of the Lake"
+  },
+  {
+   "club": "Pacific Union College Pioneers",
+   "team": "Pacific Union (CA)"
+  },
+  {
+   "club": "Park University Pirates",
+   "team": "Park"
+  },
+  {
+   "club": "Paul Quinn College Tigers",
+   "team": "Paul Quinn"
+  },
+  {
+   "club": "Rocky Mountain College Battlin' Bears",
+   "team": "Rocky Mountain (MT)"
+  },
+  {
+   "club": "Southwestern Christian University Eagles",
+   "team": "Southwestern Christian"
+  },
+  {
+   "club": "Simpson University Red Hawks",
+   "team": "Simpson (CA)"
+  },
+  {
+   "club": "University of Saint Mary Spires",
+   "team": "Saint Mary"
+  },
+  {
+   "club": "Saint Mary-of-the-Woods College Pomeroys",
+   "team": "Saint Mary"
+  },
+  {
+   "club": "Saint Xavier University Cougars",
+   "team": "Saint Xavier (IL)"
+  },
+  {
+   "club": "Texas A&M University\u2013San Antonio Jaguars",
+   "team": "Texas A&M-San Antonio"
+  },
+  {
+   "club": "Union Commonwealth University Bulldogs",
+   "team": "Union Commonwealth"
+  },
+  {
+   "club": "University of the Southwest Mustangs",
+   "team": "Southwest"
+  },
+  {
+   "club": "Warner Pacific University Knights",
+   "team": "Warner Pacific (OR)"
+  },
+  {
+   "club": "William Penn University Statesmen",
+   "team": "William Penn (Iowa)"
+  },
+  {
+   "club": "Williams Baptist University Eagles",
+   "team": "Williams Baptist (AR)"
+  },
+  {
+   "club": "William Carey University Crusaders",
+   "team": "William Carey (Miss.)"
+  }
+ ],
+ "unmatched": [
+  "Culver\u2013Stockton College Wildcats",
+  "Embry\u2013Riddle Aeronautical University, Prescott Eagles",
+  "Freed\u2013Hardeman University Lions",
+  "Hannibal\u2013LaGrange University Trojans",
+  "Huston\u2013Tillotson University Rams",
+  "University of Michigan\u2013Dearborn Wolverines",
+  "West Virginia University Institute of Technology Golden Bears"
+ ],
+ "ambig": [
+  {
+   "club": "Brewton\u2013Parker Christian University Barons",
+   "cands": [
+    "Ohio Christian",
+    "Arizona Christian"
+   ]
+  },
+  {
+   "club": "Harris\u2013Stowe State University Hornets",
+   "cands": [
+    "Shawnee State",
+    "Governors State"
+   ]
+  },
+  {
+   "club": "Indiana University Columbus Crimson Pride",
+   "cands": [
+    "Indiana Tech",
+    "Indiana Wesleyan"
+   ]
+  },
+  {
+   "club": "Indiana Institute of Technology Warriors",
+   "cands": [
+    "Indiana Tech",
+    "Indiana Wesleyan"
+   ]
+  },
+  {
+   "club": "Louisiana State University in Shreveport Pilots & Lady Pilots",
+   "cands": [
+    "LSU Shreveport (La.)",
+    "Shawnee State"
+   ]
+  },
+  {
+   "club": "Louisiana State University at Alexandria Generals",
+   "cands": [
+    "LSU Alexandria (La.)",
+    "Shawnee State"
+   ]
+  },
+  {
+   "club": "Life University Eagles",
+   "cands": [
+    "Life",
+    "Life Pacific"
+   ]
+  },
+  {
+   "club": "Northwest University Eagles",
+   "cands": [
+    "Northwest",
+    "Indiana Northwest"
+   ]
+  },
+  {
+   "club": "Northwestern College Red Raiders",
+   "cands": [
+    "Northwestern Ohio",
+    "Northwestern (Iowa)"
+   ]
+  },
+  {
+   "club": "Oregon Institute of Technology Owls",
+   "cands": [
+    "Eastern Oregon",
+    "Southern Oregon"
+   ]
+  },
+  {
+   "club": "Ottawa University Arizona Spirit",
+   "cands": [
+    "Ottawa (Kan.)",
+    "Arizona Christian"
+   ]
+  },
+  {
+   "club": "Xavier University of Louisiana Gold Rush & Gold Nuggets",
+   "cands": [
+    "Xavier (La.)",
+    "Louisiana Christian"
+   ]
+  }
+ ],
+ "failed": [
+  {
+   "club": "Bethel University Pilots",
+   "team": "Bethel (IN)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Bethel University Wildcats",
+   "team": "Bethel (TN)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Blue Mountain Christian University Toppers",
+   "team": "Blue Mountain Christian (MS)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Bluefield University Rams",
+   "team": "Bluefield (VA)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Brescia University Bearcats",
+   "team": "Brescia (KY)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Carolina University Bruins",
+   "team": "Carolina (N.C.)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Central Methodist University Eagles",
+   "team": "Central Methodist",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Columbia College Cougars",
+   "team": "Columbia (MO)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Concordia University\u2013Nebraska Bulldogs",
+   "team": "Concordia (Neb.)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Corban University Warriors",
+   "team": "Corban",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "The Evergreen State College Geoducks",
+   "team": "Evergreen (WA)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Georgetown College Tigers",
+   "team": "Georgetown (Ky.)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Goshen College Maple Leafs",
+   "team": "Goshen (IN)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Governors State University Jaguars",
+   "team": "Governors State",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Holy Cross College Saints",
+   "team": "Holy Cross (Ind.)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Hope International University Royals",
+   "team": "Hope International",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Texas A&M University\u2013Victoria Jaguars",
+   "team": "Texas A&M  Texarkana",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Huntington University Foresters",
+   "team": "Huntington (IN)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "La Sierra University Golden Eagles",
+   "team": "La Sierra",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Lawrence Technological University Blue Devils",
+   "team": "Lawrence Tech",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Life Pacific University Warriors",
+   "team": "Life Pacific",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Lindsey Wilson University Blue Raiders",
+   "team": "Lindsey Wilson (Ky.)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Mid-America Christian University Evangels",
+   "team": "Mid-America Christian",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Midway University Eagles",
+   "team": "Midway",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Milligan University Buffaloes",
+   "team": "Milligan (TN)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Mount Marty University Lancers",
+   "team": "Mount Marty",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Mount Mercy University Mustangs",
+   "team": "Mount Mercy",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "University of Science and Arts of Oklahoma Drovers",
+   "team": "Science and Arts",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Olivet Nazarene University Tigers",
+   "team": "Olivet Nazarene (IL)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "University of Pikeville Bears",
+   "team": "Pikeville (KY)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "University of Providence Argonauts",
+   "team": "Providence (MT)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "University of Rio Grande RedStorm",
+   "team": "Rio Grande",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Rochester Christian University Warriors",
+   "team": "Rochester Christian (Mich.)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Soka University of America Lions",
+   "team": "Soka (CA)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Spartanburg Methodist College Pioneers",
+   "team": "Spartanburg Methodist",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "University of St. Francis Fighting Saints",
+   "team": "St. Francis (IL)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "University of Saint Francis Cougars",
+   "team": "Saint Francis (Ind.)",
+   "why": "Page.goto: net::ERR_NETWORK_CHANGED at https://naiastats.prestosports.com/sports"
+  },
+  {
+   "club": "The Master's University Mustangs",
+   "team": "The Master's (Calif.)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Tougaloo College Bulldogs",
+   "team": "Tougaloo (Miss.)",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Truett McConnell University Bears",
+   "team": "Truett McConnell",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Viterbo University V-Hawks",
+   "team": "Viterbo",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "William Woods University Owls",
+   "team": "William Woods",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Waldorf University Warriors",
+   "team": "Waldorf",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "Walla Walla University Wolves",
+   "team": "Walla Walla",
+   "why": "no logo img on team page"
+  },
+  {
+   "club": "York University Panthers",
+   "team": "York (NE)",
+   "why": "no logo img on team page"
+  }
+ ]
+}

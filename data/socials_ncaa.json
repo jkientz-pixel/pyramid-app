@@ -1,0 +1,719 @@
+{
+"Binghamton University Bearcats": {
+"sx": "https://x.com/BU_Bearcats"
+},
+"Bryant University Bulldogs": {
+"sx": "https://x.com/BryantAthletics"
+},
+"Duquesne University Dukes": {
+"sx": "https://x.com/GoDuquesne"
+},
+"Fordham University Rams": {
+"sx": "https://x.com/FordhamRams"
+},
+"Bellarmine University Knights": {
+"sx": "https://x.com/buknights"
+},
+"Stetson University Hatters": {
+"sx": "https://x.com/StetsonHatters"
+},
+"Creighton University Bluejays": {
+"sx": "https://x.com/GoCreighton"
+},
+"Xavier University Musketeers": {
+"sx": "https://x.com/XUAthletics"
+},
+"Longwood University Lancers": {
+"sx": "https://x.com/LongwoodLancers"
+},
+"Winthrop University Eagles": {
+"sx": "https://x.com/WUEagles"
+},
+"Drexel University Dragons": {
+"sx": "https://x.com/drexeldragons"
+},
+"Elon University Phoenix": {
+"sx": "https://x.com/elonphoenix"
+},
+"Hofstra University Pride": {
+"sx": "https://x.com/HofstraPride"
+},
+"Harvard University Crimson": {
+"sx": "https://x.com/harvardcrimson"
+},
+"Princeton University Tigers": {
+"sx": "https://x.com/PUTigers"
+},
+"Fairfield University Stags": {
+"sx": "https://x.com/FairfieldStags"
+},
+"Iona University Gaels": {
+"sx": "https://x.com/ICGaels"
+},
+"Manhattan University Jaspers": {
+"sx": "https://x.com/GoJaspers"
+},
+"Merrimack College Warriors": {
+"sx": "https://x.com/MC_Athletics"
+},
+"Rider University Broncs": {
+"sx": "https://x.com/RIDERATHLETICS"
+},
+"Siena University Saints": {
+"sx": "https://x.com/SienaSaints"
+},
+"Le Moyne College Dolphins": {
+"sx": "https://x.com/LeMoyneDolphins"
+},
+"Long Island University Sharks": {
+"sx": "https://x.com/LIUAthletics"
+},
+"Mercyhurst University Lakers": {
+"sx": "https://x.com/HurstAthletics"
+},
+"Stonehill College Skyhawks": {
+"sx": "https://x.com/SkyhawkTalk"
+},
+"Lindenwood University Lions": {
+"sx": "https://x.com/lu_lions"
+},
+"Lindenwood University Lions and Lady Lions": {
+"sx": "https://x.com/lu_lions"
+},
+"Furman University Paladins": {
+"sx": "https://x.com/FurmanPaladins"
+},
+"Mercer University Bears": {
+"sx": "https://x.com/MercerBears"
+},
+"Adelphi University Panthers": {
+"sx": "https://x.com/AUPanthers"
+},
+"Ashland University Eagles": {
+"sx": "https://x.com/goashlandeagles"
+},
+"Barry University Buccaneers": {
+"sx": "https://x.com/gobarrybucs"
+},
+"Barton College Bulldogs": {
+"sx": "https://x.com/bartonathletics"
+},
+"Bentley University Falcons": {
+"sx": "https://x.com/BentleyFalcons"
+},
+"Chestnut Hill College Griffins": {
+"sx": "https://x.com/CHCAthletics"
+},
+"Chowan University Hawks": {
+"sx": "https://x.com/cuhawks"
+},
+"Coker University Cobras": {
+"sx": "https://x.com/Coker_Cobras"
+},
+"Commonwealth University-Bloomsburg Huskies": {
+"sx": "https://x.com/GoBUHuskies"
+},
+"Commonwealth University-Lock Haven Bald Eagles": {
+"sx": "https://x.com/HavenAthletics"
+},
+"Daemen University Wildcats": {
+"sx": "https://x.com/DaemenAthletics"
+},
+"Davenport University Panthers": {
+"sx": "https://x.com/DUAthletics"
+},
+"Drury University Panthers": {
+"sx": "https://x.com/drurypanthers"
+},
+"Eckerd College Tritons": {
+"sx": "https://x.com/ECTritons"
+},
+"Flagler College Saints": {
+"sx": "https://x.com/FlaglerSports"
+},
+"Francis Marion University Patriots": {
+"sx": "https://x.com/FMUSports"
+},
+"Franklin Pierce University Ravens": {
+"sx": "https://x.com/FPUathletics"
+},
+"Harding University Bisons": {
+"sx": "https://x.com/HardingSports"
+},
+"Harding University Bisons & Lady Bisons": {
+"sx": "https://x.com/HardingSports"
+},
+"Holy Family University Tigers": {
+"sx": "https://x.com/GoHFUTigers"
+},
+"Lake Erie College Storm": {
+"sx": "https://x.com/lecsports"
+},
+"Lander University Bearcats": {
+"sx": "https://x.com/LanderAthletics"
+},
+"Malone University Pioneers": {
+"sx": "https://x.com/maloneathletics"
+},
+"McKendree University Bearcats": {
+"sx": "https://x.com/McKBearcats"
+},
+"Mississippi Christian University Choctaws": {
+"sx": "https://x.com/ChoctawSports"
+},
+"Molloy University Lions": {
+"sx": "https://x.com/molloylions"
+},
+"Newberry College Wolves": {
+"sx": "https://x.com/NewberrySports"
+},
+"Northwood University Timberwolves": {
+"sx": "https://x.com/nutimberwolves"
+},
+"Pace University Setters": {
+"sx": "https://x.com/PaceUAthletics"
+},
+"Quincy University Hawks": {
+"sx": "https://x.com/QUHawks"
+},
+"Rockhurst University Hawks": {
+"sx": "https://x.com/RUhawks"
+},
+"Roosevelt University Lakers": {
+"sx": "https://x.com/RooseveltLakers"
+},
+"Rollins College Tars": {
+"sx": "https://x.com/RollinsSports"
+},
+"St. Thomas Aquinas College Spartans": {
+"sx": "https://x.com/STACSpartans"
+},
+"Shaw University Bears": {
+"sx": "https://x.com/ShawBears"
+},
+"Shepherd University Rams": {
+"sx": "https://x.com/SURamsOfficial"
+},
+"Shorter University Hawks": {
+"sx": "https://x.com/ShorterHawks"
+},
+"Thomas More University Saints": {
+"sx": "https://x.com/tmusaints"
+},
+"Tiffin University Dragons": {
+"sx": "https://x.com/gotiffindragons"
+},
+"Tusculum College Pioneers": {
+"sx": "https://x.com/TusculumSports"
+},
+"Tusculum University Pioneers": {
+"sx": "https://x.com/TusculumSports"
+},
+"Tuskegee University Tigers": {
+"sx": "https://x.com/TUGoldenTigers"
+},
+"Walsh University Cavaliers": {
+"sx": "https://x.com/walshcavaliers"
+},
+"Westmont College Warriors": {
+"sx": "https://x.com/WestmontSports"
+},
+"Wheeling University Cardinals": {
+"sx": "https://x.com/WJUCardinals"
+},
+"William Jewell College Cardinals": {
+"sx": "https://x.com/WJCCardinals"
+},
+"Wingate University Bulldogs": {
+"sx": "https://x.com/WU_Bulldogs"
+},
+"Monroe University Mustangs": {
+"sx": "https://x.com/ULMWarhawks"
+},
+"Adrian College Bulldogs": {
+"sx": "https://x.com/AdrianBulldogs"
+},
+"Albertus Magnus College Falcons": {
+"sx": "https://x.com/AMCAthletics"
+},
+"Albright College Lions": {
+"sx": "https://x.com/AlbrightLions"
+},
+"Allegheny College Gators": {
+"sx": "https://x.com/gatorsports"
+},
+"Alma College Scots": {
+"sx": "https://x.com/GoAlmaScots"
+},
+"Arcadia University Knights": {
+"sx": "https://x.com/ArcadiaKnights"
+},
+"Asbury University Eagles": {
+"sx": "https://x.com/AsburyEagles"
+},
+"Augsburg University Auggies": {
+"sx": "https://x.com/AugsburgAuggies"
+},
+"Aurora University Spartans": {
+"sx": "https://x.com/AU_Spartans"
+},
+"Averett University Cougars": {
+"sx": "https://x.com/AverettUCougars"
+},
+"Bard College Raptors": {
+"sx": "https://x.com/BardAthletics"
+},
+"Baruch College Bearcats": {
+"sx": "https://x.com/baruchathletics"
+},
+"Bates College Bobcats": {
+"sx": "https://x.com/BatesSports"
+},
+"Belhaven University Blazers": {
+"sx": "https://x.com/belhavenblazers"
+},
+"Beloit College Buccaneers": {
+"sx": "https://x.com/BeloitBucs"
+},
+"Benedictine University Eagles": {
+"sx": "https://x.com/benueagles"
+},
+"Berea College Mountaineers": {
+"sx": "https://x.com/bereacollege"
+},
+"Berry College Vikings": {
+"sx": "https://x.com/berryvikings"
+},
+"Bethel University Royals": {
+"sx": "https://x.com/bethelroyals"
+},
+"Blackburn College Beavers": {
+"sx": "https://x.com/BeaverBlackburn"
+},
+"Bluffton University Beavers": {
+"sx": "https://x.com/BlufftonU"
+},
+"Brevard College Tornados": {
+"sx": "https://x.com/BCTornados"
+},
+"Buena Vista University Beavers": {
+"sx": "https://x.com/BVUAthletics"
+},
+"Cairn University Highlanders": {
+"sx": "https://x.com/CairnAthletics"
+},
+"Calvin University Knights": {
+"sx": "https://x.com/CalvinKnights"
+},
+"Capital University Comets": {
+"sx": "https://x.com/cap_athletics"
+},
+"Carthage College Firebirds": {
+"sx": "https://x.com/carthagesports"
+},
+"Centre College Colonels": {
+"sx": "https://x.com/CentreAthletics"
+},
+"Chapman University Panthers": {
+"sx": "https://x.com/ChapmanSports"
+},
+"Chatham University Cougars": {
+"sx": "https://x.com/chathamcougar"
+},
+"Christopher Newport University Captains": {
+"sx": "https://x.com/CNUAthletics"
+},
+"Coe College Kohawks": {
+"sx": "https://x.com/CoeAthletics"
+},
+"Covenant College Scots": {
+"sx": "https://x.com/CovenantScots"
+},
+"Crown College Polars": {
+"sx": "https://x.com/CrownPolars"
+},
+"Curry College Colonels": {
+"sx": "https://x.com/CurryEdu"
+},
+"DePauw University Tigers": {
+"sx": "https://x.com/DePauwAthletics"
+},
+"DeSales University Bulldogs": {
+"sx": "https://x.com/DSUBulldogs"
+},
+"Dean College Bulldogs": {
+"sx": "https://x.com/DeanAthletics"
+},
+"Delaware Valley University Aggies": {
+"sx": "https://x.com/delvalaggies"
+},
+"Drew University Rangers": {
+"sx": "https://x.com/GoDrewRangers"
+},
+"Earlham College Quakers": {
+"sx": "https://x.com/EarlhamQuakers"
+},
+"Edgewood University Eagles": {
+"sx": "https://x.com/edgewoodeagles"
+},
+"Elmhurst University Bluejays": {
+"sx": "https://x.com/ElmhurstBluejay"
+},
+"Elms College Blazers": {
+"sx": "https://x.com/elmsblazersWSOC"
+},
+"Emerson College Lions": {
+"sx": "https://x.com/EmersonLions"
+},
+"Endicott College Gulls": {
+"sx": "https://x.com/ECGulls"
+},
+"George Fox University Bruins": {
+"sx": "https://x.com/GFUAthletics"
+},
+"Goucher College Gophers": {
+"sx": "https://x.com/GoucherSports"
+},
+"Grinnell College Pioneers": {
+"sx": "https://x.com/gcpioneers"
+},
+"Guilford College Quakers": {
+"sx": "https://x.com/goquakers"
+},
+"Hamilton College Continentals": {
+"sx": "https://x.com/HamCollSports"
+},
+"Hamline University Pipers": {
+"sx": "https://x.com/HUPipers"
+},
+"Haverford College Fords": {
+"sx": "https://x.com/HCFords_Sports"
+},
+"Hendrix College Warriors": {
+"sx": "https://x.com/HendrixWarriors"
+},
+"Hilbert College Hawks": {
+"sx": "https://x.com/HilbertAthletic"
+},
+"Hiram College Terriers": {
+"sx": "https://x.com/Hiram_Athletics"
+},
+"Hobart College Statesmen": {
+"sx": "https://x.com/hwssid"
+},
+"Hood College Blazers": {
+"sx": "https://x.com/HoodBlazers"
+},
+"Houghton University Highlanders": {
+"sx": "https://x.com/HCHighlanders"
+},
+"Hunter College Hawks": {
+"sx": "https://x.com/HunterAthletics"
+},
+"Huntingdon College Hawks": {
+"sx": "https://x.com/HCHawksSports"
+},
+"Husson University Eagles": {
+"sx": "https://x.com/HussonEagles"
+},
+"Juniata College Eagles": {
+"sx": "https://x.com/JuniataEagles"
+},
+"Kalamazoo College Hornets": {
+"sx": "https://x.com/khornets"
+},
+"Kenyon College Owls": {
+"sx": "https://x.com/KenyonSports"
+},
+"Keuka College Wolves": {
+"sx": "https://x.com/KeukaAthletics"
+},
+"Keystone College Giants": {
+"sx": "https://x.com/KCGiants"
+},
+"LaGrange College Panthers": {
+"sx": "https://x.com/LCPanthers"
+},
+"Lakeland University Muskies": {
+"sx": "https://x.com/LCMuskies"
+},
+"Lasell University Lasers": {
+"sx": "https://x.com/LasellAthletics"
+},
+"Lehman College Lightning": {
+"sx": "https://x.com/LehmanSports"
+},
+"Lesley University Lynx": {
+"sx": "https://x.com/lesleyathletics"
+},
+"Linfield University Wildcats": {
+"sx": "https://x.com/linfieldsports"
+},
+"Loras College Duhawks": {
+"sx": "https://x.com/LorasAthletics"
+},
+"Lycoming College Warriors": {
+"sx": "https://x.com/lycoathletics"
+},
+"Lyon College Scots": {
+"sx": "https://x.com/lyoncollege"
+},
+"Massachusetts Institute of Technology Engineers": {
+"sx": "https://x.com/GoPrattGo"
+},
+"Macalester College Scots": {
+"sx": "https://x.com/MACathletics"
+},
+"Manhattanville University Valiants": {
+"sx": "https://x.com/MVilleValiants"
+},
+"Marian University Sabres": {
+"sx": "https://x.com/MUSabres"
+},
+"Marywood University Pacers": {
+"sx": "https://x.com/marywoodpacers"
+},
+"United States Merchant Marine Academy Mariners": {
+"sx": "https://x.com/USMMA_Athletics"
+},
+"Messiah University Falcons": {
+"sx": "https://x.com/MessiahSports"
+},
+"Methodist University Monarchs": {
+"sx": "https://x.com/mumonarchs"
+},
+"Middlebury College Panthers": {
+"sx": "https://x.com/MiddAthletics"
+},
+"Millsaps College Majors and Lady Majors": {
+"sx": "https://x.com/MajorAthletics"
+},
+"Misericordia University Cougars": {
+"sx": "https://x.com/MUCougars"
+},
+"Mitchell College Mariners": {
+"sx": "https://x.com/AthleticsMC"
+},
+"Moravian University Greyhounds": {
+"sx": "https://x.com/MCGreyhounds"
+},
+"Mount St. Joseph University Lions": {
+"sx": "https://x.com/MSJ_Athletics"
+},
+"Muhlenberg College Mules": {
+"sx": "https://x.com/Muhl_Sports"
+},
+"Neumann University Knights": {
+"sx": "https://x.com/NeumannKnights"
+},
+"Nichols College Bison": {
+"sx": "https://x.com/ncbison"
+},
+"University of Northwestern - St. Paul Eagles": {
+"sx": "https://x.com/unweagles"
+},
+"Oberlin College Yeomen and Yeowomen": {
+"sx": "https://x.com/OC_Athletics"
+},
+"Occidental College Tigers": {
+"sx": "https://x.com/OxyAthletics"
+},
+"Otterbein University Cardinals": {
+"sx": "https://x.com/OtterbeinSports"
+},
+"Pennsylvania State University, Abington Nittany Lions": {
+"sx": "https://x.com/abingtonsports"
+},
+"Pennsylvania State University, Berks College Nittany Lions": {
+"sx": "https://x.com/PennStateBerks"
+},
+"Pfeiffer University Falcons": {
+"sx": "https://x.com/PfeifferSports"
+},
+"Piedmont University Lions": {
+"sx": "https://x.com/PiedmontLions"
+},
+"Pomona College and Pitzer College Sagehens": {
+"sx": "https://x.com/Sagehens"
+},
+"Principia College Panthers": {
+"sx": "https://x.com/PrinAthletics"
+},
+"Stockton University Ospreys": {
+"sx": "https://x.com/stocktonospreys"
+},
+"Ramapo College Roadrunners": {
+"sx": "https://x.com/RCNJRoadrunners"
+},
+"Rhodes College Lynx": {
+"sx": "https://x.com/RhodesAthletics"
+},
+"Rivier University Raiders": {
+"sx": "https://x.com/RivierRaiders"
+},
+"Roanoke College Maroons": {
+"sx": "https://x.com/RCmaroons"
+},
+"Rockford University Regents": {
+"sx": "https://x.com/RockfordRegents"
+},
+"Roger Williams University Hawks": {
+"sx": "https://x.com/RWU_Athletics"
+},
+"Rowan University Profs": {
+"sx": "https://x.com/RowanAthletics"
+},
+"Salve Regina University Seahawks": {
+"sx": "https://x.com/SalveAthletics"
+},
+"Schreiner University Mountaineers": {
+"sx": "https://x.com/SUMountaineers"
+},
+"Shenandoah University Hornets": {
+"sx": "https://x.com/SUHornets"
+},
+"Simpson College Storm": {
+"sx": "https://x.com/StormSports"
+},
+"Skidmore College Thoroughbreds": {
+"sx": "https://x.com/SkidmoreSID"
+},
+"St. Lawrence University Saints": {
+"sx": "https://x.com/SLUsaints"
+},
+"Stevenson University Mustangs": {
+"sx": "https://x.com/GoMustangSports"
+},
+"Suffolk University Rams": {
+"sx": "https://x.com/gosuffolkrams"
+},
+"Swarthmore College Garnet": {
+"sx": "https://x.com/SwatAthletics"
+},
+"Thiel College Tomcats": {
+"sx": "https://x.com/ThielAthletics"
+},
+"Transylvania University Pioneers": {
+"sx": "https://x.com/TransySports"
+},
+"Trine University Thunder": {
+"sx": "https://x.com/TrineAthletics"
+},
+"Tufts University Jumbos": {
+"sx": "https://x.com/TuftsAthletics"
+},
+"Ursinus College Bears": {
+"sx": "https://x.com/ucathletics"
+},
+"Utica University Pioneers": {
+"sx": "https://x.com/UCPioneers"
+},
+"Warren Wilson College Owls": {
+"sx": "https://x.com/WWCAthletics"
+},
+"Wartburg College Knights": {
+"sx": "https://x.com/KnightsSID"
+},
+"Westfield State University Owls": {
+"sx": "https://x.com/WestfieldOwls"
+},
+"Widener University Pride": {
+"sx": "https://x.com/WidenerPride"
+},
+"Wittenberg University Tigers": {
+"sx": "https://x.com/WittAthletics"
+},
+"William Paterson University Pioneers": {
+"sx": "https://x.com/WPUPioneers"
+},
+"Yeshiva University Maccabees": {
+"sx": "https://x.com/YUathletics"
+},
+"Alcorn State University Braves": {
+"sx": "https://x.com/BRAVESSPORTS"
+},
+"Baylor University Bears": {
+"sx": "https://x.com/BaylorAthletics"
+},
+"Florida State University Seminoles": {
+"sx": "https://x.com/Seminoles"
+},
+"Hampton University Pirates": {
+"sx": "https://x.com/HUathletics1868"
+},
+"Lamar University Cardinals": {
+"sx": "https://x.com/LamarCards"
+},
+"Pepperdine University Waves": {
+"sx": "https://x.com/PepperdineWaves"
+},
+"Samford University Bulldogs": {
+"sx": "https://x.com/samford_sports"
+},
+"Leland Stanford Junior University Cardinal": {
+"sx": "https://x.com/gostanford"
+},
+"Towson University Tigers": {
+"sx": "https://x.com/TowsonTigers"
+},
+"Troy University Trojans": {
+"sx": "https://x.com/TroyAthletics"
+},
+"The University of Tulsa Golden Hurricane": {
+"sx": "https://x.com/TulsaHurricane"
+},
+"The University of Texas at San Antonio Roadrunners": {
+"sx": "https://x.com/UTSAAthletics"
+},
+"Valparaiso University Beacons": {
+"sx": "https://x.com/valpoathletics"
+},
+"Wagner College Seahawks": {
+"sx": "https://x.com/WagnerAthletics"
+},
+"The College of William and Mary in Virginia Tribe": {
+"sx": "https://x.com/TribeAthletics"
+},
+"Bluefield State University Big Blues & Lady Blues": {
+"sx": "https://x.com/bstatesports"
+},
+"Concordia University\u2013St. Paul Golden Bears": {
+"sx": "https://x.com/CUGoldenBears"
+},
+"Delta State University Statesmen & Lady Statesmen": {
+"sx": "https://x.com/dsustatesmen"
+},
+"Ferrum College Panthers": {
+"sx": "https://x.com/FerrumAthletics"
+},
+"King University Tornados": {
+"sx": "https://x.com/kingathletics"
+},
+"Lubbock Christian University Chaparrals & Lady Chaps": {
+"sx": "https://x.com/LCUCHAPS"
+},
+"Commonwealth University-Mansfield Mountaineers": {
+"sx": "https://x.com/MUMounties"
+},
+"Millersville University Marauders": {
+"sx": "https://x.com/MarauderNews"
+},
+"New Mexico Highlands University Cowboys & Cowgirls": {
+"sx": "https://x.com/NMHighlands"
+},
+"Northern State University Wolves": {
+"sx": "https://x.com/WolvesAthletics"
+},
+"Oklahoma Christian University Eagles & Lady Eagles": {
+"sx": "https://x.com/OCEagles"
+},
+"Shippensburg University Raiders": {
+"sx": "https://x.com/ShipURaiders"
+},
+"Ursuline College Arrows": {
+"sx": "https://x.com/UrsulineArrows"
+},
+"Washburn University Ichabods": {
+"sx": "https://x.com/wusports"
+}
+}

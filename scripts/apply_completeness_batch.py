@@ -49,7 +49,7 @@ def main():
                     if k == 'url': n_url += 1
 
     n_wd = 0
-    for sidecar in ('sites_wikidata.json', 'sites_tgs.json'):
+    for sidecar in ('sites_wikidata.json', 'sites_tgs.json', 'socials_ncaa.json'):
         path = os.path.join(ROOT, 'data', sidecar)
         if not os.path.exists(path): continue
         staged = json.load(open(path))
@@ -61,8 +61,51 @@ def main():
                     c[k] = rec[k]
                     if k == 'url': n_wd += 1
 
+    # GA / GA Aspire verify: girlsacademyleague.com members pages state
+    # "Club (City, ST)" — league-stated, same source the youth build scraped.
+    n_ga = 0
+    ga_path = os.path.join(ROOT, 'data', 'ga_member_locs.json')
+    if os.path.exists(ga_path):
+        ga = json.load(open(ga_path))
+        import unicodedata
+        def _norm(s):
+            s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode()
+            return re.sub(r'\s+', ' ', re.sub(r'[^a-z0-9]+', ' ', s.lower())).strip()
+        for grp, entries in (('ga', ga.get('ga', {})), ('gaa', ga.get('gaa', {}))):
+            emap = {_norm(k): v for k, v in entries.items()}
+            for c in clubs:
+                if c['g'] != grp or c.get('acc') == 'v':
+                    continue
+                rec = emap.get(_norm(c['n']))
+                if rec and _norm(rec[0]) == _norm(c.get('ct', '')) and rec[1] == c.get('st'):
+                    c['acc'] = 'v'; n_ga += 1
+
+    # UPSL team-page harvest (data/upsl_sites.json, keyed by team URL): match
+    # by slug then normalized name, mirroring refresh_upsl_locations.py.
+    n_upsl = 0
+    us_path = os.path.join(ROOT, 'data', 'upsl_sites.json')
+    if os.path.exists(us_path):
+        harvested = json.load(open(us_path))
+        by_slug = {}
+        for u, rec in harvested.items():
+            if rec.get('error'):
+                continue
+            s = re.sub(r'-\d+$', '', u.rstrip('/').split('/')[-1])
+            by_slug.setdefault(s, rec)
+        for c in clubs:
+            if c['g'] != 'upsl':
+                continue
+            rec = by_slug.get(c.get('id', ''))
+            if not rec:
+                continue
+            for k in ('url', 'si', 'sx'):
+                if rec.get(k) and not c.get(k):
+                    c[k] = rec[k]
+                    if k == 'url': n_upsl += 1
+
     print(f'inactive-flagged {n_ia} UPSL ghosts; acc=v on {n_v} college clubs; '
-          f'{n_url} urls cloned men->women; {n_wd} urls from wikidata sidecar')
+          f'{n_url} urls cloned men->women; {n_wd} urls from sidecars; '
+          f'GA/GAA verified {n_ga}; UPSL urls {n_upsl}')
     write_clubs(clubs)
 
 
