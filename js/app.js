@@ -142,7 +142,9 @@ function renderMapSvg(clubs, useCrests) {
       ? `<circle ${base} fill="none" stroke="${m.color}" stroke-width="1.6"></circle>`
       : `<circle ${base} fill="${m.color}" fill-opacity=".9"></circle>`;
   }).join('');
-  return `<div class="mapbox"><svg class="usmap" viewBox="0 -20 980 580" role="img" aria-label="US and Canada soccer club map">${USMAP}${INSETS}<g id="pins">${pins}</g></svg>
+  return `<div class="mapbox" data-mode="art"><svg class="usmap" viewBox="0 -20 980 580" role="img" aria-label="US and Canada soccer club map">${USMAP}${INSETS}<g id="pins">${pins}</g></svg>
+    <div class="leafmap" hidden aria-label="Street map of clubs"></div>
+    <div class="mapmode" role="group" aria-label="Map style"><button data-mode="art" aria-pressed="true">Illustrated</button><button data-mode="street" aria-pressed="false">Detailed</button></div>
     <div class="mapctl"><button data-z="in" aria-label="Zoom in">+</button><button data-z="out" aria-label="Zoom out">&minus;</button><button data-z="reset" aria-label="Reset zoom">&#8634;</button></div>
     <div class="maptip" hidden></div></div>`;
 }
@@ -165,9 +167,10 @@ function zoomTo(svg, states) {
   svg.setAttribute('viewBox', `${(x0 - pad).toFixed(1)} ${(y0 - pad).toFixed(1)} ${(x1 - x0 + 2 * pad).toFixed(1)} ${(y1 - y0 + 2 * pad).toFixed(1)}`);
 }
 
-function wireMap(scopeStates) {
+function wireMap(scopeStates, mapClubs) {
   const svg = view.querySelector('svg.usmap');
   if (!svg) return;
+  wireBasemap(scopeStates, mapClubs || []);
   let dragged = false;
   svg.addEventListener('click', e => {
     if (dragged) { dragged = false; return; }
@@ -379,6 +382,90 @@ function wireMap(scopeStates) {
   });
 }
 
+/* "Detailed" basemap: real streets/towns/waterways via Leaflet + OSM tiles.
+   Leaflet is vendored and lazy-loaded only when the mode is first used, so
+   the illustrated map (default, offline-capable, brand look) costs nothing.
+   The chosen mode persists and survives the full re-render that league/sex
+   toggles trigger, because wireMap re-reads it on every screen build. */
+const MAPMODE_KEY = 'rxi-mapmode';
+function wireBasemap(scopeStates, mapClubs) {
+  const box = view.querySelector('.mapbox');
+  const modeCtl = box && box.querySelector('.mapmode');
+  const leafEl = box && box.querySelector('.leafmap');
+  if (!modeCtl || !leafEl) return;
+  let leafMap = null;
+  const ensureLeaflet = () => window.L ? Promise.resolve() : new Promise((res, rej) => {
+    if (!document.querySelector('link[data-leaf]')) {
+      const l = document.createElement('link');
+      l.rel = 'stylesheet'; l.href = 'css/vendor/leaflet.css'; l.dataset.leaf = '1';
+      document.head.appendChild(l);
+    }
+    const s = document.createElement('script');
+    s.src = 'js/vendor/leaflet.js'; s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+  function buildLeaf() {
+    const pts = mapClubs.filter(c => isFinite(c.la) && isFinite(c.lo));
+    leafMap = L.map(leafEl, { zoomSnap: 0.25, wheelPxPerZoomLevel: 90, preferCanvas: true, zoomControl: false });
+    L.control.zoom({ position: 'topright' }).addTo(leafMap);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(leafMap);
+    if (pts.length) leafMap.fitBounds(L.latLngBounds(pts.map(c => [c.la, c.lo])).pad(0.08));
+    else leafMap.setView([39.5, -98.35], 4);
+    pts.forEach(c => {
+      const lg = LEAGUES[c.g];
+      L.circleMarker([c.la, c.lo], {
+        radius: 6, color: lg.color, weight: 2,
+        fillColor: lg.color, fillOpacity: lg.hollow ? 0.15 : 0.75,
+      }).addTo(leafMap).bindTooltip(c.n)
+        .on('click', () => { location.hash = clubHref(CLUBS.indexOf(c)); });
+    });
+    /* crest icons appear zoomed-in only, viewport-scoped and capped: 4k DOM
+       image markers at national zoom would jank mobile for no visual gain */
+    const crestLayer = L.layerGroup().addTo(leafMap);
+    const refreshCrests = () => {
+      crestLayer.clearLayers();
+      if (leafMap.getZoom() < 8) return;
+      const b = leafMap.getBounds();
+      let n = 0;
+      for (const c of pts) {
+        if (n >= 250) break;
+        if (!c.img || !b.contains([c.la, c.lo])) continue;
+        n++;
+        L.marker([c.la, c.lo], {
+          icon: L.icon({ iconUrl: `${c.img}?cv=${CRESTV}`, iconSize: [26, 26], iconAnchor: [13, 13] }),
+          keyboard: false,
+        }).addTo(crestLayer).bindTooltip(c.n)
+          .on('click', () => { location.hash = clubHref(CLUBS.indexOf(c)); });
+      }
+    };
+    leafMap.on('zoomend moveend', refreshCrests);
+    refreshCrests();
+  }
+  async function setMode(mode, persist) {
+    if (mode === 'street') {
+      /* tiles need network — if the vendored lib can't load, stay illustrated */
+      try { await ensureLeaflet(); } catch { return; }
+      box.dataset.mode = 'street'; leafEl.hidden = false;
+      if (!leafMap) buildLeaf(); else leafMap.invalidateSize();
+    } else {
+      box.dataset.mode = 'art'; leafEl.hidden = true;
+    }
+    modeCtl.querySelectorAll('[data-mode]').forEach(b =>
+      b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+    if (persist) try { localStorage.setItem(MAPMODE_KEY, mode); } catch {}
+  }
+  modeCtl.addEventListener('click', e => {
+    const b = e.target.closest('[data-mode]'); if (!b) return;
+    setMode(b.dataset.mode, true);
+  });
+  let saved = 'art';
+  try { saved = localStorage.getItem(MAPMODE_KEY) || 'art'; } catch {}
+  if (saved === 'street') setMode('street', false);
+}
+
 function wireSearch() {
   const q = document.querySelector('#q'), res = document.querySelector('#qres');
   if (!q) return;
@@ -508,7 +595,7 @@ function screenMap() {
     </select>`;
   wireSexToggle();
   wireLevelChips();
-  wireMap(null);
+  wireMap(null, visible(clubs));
   view.querySelector('#regionchips').addEventListener('click', e => {
     const b = e.target.closest('[data-region]'); if (!b) return;
     location.hash = b.dataset.region === 'all' ? '#/map' : `#/region/${b.dataset.region}`;
@@ -536,7 +623,7 @@ function screenRegion(key) {
     <ul class="clublist">${ranked.slice(0, 15).map((c, i) => clubRow(c, i + 1)).join('')}</ul>
     ${adSlot('region', REGION_LABEL[key])}`;
   wireSexToggle();
-  wireMap(states);
+  wireMap(states, visible(clubs));
 }
 
 function screenState(st) {
@@ -558,7 +645,7 @@ function screenState(st) {
     ${clubs.length ? '' : '<p class="note">This is where league expansion starts — the dataset grows as leagues are added.</p>'}`;
   wireSexToggle();
   if (mappable) {
-    wireMap([st]);
+    wireMap([st], visible(clubs));
   }
 }
 
