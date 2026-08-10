@@ -94,6 +94,43 @@ try:
 except Exception as e:
     fail.append(f'cups.json: {e}')
 
+# 5. national_teams.json structural sanity — fixtures are hand-curated from
+#    U.S. Soccer / Concacaf announcements; a match must never carry a score
+#    before it's played (or claim ENDED without one), and broadcast links
+#    must be https.
+try:
+    import datetime
+    nt = json.loads((ROOT / 'data' / 'national_teams.json').read_text())
+    teams = nt.get('teams') or []
+    if not teams:
+        fail.append('national_teams.json: no teams')
+    for t in teams:
+        tid = t.get('id', '?')
+        for req in ('id', 'label', 'name', 'comp', 'matches'):
+            if not t.get(req):
+                fail.append(f'national_teams.json[{tid}]: missing {req}')
+        for m in t.get('matches') or []:
+            tag = f'national_teams.json[{tid}] v {m.get("opp", "?")}'
+            try:
+                datetime.datetime.fromisoformat(str(m.get('start', '')).replace('Z', '+00:00'))
+            except Exception:
+                fail.append(f'{tag}: bad start {m.get("start")!r}'); continue
+            if m.get('status') not in ('ENDED', 'SCHEDULED'):
+                fail.append(f'{tag}: unknown status {m.get("status")!r}')
+            if m.get('status') == 'ENDED' and (m.get('us') is None or m.get('them') is None):
+                fail.append(f'{tag}: ENDED without a score')
+            if m.get('status') == 'SCHEDULED' and (m.get('us') is not None or m.get('them') is not None):
+                fail.append(f'{tag}: SCHEDULED with a score — mark it ENDED')
+            for tv in m.get('tv') or []:
+                if not str(tv.get('url', '')).startswith('https://'):
+                    fail.append(f'{tag}: tv url must be https')
+                if not tv.get('label'):
+                    fail.append(f'{tag}: tv entry without a label')
+    print(f'  national_teams.json OK — {len(teams)} teams, '
+          f'{sum(len(t.get("matches") or []) for t in teams)} matches')
+except Exception as e:
+    fail.append(f'national_teams.json: {e}')
+
 if fail:
     print('\nPREFLIGHT FAILED:', file=sys.stderr)
     for f in fail: print('  ✗', f, file=sys.stderr)
