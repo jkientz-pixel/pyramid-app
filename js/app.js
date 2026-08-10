@@ -1187,7 +1187,7 @@ async function screenClub(ref) {
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/map'">&larr; Back</button>
     <div class="clubhead">${crestHtml(c)}
       <div><h2 class="disp" style="margin:0">${esc(c.n)}</h2>
-      ${m.url ? `<a class="lgchip" href="${m.url}" target="_blank" rel="noopener" style="background:${m.color}">${m.img ? `<img class="lgimg" src="${m.img}" alt="">` : ''}${m.label} &nearr;</a>` : `<span class="lgchip" style="background:${m.color}">${m.label}</span>`}
+      <a class="lgchip" href="#/league/${c.g}" style="background:${m.color}">${m.img ? `<img class="lgimg" src="${m.img}" alt="">` : ''}${m.label}</a>
       <span class="sub" style="margin-left:8px">${c.ct ? `${esc(c.ct)}, ${c.st}` : (STATE_NAME[c.st] || PROV_NAME[c.st] || c.st)}</span></div>
     </div>
     <div class="btnrow">${favBtn('clubs', c.id)}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.url ? `<a class="hdrlink" href="${safeHref(c.url)}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${safeHref(c.si)}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${safeHref(c.sx)}" target="_blank" rel="noopener">X</a>` : ''}</div>
@@ -1489,6 +1489,46 @@ const TIERS = {
     { t: 'Youth', leagues: ['ga', 'ecnlg', 'ecrlg', 'gaa'] }
   ]
 };
+/* league page (#/league/:key): what the league is, where to watch it, and
+   every club we map in it — the sticky in-app home for each league, with the
+   official site one tap away. Profile text and watch links are hand-curated
+   in data/leagues_info.json; watch URLs are verified before shipping. */
+let _lgInfo = null;
+async function leaguesInfoDb() {
+  if (_lgInfo) return _lgInfo;
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260809d')).json(); }
+  catch { _lgInfo = { leagues: {} }; }
+  return _lgInfo;
+}
+async function screenLeague(key) {
+  const m = LEAGUES[key];
+  if (!m) return screenPyramid();
+  crumb.textContent = m.label;
+  const info = ((await leaguesInfoDb()).leagues || {})[key] || {};
+  if (location.hash !== '#/league/' + key) return;
+  const clubs = CLUBS.filter(c => c.g === key && !c.h);
+  const ranked = clubs.filter(c => c.r).sort((a, b) => b.r - a.r);
+  const rest = clubs.filter(c => !c.r).sort((a, b) => a.n.localeCompare(b.n));
+  const level = LEVELS.pro.includes(key) ? 'professional' : LEVELS.college.includes(key) ? 'college'
+    : LEVELS.youth.includes(key) ? 'youth' : 'amateur';
+  view.innerHTML = `
+    <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/tiers'">&larr; Back</button>
+    <div class="clubhead">${m.img ? `<img class="crest imgcrest${m.inv ? ' inv-' + m.inv : ''}" src="${m.img}" alt="" onerror="this.style.display='none'">` : `<span class="crest" style="background:${m.color}">${esc(m.label[0])}</span>`}
+      <div><h2 class="disp" style="margin:0">${esc(m.label)}</h2>
+      <span class="sub">${clubs.length} clubs &middot; ${m.sex === 'w' ? "women's" : "men's"} ${level} soccer</span></div>
+    </div>
+    ${m.url ? `<div class="btnrow"><a class="hdrlink" href="${m.url}" target="_blank" rel="noopener">Official league site &nearr;</a></div>` : ''}
+    ${info.about ? `<p style="margin:10px 0 4px;line-height:1.55">${esc(info.about)}</p>` : ''}
+    ${(info.watch || []).length ? `
+      <div class="kicker" style="margin-top:14px">Where to watch</div>
+      <p style="margin:6px 0 0">${info.watch.map(w => `<a class="watchlink" href="${w.url}" target="_blank" rel="noopener">&#9655; ${esc(w.label)}</a>`).join('<span style="color:var(--ink-dim)"> &nbsp;&middot;&nbsp; </span>')}</p>
+      ${info.watchNote ? `<p class="note" style="margin:6px 0 0">${esc(info.watchNote)}</p>` : ''}` : ''}
+    ${adSlot('league', m.label)}
+    <div class="kicker" style="margin-top:16px">All clubs${ranked.length ? ' &middot; ranked by rating' : ''}</div>
+    <ul class="clublist">${ranked.map((c, i) => clubRow(c, i + 1)).join('')}${rest.map(c => clubRow(c)).join('')}</ul>
+    ${LEVELS.youth.includes(key) ? '<p class="note">Youth directory entries are name, league and league-stated location only — no ratings, fixtures or player data.</p>' : ''}`;
+}
+
 function screenPyramid() {
   crumb.textContent = 'Tiers';
   const count = g => CLUBS.filter(c => c.g === g && !c.h).length;
@@ -1500,8 +1540,8 @@ function screenPyramid() {
       <div class="tier" style="width:${100 - i * (52 / TIERS[sex].length)}%">
         <div class="tier-label">${tier.t}${tier.pro ? ' · pro' : ''}</div>
         <div class="tier-leagues">
-          ${(tier.leagues || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img class="${m.inv ? 'inv-' + m.inv : ''}" src="${m.img}" alt="" onerror="this.style.display='none'">` : `<span class="dot" style="background:${m.color}"></span>`}<b>${m.label}</b><span>${count(g)} clubs</span>`; return m.url ? `<a class="tierlg" href="${m.url}" target="_blank" rel="noopener">${inner}</a>` : `<span class="tierlg">${inner}</span>`; }).join('')}
-          ${(tier.extra || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img class="${m.inv ? 'inv-' + m.inv : ''}" src="${m.img}" alt="" onerror="this.style.display='none'">` : ''}<b>${m.label}</b><span>${count(g)} clubs</span>`; return m.url ? `<a class="tierlg dimmed" href="${m.url}" target="_blank" rel="noopener">${inner}</a>` : `<span class="tierlg dimmed">${inner}</span>`; }).join('')}
+          ${(tier.leagues || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img class="${m.inv ? 'inv-' + m.inv : ''}" src="${m.img}" alt="" onerror="this.style.display='none'">` : `<span class="dot" style="background:${m.color}"></span>`}<b>${m.label}</b><span>${count(g)} clubs</span>`; return `<a class="tierlg" href="#/league/${g}">${inner}</a>`; }).join('')}
+          ${(tier.extra || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img class="${m.inv ? 'inv-' + m.inv : ''}" src="${m.img}" alt="" onerror="this.style.display='none'">` : ''}<b>${m.label}</b><span>${count(g)} clubs</span>`; return `<a class="tierlg dimmed" href="#/league/${g}">${inner}</a>`; }).join('')}
           ${(tier.coming || []).map(c => c.url
             ? `<a class="tierlg coming" href="${c.url}" target="_blank" rel="noopener">${c.img ? `<img src="${c.img}" alt="">` : ''}<b>${c.label}</b><span>league site</span></a>`
             : `<span class="tierlg coming"><b>${c.label || c}</b></span>`).join('')}
@@ -1512,7 +1552,7 @@ function screenPyramid() {
     <a class="fa-card" href="#/cups"><b>&#127942; The Trophy Room</b><span>16 national trophies, every tier — MLS Cup to the NPSL, the College Cups, and the Open Cup back to 1914.</span></a>
     <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>Above the pyramid — USA youth national teams in Concacaf and FIFA competition, with fixtures and how to watch.</span></a>
     ${adSlot('tiers', 'The Pyramid')}
-    <p class="note">Tiers are organizational, not sporting — US soccer has no promotion and relegation between most levels. The pathway runs through players, not clubs: youth to college to the amateur leagues to the pro game. Tap a league to visit its official site.</p>`;
+    <p class="note">Tiers are organizational, not sporting — US soccer has no promotion and relegation between most levels. The pathway runs through players, not clubs: youth to college to the amateur leagues to the pro game. Tap a league for its page &mdash; every club, where to watch, and the official site.</p>`;
   wireSexToggle();
 }
 
@@ -2039,7 +2079,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
 let routedOnce = false;
 function route() {
   const h = location.hash || '#/map';
@@ -2063,6 +2103,7 @@ function route() {
   else if (parts[0] === 'legends') screenLegends(parts[1]);
   else if (parts[0] === 'cups') screenCups();
   else if (parts[0] === 'nt') screenNationalTeams(parts[1], parts[2]);
+  else if (parts[0] === 'league') screenLeague(parts[1]);
   else if (parts[0] === 'freeagent') screenFASample();
   else if (parts[0] === 'clubtools') screenClubTools();
   else if (parts[0] === 'legal') screenLegal();
