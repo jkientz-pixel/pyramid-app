@@ -89,7 +89,12 @@ def main():
                 try:
                     req = urllib.request.Request(LOGO.format(slug=m['slug']), headers=UA)
                     data = urllib.request.urlopen(req, timeout=30).read()
-                    if b'<svg' not in data[:600]: raise Exception('not svg')
+                    # ncaa.com soft-404s return HTML that contains inline <svg
+                    # icons — the old sniff accepted those, Chromium showed the
+                    # broken-image glyph, and 971 grey placeholders shipped.
+                    head = data[:600].lstrip()
+                    if b'<html' in head.lower() or not (head.startswith(b'<svg') or head.startswith(b'<?xml')):
+                        raise Exception('not svg')
                     open(svg, 'wb').write(data)
                     time.sleep(0.3)
                 except Exception as e:
@@ -97,10 +102,22 @@ def main():
             fn = f"crests/{c['g']}-{slugify(c['n'])}.png"
             dest = os.path.join(ROOT, fn)
             try:
-                page.set_content(f'<body style="margin:0"><img src="file://{svg}" '
+                # data: URI, not file:// — Chromium blocks file subresources
+                # inside set_content pages, which turned every render into the
+                # broken-image glyph (the root cause of the 971 placeholders)
+                import base64
+                uri = 'data:image/svg+xml;base64,' + base64.b64encode(open(svg, 'rb').read()).decode()
+                page.set_content(f'<body style="margin:0"><img src="{uri}" '
                                  'style="width:128px;height:128px;object-fit:contain"></body>')
                 page.locator('img').screenshot(path=dest, omit_background=True)
                 assert os.path.getsize(dest) > 500
+                # a broken-image render is nearly all transparent — reject it
+                from PIL import Image
+                a = Image.open(dest).convert('RGBA').getchannel('A')
+                opaque = sum(n for v, n in enumerate(a.histogram()) if v >= 200) / (a.width * a.height)
+                if opaque < 0.10:
+                    os.remove(dest)
+                    raise Exception(f'placeholder render ({opaque:.0%} opaque)')
             except Exception as e:
                 miss += 1; print(f"  - {c['n']}: rasterize failed ({e})"); continue
             c['img'] = fn
