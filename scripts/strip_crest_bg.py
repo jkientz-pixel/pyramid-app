@@ -11,6 +11,15 @@ image (a matte box), with a one-step 225-threshold halo cleanup around cleared
 regions. Small interior whites (shield fills, outline rings, lettering) are
 never touched. Idempotent; rerun after every crest sweep.
 
+v3 — colored mattes (`--mattes`): navy/black/grey boxes the white pass never
+touches. The matte color is sampled from the four corners (must be opaque and
+agree within a small tolerance), then border-connected components of
+near-matte pixels are cleared. Guards keep legit full-bleed rectangle logos
+intact: the clear must cover >=50% of the opaque border ring, remove >=12% of
+the frame, and leave >=6% of the frame opaque — otherwise the file is kept
+unchanged and reported for manual review. Same one-step halo cleanup, keyed
+to the matte color instead of white.
+
 IMPORTANT: crest URLs are cached immutable and cache-first (sw.js ASSETS).
 After any run that changes files, bump CRESTV in js/app.js or returning
 browsers keep the old pixels forever.
@@ -90,18 +99,74 @@ def process(path):
     return 'stripped'
 
 
+MATTE_TOL = 34          # per-channel distance from the corner color
+MATTE_HALO_TOL = 60     # looser tolerance for the one-step halo cleanup
+MATTE_MIN_CLEARED = 0.12
+MATTE_MIN_REMAIN = 0.06
+MATTE_MIN_BORDER = 0.50
+CORNER_STD_MAX = 12
+
+
+def process_matte(path):
+    im = Image.open(path).convert('RGBA')
+    a = np.asarray(im).copy()
+    h, w = a.shape[:2]
+    if h < 8 or w < 8:
+        return 'tiny'
+    alpha = a[..., 3]
+    rgb = a[..., :3].astype(int)
+    corners = np.array([a[0, 0], a[0, -1], a[-1, 0], a[-1, -1]], dtype=int)
+    if (corners[:, 3] < 200).any():
+        return 'floats'          # transparent corner: nothing boxed here
+    crgb = corners[:, :3]
+    if crgb.std(axis=0).max() > CORNER_STD_MAX:
+        return 'no-matte'        # corners disagree: not a uniform backdrop
+    matte = crgb.mean(axis=0)
+    if matte.min() >= THRESHOLD:
+        return 'white'           # the white pass owns near-white mattes
+    near = (np.abs(rgb - matte).max(axis=2) <= MATTE_TOL) & (alpha >= 200)
+    clear = np.zeros_like(near)
+    for pts in components(near):
+        ys, xs = pts[:, 0], pts[:, 1]
+        if ys.min() == 0 or xs.min() == 0 or ys.max() == h - 1 or xs.max() == w - 1:
+            clear[ys, xs] = True
+    if not clear.any():
+        return 'kept'
+    border = np.zeros((h, w), dtype=bool)
+    border[0] = border[-1] = True
+    border[:, 0] = border[:, -1] = True
+    opaque_border = border & (alpha >= 200)
+    remain = (alpha >= 200) & ~clear
+    if (clear[opaque_border].mean() < MATTE_MIN_BORDER
+            or clear.mean() < MATTE_MIN_CLEARED
+            or remain.mean() < MATTE_MIN_REMAIN):
+        return 'kept-guard'      # full-bleed artwork or broken file — hands off
+    # one-step halo: near-matte fringe pixels bordering a cleared region
+    halo = (np.abs(rgb - matte).max(axis=2) <= MATTE_HALO_TOL) & (alpha >= 200) & ~clear
+    edge = np.zeros_like(clear)
+    edge[:-1] |= clear[1:]; edge[1:] |= clear[:-1]
+    edge[:, :-1] |= clear[:, 1:]; edge[:, 1:] |= clear[:, :-1]
+    clear |= (halo & edge)
+    a[..., 3] = np.where(clear, 0, alpha)
+    Image.fromarray(a).save(path, optimize=True)
+    return 'stripped'
+
+
 def main():
     from collections import Counter
+    matte_mode = '--mattes' in sys.argv
     stats = Counter()
     for path in sorted(glob.glob(os.path.join(ROOT, 'crests', '*.png'))):
+        if os.path.basename(path).startswith('brand-'):
+            continue             # UI assets, not club crests
         try:
-            r = process(path)
+            r = process_matte(path) if matte_mode else process(path)
         except Exception as e:
             r = 'error'
             print(f'  ERROR {os.path.basename(path)}: {e}', file=sys.stderr)
         stats[r] += 1
-        if r == 'all-white':
-            print(f'  all-white (review): {os.path.basename(path)}', file=sys.stderr)
+        if r in ('all-white', 'kept-guard'):
+            print(f'  {r} (review): {os.path.basename(path)}', file=sys.stderr)
     print(dict(stats), file=sys.stderr)
 
 
