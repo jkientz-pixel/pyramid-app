@@ -605,18 +605,20 @@ function screenMap() {
         f.players.map(id => { const parts2 = id.split('/'); const c2 = CLUBS[clubIdx(parts2[0])]; if (!c2) return '';
           const p2 = squadFor(c2)[+parts2[1]]; return p2 ? `<a class="chip" href="#/player/${id}" style="text-decoration:none">&#9733; ${esc(p2.name)}</a>` : ''; }).join('') + `</div>`;
     })()}
-    <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>Upsets, rating swings, golden-boot races &mdash; generated live from real results.</span></a>
+    <a class="fa-card" href="#/wire" id="wirehook"><b>&#128240; The Wire</b><span>Upsets, rating swings, golden-boot races &mdash; generated live from real results.</span></a>
+    <a class="fa-card" href="#/predict"><b>&#9876; Matchup Machine</b><span>Any club against any club &mdash; predicted score, three-way odds, and a confidence read.</span></a>
     <a class="fa-card" href="#/freeagents"><b>&#9733; Free Agents</b><span>No club right now? Get seen by every club on this map.</span></a>
-    ${adSlot('map', 'National map')}
     <p class="note">Tap a state to zoom in. Tap a pin for the club. Pinch, scroll, or use +/&minus; to zoom further.</p>
     <label class="sr-only" for="statejump">Jump to a state or province</label>
     <select id="statejump">
       <option value="">Jump to a state or province&hellip;</option>
       ${Object.entries({ ...STATE_NAME, ...PROV_NAME }).sort((a, b) => a[1].localeCompare(b[1])).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
-    </select>`;
+    </select>
+    ${adSlot('map', 'National map')}`;
   wireSexToggle();
   wireLevelChips();
   wireMap(null, visible(clubs));
+  hydrateWireHook();
   view.querySelector('#regionchips').addEventListener('click', e => {
     const b = e.target.closest('[data-region]'); if (!b) return;
     location.hash = b.dataset.region === 'all' ? '#/map' : `#/region/${b.dataset.region}`;
@@ -867,6 +869,23 @@ async function wireDb() {
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
 }
+const isUpset = w => w.gp >= 3 && ((w.s1 > w.s2 && w.ph <= 0.35) || (w.s2 > w.s1 && w.ph >= 0.65));
+/* map-screen hook: swap the static Wire card copy for the actual top story
+   (latest upset, else biggest rating swing of the recent window) once the
+   feed is in memory — the front door leads with live news, not a slogan */
+async function hydrateWireHook() {
+  const rows = (await wireDb()).slice(-60).reverse(); // newest first
+  const card = document.getElementById('wirehook');
+  if (!card) return;
+  const lgs = new Set(sex === 'w' ? ['nwsl', 'uslw'] : ['mls', 'uslc', 'usl1', 'mnp', 'npsl']);
+  const mine = rows.filter(w => lgs.has(w.lg));
+  if (!mine.length) return;
+  const top = mine.find(isUpset) || [...mine].sort((a, b) => Math.abs(b.dr) - Math.abs(a.dr))[0];
+  const side = nm => { const i = clubIdxByName(nm); return `${i >= 0 ? mcrest(CLUBS[i]) : ''}<b class="whc">${esc(nm)}</b>`; };
+  card.querySelector('span').innerHTML =
+    `${isUpset(top) ? '<b class="wup">UPSET</b> · ' : ''}${side(top.t1)} ${top.s1}&ndash;${top.s2} ${side(top.t2)}` +
+    ` · Elo &plusmn;${Math.abs(top.dr)} · ${fmtWireDay(top.d)} · <i class="whmore">more on the Wire &rarr;</i>`;
+}
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
@@ -880,47 +899,23 @@ function fmtKick(iso) {
   const loc = d.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
   return et === loc ? et + ' ET' : et + ' ET · ' + loc + ' local';
 }
-function screenMatches(preH) {
-  crumb.textContent = 'Matches';
-  const rated = pool().filter(c => c.r).sort((a, b) => b.r - a.r);
-  const groups = leaguesFor(sex).filter(k => !LEAGUES[k].hollow && k !== 'mnp');
-  const used = new Set(); const pairs = [];
-  groups.forEach(g => {
-    const p = rated.filter(c => c.g === g);
-    for (const home of p) {
-      if (used.has(home) || pairs.length >= 12) break;
-      /* vary which neighbor each club draws — always pairing nearest-with-
-         nearest gives every card the same tiny Elo gap and near-identical
-         odds; a deterministic spread across the 6 closest keeps the radar
-         varied */
-      const cand = neighbors(home, 6).filter(o => !used.has(o));
-      if (!cand.length) continue;
-      const opp = cand[(home.n.length * 7 + pairs.length * 3) % cand.length];
-      used.add(home); used.add(opp);
-      pairs.push([home, opp]);
-    }
-  });
+/* Matchup Machine — one renderer, two homes: inline on #/matches and the
+   standalone #/predict screen (the feature is a headliner, not a footnote) */
+function matchupMachineHtml(rated, preH) {
   const pickBox = (id, sel) => `<span class="pickwrap"><input class="pickq" id="${id}" role="combobox" aria-expanded="false" aria-label="${id === 'pickH' ? 'Home' : 'Away'} club" autocomplete="off" spellcheck="false" data-idx="${CLUBS.indexOf(sel)}" value="${esc(sel.n)}"><div class="pickres" hidden></div></span>`;
-  view.innerHTML = `
-    ${sexToggle()}
-    <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>This week's results, upsets and rating swings &mdash; generated from real data.</span></a>
-    <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>USA national teams, senior through U-15 &mdash; fixtures, how to watch, squad history and player bios back to 1930.</span></a>
-    <div id="realfx"></div>
+  const home = CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0];
+  return `
     <div class="kicker">Predictor · any club v any club · model estimate</div>
     <h2 class="disp">Matchup Machine</h2>
     <p class="note" style="margin:2px 0 6px">Type to search any rated club &mdash; ${rated.length.toLocaleString()} to choose from.</p>
     <div class="pickrow">
-      ${pickBox('pickH', CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0])}
+      ${pickBox('pickH', home)}
       <span class="vs">V</span>
       ${pickBox('pickA', rated[1])}
     </div>
-    <div id="pickout">${matchCard(CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0], rated[1], 'HYPOTHETICAL')}</div>
-    <div class="kicker" style="margin-top:18px">Rivalry Radar · nearest matchups by geography</div>
-    <h2 class="disp">Rivalry Radar</h2>
-    <p class="note" style="margin:2px 0 10px">Who's closest to whom — and how the model thinks it would go. A discovery feature, not a schedule: these games aren't scheduled, so there are no dates. Verified fixtures appear above as league feeds connect.</p>
-    ${pairs.map(([h, a]) => matchCard(h, a, `${milesApart(h, a)} MI APART`)).join('')}
-    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Predictions, not betting advice.</p>`;
-  wireSexToggle();
+    <div id="pickout">${matchCard(home, rated[1], 'HYPOTHETICAL')}</div>`;
+}
+function wireMatchupMachine(rated) {
   const redo = () => {
     const h = CLUBS[+view.querySelector('#pickH').dataset.idx];
     const a = CLUBS[+view.querySelector('#pickA').dataset.idx];
@@ -950,6 +945,53 @@ function screenMatches(preH) {
     q.addEventListener('blur', () => setTimeout(() => { if (!res.contains(document.activeElement)) close(); }, 150));
   };
   wirePick('pickH'); wirePick('pickA');
+}
+function screenPredict(preH) {
+  crumb.textContent = 'Predict';
+  const rated = pool().filter(c => c.r).sort((a, b) => b.r - a.r);
+  if (rated.length < 2) return screenMap();
+  view.innerHTML = `
+    ${sexToggle()}
+    ${matchupMachineHtml(rated, preH)}
+    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Predictions, not betting advice.</p>
+    <a class="fa-card" href="#/matches"><b>&#128197; Matches &amp; Rivalry Radar</b><span>Verified fixtures and the nearest-rival matchups the model finds on its own.</span></a>
+    <p class="note">Every rated club page has a &#9876; Predict Result button that starts from that club.</p>`;
+  wireSexToggle();
+  wireMatchupMachine(rated);
+}
+function screenMatches(preH) {
+  crumb.textContent = 'Matches';
+  const rated = pool().filter(c => c.r).sort((a, b) => b.r - a.r);
+  const groups = leaguesFor(sex).filter(k => !LEAGUES[k].hollow && k !== 'mnp');
+  const used = new Set(); const pairs = [];
+  groups.forEach(g => {
+    const p = rated.filter(c => c.g === g);
+    for (const home of p) {
+      if (used.has(home) || pairs.length >= 12) break;
+      /* vary which neighbor each club draws — always pairing nearest-with-
+         nearest gives every card the same tiny Elo gap and near-identical
+         odds; a deterministic spread across the 6 closest keeps the radar
+         varied */
+      const cand = neighbors(home, 6).filter(o => !used.has(o));
+      if (!cand.length) continue;
+      const opp = cand[(home.n.length * 7 + pairs.length * 3) % cand.length];
+      used.add(home); used.add(opp);
+      pairs.push([home, opp]);
+    }
+  });
+  view.innerHTML = `
+    ${sexToggle()}
+    <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>This week's results, upsets and rating swings &mdash; generated from real data.</span></a>
+    <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>USA national teams, senior through U-15 &mdash; fixtures, how to watch, squad history and player bios back to 1930.</span></a>
+    <div id="realfx"></div>
+    ${matchupMachineHtml(rated, preH)}
+    <div class="kicker" style="margin-top:18px">Rivalry Radar · nearest matchups by geography</div>
+    <h2 class="disp">Rivalry Radar</h2>
+    <p class="note" style="margin:2px 0 10px">Who's closest to whom — and how the model thinks it would go. A discovery feature, not a schedule: these games aren't scheduled, so there are no dates. Verified fixtures appear above as league feeds connect.</p>
+    ${pairs.map(([h, a]) => matchCard(h, a, `${milesApart(h, a)} MI APART`)).join('')}
+    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Predictions, not betting advice.</p>`;
+  wireSexToggle();
+  wireMatchupMachine(rated);
   /* NPSL is a men's league: its fixtures never render into the women's
      view, including late async resolution after the user toggles sex —
      the women's view gets the honest empty state instead */
@@ -1403,6 +1445,11 @@ async function screenClub(ref) {
   const hist = c.g === 'mls' ? (await mlsHistory()) : null;
   const hasLegends = c.g === 'mls' && !!((await legendsDb())[c.n] || []).length;
   const cupRec = (await cupDb())[c.id] || [];
+  /* board listings that belong to this club — moderation sets clubId; the
+     name match catches listings posted before the id was attached */
+  const tToday = new Date().toISOString().slice(0, 10);
+  const clubTry = (await tryoutsDb()).filter(t => !t.sample && t.date >= tToday &&
+    ((t.clubId && t.clubId === c.id) || (t.club || '').toLowerCase() === c.n.toLowerCase()));
   crumb.textContent = c.st;
   const m = LEAGUES[c.g];
   const peers = CLUBS.filter(o => o.g === c.g && o.r && !o.h).sort((a, b) => b.r - a.r);
@@ -1421,7 +1468,7 @@ async function screenClub(ref) {
       <a class="lgchip" href="#/league/${c.g}" style="background:${m.color}">${m.img ? `<img class="lgimg" src="${m.img}" alt="">` : ''}${m.label}</a>
       <span class="sub" style="margin-left:8px">${c.ct ? `${esc(c.ct)}, ${c.st}` : (STATE_NAME[c.st] || PROV_NAME[c.st] || c.st)}</span>${c.ia ? `<span class="sub" style="margin-left:8px;color:#C77F1E;border:1px solid #C77F1E;border-radius:6px;padding:1px 7px;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">Inactive &middot; not in current league listings</span>` : ''}</div>
     </div>
-    <div class="btnrow">${favBtn('clubs', c.id)}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.url ? `<a class="hdrlink" href="${safeHref(c.url)}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${safeHref(c.si)}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${safeHref(c.sx)}" target="_blank" rel="noopener">X</a>` : ''}</div>
+    <div class="btnrow">${favBtn('clubs', c.id)}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}<button class="hdrlink sharebtn" type="button">Share</button>${c.url ? `<a class="hdrlink" href="${safeHref(c.url)}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${safeHref(c.si)}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${safeHref(c.sx)}" target="_blank" rel="noopener">X</a>` : ''}</div>
     ${(HONOURS[rosterKey(c)] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[rosterKey(c)] || []).map(h2 => `<li><b>${esc(h2.t)}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
       <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : DTAG + 'Rating'}${c.pv ? ' · provisional' : ''}</span></div>
@@ -1482,6 +1529,11 @@ async function screenClub(ref) {
         kids.map(k => `<li><span>Second team</span><b>${linkify(k)}</b></li>`).join('') +
         `</ul><p class="note">The route a player climbs: second team to first team, tier to tier.</p>`;
     })()}
+    ${clubTry.length ? `<div class="kicker" style="margin-top:14px">Open tryouts &middot; from the Tryouts board</div>
+    ${clubTry.map(t => `<div class="pricecard"><b>${new Date(t.date + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}${t.time ? ' &middot; ' + esc(t.time) : ''}</b>
+      <p>${[t.city && t.st ? `${esc(t.city)}, ${esc(t.st)}` : esc(t.st || t.city || ''), t.league ? esc(t.league) : '', t.details ? esc(t.details) : ''].filter(Boolean).join(' · ')}</p>
+      ${t.link ? `<div class="linkrow"><a href="${safeHref(t.link)}" target="_blank" rel="noopener">Tryout details</a></div>` : ''}</div>`).join('')}
+    <p class="note"><a href="#/tryouts" style="color:var(--accent)">All open tryouts &rarr;</a></p>` : ''}
     <p class="note">${(c.si || c.sx || c.url) ? 'Official site and social links above come from Wikidata and league sources — they go exactly where they say.' : 'Club website and socials appear at the top once the club claims its page — links always go exactly where they say.'}</p>
     <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim club: ' + c.n)}">Run this club? Claim this page</a>
     <p class="note">Claimed clubs manage their crest, links, roster and schedule.</p>
@@ -1489,6 +1541,20 @@ async function screenClub(ref) {
   wireFav();
   const pb = view.querySelector('.predictbtn2');
   if (pb) pb.addEventListener('click', () => openPredict(pb.dataset.predict));
+  const sb = view.querySelector('.sharebtn');
+  if (sb) sb.addEventListener('click', async () => {
+    /* rated clubs have a static /club/<id> page with a per-club share card —
+       that's the link that unfurls properly everywhere; unrated (youth
+       directory) clubs fall back to the app route */
+    const url = (c.r && !c.h) ? `https://www.rankedxi.com/club/${c.id}` : `https://www.rankedxi.com/app#/club/${c.id}`;
+    if (navigator.share) {
+      try { await navigator.share({ title: `${c.n} — Ranked XI`, url }); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    try { await navigator.clipboard.writeText(url); sb.textContent = 'Link copied ✓'; }
+    catch { sb.textContent = url; }
+    setTimeout(() => { sb.textContent = 'Share'; }, 1800);
+  });
 }
 
 function screenAbout() {
@@ -1594,7 +1660,7 @@ async function screenPlayer(ci, pi) {
   view.innerHTML = `
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/club/${ci}'">&larr; ${esc(c.n)}</button>
     <div class="clubhead">
-      <img class="pphoto" src="${prof.photo || AVATAR}" alt="${esc(pl.name)}" onerror="this.src='${AVATAR}'">
+      <img class="pphoto" src="${prof.photo || AVATAR}" alt="${esc(pl.name)}">
       <div><h2 class="disp" style="margin:0">${esc(pl.name)}</h2>
       <span class="sub">#${pl.num} · ${pl.pos}${pl.real ? (pl.nat ? ' · ' + pl.nat : '') : ' · ' + pl.age + ' yrs'} · ${esc(c.n)}</span></div>
     </div>
@@ -1668,6 +1734,11 @@ async function screenPlayer(ci, pi) {
       <p class="join-msg claim-msg" role="status" aria-live="polite"></p>
     </details>` : ''}
     ${reportLink('Fix', pl.name)}`;
+  /* fallback listener, not an inline onerror attribute: AVATAR is a data URI
+     full of single quotes, which terminated the attribute's JS string and
+     threw "Unexpected identifier" on every failed headshot */
+  const ph = view.querySelector('.pphoto');
+  if (ph) ph.addEventListener('error', () => { if (ph.src !== AVATAR) ph.src = AVATAR; });
   wireFav();
   wireClaimForm(pl, c);
 }
@@ -1813,14 +1884,17 @@ function screenFreeAgents() {
     <p class="note"><a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('Report a free agent listing')}&body=${encodeURIComponent('Listing (name shown):\nWhat is wrong (impersonation, inaccurate, inappropriate, other):\n')}" style="color:var(--accent)">Report a listing</a> — reports are reviewed within days; a listing that misrepresents someone comes down first, questions after.</p>`;
 }
 
-let tryoutSex = 'all';
+let tryoutSex = 'all', tryoutSort = 'date';
 async function screenTryouts() {
   crumb.textContent = 'Tryouts';
   const all = await tryoutsDb();
   if (location.hash !== '#/tryouts') return;
   const today = new Date().toISOString().slice(0, 10);
   const upcoming = all.filter(t => t.date >= today).sort((a, b) => a.date < b.date ? -1 : 1);
-  const list = tryoutSex === 'all' ? upcoming : upcoming.filter(t => t.x === tryoutSex);
+  let list = tryoutSex === 'all' ? upcoming : upcoming.filter(t => t.x === tryoutSex);
+  /* secondary sorts keep date order inside each group — soonest first */
+  if (tryoutSort === 'state') list = [...list].sort((a, b) => (a.st || 'zz').localeCompare(b.st || 'zz') || (a.date < b.date ? -1 : 1));
+  else if (tryoutSort === 'league') list = [...list].sort((a, b) => (a.league || 'zz').localeCompare(b.league || 'zz') || (a.date < b.date ? -1 : 1));
   const fmtDay = d => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   const card = t => {
     /* clubId is never submitted — it's added by hand during moderation when
@@ -1839,6 +1913,10 @@ async function screenTryouts() {
     <div class="chips seg" id="tsex">
       ${[['all', 'All'], ['m', "Men's"], ['w', "Women's"]].map(([k, lb]) =>
         `<button class="chip solid" data-tsx="${k}" aria-pressed="${tryoutSex === k}">${lb}</button>`).join('')}
+    </div>
+    <div class="chips seg" id="tsort" role="group" aria-label="Sort tryouts">
+      ${[['date', 'Soonest'], ['state', 'By state'], ['league', 'By league']].map(([k, lb]) =>
+        `<button class="chip solid" data-tso="${k}" aria-pressed="${tryoutSort === k}">${lb}</button>`).join('')}
     </div>
     ${list.length ? list.map(card).join('') : '<p class="note">No upcoming tryouts in this filter yet — check back, or post the first one below.</p>'}
     ${list.some(t => t.sample) ? '<p class="note">Sample listings show the format — they clear out as real dates land. The board is new: clubs, the first posts are yours.</p>' : ''}
@@ -1861,6 +1939,10 @@ async function screenTryouts() {
   view.querySelector('#tsex').addEventListener('click', e => {
     const b = e.target.closest('[data-tsx]'); if (!b || b.dataset.tsx === tryoutSex) return;
     tryoutSex = b.dataset.tsx; screenTryouts();
+  });
+  view.querySelector('#tsort').addEventListener('click', e => {
+    const b = e.target.closest('[data-tso]'); if (!b || b.dataset.tso === tryoutSort) return;
+    tryoutSort = b.dataset.tso; screenTryouts();
   });
   wireTryoutForm();
 }
@@ -2235,7 +2317,7 @@ const fmtWireDay = d => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', {
 let wireLg = 'all', wireLimit = 20;
 function wireResultRow(w) {
   const hi = clubIdxByName(w.t1), ai = clubIdxByName(w.t2);
-  const upset = w.gp >= 3 && ((w.s1 > w.s2 && w.ph <= 0.35) || (w.s2 > w.s1 && w.ph >= 0.65));
+  const upset = isUpset(w);
   const side = (i2, n2, cls) => i2 >= 0
     ? `<a class="side ${cls}" href="#/club/${i2}">${mcrest(CLUBS[i2])}<span class="sn">${esc(n2)}</span></a>`
     : `<span class="side ${cls}"><span class="sn">${esc(n2)}</span></span>`;
@@ -2253,14 +2335,14 @@ function wireLeaders(lgs) {
     const L = LEAGUES[lg].label;
     const link = p => `#/player/${CLUBS.indexOf(p.c)}/${p.i}`;
     const sc = [...lp].sort((a, b) => b.goals - a.goals || (b.xg || 0) - (a.xg || 0))[0];
-    if (sc && sc.goals > 1) items.push({ tag: 'Golden Boot', href: link(sc),
+    if (sc && sc.goals > 1) items.push({ tag: 'Golden Boot', href: link(sc), c: sc.c,
       head: `${sc.name} — ${sc.goals} goals`, sub: `${L} scoring leader · xG ${sc.xg ?? '—'} · ${sc.c.n}` });
     const as = [...lp].sort((a, b) => b.assists - a.assists || (b.xa || 0) - (a.xa || 0))[0];
-    if (as && as.assists > 1) items.push({ tag: 'Playmaker', href: link(as),
+    if (as && as.assists > 1) items.push({ tag: 'Playmaker', href: link(as), c: as.c,
       head: `${as.name} — ${as.assists} assists`, sub: `${L} assist leader${as.kp != null ? ' · ' + as.kp + ' key passes' : ''} · ${as.c.n}` });
     const gk = lp.filter(p => p.pos === 'GK' && p.gc != null && p.mins >= 900 && p.saves + p.gc > 0)
       .sort((a, b) => b.saves / (b.saves + b.gc) - a.saves / (a.saves + a.gc))[0];
-    if (gk) items.push({ tag: 'The Wall', href: link(gk),
+    if (gk) items.push({ tag: 'The Wall', href: link(gk), c: gk.c,
       head: `${gk.name} — ${Math.round(100 * gk.saves / (gk.saves + gk.gc))}% save rate`,
       sub: `${L} keeper leader · ${gk.saves} saves, ${gk.gc} conceded · ${gk.c.n}` });
   }
@@ -2273,7 +2355,7 @@ async function screenWire() {
   const active = wireLg === 'all' ? lgs : [wireLg];
   const leaders = wireLeaders(active).map(it => `
     <a class="match wirelink" href="${it.href}">
-      <div class="mrow"><span class="side">${esc(it.head)}</span><span class="vs wtag">${it.tag.toUpperCase()}</span></div>
+      <div class="mrow"><span class="side">${it.c ? mcrest(it.c) : ''}<span class="sn">${esc(it.head)}</span></span><span class="vs wtag">${it.tag.toUpperCase()}</span></div>
       <div class="meta"><span>${esc(it.sub)}</span><span></span></div></a>`).join('');
   view.innerHTML = `
     ${sexToggle()}
@@ -2298,8 +2380,11 @@ async function screenWire() {
   const upcoming = activeSet.has('npsl') ? await fixturesDb() : [];
   box.innerHTML =
     (upcoming.length ? `<div class="kicker" style="margin-top:12px">Coming up · NPSL playoffs</div>` +
-      upcoming.map(f => `<div class="match"><div class="mrow"><span class="side">${esc(f.t1)}</span><span class="vs">${esc(f.round)}</span><span class="side away">${esc(f.t2)}</span></div>
-      <div class="meta"><span>${fmtKick(f.start)}</span><span>${esc(f.venue || '')}</span></div></div>`).join('') : '') +
+      upcoming.map(f => { const fs = (nm, cls) => { const i2 = clubIdxByName(nm); return i2 >= 0
+          ? `<a class="side ${cls}" href="#/club/${i2}">${mcrest(CLUBS[i2])}<span class="sn">${esc(nm)}</span></a>`
+          : `<span class="side ${cls}"><span class="sn">${esc(nm)}</span></span>`; };
+        return `<div class="match"><div class="mrow">${fs(f.t1, '')}<span class="vs">${esc(f.round)}</span>${fs(f.t2, 'away')}</div>
+      <div class="meta"><span>${fmtKick(f.start)}</span><span>${esc(f.venue || '')}</span></div></div>`; }).join('') : '') +
     (rows.length ? `<div class="kicker" style="margin-top:12px">The results wire · ${rows.length.toLocaleString()} rated matches</div>` +
       rows.slice(0, wireLimit).map(wireResultRow).join('') +
       (rows.length > wireLimit ? `<button class="chip solid" id="wiremore" style="margin-top:8px">Show more</button>` : '')
@@ -2310,13 +2395,14 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
 let routedOnce = false;
 function route() {
   const h = location.hash || '#/map';
   const parts = h.slice(2).split('/');
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active',
-    a.dataset.tab === (['state', 'region', 'club', 'player'].includes(parts[0]) ? 'map' : parts[0])));
+    a.dataset.tab === (['state', 'region', 'club', 'player'].includes(parts[0]) ? 'map'
+      : parts[0] === 'predict' ? 'matches' : parts[0])));
   view.scrollTop = 0;
   /* these views read ROSTERS synchronously; any view shows followed-player
      chips, so a user with player favorites also waits for the module */
@@ -2340,6 +2426,7 @@ function route() {
   else if (parts[0] === 'legal') screenLegal();
   else if (parts[0] === 'table') screenTable();
   else if (parts[0] === 'matches') screenMatches(parts[1]);
+  else if (parts[0] === 'predict') screenPredict(parts[1]);
   else if (parts[0] === 'wire') screenWire();
   else if (parts[0] === 'about') screenAbout();
   else if (parts[0] === 'state') screenState(parts[1]);

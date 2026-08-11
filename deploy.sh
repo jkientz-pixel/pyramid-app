@@ -8,8 +8,10 @@ cd "$(dirname "$0")"
 NEWV=$(python3 scripts/bump_version.py | tail -1 | awk '{print $NF}')
 
 # regenerate the static SEO surface from current data: league landing pages,
-# per-club pages (club/), and the full sitemap
+# per-club share cards (og/ — must run before club pages so they can point
+# og:image at the cards), per-club pages (club/), and the full sitemap
 python3 scripts/gen_seo_pages.py
+python3 scripts/gen_og_cards.py
 python3 scripts/gen_club_pages.py
 
 python3 scripts/preflight.py
@@ -34,12 +36,18 @@ cp -R app.html index.html 404.html npsl-rankings.html upsl-rankings.html \
       manifest.webmanifest sw.js robots.txt sitemap.xml _headers \
       js css crests fonts \
       icon-192.png icon-512.png apple-touch-icon.png og.png "$STAGE/"
+# per-club share cards (skipped gracefully when gen_og_cards had no Pillow)
+if [ -d og ]; then cp -R og "$STAGE/"; rm -f "$STAGE/og/.cards.json"; fi
 # local editor/backup droppings must not reach production
 find "$STAGE/js" "$STAGE/css" \( -name '*.bak' -o -name '*.tmp' \) -delete
 
-# only the data files app.js actually fetches
+# only the data files app.js actually fetches — match any 'data/...' string
+# literal, not just fetch( call sites: wire_asa/wire_npsl load via a local
+# grab() helper and silently 404'd in production when this grep was
+# fetch(-only (every fetch is wrapped in try/catch, so nothing surfaced)
 mkdir -p "$STAGE/data"
-for f in $(grep -ohE "fetch\('data/[a-z0-9_.-]+" js/app.js | sed "s/.*'//"); do
+for f in $(grep -ohE "'data/[a-z0-9_.-]+" js/app.js | sed "s/^'//" | sort -u); do
+  [ -f "$f" ] || { echo "MISSING data file referenced by app.js: $f" >&2; exit 1; }
   cp "$f" "$STAGE/data/"
 done
 

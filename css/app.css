@@ -310,6 +310,11 @@ details.how b{color:var(--ink)}
 .fa-card{display:block;background:var(--raise);border:1px solid var(--accent);border-radius:12px;padding:12px 14px;margin:12px 0 4px;text-decoration:none;color:var(--ink)}
 .fa-card b{color:var(--accent)}
 .fa-card span{display:block;color:var(--ink-dim);font-size:.8rem;margin-top:2px}
+/* map-screen Wire ticker: hydrated top story inside the fa-card */
+#wirehook span .mcrest{display:inline-block;vertical-align:-4px;width:16px;height:16px;margin:0 3px 0 1px}
+#wirehook span .mcrest.ini{display:inline-grid}
+#wirehook span .whc{color:var(--ink)}
+#wirehook span .whmore{color:var(--accent);font-style:normal;white-space:nowrap}
 .pricecard{border:1px solid var(--line);border-radius:14px;background:var(--raise);padding:14px 16px;margin:10px 0}
 .pricecard.paid{border-color:var(--accent)}
 .pricecard b{font-size:.95rem}
@@ -338,9 +343,9 @@ a.tierlg:hover{border-color:var(--accent)}
 .rankchart svg{width:100%;height:auto;display:block}
 .rankchart .ax{fill:var(--ink-dim);font-size:9px;font-family:-apple-system,"Segoe UI",Roboto,sans-serif}
 .btnrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.btnrow a.hdrlink{border:1px solid var(--line);border-radius:999px;padding:8px 14px;color:var(--ink);text-decoration:none;font-size:.78rem;background:var(--raise)}
+.btnrow a.hdrlink,.btnrow button.hdrlink{border:1px solid var(--line);border-radius:999px;padding:8px 14px;color:var(--ink);text-decoration:none;font-size:.78rem;background:var(--raise);font-family:inherit;cursor:pointer}
 .btnrow a.hdrlink.dim{color:var(--ink-dim)}
-.btnrow a.hdrlink:active{background:var(--accent);color:var(--ground);border-color:var(--accent)}
+.btnrow a.hdrlink:active,.btnrow button.hdrlink:active{background:var(--accent);color:var(--ground);border-color:var(--accent)}
 /* dark ink on amber: white on var(--accent) was 2.15:1, below WCAG AA */
 .predictbtn2{border:none;background:var(--accent);color:#16211B;border-radius:999px;padding:8px 16px;font:inherit;font-size:.78rem;font-weight:700;cursor:pointer;margin:6px 0}
 .pheadline{font-family:var(--font-disp);text-transform:uppercase;font-size:1.15rem;font-weight:700;color:var(--accent);margin:6px 0 2px}
