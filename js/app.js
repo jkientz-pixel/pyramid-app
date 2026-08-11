@@ -66,7 +66,7 @@ function reportLink(kind, what) {
 /* crest-content generation: bump when crest PIXELS change under the same
    filename (e.g. a strip_crest_bg.py run) — crest URLs are cached immutable
    and cache-first, so only a new ?cv= reaches returning browsers */
-const CRESTV = '4';
+const CRESTV = '5';
 function crestHtml(c) {
   /* a failed crest load must degrade to the initials chip, never the
      browser's broken-image glyph with overflowing alt text */
