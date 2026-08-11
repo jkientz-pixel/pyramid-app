@@ -435,14 +435,48 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     /* if the container had no layout size yet, fitBounds degenerates to
        max zoom at the bounds center (the Kansas bug) — re-fit next frame */
     requestAnimationFrame(() => { leafMap.invalidateSize(); fitFrame(); });
+    /* city-centroid pinning gives every club in a city the identical
+       coordinate, so stacked markers hide all but the top one (~850 clubs
+       nationally). Fan each stack into a golden-angle spiral in pixel
+       space: the best-ranked club keeps the true point, the rest spiral
+       out around it, and spacing widens as you zoom in. Render-time only —
+       stored coordinates are never touched. */
+    const fanIdx = new Map();
+    {
+      const stacks = new Map();
+      for (const c of pts) {
+        const k = c.la + ',' + c.lo;
+        const g = stacks.get(k);
+        if (g) g.push(c); else stacks.set(k, [c]);
+      }
+      for (const g of stacks.values()) {
+        if (g.length < 2) continue;
+        g.sort((a, b) => (a.r || 1e9) - (b.r || 1e9));
+        g.forEach((c, i) => fanIdx.set(c, i));
+      }
+    }
+    const GOLDEN = 2.39996;
+    const fanLatLng = (c) => {
+      const i = fanIdx.get(c);
+      if (!i) return [c.la, c.lo];
+      const z = leafMap.getZoom();
+      const spread = Math.max(4, Math.min(44, 6 + (z - 4) * 3));
+      const p = leafMap.project([c.la, c.lo], z);
+      const r = spread * Math.sqrt(i), a = i * GOLDEN;
+      const ll = leafMap.unproject(L.point(p.x + r * Math.cos(a), p.y + r * Math.sin(a)), z);
+      return [ll.lat, ll.lng];
+    };
+    const fanned = [];
     pts.forEach(c => {
       const lg = LEAGUES[c.g];
-      L.circleMarker([c.la, c.lo], {
+      const m = L.circleMarker(fanLatLng(c), {
         radius: 6, color: lg.color, weight: 2,
         fillColor: lg.color, fillOpacity: lg.hollow ? 0.15 : 0.75,
       }).addTo(leafMap).bindTooltip(c.n)
         .on('click', () => { location.hash = clubHref(CLUBS.indexOf(c)); });
+      if (fanIdx.get(c)) fanned.push([m, c]);
     });
+    leafMap.on('zoomend', () => fanned.forEach(([m, c]) => m.setLatLng(fanLatLng(c))));
     /* crest icons appear zoomed-in only, viewport-scoped and capped: 4k DOM
        image markers at national zoom would jank mobile for no visual gain */
     const crestLayer = L.layerGroup().addTo(leafMap);
@@ -455,7 +489,8 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
         if (n >= 250) break;
         if (!c.img || !b.contains([c.la, c.lo])) continue;
         n++;
-        L.marker([c.la, c.lo], {
+        /* refreshCrests reruns on zoomend, so fanned positions track zoom */
+        L.marker(fanLatLng(c), {
           icon: L.icon({ iconUrl: `${c.img}?cv=${CRESTV}`, iconSize: [26, 26], iconAnchor: [13, 13] }),
           keyboard: false,
         }).addTo(crestLayer).bindTooltip(c.n)
