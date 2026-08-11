@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260811a';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260811a';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260811b';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260811b';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260811a')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260811b')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260811a';
+const BUILDV = '20260811b';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -435,14 +435,48 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     /* if the container had no layout size yet, fitBounds degenerates to
        max zoom at the bounds center (the Kansas bug) — re-fit next frame */
     requestAnimationFrame(() => { leafMap.invalidateSize(); fitFrame(); });
+    /* city-centroid pinning gives every club in a city the identical
+       coordinate, so stacked markers hide all but the top one (~850 clubs
+       nationally). Fan each stack into a golden-angle spiral in pixel
+       space: the best-ranked club keeps the true point, the rest spiral
+       out around it, and spacing widens as you zoom in. Render-time only —
+       stored coordinates are never touched. */
+    const fanIdx = new Map();
+    {
+      const stacks = new Map();
+      for (const c of pts) {
+        const k = c.la + ',' + c.lo;
+        const g = stacks.get(k);
+        if (g) g.push(c); else stacks.set(k, [c]);
+      }
+      for (const g of stacks.values()) {
+        if (g.length < 2) continue;
+        g.sort((a, b) => (a.r || 1e9) - (b.r || 1e9));
+        g.forEach((c, i) => fanIdx.set(c, i));
+      }
+    }
+    const GOLDEN = 2.39996;
+    const fanLatLng = (c) => {
+      const i = fanIdx.get(c);
+      if (!i) return [c.la, c.lo];
+      const z = leafMap.getZoom();
+      const spread = Math.max(4, Math.min(44, 6 + (z - 4) * 3));
+      const p = leafMap.project([c.la, c.lo], z);
+      const r = spread * Math.sqrt(i), a = i * GOLDEN;
+      const ll = leafMap.unproject(L.point(p.x + r * Math.cos(a), p.y + r * Math.sin(a)), z);
+      return [ll.lat, ll.lng];
+    };
+    const fanned = [];
     pts.forEach(c => {
       const lg = LEAGUES[c.g];
-      L.circleMarker([c.la, c.lo], {
+      const m = L.circleMarker(fanLatLng(c), {
         radius: 6, color: lg.color, weight: 2,
         fillColor: lg.color, fillOpacity: lg.hollow ? 0.15 : 0.75,
       }).addTo(leafMap).bindTooltip(c.n)
         .on('click', () => { location.hash = clubHref(CLUBS.indexOf(c)); });
+      if (fanIdx.get(c)) fanned.push([m, c]);
     });
+    leafMap.on('zoomend', () => fanned.forEach(([m, c]) => m.setLatLng(fanLatLng(c))));
     /* crest icons appear zoomed-in only, viewport-scoped and capped: 4k DOM
        image markers at national zoom would jank mobile for no visual gain */
     const crestLayer = L.layerGroup().addTo(leafMap);
@@ -455,7 +489,8 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
         if (n >= 250) break;
         if (!c.img || !b.contains([c.la, c.lo])) continue;
         n++;
-        L.marker([c.la, c.lo], {
+        /* refreshCrests reruns on zoomend, so fanned positions track zoom */
+        L.marker(fanLatLng(c), {
           icon: L.icon({ iconUrl: `${c.img}?cv=${CRESTV}`, iconSize: [26, 26], iconAnchor: [13, 13] }),
           keyboard: false,
         }).addTo(crestLayer).bindTooltip(c.n)
@@ -853,7 +888,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260811a')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260811b')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -862,7 +897,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260811a'), grab('data/wire_asa.json?v=20260811a')]);
+    grab('data/wire_npsl.json?v=20260811b'), grab('data/wire_asa.json?v=20260811b')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -870,7 +905,7 @@ async function wireDb() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260811a')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260811b')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1045,7 +1080,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260811a')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260811b')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1319,35 +1354,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260811a')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260811b')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260811a')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260811b')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260811a')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260811b')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260811a')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260811b')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260811a')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260811b')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1727,7 +1762,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260811a')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260811b')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -2007,7 +2042,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260811a')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260811b')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
