@@ -26,7 +26,7 @@
 *{box-sizing:border-box}body{margin:0;background:var(--ground);color:var(--ink);font:17px/1.6 -apple-system,"Segoe UI",Roboto,sans-serif}
 .disp{font-family:"Barlow Condensed","Avenir Next Condensed","Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.02em}
 header{display:flex;justify-content:space-between;align-items:center;padding:22px clamp(20px,5vw,64px)}
-.mark{font-weight:700;font-size:1.4rem}
+.mark{font-weight:700;font-size:1.4rem;color:inherit;text-decoration:none}
 header a.cta{background:var(--ink);color:var(--ground);padding:10px 22px;border-radius:999px;text-decoration:none;font-size:.85rem;font-weight:600}
 .hero{display:grid;gap:48px;align-items:center;padding:24px clamp(20px,5vw,64px) 64px;max-width:1200px;margin:0 auto}
 @media(min-width:960px){.hero{grid-template-columns:1.1fr .9fr}}
@@ -63,7 +63,7 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
 </style>
 </head>
 <body>
-<header><span class="mark disp">Ranked XI</span><a class="cta" href="/app">Open the app</a></header>
+<header><a class="mark disp" href="/">Ranked XI</a><a class="cta" href="/app">Open the app</a></header>
 <main>
 <section class="hero">
   <div>
