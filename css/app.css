@@ -439,3 +439,18 @@ a.wirelink:hover .side{color:var(--accent)}
 .leafmap .leaflet-marker-icon{filter:drop-shadow(0 0 3px rgba(0,0,0,.85)) drop-shadow(0 1px 2px rgba(0,0,0,.6))}
 .leafmap.leaflet-container .leaflet-control-attribution{background:rgba(12,16,19,.7);color:#9aa7b0}
 .leafmap.leaflet-container .leaflet-control-attribution a{color:#c7d2da}
+
+/* inline data-correction form (community fixes) */
+.fixform { margin: 14px 0 4px }
+.fixform summary { cursor: pointer; list-style: none }
+.fixform summary::-webkit-details-marker { display: none }
+.fixform form { display: grid; gap: 8px; max-width: 26em; margin-top: 10px }
+.fixform textarea, .fixform input {
+  background: var(--raise); border: 1px solid var(--line);
+  border-radius: 8px; color: inherit; font: inherit; padding: 8px 10px }
+.fixform textarea:focus, .fixform input:focus { outline: 2px solid var(--accent); border-color: transparent }
+.fixform button {
+  justify-self: start; background: var(--accent); color: #fff; border: 0; border-radius: 8px;
+  padding: 8px 16px; font: inherit; font-weight: 700; cursor: pointer }
+.fixform button:hover { filter: brightness(1.1) }
+.fixform button:disabled { opacity: .6; cursor: default }
