@@ -110,6 +110,29 @@ test('tab bar navigates between sections', async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
+test('appbar wordmark is a home link and resets the map framing', async ({ page }) => {
+  const errors = trackErrors(page);
+  await gotoRoute(page, '#/tiers');
+  await page.click('.appbar .brand');
+  await viewRendered(page);
+  expect(page.url()).toContain('#/map');
+  const svg = page.locator('svg.usmap');
+  await expect(svg).toBeVisible();
+  const homeW = parseFloat((await svg.getAttribute('viewBox')).split(' ')[2]);
+  // already on the map: zoom in, then the wordmark restores the home framing
+  await page.click('.mapctl [data-z="in"]');
+  await page.waitForFunction(w => {
+    const vb = document.querySelector('svg.usmap')?.getAttribute('viewBox');
+    return vb && parseFloat(vb.split(' ')[2]) < w - 1;
+  }, homeW);
+  await page.click('.appbar .brand');
+  await page.waitForFunction(w => {
+    const vb = document.querySelector('svg.usmap')?.getAttribute('viewBox');
+    return vb && Math.abs(parseFloat(vb.split(' ')[2]) - w) < 1;
+  }, homeW);
+  expect(errors).toEqual([]);
+});
+
 /* Static pages outside the SPA shell. */
 for (const path of ['/index.html', '/npsl-rankings.html', '/upsl-rankings.html']) {
   test(`static page ${path} loads without errors`, async ({ page }) => {
