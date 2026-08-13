@@ -1,26 +1,28 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260813i';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260813i';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260813j';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260813j';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260813i')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260813j')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260813i';
+const BUILDV = '20260813j';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
 const view = document.getElementById('view');
 const crumb = document.getElementById('crumb');
 const PROV_NAME = { QC:'Quebec', ON:'Ontario', BC:'British Columbia' };
-const REGION_LABEL = { northwest:'Northwest', southwest:'Southwest', midwest:'Midwest', south:'South', southeast:'Southeast', northeast:'Northeast' };
+const REGION_LABEL = { region1:'Region I · Northeast', region2:'Region II · Midwest', region3:'Region III · South', region4:'Region IV · West' };
+/* pre-USASA region slugs from shared links keep resolving */
+const LEGACY_REGION = { northeast:'region1', midwest:'region2', south:'region3', southeast:'region3', southwest:'region4', northwest:'region4' };
 const STATE_NAME = { AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',DC:'Washington DC',FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming' };
 
 let sex = 'm';
@@ -601,7 +603,7 @@ function wireLevelChips() {
    sponsor -> placeholder, so local sponsors show only inside their region
    and national coverage fills everywhere else.
    Fill: SPONSORS.map.national = {name, url, img}
-         SPONSORS.region.regions.southwest = {name, url, img} */
+         SPONSORS.region.regions.region4 = {name, url, img} */
 const SPONSORS = {
   map: { national: null, regions: {} },        // national map — every session starts here
   tiers: { national: null, regions: {} },      // the pyramid
@@ -686,6 +688,7 @@ function nearScope(scoped, all) {
 }
 
 function screenRegion(key) {
+  if (LEGACY_REGION[key]) { location.hash = '#/region/' + LEGACY_REGION[key]; return; }
   const states = REGIONS[key];
   if (!states) return screenMap();
   crumb.textContent = REGION_LABEL[key];
@@ -891,7 +894,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260813i')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260813j')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -900,7 +903,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260813i'), grab('data/wire_asa.json?v=20260813i')]);
+    grab('data/wire_npsl.json?v=20260813j'), grab('data/wire_asa.json?v=20260813j')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -908,7 +911,7 @@ async function wireDb() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260813i')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260813j')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1083,7 +1086,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260813i')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260813j')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1356,35 +1359,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260813i')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260813j')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260813i')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260813j')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260813i')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260813j')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260813i')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260813j')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260813i')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260813j')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1764,7 +1767,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260813i')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260813j')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -1947,7 +1950,7 @@ function screenAdvertise() {
       <a class="claim" href="${mail(subj)}">Ask about this placement</a></div>`).join('')}
     <div class="kicker" style="margin-top:16px">Regional — your market only</div>
     <div class="pricecard paid"><b>Regional sponsorship · $79/mo per region</b>
-      <p>Your creative on every region and state screen inside <b>one region</b> — Northwest, Southwest, Midwest, South, Southeast, or Northeast. A San Diego shop sponsors the Southwest; fans in Ohio never see it, and that space stays sellable to someone in Ohio. Local rates for local reach; the national slots above stay independent.</p>
+      <p>Your creative on every region and state screen inside <b>one USASA region</b> — Region I (Northeast), Region II (Midwest), Region III (South), or Region IV (West). A San Diego shop sponsors Region IV; fans in Ohio never see it, and that space stays sellable to someone in Ohio. Local rates for local reach; the national slots above stay independent.</p>
       <a class="claim" href="${mail('Regional sponsorship')}">Claim a region</a></div>
     <div class="pricecard"><b>Tier sponsorship · custom</b>
       <p>Exclusive "presented by" on a whole tier row of the Pyramid — one sponsor per tier, priced by tier. Leagues: sponsoring your own tier row comes with your data layer.</p>
@@ -2044,7 +2047,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260813i')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260813j')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
