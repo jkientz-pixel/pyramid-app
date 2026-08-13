@@ -33,7 +33,7 @@ cp -R app.html index.html 404.html npsl-rankings.html upsl-rankings.html \
       methodology.html privacy.html club .well-known \
       manifest.webmanifest sw.js robots.txt sitemap.xml _headers \
       js css crests fonts \
-      icon-192.png icon-512.png apple-touch-icon.png og.png "$STAGE/"
+      icon-192.png icon-512.png apple-touch-icon.png og.png google-play-badge.png "$STAGE/"
 # local editor/backup droppings must not reach production
 find "$STAGE/js" "$STAGE/css" \( -name '*.bak' -o -name '*.tmp' \) -delete
 
