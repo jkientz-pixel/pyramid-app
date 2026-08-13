@@ -36,6 +36,11 @@ h1{font-size:clamp(2.6rem,6vw,5rem);line-height:.95;margin:.2em 0}
 .cta-row a{padding:14px 26px;border-radius:12px;text-decoration:none;font-weight:700}
 .cta-row .primary{background:var(--accent);color:#1D1509}
 .cta-row .ghost{border:1px solid var(--line);color:var(--ink);background:var(--raise)}
+.playbar{background:var(--ink);color:var(--ground);text-align:center;padding:11px clamp(20px,5vw,64px);font-size:.92rem}
+.playbar b{color:#F2C078}
+.playbar a{color:#F2C078;font-weight:700;text-decoration:underline;white-space:nowrap}
+.playbadge{display:inline-flex;align-items:center}
+.playbadge img{display:block;border-radius:8px}
 .stats{display:flex;gap:28px;flex-wrap:wrap;color:var(--dim);font-size:.9rem}
 .stats b{display:block;color:var(--ink);font-size:1.5rem;font-variant-numeric:tabular-nums}
 .phone-wrap{display:flex;justify-content:center}
@@ -63,6 +68,7 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
 </style>
 </head>
 <body>
+<aside class="playbar"><b>Ranked XI is now on Google Play.</b> The full US soccer pyramid — <span data-stat="clubs">3,965</span> clubs, ratings, and matchups — on Android now. <a href="https://play.google.com/store/apps/details?id=com.rankedxi.app">Get it on Google Play</a></aside>
 <header><a class="mark disp" href="/">Ranked XI</a><a class="cta" href="/app">Open the app</a></header>
 <main>
 <section class="hero">
@@ -74,6 +80,7 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
       <a class="ghost" href="/app#/table">See the national table</a>
       <a class="ghost" href="#join">Get launch updates</a>
       <a class="ghost" href="#" id="installbtn" hidden>Install the app</a>
+      <a class="playbadge" href="https://play.google.com/store/apps/details?id=com.rankedxi.app"><img src="/google-play-badge.png" alt="Get it on Google Play" width="134" height="52" loading="eager"></a>
     </div>
     <p id="ioshowto" hidden style="margin:-14px 0 26px;font-size:.85rem;color:var(--dim);border:1px solid var(--line);border-radius:12px;padding:10px 14px;max-width:520px">On iPhone or iPad: open this page in <b>Safari</b>, tap the <b>Share</b> button, then <b>"Add to Home Screen."</b> Ranked XI installs with its own icon, opens full-screen, and works offline — no app store needed.</p>
     <div class="stats">
