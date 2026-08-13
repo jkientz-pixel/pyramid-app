@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260813k';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260813k';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260813l';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260813l';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260813k')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260813l')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260813k';
+const BUILDV = '20260813l';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -62,9 +62,32 @@ const visible = clubs => clubs.filter(c => leagueFilter.has(c.g));
 function reportLink(kind, what) {
   const subj = encodeURIComponent(`RankedXI ${kind}: ${what}`);
   const body = encodeURIComponent(`Page: ${location.hash}\nWhat's wrong / your suggestion:\n\n`);
-  return `<a class="reportlink" href="mailto:hello@rankedxi.com?subject=${subj}&body=${body}">&#9873; See an error? Send us a note</a>
+  return `<details class="fixform"><summary class="reportlink">&#9873; See an error? Suggest a fix</summary>
+    <form onsubmit="return submitCorrection(event, this)" data-club="${esc(what)}">
+      <textarea name="message" rows="3" maxlength="1000" required minlength="10"
+        placeholder="What's wrong — wrong city, coach, league, crest? A sentence is plenty."></textarea>
+      <input name="contact" maxlength="120" placeholder="Email or @handle (optional, for follow-up)">
+      <input name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+      <button type="submit">Send it in</button>
+      <span class="note">or <a href="mailto:hello@rankedxi.com?subject=${subj}&body=${body}">email us</a></span>
+    </form></details>
     <a class="reportlink" href="#/legal">Corrections &amp; removal requests</a>`;
 }
+window.submitCorrection = (ev, f) => {
+  ev.preventDefault();
+  const btn = f.querySelector('button');
+  btn.disabled = true; btn.textContent = 'Sending\u2026';
+  fetch('/api/correction', {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ club: f.dataset.club, page: location.hash,
+      message: f.message.value, contact: f.contact.value, website: f.website.value })
+  }).then(r => r.json()).then(d => {
+    f.outerHTML = d.ok
+      ? '<p class="note">&#10003; Got it — thank you. Fixes usually land within a few days.</p>'
+      : `<p class="note">${d.error || 'Something went wrong — try the email link instead.'}</p>`;
+  }).catch(() => { btn.disabled = false; btn.textContent = 'Send it in'; });
+  return false;
+};
 /* crest-content generation: bump when crest PIXELS change under the same
    filename (e.g. a strip_crest_bg.py run) — crest URLs are cached immutable
    and cache-first, so only a new ?cv= reaches returning browsers */
@@ -894,7 +917,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260813k')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260813l')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -903,7 +926,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260813k'), grab('data/wire_asa.json?v=20260813k')]);
+    grab('data/wire_npsl.json?v=20260813l'), grab('data/wire_asa.json?v=20260813l')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -911,7 +934,7 @@ async function wireDb() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260813k')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260813l')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1086,7 +1109,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260813k')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260813l')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1359,35 +1382,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260813k')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260813l')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260813k')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260813l')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260813k')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260813l')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260813k')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260813l')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260813k')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260813l')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1767,7 +1790,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260813k')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260813l')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -2047,7 +2070,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260813k')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260813l')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
