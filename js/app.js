@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260813g';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260813g';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260813h';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260813h';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260813g')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260813h')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260813g';
+const BUILDV = '20260813h';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -66,7 +66,7 @@ function reportLink(kind, what) {
 /* crest-content generation: bump when crest PIXELS change under the same
    filename (e.g. a strip_crest_bg.py run) — crest URLs are cached immutable
    and cache-first, so only a new ?cv= reaches returning browsers */
-const CRESTV = '5';
+const CRESTV = '6';
 function crestHtml(c) {
   /* a failed crest load must degrade to the initials chip, never the
      browser's broken-image glyph with overflowing alt text */
@@ -888,7 +888,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260813g')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260813h')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -897,7 +897,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260813g'), grab('data/wire_asa.json?v=20260813g')]);
+    grab('data/wire_npsl.json?v=20260813h'), grab('data/wire_asa.json?v=20260813h')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -905,7 +905,7 @@ async function wireDb() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260813g')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260813h')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1080,7 +1080,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260813g')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260813h')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1271,16 +1271,15 @@ function squadFor(c) {
         pvr: Math.round((rp.st.g * 4 + rp.st.a * 3 + apps * 0.6 + (rp.st.sv || 0) * 0.06) * (c.r / 1800) * 10) / 10,
         form: null };
     }
-    return { ...st, num: rp.num || i + 1, name: rp.name, pos: rp.pos,
+    return { ...st, num: rp.num || '', name: rp.name, pos: rp.pos,
       nat: rp.nat ? rp.nat.toUpperCase() : null, wiki: rp.wiki, real: true, rs, age: null };
   });
 }
 function staffFor(c) {
+  /* real coaches only — an invented name next to a real roster reads as a
+     data error, not a demo (first Reddit feedback wave, Aug 2026) */
   const real = COACHES[rosterKey(c)];
-  if (real) return [{ tag: 'HC', name: real.name, role: real.role, age: '' }];
-  const g = genStaff(c);
-  return [{ tag: 'HC', name: g.hc.name, role: 'Head Coach', age: g.hc.age },
-          { tag: 'AC', name: g.ac.name, role: 'Assistant', age: g.ac.age }];
+  return real ? [{ tag: 'HC', name: real.name, role: real.role, age: '' }] : [];
 }
 const favs = () => { try {
   const raw = localStorage.getItem('pyr-favs');
@@ -1354,35 +1353,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260813g')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260813h')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260813g')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260813h')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260813g')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260813h')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260813g')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260813h')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260813g')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260813h')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1472,7 +1471,7 @@ async function screenClub(ref) {
     ${c.re ? `<p class="note" style="margin:2px 0 10px;font-size:.78rem">Results-only Elo: <b>${c.re}</b> · experimental — computed from every 2026 match and published for transparency; the headline rating and ranks above stay with the official league table.</p>` : ''}
     ${c.r ? `<div class="kicker">Rivalry Radar · nearest rated rivals</div>
     <p class="note" style="margin:2px 0 8px">Who's nearby, and how the model thinks it would go — a discovery feature, not a schedule. Verified fixtures appear when this league's feed connects.</p>
-    ${(opps.length > 6 ? opps.slice(5, 7) : opps.slice(0, 2)).map((o, i) => matchCard(i === 0 ? c : o, i === 0 ? o : c, `${milesApart(c, o)} MI APART`)).join('') || '<p class="note">No rated opponents in the dataset yet.</p>'}
+    ${opps.slice(0, 2).map((o, i) => matchCard(i === 0 ? c : o, i === 0 ? o : c, `${milesApart(c, o)} MI APART`)).join('') || '<p class="note">No rated opponents in the dataset yet.</p>'}
     <details class="how"><summary>How is this club's rating made?</summary><p>${c.rr === 1
       ? "From real results: Elo over this season's matches — everyone starts at 1500, winners take points from losers, weighted by upset size and goal margin, with a backtested tier-tuned home edge (+30 amateur, +65 pro)."
       : c.rr === 2
@@ -1631,7 +1630,7 @@ async function screenPlayer(ci, pi) {
     <div class="clubhead">
       <img class="pphoto" src="${prof.photo || AVATAR}" alt="${esc(pl.name)}" onerror="this.src='${AVATAR}'">
       <div><h2 class="disp" style="margin:0">${esc(pl.name)}</h2>
-      <span class="sub">#${pl.num} · ${pl.pos}${pl.real ? (pl.nat ? ' · ' + pl.nat : '') : ' · ' + pl.age + ' yrs'} · ${esc(c.n)}</span></div>
+      <span class="sub">${pl.num ? '#' + pl.num + ' · ' : ''}${pl.pos}${pl.real ? (pl.nat ? ' · ' + pl.nat : '') : ' · ' + pl.age + ' yrs'} · ${esc(c.n)}</span></div>
     </div>
     ${verifyBadge(c)}
     ${prof.claimed ? '<span class="badge v">&#10003; Claimed profile</span> ' : ''}${prof.fa ? '<span class="badge c">Free agent &middot; available</span>' : ''}
@@ -1762,7 +1761,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260813g')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260813h')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -2042,7 +2041,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260813g')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260813h')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
