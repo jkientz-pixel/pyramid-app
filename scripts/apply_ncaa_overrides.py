@@ -6,7 +6,7 @@ probe-verified 200 against images/logos/schools/bgl/<slug>.svg on 2026-07-29.
 Monroe University (NY) and Lackawanna College have no ncaa.com logo. Same
 download+rasterize path as fetch_crests_ncaa.py."""
 from _datajs import load_clubs, write_clubs, ROOT
-from fetch_crests_ncaa import slugify, LOGO, UA
+from fetch_crests_ncaa import slugify, LOGO, UA, fetch_svg, rasterize_svg
 import os, time, urllib.request
 
 OVERRIDES = {
@@ -95,6 +95,62 @@ OVERRIDES = {
     'Westminster University Griffins': 'westminster-ut',
     'Wilmington University Wildcats': 'wilmington-de',
     'University of Wisconsin–Parkside Rangers': 'wis-parkside',
+    # Aug 2026 flagship-bug repair: schools the strict matcher now abstains
+    # on (the index abbreviates them past recognition) or was mis-claiming.
+    # Slugs read from the cached schools index; SIUE/TAMIU/Corpus sit under
+    # non-obvious slugs there. A&M-Texarkana has no ncaa.com logo.
+    'Milwaukee School of Engineering Raiders': 'msoe',
+    'Boston University Terriers': 'boston-u',
+    'United States Naval Academy Midshipmen': 'navy',
+    'United States Military Academy Black Knights': 'army',
+    'Michigan Technological University Huskies': 'michigan-tech',
+    'Illinois Institute of Technology Scarlet Hawks': 'iit',
+    'Illinois College Blueboys and Lady Blues': 'illinois-col',
+    'Florida Institute of Technology Panthers': 'florida-tech',
+    'Rhode Island College Anchormen': 'rhode-island-col',
+    'Connecticut College Camels': 'connecticut-col',
+    'Washington College Shoremen': 'washington-col',
+    'Georgia College & State University Bobcats': 'georgia-college',
+    'Colorado State University–Pueblo ThunderWolves': 'colorado-st-pueblo',
+    'Southern Illinois University Edwardsville Cougars': 'siu-edwardsville',
+    'Southern Illinois University Carbondale Salukis': 'southern-ill',
+    'Texas A&M International University Dustdevils': 'tex-am-intl',
+    'Texas A&M University–Corpus Christi Islanders': 'am-corpus-chris',
+    'Texas A&M University Aggies': 'texas-am',
+    'University of Illinois Urbana-Champaign Fighting Illini': 'illinois',
+    'University of Nevada, Reno Wolf Pack': 'nevada',
+    'Texas Southern University Tigers': 'texas-southern',
+    'Saint Francis University Red Flash': 'st-francis-pa',
+    'Texas State University Bobcats': 'texas-st',
+    "St. Edward's University Hilltoppers": 'st-edwards',
+    'East Texas A&M University Lions': 'tex-am-commerce',
+    'Southern New Hampshire University Penmen': 'southern-nh',
+    'Black Hills State University Yellow Jackets': 'black-hills-st',
+    'Metropolitan State University of Denver Roadrunners': 'metro-st',
+    'Colorado State University Rams': 'colorado-st',
+    "St. Mary's College of Maryland Seahawks": 'st-marys-md',
+    'Dickinson College Red Devils': 'dickinson',
+    'Pennsylvania State University, Abington Nittany Lions': 'penn-st-abington',
+    'Pennsylvania State University, Altoona Lions': 'penn-st-altoona',
+    'Pennsylvania State University, Behrend Lions': 'penn-st-behrend',
+    'Pennsylvania State University, Berks College Nittany Lions': 'penn-st-berks',
+    'Pennsylvania State University, Harrisburg Lions': 'penn-st-harrisburg',
+    'The Pennsylvania State University Nittany Lions': 'penn-st',
+    'University of North Carolina at Charlotte 49ers': 'charlotte',
+    'University of North Carolina at Asheville Bulldogs': 'unc-asheville',
+    'University of North Carolina Wilmington Seahawks': 'unc-wilmington',
+    'University of North Carolina at Wilmington Seahawks': 'unc-wilmington',
+    'University of North Carolina at Greensboro Spartans': 'unc-greensboro',
+    'University of North Carolina at Pembroke Braves': 'unc-pembroke',
+    'University of California, San Diego Tritons': 'uc-san-diego',
+    'Georgia Southwestern State University Hurricanes': 'ga-southwestern',
+    'The Citadel, The Military College of South Carolina Bulldogs': 'citadel',
+    'University of South Carolina Beaufort Sand Sharks': 'usc-beaufort',
+    'San Francisco State University Gators': 'san-fran-st',
+    'New England College Pilgrims': 'new-england-col',
+    'Western New England University Golden Bears': 'western-new-eng',
+    'Virginia Polytechnic Institute and State University Hokies': 'virginia-tech',
+    'Virginia State University Trojans': 'virginia-st',
 }
 
 def main():
@@ -108,26 +164,16 @@ def main():
         b = pw.chromium.launch()
         page = b.new_page(viewport={'width': 160, 'height': 160})
         for c in clubs:
-            if c['g'] not in ('ncaa1', 'ncaa2') or c.get('img'):
+            if c['g'] not in ('ncaa1', 'ncaa2', 'ncaa3', 'ncaa1w', 'ncaa2w') or c.get('img'):
                 continue
             slug = OVERRIDES.get(c['n'])
             if not slug:
                 print(f"  - no override: {c['n']}"); miss += 1; continue
             unused.pop(c['n'], None)
-            svg = os.path.join(svgdir, slug + '.svg')
             try:
-                if not os.path.exists(svg):
-                    req = urllib.request.Request(LOGO.format(slug=slug), headers=UA)
-                    data = urllib.request.urlopen(req, timeout=30).read()
-                    if b'<svg' not in data[:600]: raise Exception('not svg')
-                    open(svg, 'wb').write(data)
-                    time.sleep(0.3)
                 fn = f"crests/{c['g']}-{slugify(c['n'])}.png"
                 dest = os.path.join(ROOT, fn)
-                page.set_content(f'<body style="margin:0"><img src="file://{svg}" '
-                                 'style="width:128px;height:128px;object-fit:contain"></body>')
-                page.locator('img').screenshot(path=dest, omit_background=True)
-                assert os.path.getsize(dest) > 500
+                rasterize_svg(page, fetch_svg(slug, svgdir), dest)
                 c['img'] = fn
                 got += 1
                 print(f"  + {c['n']} <- {slug}.svg")

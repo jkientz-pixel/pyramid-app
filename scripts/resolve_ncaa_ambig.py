@@ -14,7 +14,7 @@ never first-of-equals; unresolved ties stay crestless rather than risk the
 wrong school's crest (the main sweep pinned SUNY Brockport to suny-morrisville
 on token overlap; only a 403 kept the wrong crest out).
 Idempotent: only fills clubs with no img."""
-from fetch_crests_ncaa import crawl_index, toks, slugify, LOGO, UA, deacc
+from fetch_crests_ncaa import crawl_index, toks, slugify, LOGO, UA, deacc, fetch_svg, rasterize_svg
 from _datajs import load_clubs, write_clubs, ROOT
 import os, re, sys, time, urllib.request
 
@@ -49,7 +49,10 @@ def score(club, school):
     ct, stt = toks(club['n']), school['_toks']
     if not stt: return None
     ov = len(stt & ct)
-    if ov == 0 or ov < len(stt) - 1: return None
+    if ov < len(stt): return None           # school name fully inside club name
+    if ov < 2 and len(ct) > 2: return None  # a 1-token school may not claim a
+    # long club name — that's how SNHU wore New Hampshire's crest and FDU
+    # wore Dickinson College's (Aug 2026)
     hint = slug_state(school['slug'], school['name'])
     state = 0 if hint is None else (1 if hint == club.get('st') else -1)
     ckind = {'college', 'university'} & set(re.findall(r'[a-z]+', deacc(club['n']).lower()))
@@ -64,8 +67,10 @@ def main():
     for s in schools:
         s['_toks'] = toks(s['name'])
     clubs = load_clubs()
+    from fetch_crests_ncaa import NO_LOGO
     todo = [c for c in clubs
-            if c['g'] in ('ncaa1', 'ncaa2', 'ncaa3', 'ncaa1w', 'ncaa2w') and not c.get('img')]
+            if c['g'] in ('ncaa1', 'ncaa2', 'ncaa3', 'ncaa1w', 'ncaa2w')
+            and not c.get('img') and c['n'] not in NO_LOGO]
     print(f'{len(todo)} college clubs still crestless')
     got = skip = 0
     svgdir = os.path.join(ROOT, 'crests', '_svg_tmp')
@@ -82,20 +87,22 @@ def main():
                     f" ({scored[0][1]['slug']}/{scored[1][1]['slug']})" if len(scored) > 1 else ''))
                 continue
             m = scored[0][1]
-            svg = os.path.join(svgdir, m['slug'] + '.svg')
+            # leftover-token guard (mirrors best_school): if an unclaimed club
+            # token near-completes a DIFFERENT index school, the club is
+            # probably that school under an abbreviated name — leave it for an
+            # explicit override rather than hand it the flagship's crest
+            leftover = toks(c['n']) - m['_toks']
+            rival = next((s2 for s2 in schools if s2 is not m and s2['_toks']
+                          and s2['_toks'] & leftover
+                          and len(s2['_toks'] & toks(c['n'])) >= len(s2['_toks']) - 1), None)
+            if rival:
+                skip += 1
+                print(f"  - {c['n']}: leftover rival ({m['slug']}/{rival['slug']})")
+                continue
             try:
-                if not os.path.exists(svg):
-                    req = urllib.request.Request(LOGO.format(slug=m['slug']), headers=UA)
-                    data = urllib.request.urlopen(req, timeout=30).read()
-                    if b'<svg' not in data[:600]: raise Exception('not svg')
-                    open(svg, 'wb').write(data)
-                    time.sleep(0.4)
                 fn = f"crests/{c['g']}-{slugify(c['n'])}.png"
                 dest = os.path.join(ROOT, fn)
-                page.set_content(f'<body style="margin:0"><img src="file://{svg}" '
-                                 'style="width:128px;height:128px;object-fit:contain"></body>')
-                page.locator('img').screenshot(path=dest, omit_background=True)
-                assert os.path.getsize(dest) > 500
+                rasterize_svg(page, fetch_svg(m['slug'], svgdir), dest)
             except Exception as e:
                 skip += 1
                 print(f"  - {c['n']}: fetch/raster failed ({m['slug']}: {e})")
