@@ -183,7 +183,10 @@ function wireMap(scopeStates, mapClubs, frameClubs) {
   const homeVB = svg.getAttribute('viewBox').split(' ').map(Number);
   const getVB = () => svg.getAttribute('viewBox').split(' ').map(Number);
   function rescalePins(vbW) {
-    const f = Math.max(0.12, vbW / 980);
+    /* low floor: pins hold a near-constant screen size while zooming, instead
+       of ballooning past ~8x and re-burying dense metros (Reddit launch
+       feedback: "can't zoom in far enough to see all the clubs") */
+    const f = Math.max(0.03, vbW / 980);
     svg.querySelectorAll('circle.pin').forEach(c2 => c2.setAttribute('r', (+c2.dataset.r * f).toFixed(2)));
     svg.querySelectorAll('image.pin').forEach(im => {
       const sz = 22 * f;
@@ -260,7 +263,7 @@ function wireMap(scopeStates, mapClubs, frameClubs) {
       if (scopeStates && w >= homeVB[2] - 0.5) { exitToNational(); return; }
       animate ? animVB(homeVB) : setVB(homeVB); return;
     }
-    if (nw < homeVB[2] / 24) return;
+    if (nw < homeVB[2] / 64) return;
     const r = svg.getBoundingClientRect();
     const fx = cx == null ? 0.5 : (cx - r.left) / r.width;
     const fy = cy == null ? 0.5 : (cy - r.top) / r.height;
@@ -314,7 +317,7 @@ function wireMap(scopeStates, mapClubs, frameClubs) {
         }
         scale = homeVB[2] / gest.vb[2];
       }
-      if (nw < homeVB[2] / 24) scale = (homeVB[2] / 24) / gest.vb[2];
+      if (nw < homeVB[2] / 64) scale = (homeVB[2] / 64) / gest.vb[2];
       nw = gest.vb[2] * scale;
       const nh = gest.vb[3] * scale;
       /* anchor the map spot that was under the initial midpoint to the CURRENT
