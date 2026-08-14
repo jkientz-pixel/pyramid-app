@@ -21,9 +21,9 @@ PAGES = [
 ]
 
 for g, fname, title, desc in PAGES:
-    pool = sorted([c for c in clubs if c['g'] == g and c.get('r')], key=lambda c: -c['r'])
+    pool = sorted([c for c in clubs if c['g'] == g and c.get('r')], key=lambda c: (0 if c.get('rr') else 1, -c['r']))
     rows = ''.join(
-        f"<tr><td>{i+1}</td><td>{html.escape(c['n'])}</td><td>{html.escape(c.get('st',''))}</td><td>{c['r']}</td></tr>"
+        f"<tr><td>{i + 1 if c.get('rr') else '—'}</td><td>{html.escape(c['n'])}</td><td>{html.escape(c.get('st',''))}</td><td>{c['r']}</td></tr>"
         for i, c in enumerate(pool[:100]))
     src_note = ('Ratings from real division standings (points + goal difference), updated as tables move.'
                 if g == 'upsl' else
