@@ -19,8 +19,13 @@ UA = {'User-Agent': 'RankXI/0.1 (jkientz@gmail.com; results wire)'}
 LEAGUES = {'mls': ('mls', '2026'), 'uslc': ('uslc', '2026'), 'usl1': ('usl1', '2026'),
            'mnp': ('mlsnp', '2026'), 'nwsl': ('nwsl', '2026'), 'uslw': ('usls', '2025-26')}
 # band center each league's Elo is anchored to (display r = elo - 1500 + anchor).
-# Values are the pre-switch league means, so the pyramid's tier bands carry over.
-ANCHOR = {'mls': 1886, 'uslc': 1763, 'usl1': 1709, 'mnp': 1662, 'nwsl': 1886, 'uslw': 1818}
+# Men's cup-anchored leagues use the measured Open Cup offsets (mls_mean 1886 +
+# offset from data/opencup_offsets.json) — these previously held stale
+# pre-recalibration means (uslc 1763 / usl1 1709 / mnp 1662), which re-inflated
+# the bands every refresh. recalibrate2.py re-centers precisely afterward;
+# keeping these on-target just means the site is never wrong in between.
+# NWSL/USLS are outside the cup calibration and keep their display bands.
+ANCHOR = {'mls': 1886, 'uslc': 1692, 'usl1': 1597, 'mnp': 1524, 'nwsl': 1886, 'uslw': 1818}
 MIN_GAMES = 3
 
 def get(path):
