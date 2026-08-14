@@ -87,7 +87,7 @@ print('  rosters.js OK')
 CB_FILES = ['app.html', 'index.html', 'js/app.js', 'sw.js', 'js/myxi.js',
             'js/account.js', 'js/claim.js', 'privacy.html', 'methodology.html', 'shots.html',
             'radar.html', 'player-simulator.html', '404.html',
-            'npsl-rankings.html', 'upsl-rankings.html']
+            'npsl-rankings.html', 'upsl-rankings.html', 'data.html']
 _cb_literal = cachebust.check([ROOT / f for f in CB_FILES])
 for b in _cb_literal:
     fail.append(f'literal cache-bust token in source (deploy.sh stamps it): {b}')
@@ -392,7 +392,7 @@ try:
     top_pages = [f for f in ('index.html', 'app.html', 'methodology.html', 'privacy.html',
                              'about.html', 'faq.html', 'terms.html', 'us-soccer-pyramid.html',
                              'upsl-rankings.html', 'npsl-rankings.html', 'shots.html',
-                             'radar.html', 'player-simulator.html') if (ROOT / f).exists()]
+                             'radar.html', 'player-simulator.html', 'data.html') if (ROOT / f).exists()]
 
     def _pages():
         for f in top_pages:

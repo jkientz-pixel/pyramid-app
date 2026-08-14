@@ -789,7 +789,9 @@ STATIC_URLS = [
     # can't see, so these static pages are their only search surface. They were
     # hand-added to sitemap.xml once and silently dropped by every subsequent
     # deploy, because this list is what regenerates it.
-    f'{SITE}/player-simulator', f'{SITE}/shots', f'{SITE}/radar']
+    f'{SITE}/player-simulator', f'{SITE}/shots', f'{SITE}/radar',
+    # open-data export landing page; the CSV/JSON files it links live in export/
+    f'{SITE}/data']
 
 CLUB_CHUNK = 2000       # well under the 50k/50MB limit, small enough to diff
 
