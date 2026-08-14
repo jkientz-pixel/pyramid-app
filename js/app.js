@@ -144,13 +144,19 @@ function leagueChips() {
   return html + `</div>`;
 }
 
+/* ranking comparator: clubs rated on real data (rr set) always sort above
+   seed/illustrative ratings (no rr) — a no-results club sitting at the 1500
+   seed must never outrank sides rated on real games (USL2 report, Aug 2026).
+   Seed rows keep their rating, dimmed, and render without a rank number. */
+const eloRank = (a, b) => ((b.rr ? 1 : 0) - (a.rr ? 1 : 0)) || (b.r - a.r);
+const rankNo = (c, i) => c.rr ? i + 1 : undefined;
 function clubRow(c, rank) {
   const idx = CLUBS.indexOf(c);
   return `<li><a href="${clubHref(idx)}">` +
     (rank !== undefined ? `<span class="rk">${rank}</span>` : '') +
     crestHtml(c) +
     `<span class="cl-name"><b>${esc(c.n)}</b><span>${LEAGUES[c.g].label} · ${c.st}</span></span>` +
-    (c.r ? `<span class="cl-rt">${c.r}</span>` : '<span class="cl-rt" style="color:var(--ink-dim)">—</span>') +
+    (c.r ? `<span class="cl-rt"${c.rr ? '' : ' style="color:var(--ink-dim)"'}>${c.r}</span>` : '<span class="cl-rt" style="color:var(--ink-dim)">—</span>') +
     `</a></li>`;
 }
 
@@ -716,7 +722,7 @@ function screenRegion(key) {
   if (!states) return screenMap();
   crumb.textContent = REGION_LABEL[key];
   const clubs = pool().filter(c => states.includes(c.st));
-  const ranked = visible(clubs).filter(c => c.r).sort((a, b) => b.r - a.r);
+  const ranked = visible(clubs).filter(c => c.r).sort(eloRank);
   const allVis = visible(pool()), nearBy = nearScope(visible(clubs), allVis);
   view.innerHTML = `
     <button class="backbtn" onclick="location.hash='#/map'">&larr; All USA</button>
@@ -725,7 +731,7 @@ function screenRegion(key) {
     ${renderMapSvg(allVis, true, nearBy)}
     ${leagueChips()}
     <div class="kicker" style="margin-top:10px">Top clubs · ${clubs.length} in region</div>
-    <ul class="clublist">${ranked.slice(0, 15).map((c, i) => clubRow(c, i + 1)).join('')}</ul>
+    <ul class="clublist">${ranked.slice(0, 15).map((c, i) => clubRow(c, rankNo(c, i))).join('')}</ul>
     ${adSlot('region', REGION_LABEL[key])}`;
   wireSexToggle();
   wireMap(states, allVis, visible(clubs));
@@ -735,7 +741,7 @@ function screenState(st) {
   if (!STATE_NAME[st]) return screenMap();
   crumb.textContent = st;
   const clubs = pool().filter(c => c.st === st);
-  const ranked = visible(clubs).filter(c => c.r).sort((a, b) => b.r - a.r);
+  const ranked = visible(clubs).filter(c => c.r).sort(eloRank);
   const allVis = visible(pool()), nearBy = nearScope(visible(clubs), allVis);
   const concepts = visible(clubs).filter(c => !c.r);
   const mappable = clubs.length > 0;
@@ -746,7 +752,7 @@ function screenState(st) {
     ${mappable ? renderMapSvg(allVis, true, nearBy) : ''}
     ${clubs.length ? leagueChips() : ''}
     <div class="kicker" style="margin-top:10px">${clubs.length ? `Clubs · ${clubs.length}` : 'No clubs mapped yet'}</div>
-    <ul class="clublist" id="statelist">${ranked.map((c, i) => clubRow(c, i + 1)).join('')}${concepts.map(c => clubRow(c)).join('')}</ul>
+    <ul class="clublist" id="statelist">${ranked.map((c, i) => clubRow(c, rankNo(c, i))).join('')}${concepts.map(c => clubRow(c)).join('')}</ul>
     ${adSlot('region', STATE_NAME[st])}
     ${clubs.length ? '' : '<p class="note">This is where league expansion starts — the dataset grows as leagues are added.</p>'}`;
   wireSexToggle();
@@ -763,14 +769,14 @@ function playerRow(p, rank) {
 }
 function screenTable() {
   crumb.textContent = 'Table';
-  const poolClubs = () => pool().filter(c => c.r && leagueFilter.has(c.g)).sort((a, b) => b.r - a.r);
+  const poolClubs = () => pool().filter(c => c.r && leagueFilter.has(c.g)).sort(eloRank);
   const poolPlayers = () => allPlayers(sex)
     .filter(p => leagueFilter.has(p.c.g) && (posFilter === 'all' || p.pos === posFilter))
     .sort((a, b) => b.pvr - a.pvr);
   const render = () => {
     const full = tableMode === 'clubs' ? poolClubs() : poolPlayers();
     const rows = full.slice(0, tableLimit).map((x, i) =>
-      tableMode === 'clubs' ? clubRow(x, i + 1) : playerRow(x, i + 1)).join('');
+      tableMode === 'clubs' ? clubRow(x, rankNo(x, i)) : playerRow(x, i + 1)).join('');
     const rest = full.length - Math.min(tableLimit, full.length);
     return rows + (rest > 0 ? `<li><button class="morebtn" id="morebtn">Show more &middot; ${rest.toLocaleString()} remaining</button></li>` : '');
   };
@@ -1493,9 +1499,9 @@ async function screenClub(ref) {
   const cupRec = (await cupDb())[c.id] || [];
   crumb.textContent = c.st;
   const m = LEAGUES[c.g];
-  const peers = CLUBS.filter(o => o.g === c.g && o.r && !o.h).sort((a, b) => b.r - a.r);
-  const rank = c.r ? peers.indexOf(c) + 1 : null;
-  const natl = CLUBS.filter(o => o.x === c.x && o.r && !o.h).sort((a, b) => b.r - a.r);
+  const peers = CLUBS.filter(o => o.g === c.g && o.r && !o.h).sort(eloRank);
+  const rank = c.r && c.rr ? peers.indexOf(c) + 1 : null;
+  const natl = CLUBS.filter(o => o.x === c.x && o.r && !o.h).sort(eloRank);
   /* same-league neighbors first; a club whose league has no nearby rated
      peers borrows the closest rated same-sex clubs so every rated club still
      gets fixtures and odds instead of an empty section */
@@ -1513,8 +1519,8 @@ async function screenClub(ref) {
     ${(HONOURS[rosterKey(c)] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[rosterKey(c)] || []).map(h2 => `<li><b>${esc(h2.t)}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
       <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : DTAG + 'Rating'}${c.pv ? ' · provisional' : ''}</span></div>
-      <div class="stat"><b>#${rank}</b><span>${m.label}</span></div>
-      <div class="stat"><b>#${natl.indexOf(c) + 1}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
+      <div class="stat"><b>${rank ? '#' + rank : 'NR'}</b><span>${m.label}</span></div>
+      <div class="stat"><b>${c.rr ? '#' + (natl.indexOf(c) + 1) : 'NR'}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
     </div>
     ${cupRec.length ? `<div class="kicker" style="margin-top:10px">U.S. Open Cup &middot; real results, ${Math.min(...cupRec.map(e => e.y))}&ndash;${Math.max(...cupRec.map(e => e.y))}</div>
     <div class="histwrap" tabindex="0" role="region" aria-label="U.S. Open Cup match history"><ul class="careerway">${cupRec.slice().reverse().map(e => {
@@ -1826,7 +1832,7 @@ async function screenLeague(key) {
   const info = ((await leaguesInfoDb()).leagues || {})[key] || {};
   if (location.hash !== '#/league/' + key) return;
   const clubs = CLUBS.filter(c => c.g === key && !c.h);
-  const ranked = clubs.filter(c => c.r).sort((a, b) => b.r - a.r);
+  const ranked = clubs.filter(c => c.r).sort(eloRank);
   const rest = clubs.filter(c => !c.r).sort((a, b) => a.n.localeCompare(b.n));
   const level = LEVELS.pro.includes(key) ? 'professional' : LEVELS.college.includes(key) ? 'college'
     : LEVELS.youth.includes(key) ? 'youth' : 'amateur';
@@ -1844,7 +1850,7 @@ async function screenLeague(key) {
       ${info.watchNote ? `<p class="note" style="margin:6px 0 0">${esc(info.watchNote)}</p>` : ''}` : ''}
     ${adSlot('league', m.label)}
     <div class="kicker" style="margin-top:16px">All clubs${ranked.length ? ' &middot; ranked by rating' : ''}</div>
-    <ul class="clublist">${ranked.map((c, i) => clubRow(c, i + 1)).join('')}${rest.map(c => clubRow(c)).join('')}</ul>
+    <ul class="clublist">${ranked.map((c, i) => clubRow(c, rankNo(c, i))).join('')}${rest.map(c => clubRow(c)).join('')}</ul>
     ${LEVELS.youth.includes(key) ? '<p class="note">Youth directory entries are name, league and league-stated location only — no ratings, fixtures or player data.</p>' : ''}`;
 }
 
