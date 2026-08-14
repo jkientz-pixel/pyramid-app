@@ -27,7 +27,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from _datajs import load_clubs, write_clubs
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-AMATEUR = {'npsl', 'upsl', 'usl2', 'loc', 'ncaa1', 'ncaa2'}
+AMATEUR = {'npsl', 'upsl', 'usl2', 'loc', 'ncaa1', 'ncaa2', 'gcpl', 'apsl'}
 RECAL_LEAGUES = {'uslc', 'usl1', 'mnp', 'nisa', 'npsl', 'upsl', 'usl2', 'loc'}
 DECAY = 0.75
 PV_MIN_NUDGE, PV_PROXY_SHARE = 30, 0.5
@@ -107,9 +107,32 @@ def main():
     by_id = {c['id']: c for c in men}
 
     # --- 1. pipeline bases (undo any previous recalibration, uncap NPSL) ---
+    # Clubs in leagues the recal does not anchor (gcpl/apsl/ncaa3/naia/...)
+    # must NOT get prev blindly undone: a club that changed league groups
+    # (loc -> gcpl split, upsl -> apsl moves) carries a stale league shift in
+    # prev, and undoing it with no new shift to replace it inflated 10 GCPL
+    # clubs by +254. Their live ratings already sit in-band, so for these
+    # leagues keep r as-is and undo only the cup nudges (recovered exactly
+    # from the previous cup_receipts.json) before the walk re-derives them.
+    ANCHORED = RECAL_LEAGUES | {'mls', 'ncaa1', 'ncaa2'}
+    rc_path = ROOT / 'data' / 'cup_receipts.json'
+    old_nudges = {}
+    if rc_path.exists():
+        for cid, evs in json.load(open(rc_path)).items():
+            old_nudges[cid] = sum(e.get('d', 0) for e in evs)
+    n_churn = sum(1 for c in men if c['g'] not in ANCHORED
+                  and abs(prev.get(c['id'], 0) - old_nudges.get(c['id'], 0)) > 60)
+    if n_churn:
+        print(f'note: {n_churn} clubs outside the anchored leagues carry a '
+              f'stale league shift in recal_state (league-group churn); '
+              f'keeping their live band, replaying cup nudges only',
+              file=sys.stderr)
     base = {}
     for c in men:
-        base[c['id']] = c['r'] - prev.get(c['id'], 0)
+        if c['g'] in ANCHORED:
+            base[c['id']] = c['r'] - prev.get(c['id'], 0)
+        else:
+            base[c['id']] = c['r'] - old_nudges.get(c['id'], 0)
     uncapped = npsl_uncapped()
     n_uncap = 0
     for c in men:
@@ -139,14 +162,27 @@ def main():
     # --- 3. cup walk (never moves MLS) ---
     idx = {}
     for c in men:
-        idx.setdefault(cup_norm(c['n']), c['id'])
+        idx.setdefault(cup_norm(c['n']), []).append((c['g'], c['id']))
     CANON = {'MLS': 'mls', 'USLC': 'uslc', 'USL1': 'usl1', 'MLSNP': 'mnp',
              'NISA': 'nisa', 'NPSL': 'npsl', 'UPSL': 'upsl', 'USL2': 'usl2'}
+
+    def join(name, tag):
+        """Resolve a cup team name to a club id. When two clubs share a
+        normalized name (e.g. Foro SC apsl vs Foro Soccer Club upsl), the
+        cup's league tag breaks the tie; otherwise first club wins."""
+        cands = idx.get(cup_norm(name))
+        if not cands:
+            return None
+        want = CANON.get(tag or '')
+        for g, cid in cands:
+            if g == want:
+                return cid
+        return cands[0][1]
 
     walk = dict(base)
     nudge, proxy_gain, receipts = {}, {}, {}
     for m in sorted((m for m in cup if m['year'] >= 2022), key=datekey):
-        i1, i2 = idx.get(cup_norm(m['t1'])), idx.get(cup_norm(m['t2']))
+        i1, i2 = join(m['t1'], m.get('l1')), join(m['t2'], m.get('l2'))
         if not (i1 or i2):
             continue
         g1 = by_id[i1]['g'] if i1 else CANON.get(m['l1'] or '', 'loc')
@@ -184,7 +220,7 @@ def main():
         c.pop('pv', None)
     for c in men:
         newr = round(walk[c['id']])
-        applied[c['id']] = newr - (c['r'] - prev.get(c['id'], 0))
+        applied[c['id']] = newr - base[c['id']]
         c['r'] = newr
         nd, pg = abs(nudge.get(c['id'], 0)), proxy_gain.get(c['id'], 0)
         total_move = sum(abs(e['d']) for e in receipts.get(c['id'], [])) or 1
