@@ -109,6 +109,11 @@ svg.usmap{width:100%;height:auto;max-height:72vh;display:block;touch-action:mani
 .watchchip{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 12px;text-decoration:none;color:#16211B;font-weight:600;font-size:.78rem}
 .watchchip img{height:15px;width:auto;max-width:60px;object-fit:contain;display:block}
 .watchchip:hover{border-color:var(--accent)}
+/* add-to-calendar: quiet outline pill next to the kickoff time — accent text,
+   line border at rest so it never competes with the broadcaster chips */
+.calbtn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--line);border-radius:999px;padding:4px 11px;color:var(--accent);font-weight:600;font-size:.75rem;font-family:inherit;cursor:pointer;transition:border-color .15s}
+.calbtn:hover,.calbtn:focus-visible{border-color:var(--accent)}
+.calrow{margin-top:8px}
 /* matchup machine type-ahead */
 .pickwrap{position:relative;flex:1;min-width:0}
 .pickq{width:100%;box-sizing:border-box;background:var(--raise);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:inherit;padding:9px 12px}

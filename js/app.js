@@ -867,6 +867,29 @@ function watchRow(h, a) {
   const ico = w.ico ? `<img class="pico${w.inv ? ' inv' : ''}" src="crests/platform-${w.ico}.svg" alt="" loading="lazy">` : '&#9655; ';
   return `<div class="meta" style="margin-top:6px"><a class="watchlink" href="${w.url}" target="_blank" rel="noopener">${ico}Watch: ${w.label}</a></div>`;
 }
+/* add-to-calendar: builds an .ics client-side — Apple, Google and Outlook
+   all import it, no backend involved. Renders only on real fixtures that
+   haven't finished (same rule as watch links: never a calendar entry for a
+   hypothetical or a played game). Time-TBA games become all-day events
+   rather than inventing a kickoff. */
+const icsEsc = s => String(s || '').replace(/\\/g, '\\\\').replace(/[,;]/g, m => '\\' + m).replace(/\r?\n/g, '\\n');
+const icsStamp = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+window.dlIcs = btn => {
+  const b = btn.dataset, dt = new Date(b.s);
+  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Ranked XI//rankedxi.com//EN', 'BEGIN:VEVENT',
+    'UID:' + b.s.replace(/\D/g, '') + '-' + b.t.replace(/[^A-Za-z0-9]/g, '').slice(0, 40) + '@rankedxi.com',
+    'DTSTAMP:' + icsStamp(new Date())];
+  if (b.tbd) lines.push('DTSTART;VALUE=DATE:' + b.s.slice(0, 10).replace(/-/g, ''));
+  else lines.push('DTSTART:' + icsStamp(dt), 'DTEND:' + icsStamp(new Date(+dt + 2 * 36e5)));
+  lines.push('SUMMARY:' + icsEsc(b.t));
+  if (b.v) lines.push('LOCATION:' + icsEsc(b.v));
+  lines.push('DESCRIPTION:' + icsEsc((b.d ? b.d + ' · ' : '') + 'via rankedxi.com'), 'END:VEVENT', 'END:VCALENDAR');
+  const url = URL.createObjectURL(new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' }));
+  const a = Object.assign(document.createElement('a'), { href: url, download: b.t.replace(/[^\w ]/g, '').trim().replace(/ +/g, '-') + '.ics' });
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+};
+const calBtn = (title, iso, venue, desc, tbd) => `<button type="button" class="calbtn" onclick="dlIcs(this)" data-t="${esc(title)}" data-s="${esc(iso)}" data-v="${esc(venue || '')}" data-d="${esc(desc || '')}"${tbd ? ' data-tbd="1"' : ''}>&#128197; Add to calendar</button>`;
 /* Confidence buckets over the strongest single outcome — the meter under the
    odds row. Thresholds line up with how bettors read a three-way market. */
 function confidenceFor(o, h, a) {
@@ -1041,7 +1064,7 @@ function screenMatches(preH) {
         if (!h || !a) return `<div class="match"><div class="mrow"><span class="side"><span class="sn">${esc(f.t1)}</span></span><span class="vs">v</span><span class="side away"><span class="sn">${esc(f.t2)}</span></span></div>
           <div class="meta"><span>${when}</span><span>${esc(f.round)} · ${esc(f.venue || 'Venue TBD')}</span></div>
           <p class="note" style="margin:6px 0 0">Pairing set once the semifinals finish.</p></div>`;
-        return matchCard(h, a, f.round.toUpperCase(), true) .replace('<div class="meta"><span>Elo', `<div class="meta"><span>${when} · ${esc(f.venue || '')}</span><span></span></div><div class="meta"><span>Elo`);
+        return matchCard(h, a, f.round.toUpperCase(), true) .replace('<div class="meta"><span>Elo', `<div class="meta"><span>${when} · ${esc(f.venue || '')}</span><span>${calBtn(`${h.n} v ${a.n}`, f.start, f.venue, 'NPSL ' + f.round)}</span></div><div class="meta"><span>Elo`);
       }).join('') + `<p class="note">Times shown in Eastern and your local time. Odds from real-results Elo.</p>`;
   });
 }
@@ -1083,11 +1106,13 @@ function ntMatchRow(m, tag) {
   const watch = !ended && (m.tv || []).length
     ? `<div class="watchrow">${m.tv.map(watchChip).join('')}</div>`
     : '';
+  const cal = ended ? '' : `<div class="calrow">${calBtn(`${tag || 'USA'} v ${m.opp}`, m.start, [m.venue, m.city].filter(Boolean).join(', '), m.round, m.timeTBD)}</div>`;
   return `<div class="match">
     <div class="mrow"><span class="side"><span class="sn">${NT_FLAG['United States']} ${esc(tag || 'USA')}</span></span><span class="vs">${ended ? res + m.us + '–' + m.them : 'V'}</span><span class="side away"><span class="sn">${ntFlag(m.opp)}${esc(m.opp)}</span></span></div>
     <div class="meta"><span>${esc(m.round)}</span><span>${when}</span></div>
     ${m.venue || m.city ? `<div class="meta"><span>${esc(m.venue || '')}</span><span>${esc(m.city || '')}</span></div>` : ''}
     ${watch}
+    ${cal}
   </div>`;
 }
 function ntTeamBlock(t, withHistoryLink) {
