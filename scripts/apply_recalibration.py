@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Apply the measured cross-league recalibration to js/data.js (men's ratings).
+"""DEPRECATED 2026-08-14: use recalibrate2.py. This script's undo-prev state
+model poisons ratings when league membership churns (see PR #54). Kept for
+reference until recalibrate2 completes one clean production cycle.
+
+Apply the measured cross-league recalibration to js/data.js (men's ratings).
 
 Pipeline position: run AFTER every rating writer (compute_elo, fetch_asa,
 reconcile_standings, apply_massey) and BEFORE deploy. Steps:
