@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260814f';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260814f';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260814g';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260814g';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260814f')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260814g')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260814f';
+const BUILDV = '20260814g';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -867,6 +867,29 @@ function watchRow(h, a) {
   const ico = w.ico ? `<img class="pico${w.inv ? ' inv' : ''}" src="crests/platform-${w.ico}.svg" alt="" loading="lazy">` : '&#9655; ';
   return `<div class="meta" style="margin-top:6px"><a class="watchlink" href="${w.url}" target="_blank" rel="noopener">${ico}Watch: ${w.label}</a></div>`;
 }
+/* add-to-calendar: builds an .ics client-side — Apple, Google and Outlook
+   all import it, no backend involved. Renders only on real fixtures that
+   haven't finished (same rule as watch links: never a calendar entry for a
+   hypothetical or a played game). Time-TBA games become all-day events
+   rather than inventing a kickoff. */
+const icsEsc = s => String(s || '').replace(/\\/g, '\\\\').replace(/[,;]/g, m => '\\' + m).replace(/\r?\n/g, '\\n');
+const icsStamp = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+window.dlIcs = btn => {
+  const b = btn.dataset, dt = new Date(b.s);
+  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Ranked XI//rankedxi.com//EN', 'BEGIN:VEVENT',
+    'UID:' + b.s.replace(/\D/g, '') + '-' + b.t.replace(/[^A-Za-z0-9]/g, '').slice(0, 40) + '@rankedxi.com',
+    'DTSTAMP:' + icsStamp(new Date())];
+  if (b.tbd) lines.push('DTSTART;VALUE=DATE:' + b.s.slice(0, 10).replace(/-/g, ''));
+  else lines.push('DTSTART:' + icsStamp(dt), 'DTEND:' + icsStamp(new Date(+dt + 2 * 36e5)));
+  lines.push('SUMMARY:' + icsEsc(b.t));
+  if (b.v) lines.push('LOCATION:' + icsEsc(b.v));
+  lines.push('DESCRIPTION:' + icsEsc((b.d ? b.d + ' · ' : '') + 'via rankedxi.com'), 'END:VEVENT', 'END:VCALENDAR');
+  const url = URL.createObjectURL(new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' }));
+  const a = Object.assign(document.createElement('a'), { href: url, download: b.t.replace(/[^\w ]/g, '').trim().replace(/ +/g, '-') + '.ics' });
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+};
+const calBtn = (title, iso, venue, desc, tbd) => `<button type="button" class="calbtn" onclick="dlIcs(this)" data-t="${esc(title)}" data-s="${esc(iso)}" data-v="${esc(venue || '')}" data-d="${esc(desc || '')}"${tbd ? ' data-tbd="1"' : ''}>&#128197; Add to calendar</button>`;
 /* Confidence buckets over the strongest single outcome — the meter under the
    odds row. Thresholds line up with how bettors read a three-way market. */
 function confidenceFor(o, h, a) {
@@ -917,7 +940,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260814f')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260814g')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -926,7 +949,7 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260814f'), grab('data/wire_asa.json?v=20260814f')]);
+    grab('data/wire_npsl.json?v=20260814g'), grab('data/wire_asa.json?v=20260814g')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
@@ -934,7 +957,7 @@ async function wireDb() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260814f')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260814g')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1041,7 +1064,7 @@ function screenMatches(preH) {
         if (!h || !a) return `<div class="match"><div class="mrow"><span class="side"><span class="sn">${esc(f.t1)}</span></span><span class="vs">v</span><span class="side away"><span class="sn">${esc(f.t2)}</span></span></div>
           <div class="meta"><span>${when}</span><span>${esc(f.round)} · ${esc(f.venue || 'Venue TBD')}</span></div>
           <p class="note" style="margin:6px 0 0">Pairing set once the semifinals finish.</p></div>`;
-        return matchCard(h, a, f.round.toUpperCase(), true) .replace('<div class="meta"><span>Elo', `<div class="meta"><span>${when} · ${esc(f.venue || '')}</span><span></span></div><div class="meta"><span>Elo`);
+        return matchCard(h, a, f.round.toUpperCase(), true) .replace('<div class="meta"><span>Elo', `<div class="meta"><span>${when} · ${esc(f.venue || '')}</span><span>${calBtn(`${h.n} v ${a.n}`, f.start, f.venue, 'NPSL ' + f.round)}</span></div><div class="meta"><span>Elo`);
       }).join('') + `<p class="note">Times shown in Eastern and your local time. Odds from real-results Elo.</p>`;
   });
 }
@@ -1083,11 +1106,13 @@ function ntMatchRow(m, tag) {
   const watch = !ended && (m.tv || []).length
     ? `<div class="watchrow">${m.tv.map(watchChip).join('')}</div>`
     : '';
+  const cal = ended ? '' : `<div class="calrow">${calBtn(`${tag || 'USA'} v ${m.opp}`, m.start, [m.venue, m.city].filter(Boolean).join(', '), m.round, m.timeTBD)}</div>`;
   return `<div class="match">
     <div class="mrow"><span class="side"><span class="sn">${NT_FLAG['United States']} ${esc(tag || 'USA')}</span></span><span class="vs">${ended ? res + m.us + '–' + m.them : 'V'}</span><span class="side away"><span class="sn">${ntFlag(m.opp)}${esc(m.opp)}</span></span></div>
     <div class="meta"><span>${esc(m.round)}</span><span>${when}</span></div>
     ${m.venue || m.city ? `<div class="meta"><span>${esc(m.venue || '')}</span><span>${esc(m.city || '')}</span></div>` : ''}
     ${watch}
+    ${cal}
   </div>`;
 }
 function ntTeamBlock(t, withHistoryLink) {
@@ -1109,7 +1134,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260814f')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260814g')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1382,35 +1407,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260814f')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260814g')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260814f')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260814g')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260814f')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260814g')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260814f')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260814g')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260814f')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260814g')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1595,7 +1620,7 @@ function screenAbout() {
     <ul class="lglist">${ROADMAP.map(r =>
       `<li><a href="${r.url}" target="_blank" rel="noopener"><span class="dot" style="background:var(--ink-dim);width:12px;height:12px;border-radius:50%;opacity:.4"></span><b>${r.label}</b><span>~${r.teams} teams · ${r.sex === 'w' ? "women's" : "men's"}</span></a></li>`).join('')}</ul>
     <p class="note">NISA is currently unsanctioned by U.S. Soccer (Dec 2024); its clubs are shown for completeness. UPSL layer holds the clubs mapped so far — the full league is 400+ clubs.</p>
-    <p class="fine" style="font-size:.75rem">Data last refreshed: ${BUILD_DATE} &middot; rosters and stats auto-refresh every 12 hours &middot; <a href="#/legal" style="color:var(--accent)">Terms &amp; Privacy</a> &middot; <a href="/methodology" style="color:var(--accent)">Methodology &amp; Disclaimer</a></p>
+    <p class="fine" style="font-size:.75rem">Data last refreshed: ${BUILD_DATE} (build v${BUILDV}) &middot; rosters and stats auto-refresh every 12 hours &middot; <a href="#/legal" style="color:var(--accent)">Terms &amp; Privacy</a> &middot; <a href="/methodology" style="color:var(--accent)">Methodology &amp; Disclaimer</a></p>
     <p class="fine" style="font-size:.75rem">Data: Wikipedia (CC BY-SA — rosters, profiles, photos, crests), league sites and public feeds (NPSL/Squadi, UPSL), OpenStreetMap Nominatim geocoding. Club and league marks belong to their owners.</p>
     <p class="fine" style="font-size:.75rem">Built by Jeremy Kientz · 2026</p>
   </div>`;
@@ -1790,7 +1815,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260814f')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260814g')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -2070,7 +2095,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260814f')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260814g')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
