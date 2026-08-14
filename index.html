@@ -119,7 +119,7 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
   <p class="join-msg" role="status" aria-live="polite"></p>
 </section>
 </main>
-<footer>By Jeremy Kientz · every rating and stat labels its basis · club and league marks belong to their owners · <a href="/methodology" style="color:inherit">methodology &amp; disclaimer</a> · <a href="/privacy" style="color:inherit">privacy</a> · <a href="/app#/legal" style="color:inherit">corrections &amp; removal requests</a></footer>
+<footer>By Jeremy Kientz · every rating and stat labels its basis · club and league marks belong to their owners · <a href="/methodology" style="color:inherit">methodology &amp; disclaimer</a> · <a href="/privacy" style="color:inherit">privacy</a> · <a href="/app#/legal" style="color:inherit">corrections &amp; removal requests</a> · <span id="bld" data-b="20260814a"></span></footer>
 <script>
 /* Headline counts are baked into the [data-stat] spans by scripts/gen_seo_pages.py
    on every deploy. This page used to import data.js + rosters.js (240KB wire,
@@ -162,6 +162,13 @@ joinForm.addEventListener('submit', async e => {
     else howto.hidden = !howto.hidden;
   });
   addEventListener('appinstalled', () => { btn.hidden = true; });
+})();
+</script>
+<script>
+(() => { /* footer freshness stamp — data-b is the cache-bust token, rewritten by scripts/bump_version.py on every deploy */
+  const el = document.getElementById('bld'), b = el.dataset.b;
+  const d = new Date(+b.slice(0, 4), +b.slice(4, 6) - 1, +b.slice(6, 8));
+  el.textContent = 'data updated ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' · build v' + b;
 })();
 </script>
 </body>
