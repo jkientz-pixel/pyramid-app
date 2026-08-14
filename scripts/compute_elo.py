@@ -15,10 +15,14 @@ def main():
     team_name = {}
 
     events = []
+    seen = set()  # Squadi lists playoff rounds under conference AND national div ids
     for m in matches:
         if m.get('status') != 'ENDED': continue
         if not isinstance(m.get('s1'), int) or not isinstance(m.get('s2'), int): continue
         if not str(m.get('start', '')).startswith('2026'): continue
+        key = (m['start'], m['t1'], m['t2'], m['s1'], m['s2'])
+        if key in seen: continue
+        seen.add(key)
         events.append((m['start'], m['t1'], m['t2'], m['s1'], m['s2']))
         team_name[m['t1']] = m['t1']; team_name[m['t2']] = m['t2']
     events.sort()

@@ -5,6 +5,7 @@
   <url><loc>https://www.rankedxi.com/upsl-rankings</loc></url>
   <url><loc>https://www.rankedxi.com/npsl-rankings</loc></url>
   <url><loc>https://www.rankedxi.com/methodology</loc></url>
+  <url><loc>https://www.rankedxi.com/privacy</loc></url>
   <url><loc>https://www.rankedxi.com/club/atlanta-united</loc></url>
   <url><loc>https://www.rankedxi.com/club/austin-fc</loc></url>
   <url><loc>https://www.rankedxi.com/club/cf-montreal</loc></url>
@@ -42,7 +43,6 @@
   <url><loc>https://www.rankedxi.com/club/loudoun-united</loc></url>
   <url><loc>https://www.rankedxi.com/club/louisville-city</loc></url>
   <url><loc>https://www.rankedxi.com/club/miami-fc</loc></url>
-  <url><loc>https://www.rankedxi.com/club/north-carolina-fc</loc></url>
   <url><loc>https://www.rankedxi.com/club/pittsburgh-riverhounds</loc></url>
   <url><loc>https://www.rankedxi.com/club/rhode-island-fc</loc></url>
   <url><loc>https://www.rankedxi.com/club/tampa-bay-rowdies</loc></url>
@@ -50,7 +50,6 @@
   <url><loc>https://www.rankedxi.com/club/el-paso-locomotive</loc></url>
   <url><loc>https://www.rankedxi.com/club/fc-tulsa</loc></url>
   <url><loc>https://www.rankedxi.com/club/las-vegas-lights</loc></url>
-  <url><loc>https://www.rankedxi.com/club/memphis-901</loc></url>
   <url><loc>https://www.rankedxi.com/club/monterey-bay-fc</loc></url>
   <url><loc>https://www.rankedxi.com/club/new-mexico-united</loc></url>
   <url><loc>https://www.rankedxi.com/club/oakland-roots</loc></url>
@@ -2362,6 +2361,13 @@
   <url><loc>https://www.rankedxi.com/club/william-carey-university-crusaders</loc></url>
   <url><loc>https://www.rankedxi.com/club/xavier-university-of-louisiana-gold-rush-gold-nuggets</loc></url>
   <url><loc>https://www.rankedxi.com/club/york-university-panthers</loc></url>
+  <url><loc>https://www.rankedxi.com/club/athletic-club-boise</loc></url>
+  <url><loc>https://www.rankedxi.com/club/corpus-christi-fc</loc></url>
+  <url><loc>https://www.rankedxi.com/club/fort-wayne-fc</loc></url>
+  <url><loc>https://www.rankedxi.com/club/new-york-cosmos</loc></url>
+  <url><loc>https://www.rankedxi.com/club/new-york-city-fc-ii</loc></url>
+  <url><loc>https://www.rankedxi.com/club/st-louis-city-2</loc></url>
+  <url><loc>https://www.rankedxi.com/club/sarasota-paradise-usl1</loc></url>
   <url><loc>https://www.rankedxi.com/club/abilene-christian-university-wildcats-w</loc></url>
   <url><loc>https://www.rankedxi.com/club/united-states-air-force-academy-falcons-w</loc></url>
   <url><loc>https://www.rankedxi.com/club/the-university-of-akron-zips-w</loc></url>
@@ -2982,4 +2988,6 @@
   <url><loc>https://www.rankedxi.com/club/la-krewe-rush</loc></url>
   <url><loc>https://www.rankedxi.com/club/louisiana-fire-fc</loc></url>
   <url><loc>https://www.rankedxi.com/club/swla-hurricanes</loc></url>
+  <url><loc>https://www.rankedxi.com/club/brooklyn-fc-uslc</loc></url>
+  <url><loc>https://www.rankedxi.com/club/sporting-club-jacksonville</loc></url>
 </urlset>
