@@ -51,6 +51,7 @@ def npsl_uncapped():
     """compute_elo's walk, minus the clamp. -> {npsl_norm(team): rating}"""
     matches = json.load(open(ROOT / 'data' / 'npsl_matches_2026.json'))
     events = []
+    seen = set()  # Squadi lists playoff rounds under conference AND national div ids
     for m in matches:
         if m.get('status') != 'ENDED':
             continue
@@ -58,6 +59,10 @@ def npsl_uncapped():
             continue
         if not str(m.get('start', '')).startswith('2026'):
             continue
+        key = (m['start'], m['t1'], m['t2'], m['s1'], m['s2'])
+        if key in seen:
+            continue
+        seen.add(key)
         events.append((m['start'], m['t1'], m['t2'], m['s1'], m['s2']))
     events.sort()
     elo = {}
