@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open Data — Ranked XI</title>
+<meta name="description" content="Download the Ranked XI club dataset: 3,974 US soccer clubs with league, level, city, coordinates and ratings. CC BY 4.0 — built for Football Manager modders and mapmakers.">
+<link rel="canonical" href="https://www.rankedxi.com/data">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
+<style>
+@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/barlow-condensed-latin-700.woff2) format("woff2")}
+:root{--ground:#FAFBF8;--ink:#16211B;--dim:#61705F;--line:#DCE2D8;--accent:#C77F1E}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.55 -apple-system,"Segoe UI",Roboto,sans-serif}
+.disp{font-family:"Barlow Condensed","Avenir Next Condensed","Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.02em}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px clamp(20px,5vw,64px);border-bottom:1px solid var(--line)}
+.mark{font-weight:700;font-size:1.2rem;text-decoration:none;color:var(--ink)}
+main{max-width:820px;margin:0 auto;padding:28px clamp(20px,5vw,64px) 40px}
+h1{margin:0 0 4px;font-size:2rem}
+.sub{color:var(--dim);margin:0 0 22px;font-size:.95rem}
+section{margin-bottom:20px}
+h2{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+p{margin:0 0 8px}
+a{color:var(--accent)}
+.dl{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0 4px}
+.dl a{display:inline-block;padding:10px 18px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);text-decoration:none;font-weight:600}
+.dl a:hover{border-color:var(--accent)}
+.dl a span{display:block;font-weight:400;font-size:.8rem;color:var(--dim)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+td,th{text-align:left;padding:5px 10px 5px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600}
+code{background:#fff;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:.85em}
+footer{color:var(--dim);font-size:.8rem;padding:18px clamp(20px,5vw,64px) 40px;border-top:1px solid var(--line);max-width:820px;margin:0 auto}
+</style>
+</head>
+<body>
+<header><a class="mark disp" href="/">Ranked XI</a><a href="/app" style="color:var(--dim);font-size:.85rem">Open the app →</a></header>
+<main>
+<h1 class="disp">Open Data</h1>
+<p class="sub">The whole club list, free to build on. Snapshot dated August 14, 2026 — the app updates several times a week, this file updates when we cut a new snapshot.</p>
+
+<section>
+<h2>Download</h2>
+<div class="dl">
+<a href="/export/rankedxi-clubs.csv" download>rankedxi-clubs.csv<span>3,974 clubs · one row each</span></a>
+<a href="/export/rankedxi-clubs.json" download>rankedxi-clubs.json<span>same data + meta block</span></a>
+</div>
+<p>Every club Ranked XI maps: pro, amateur, college, and youth, men's and women's sides both — including 1,300+ women's clubs from the NWSL down through WPSL and UWS.</p>
+</section>
+
+<section>
+<h2>Who this is for</h2>
+<p>Football Manager database creators asked first: the club list, real league structure, and real geography are the slow part of building a US pyramid mod, and that part is done here. It works just as well for maps, research, or any project that needs to know what actually exists at every level of American soccer. The competition rules — the part that makes a US save feel like US soccer instead of a pro/rel clone — are still yours to build.</p>
+</section>
+
+<section>
+<h2>What's in each row</h2>
+<table>
+<tr><th>Field</th><th>Meaning</th></tr>
+<tr><td><code>id</code></td><td>Stable slug — the club's page lives at <code>rankedxi.com/club/&lt;id&gt;</code></td></tr>
+<tr><td><code>league_code</code> / <code>league</code></td><td>League the club plays in</td></tr>
+<tr><td><code>level</code></td><td><code>pro</code>, <code>amateur</code>, <code>college</code>, or <code>youth</code></td></tr>
+<tr><td><code>gender</code></td><td><code>M</code> or <code>W</code></td></tr>
+<tr><td><code>city</code>, <code>state</code>, <code>lat</code>, <code>lon</code></td><td>Home city and coordinates; <code>location_accuracy</code> says <code>verified</code> or <code>approximate</code></td></tr>
+<tr><td><code>rating</code></td><td>Elo-style rating on the snapshot date. Blank means unrated — youth listings never carry ratings</td></tr>
+<tr><td><code>rating_basis</code></td><td>How the rating was built: <code>real_results</code>, <code>standings</code>, or <code>results_model</code> — full detail on the <a href="/methodology">methodology page</a></td></tr>
+<tr><td><code>website</code>, <code>crest_url</code></td><td>Club's own site, and the crest as shown on Ranked XI for identification</td></tr>
+</table>
+</section>
+
+<section>
+<h2>What's not in here, and why</h2>
+<p>No rosters and no crest image pack. Roster data reaches us through league feeds with their own terms, and crest artwork belongs to the clubs — neither is ours to redistribute in bulk. Youth clubs are organization listings only: no ratings, no player data, ever.</p>
+</section>
+
+<section>
+<h2>License</h2>
+<p>The dataset is released under <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>: use it, adapt it, ship it — with attribution to <b>Ranked XI (rankedxi.com)</b> wherever the data appears. Club and league names and crests remain the property of their owners and appear for identification only.</p>
+<p>Building something with it? <a href="mailto:hello@rankedxi.com?subject=Open%20data">Tell us</a> — we link to good projects. Found an error? Every club page has a "suggest a fix" button.</p>
+</section>
+</main>
+<footer>Independent project by Jeremy Kientz · 2026 · <a href="/">Home</a> · <a href="/app">App</a> · <a href="/methodology">Methodology</a> · <a href="/app#/legal">Terms &amp; Notices</a></footer>
+</body>
+</html>
