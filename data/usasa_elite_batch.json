@@ -1,0 +1,315 @@
+{
+ "note": "Hand-curated from verified research in ~/Documents/rankedxi-launch-campaign/usasa-elite-batch/ (2026-08-17). Cities are league/club-stated only. city:null = held out (logged, not added). force = deliberate dual-membership add despite name collision with another layer. BDSL excluded entirely — see bdsl.md (site 403s its own standings; no verifiable 2026 roster).",
+ "leagues": [
+  {
+   "code": "eplwa",
+   "label": "EPLWA",
+   "color": "#2F7A4D",
+   "sex": "m",
+   "url": "https://www.evergreenpremierleague.com",
+   "img": "crests/league-eplwa.png",
+   "season": "2026 Premier (league stats API, division_id=48748)",
+   "clubs": [
+    {
+     "name": "Bellingham United FC",
+     "city": "Bellingham",
+     "st": "WA",
+     "force": true,
+     "logo": "https://digitalshift-stats.us-lax-1.linodeobjects.com/ed1102fd-5e6c-4724-9807-61355291394e/team-logo_url-528272-bellingham-united-1742414499211601254-large.png"
+    },
+    {
+     "name": "FC Olympia",
+     "city": "Olympia",
+     "st": "WA",
+     "url": "https://fcoly.com/lacey/",
+     "force": true,
+     "logo": "https://digitalshift-stats.us-lax-1.linodeobjects.com/ed1102fd-5e6c-4724-9807-61355291394e/team-logo_url-528274-fc-olympia-1743353180611615900-large.png"
+    },
+    {
+     "name": "Port Orchard FC",
+     "city": "Port Orchard",
+     "st": "WA",
+     "url": "https://gopofc.com/",
+     "logo": "https://digitalshift-stats.us-lax-1.linodeobjects.com/ed1102fd-5e6c-4724-9807-61355291394e/team-logo_url-659763-port-orchard-fc-1775316730727870069-large.png"
+    },
+    {
+     "name": "Skagit Athletic FC",
+     "city": null,
+     "st": "WA",
+     "logo": "https://digitalshift-stats.us-lax-1.linodeobjects.com/ed1102fd-5e6c-4724-9807-61355291394e/team-logo_url-535340-skagit-athletic-fc-1743046547665921651-large.png"
+    },
+    {
+     "name": "WE SURF SC",
+     "city": "Spokane",
+     "st": "WA",
+     "url": "http://www.wesurfsc.com",
+     "force": true,
+     "logo": "https://digitalshift-stats.us-lax-1.linodeobjects.com/ed1102fd-5e6c-4724-9807-61355291394e/team-logo_url-532835-washington-surf-east-soccer-club-1742660023847113822-large.png"
+    },
+    {
+     "name": "Wenatchee All Stars FC",
+     "city": "Wenatchee",
+     "st": "WA",
+     "url": "https://www.wenatcheeallstarsfc.org/",
+     "logo": "https://digitalshift-stats.us-lax-1.linodeobjects.com/ed1102fd-5e6c-4724-9807-61355291394e/team-logo_url-669378-wenatchee-all-stars-fc-1776917328354849853-large.png"
+    },
+    {
+     "name": "Yakima United FC",
+     "city": "Yakima",
+     "st": "WA",
+     "url": "http://www.yakimaunited.com",
+     "logo": "https://digitalshift-stats.us-lax-1.linodeobjects.com/ed1102fd-5e6c-4724-9807-61355291394e/team-logo_url-530665-yakima-united-fc-1745610464283918164-large.png"
+    }
+   ]
+  },
+  {
+   "code": "sfsfl",
+   "label": "SFSFL",
+   "color": "#B3813B",
+   "sex": "m",
+   "url": "https://www.sfsfl.com",
+   "img": "crests/league-sfsfl.png",
+   "season": "2026 Premier (league team list, LeagueStand.php?PARAM_TEAM_LIST=1)",
+   "clubs": [
+    {
+     "name": "Club Marin",
+     "city": "Mill Valley",
+     "st": "CA",
+     "approx": true,
+     "logo": "https://www.sfsfl.com/sfsfl/TeamLogos/2026/CLBMAR.jpg",
+     "force": true
+    },
+    {
+     "name": "Inter SF",
+     "city": "San Francisco",
+     "st": "CA",
+     "url": "https://www.intersf.org/",
+     "logo": "https://www.sfsfl.com/sfsfl/TeamLogos/2026/INTSF.jpg",
+     "force": true
+    },
+    {
+     "name": "Lands End FC",
+     "city": "San Francisco",
+     "st": "CA",
+     "logo": "https://www.sfsfl.com/sfsfl/TeamLogos/2026/Lasala.jpg"
+    },
+    {
+     "name": "Mexicali FC",
+     "city": "San Francisco",
+     "st": "CA",
+     "logo": "https://www.sfsfl.com/sfsfl/TeamLogos/2026/MEXICA.jpg"
+    },
+    {
+     "name": "Olympic Club",
+     "city": "San Francisco",
+     "st": "CA",
+     "logo": "https://www.sfsfl.com/sfsfl/TeamLogos/2026/OLYCLU.jpg"
+    },
+    {
+     "name": "SF Celtic SC",
+     "city": "San Francisco",
+     "st": "CA",
+     "logo": "https://www.sfsfl.com/sfsfl/TeamLogos/2026/CELTIC.jpg"
+    },
+    {
+     "name": "SF City FC",
+     "city": "San Francisco",
+     "st": "CA",
+     "url": "http://sfcityfc.com/",
+     "logo": "https://www.sfsfl.com/sfsfl/TeamLogos/2026/SFCIFC.jpg",
+     "force": true
+    },
+    {
+     "name": "SF Elite SC",
+     "city": "San Francisco",
+     "st": "CA",
+     "url": "http://www.sfelitesc.org",
+     "logo": "https://www.sfsfl.com/sfsfl/TeamLogos/2026/SFMETRO.jpg"
+    },
+    {
+     "name": "SF Glens SC",
+     "city": "San Francisco",
+     "st": "CA",
+     "url": "http://www.sfglens.com",
+     "logo": "https://www.sfsfl.com/sfsfl/TeamLogos/2026/SFGLEN.jpg"
+    },
+    {
+     "name": "SF Hibernian FC",
+     "city": "San Francisco",
+     "st": "CA",
+     "logo": "https://www.sfsfl.com/sfsfl/TeamLogos/2026/HIBER.jpg"
+    },
+    {
+     "name": "SF Vikings SC",
+     "city": "San Francisco",
+     "st": "CA",
+     "logo": "https://www.sfsfl.com/sfsfl/TeamLogos/2026/VIKING.gif"
+    },
+    {
+     "name": "SFIAC",
+     "city": "San Francisco",
+     "st": "CA",
+     "url": "http://sfiac.org",
+     "logo": "https://www.sfsfl.com/sfsfl/TeamLogos/2026/SFIACX.jpg"
+    }
+   ]
+  },
+  {
+   "code": "csl",
+   "label": "Cosmopolitan SL",
+   "color": "#4A5FA0",
+   "sex": "m",
+   "url": "https://www.cosmosoccerleague.com",
+   "img": "crests/league-csl.png",
+   "season": "2026/27 Division 1 announced membership (Teampass tables, captured 2026-08-17)",
+   "clubs": [
+    {
+     "name": "Braza Futbol",
+     "city": "New York",
+     "st": "NY",
+     "approx": true,
+     "logo": "https://app.teampass.com/mediacontent//2025/07/25/16/u_BF_1753487768998_1_247341.jpg"
+    },
+    {
+     "name": "Brooklyn City FC",
+     "city": "Brooklyn",
+     "st": "NY",
+     "url": "https://brooklyncityfc.org/",
+     "logo": "https://brooklyncityfc.org/wp-content/uploads/2017/12/Logo_WhiteBorder.png",
+     "force": true
+    },
+    {
+     "name": "Central Park Rangers II",
+     "city": "New York",
+     "st": "NY",
+     "approx": true,
+     "url": "https://www.centralparkrangers.com/",
+     "logo": "https://static.wixstatic.com/media/7e7d32_c6f2526aea374cfc8c0fd262d6c73d80~mv2.png"
+    },
+    {
+     "name": "Hoboken FC 1912 II",
+     "city": "Hoboken",
+     "st": "NJ",
+     "url": "https://hobokenfc.com/",
+     "logo": "https://hobokenfc.com/mediacontent//2023/02/28/00/HCF_circle_-_white_231278_235098.png"
+    },
+    {
+     "name": "Laberia FC",
+     "city": "New York",
+     "st": "NY",
+     "approx": true,
+     "logo": "https://app.teampass.com/mediacontent//2022/08/12/03/Lab%C3%ABria_Club_Logo.svg_229964.png"
+    },
+    {
+     "name": "Manhattan Celtic",
+     "city": "New York",
+     "st": "NY",
+     "approx": true,
+     "url": "https://www.manhattanceltic.com/",
+     "logo": "https://images.squarespace-cdn.com/content/v1/67057d2252dd076744654732/fcdb755b-b925-4ab6-9195-639fda0fda8b/MCFC+Emblem_Full.png"
+    },
+    {
+     "name": "Manhattan Kickers",
+     "city": "New York",
+     "st": "NY",
+     "approx": true
+    },
+    {
+     "name": "New Amsterdam FC",
+     "city": null,
+     "st": "NY"
+    },
+    {
+     "name": "NY Galicia",
+     "city": "New York",
+     "st": "NY",
+     "approx": true
+    },
+    {
+     "name": "NY International FC",
+     "city": "New York",
+     "st": "NY",
+     "url": "https://www.nyintfc.com/",
+     "logo": "https://images.squarespace-cdn.com/content/v1/63edbd8f26e6ab49f9f9e0db/d93eb2b7-dc51-45e4-b079-77c1020f728c/CREST.png",
+     "force": true
+    },
+    {
+     "name": "NY Ukrainians",
+     "city": "Greenpoint",
+     "st": "NY",
+     "url": "https://www.ukrainiansportsclubny.com/"
+    },
+    {
+     "name": "Polonia SC",
+     "city": "Greenpoint",
+     "st": "NY",
+     "logo": "https://app.teampass.com/mediacontent//2024/09/11/12/LOGO_POLONIA_NY__1__243314.png"
+    }
+   ]
+  },
+  {
+   "code": "lisfl",
+   "label": "LISFL",
+   "color": "#4696C2",
+   "sex": "m",
+   "url": "https://lisfl.org",
+   "img": "crests/league-lisfl.png",
+   "season": "2025-26 Premier final standings (Demosphere team list, captured 2026-08-17)",
+   "clubs": [
+    {
+     "name": "NY Irish Rovers",
+     "city": "Massapequa",
+     "st": "NY",
+     "approx": true,
+     "logo": "https://elements.demosphere.com/72839/images/logos/3276920432769204.jpg"
+    },
+    {
+     "name": "Port Jefferson",
+     "city": null,
+     "st": "NY",
+     "logo": "https://elements.demosphere.com/72839/images/logos/1903216219032162.jpg"
+    },
+    {
+     "name": "NY Polet",
+     "city": "Franklin Square",
+     "st": "NY",
+     "logo": "https://elements.demosphere.com/72839/images/logos/3247910232479102.jpg"
+    },
+    {
+     "name": "Istria SC",
+     "city": "Astoria",
+     "st": "NY",
+     "url": "http://istriasportclub.com/",
+     "logo": "https://elements.demosphere.com/72839/images/logos/3276940232769402.jpg"
+    },
+    {
+     "name": "Guyana Juniors AP Generals",
+     "city": null,
+     "st": "NY"
+    },
+    {
+     "name": "Eleftheria SC",
+     "city": "Astoria",
+     "st": "NY",
+     "approx": true,
+     "url": "https://www.eleftheriapancyprian.com/",
+     "logo": "https://elements.demosphere.com/72839/images/logos/111710452111710452.jpg"
+    },
+    {
+     "name": "Asteras FC",
+     "city": "Massapequa",
+     "st": "NY",
+     "approx": true,
+     "url": "https://www.asterasfc.com/",
+     "logo": "https://elements.demosphere.com/72839/images/logos/8477955684779556.jpg"
+    },
+    {
+     "name": "Hellas New York FC",
+     "city": "Bayside",
+     "st": "NY",
+     "logo": "https://elements.demosphere.com/72839/images/logos/8924378589243785.jpg"
+    }
+   ]
+  }
+ ]
+}
