@@ -4,7 +4,7 @@ app.html, index.html, js/app.js (?v=) and sw.js (VERSION). Drift between these
 serves users stale code, so this replaces hand-editing four files.
 Usage: python3 scripts/bump_version.py [YYYYMMDDx]   (default: today + next letter)
 """
-import re, sys, pathlib, datetime, string
+import re, subprocess, sys, pathlib, datetime, string
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 FILES = [ROOT / 'app.html', ROOT / 'index.html', ROOT / 'js' / 'app.js', ROOT / 'sw.js']
@@ -29,6 +29,21 @@ else:
     base = max(today, old[:8])
     new = base + ('a' if old[:8] != base
                   else string.ascii_lowercase[string.ascii_lowercase.index(old[8]) + 1])
+
+# a stale checkout can re-mint a token master already shipped (v20260809a
+# shipped twice; near-miss again 2026-08-17 when a worktree bumped to a token
+# two auto-deploys had used). Best-effort: read origin/master's sw.js and mint
+# strictly above whatever it carries. Offline or missing ref -> skip silently.
+try:
+    r = subprocess.run(['git', 'show', 'origin/master:sw.js'], cwd=ROOT,
+                       capture_output=True, text=True, timeout=10)
+    remote = max(TOKEN.findall(r.stdout), default=None) if r.returncode == 0 else None
+except Exception:
+    remote = None
+if remote and new <= remote:
+    base = remote[:8]
+    new = base + string.ascii_lowercase[string.ascii_lowercase.index(remote[8]) + 1]
+    print(f'  (origin/master already at {remote}; minting {new} instead)')
 
 for f in FILES:
     t = f.read_text()

@@ -47,9 +47,36 @@ def norm(n):
     return re.sub(r'\b(fc|sc|cf|afc|cd|club|the)\b', '', n.lower()).replace(' ', '').strip()
 
 
+def check_bank(bank):
+    """The seed filter once silently dropped four clubs (caught 2026-08-17
+    only by cross-checking Wikipedia). A division whose teams disagree on
+    games played, or any team with implausibly few games, is the signature —
+    refuse to rate from a bank that shows it."""
+    grp, gp = {}, {}
+    for m in bank['matches'].values():
+        if m['bracket'] != 'League' or not m.get('score'):
+            continue
+        grp.setdefault(m['group'], set()).update((m['home'], m['away']))
+        for t in (m['home'], m['away']):
+            gp[t] = gp.get(t, 0) + 1
+    bad = {g: sorted({gp[t] for t in ts}) for g, ts in grp.items()
+           if len({gp[t] for t in ts}) > 1}
+    if bad:
+        sys.exit(f'BANK INVARIANT FAILED — divisions with non-uniform games '
+                 f'played {bad}: a team is probably missing from the '
+                 f'usl2_rosters.json seed (verify division rosters, reseed, '
+                 f'rerun bank_usl2_full.py)')
+    low = [bank['teams'].get(t, t) for t, n in gp.items() if n < 10]
+    if low:
+        sys.exit(f'BANK INVARIANT FAILED — teams under 10 league games: {low}')
+    print(f'bank invariants OK: {len(gp)} teams, {len(grp)} divisions, '
+          f'uniform games played', file=sys.stderr)
+
+
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     bank = json.load(open(os.path.join(root, 'data', 'usl2_matches.json')))
+    check_bank(bank)
     team_name = bank['teams']
 
     events = []
