@@ -48,3 +48,29 @@ echo "staged $(find "$STAGE" -type f | wc -l | tr -d ' ') files ($(du -sh "$STAG
 # and the D1 signups binding (bindings only apply when deploying via config).
 npx -y wrangler@4.114.0 pages deploy --branch=master --commit-dirty=true
 echo "Deployed: https://rank-xi.pages.dev"
+
+# Post-deploy gate: a deploy that ships but serves 404s must fail loudly —
+# the wire JSONs were 404 in production for days (staging grep missed grab()
+# fetches) and nothing noticed. Verify against the project domain (custom
+# domain adds redirects + edge cache); retry to ride out propagation lag.
+# In the scheduled Action a non-zero exit here files the failure issue.
+LIVE="https://rank-xi.pages.dev"
+verify_url() {
+  for i in 1 2 3 4 5; do
+    curl -sfo /dev/null "$1" && return 0
+    sleep 3
+  done
+  echo "DEPLOY VERIFY FAILED: $1" >&2
+  return 1
+}
+vfail=0
+curl -sfL "$LIVE/app.html" | grep -q "$NEWV" || \
+  { echo "DEPLOY VERIFY FAILED: live app.html is not serving v$NEWV" >&2; vfail=1; }
+for f in "$STAGE"/data/*.json; do
+  verify_url "$LIVE/data/$(basename "$f")?v=$NEWV" || vfail=1
+done
+if [ "$vfail" -ne 0 ]; then
+  echo "DEPLOY VERIFY FAILED — live site disagrees with what was staged" >&2
+  exit 1
+fi
+echo "verified: v$NEWV live, $(ls "$STAGE"/data/*.json | wc -l | tr -d ' ') data files serving 200"
