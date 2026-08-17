@@ -604,7 +604,7 @@ function wireSearch() {
 const LEVELS = {
   all: null,
   pro: ['mls', 'uslc', 'usl1', 'mnp', 'nisa', 'nwsl', 'uslw'],
-  amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'swpl', 'mpl', 'mwpl', 'cpl', 'cplw', 'gcpl', 'loc', 'uslwl', 'wpsl', 'uws', 'uws2'],
+  amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'swpl', 'mpl', 'mwpl', 'cpl', 'cplw', 'gcpl', 'loc', 'csl', 'sfsfl', 'eplwa', 'lisfl', 'uslwl', 'wpsl', 'uws', 'uws2'],
   college: ['ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w'],
   youth: ['mlsnext', 'ecnlb', 'ga', 'ecnlg', 'ea', 'ecrlb', 'ecrlg', 'gaa']
 };
@@ -834,7 +834,7 @@ const FACT = [1, 1, 2, 6, 24, 120, 720, 5040];
 /* Tier-tuned engine — backtested 2026-07-27 on 1,377 real matches (310 NPSL
    + 1,067 pro): amateur football wants a bigger K and smaller home edge than
    pro parity leagues, so params split by tier instead of one-size-fits-all. */
-const AMATEUR_TIER = new Set(['npsl', 'upsl', 'usl2', 'apsl', 'gcpl', 'loc', 'uslwl', 'wpsl', 'uws', 'nisa', 'ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w']);
+const AMATEUR_TIER = new Set(['npsl', 'upsl', 'usl2', 'apsl', 'gcpl', 'loc', 'csl', 'sfsfl', 'eplwa', 'lisfl', 'uslwl', 'wpsl', 'uws', 'nisa', 'ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w']);
 function oddsFor(h, a, homeAdv) {
   const amateur = AMATEUR_TIER.has(h.g) && AMATEUR_TIER.has(a.g);
   const ha = homeAdv != null ? homeAdv : (amateur ? 30 : 65);
@@ -1800,10 +1800,12 @@ const TIERS = {
     { t: 'Division II', pro: true, leagues: ['uslc'] },
     { t: 'Division III', pro: true, leagues: ['usl1', 'mnp'], extra: ['nisa'], note: 'NISA: professional sanctioning not awarded — unsanctioned since Dec 2024' },
     { t: 'National amateur', leagues: ['npsl', 'usl2', 'upsl'] },
-    { t: 'Regional & emerging', leagues: ['apsl', 'gcpl', 'loc', 'swpl', 'mpl', 'mwpl', 'cpl'], coming: [
+    { t: 'Regional & emerging', leagues: ['apsl', 'gcpl', 'loc', 'swpl', 'mpl', 'mwpl', 'cpl', 'csl', 'sfsfl', 'eplwa', 'lisfl'], coming: [
       /* The old Eastern Premier (EPSL) is NOT missing: it renamed to APSL in
          Feb 2025 and is already a rated layer above. */
-      'More regional leagues', 'State, city & rec leagues'] },
+      /* BDSL held out 8/2026: bdsl.org's own standings embed 403s site-wide,
+         so no verifiable 2026 Premier roster exists — see usasa-elite-batch/bdsl.md. */
+      'Buffalo & District SL', 'More regional leagues', 'State, city & rec leagues'] },
     { t: 'College', leagues: ['ncaa1', 'ncaa2', 'ncaa3', 'naia'] },
     { t: 'Youth', leagues: ['mlsnext', 'ecnlb', 'ecrlb', 'ea'] }
   ],
