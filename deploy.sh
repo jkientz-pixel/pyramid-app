@@ -39,7 +39,7 @@ find "$STAGE/js" "$STAGE/css" \( -name '*.bak' -o -name '*.tmp' \) -delete
 
 # only the data files app.js actually fetches
 mkdir -p "$STAGE/data"
-for f in $(grep -ohE "fetch\('data/[a-z0-9_.-]+" js/app.js | sed "s/.*'//"); do
+for f in $(grep -ohE "(fetch|grab)\('data/[a-z0-9_.-]+" js/app.js | sed "s/.*'//" | sort -u); do
   cp "$f" "$STAGE/data/"
 done
 
