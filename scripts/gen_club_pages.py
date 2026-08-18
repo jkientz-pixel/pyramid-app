@@ -61,6 +61,11 @@ for c in rated:
     desc = (f"{c['n']} ({loc}) rates {c['r']} {basis} — #{lg_rank[c['id']]} in {lg_label}, "
             f"#{nat_rank[c['id']]} of {len(by_sex[c.get('x', 'm')]):,} rated clubs in the "
             f"{'women’s' if sexw else 'men’s'} US soccer pyramid.")
+    # per-club share card when gen_og_cards.py produced one (it runs first in
+    # deploy.sh); otherwise the site-wide banner
+    has_card = os.path.exists(os.path.join(ROOT, 'og', f"{c['id']}.jpg"))
+    og_img = f"{SITE}/og/{c['id']}.jpg" if has_card else f'{SITE}/og.png'
+    tw_card = 'summary_large_image' if has_card else 'summary'
     riv_rows = ''.join(
         f'<li><a href="/club/{p["id"]}">{html.escape(p["n"])}</a> · {html.escape(leagues.get(p["g"], {}).get("label", p["g"]))} · {p["r"]}</li>'
         for p in rivals(c))
@@ -77,7 +82,8 @@ for c in rated:
 <link rel="canonical" href="{SITE}/club/{c['id']}">
 <meta property="og:title" content="{html.escape(title)}">
 <meta property="og:description" content="{html.escape(desc)}">
-<meta property="og:image" content="{SITE}/og.png"><meta property="og:type" content="website">
+<meta property="og:image" content="{og_img}"><meta property="og:type" content="website">
+<meta name="twitter:card" content="{tw_card}">
 <script type="application/ld+json">{ld}</script>
 <style>@font-face{{font-family:"Barlow Condensed";font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/barlow-condensed-latin-700.woff2) format("woff2")}}
 body{{margin:0;background:#0C1512;color:#E8EFEA;font:16px/1.55 -apple-system,"Segoe UI",Roboto,sans-serif;padding:24px clamp(16px,4vw,48px)}}
