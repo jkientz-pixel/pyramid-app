@@ -2433,7 +2433,7 @@ function screenSimulator(ref) {
     </div>
     ${passed.length ? `<p class="note sim-up">You'd pass: ${passed.slice(0, 5).map(esc).join(', ')}${passed.length > 5 ? ` +${passed.length - 5} more` : ''}</p>`
       : dropped ? `<p class="note sim-down">${dropped} club${dropped > 1 ? 's' : ''} would pass you.</p>`
-      : `<p class="note">Add a result and these numbers move.</p>`}
+      : _sim.log.length ? '' : `<p class="note">Add a result and these numbers move.</p>`}
     ${_sim.log.length ? `<ul class="simlog">${_sim.log.map(m =>
       `<li><span>${m.gf > m.ga ? '&#9989; Won' : m.gf === m.ga ? '&#10134; Drew' : '&#10060; Lost'} ${m.gf}&ndash;${m.ga} ${m.v === 'h' ? 'vs' : 'at'} ${esc(m.n)}${m.xlg ? ` <i>(${esc(m.xlg)})</i>` : ''}</span><span class="${m.d >= 0 ? 'sim-up' : 'sim-down'}">${m.d >= 0 ? '+' : ''}${m.d.toFixed(1)}</span></li>`).join('')}</ul>` : ''}
     <div class="kicker" style="margin-top:14px">What would it take?</div>
