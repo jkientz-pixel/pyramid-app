@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260815a';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260815a';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260817f';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260817f';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260815a')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260817f')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260815a';
+const BUILDV = '20260817f';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -604,7 +604,7 @@ function wireSearch() {
 const LEVELS = {
   all: null,
   pro: ['mls', 'uslc', 'usl1', 'mnp', 'nisa', 'nwsl', 'uslw'],
-  amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'swpl', 'mpl', 'mwpl', 'cpl', 'cplw', 'gcpl', 'loc', 'uslwl', 'wpsl', 'uws', 'uws2'],
+  amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'swpl', 'mpl', 'mwpl', 'cpl', 'cplw', 'gcpl', 'loc', 'csl', 'sfsfl', 'eplwa', 'lisfl', 'uslwl', 'wpsl', 'uws', 'uws2'],
   college: ['ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w'],
   youth: ['mlsnext', 'ecnlb', 'ga', 'ecnlg', 'ea', 'ecrlb', 'ecrlg', 'gaa']
 };
@@ -834,7 +834,7 @@ const FACT = [1, 1, 2, 6, 24, 120, 720, 5040];
 /* Tier-tuned engine — backtested 2026-07-27 on 1,377 real matches (310 NPSL
    + 1,067 pro): amateur football wants a bigger K and smaller home edge than
    pro parity leagues, so params split by tier instead of one-size-fits-all. */
-const AMATEUR_TIER = new Set(['npsl', 'upsl', 'usl2', 'apsl', 'gcpl', 'loc', 'uslwl', 'wpsl', 'uws', 'nisa', 'ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w']);
+const AMATEUR_TIER = new Set(['npsl', 'upsl', 'usl2', 'apsl', 'gcpl', 'loc', 'csl', 'sfsfl', 'eplwa', 'lisfl', 'uslwl', 'wpsl', 'uws', 'nisa', 'ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w']);
 function oddsFor(h, a, homeAdv) {
   const amateur = AMATEUR_TIER.has(h.g) && AMATEUR_TIER.has(a.g);
   const ha = homeAdv != null ? homeAdv : (amateur ? 30 : 65);
@@ -946,7 +946,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260815a')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260817f')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -954,16 +954,18 @@ let _wireFeed = null;
 async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
-  const [npsl, asa] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260815a'), grab('data/wire_asa.json?v=20260815a')]);
-  _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' })).concat(asa)
+  const [npsl, asa, usl2] = await Promise.all([
+    grab('data/wire_npsl.json?v=20260817f'), grab('data/wire_asa.json?v=20260817f'),
+    grab('data/wire_usl2.json?v=20260817f')]);
+  _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' }))
+    .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })))
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
 }
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260815a')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260817f')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1142,7 +1144,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260815a')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260817f')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1415,35 +1417,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260815a')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260817f')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260815a')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260817f')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260815a')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260817f')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260815a')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260817f')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260815a')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260817f')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1800,10 +1802,12 @@ const TIERS = {
     { t: 'Division II', pro: true, leagues: ['uslc'] },
     { t: 'Division III', pro: true, leagues: ['usl1', 'mnp'], extra: ['nisa'], note: 'NISA: professional sanctioning not awarded — unsanctioned since Dec 2024' },
     { t: 'National amateur', leagues: ['npsl', 'usl2', 'upsl'] },
-    { t: 'Regional & emerging', leagues: ['apsl', 'gcpl', 'loc', 'swpl', 'mpl', 'mwpl', 'cpl'], coming: [
+    { t: 'Regional & emerging', leagues: ['apsl', 'gcpl', 'loc', 'swpl', 'mpl', 'mwpl', 'cpl', 'csl', 'sfsfl', 'eplwa', 'lisfl'], coming: [
       /* The old Eastern Premier (EPSL) is NOT missing: it renamed to APSL in
          Feb 2025 and is already a rated layer above. */
-      'More regional leagues', 'State, city & rec leagues'] },
+      /* BDSL held out 8/2026: bdsl.org's own standings embed 403s site-wide,
+         so no verifiable 2026 Premier roster exists — see usasa-elite-batch/bdsl.md. */
+      'Buffalo & District SL', 'More regional leagues', 'State, city & rec leagues'] },
     { t: 'College', leagues: ['ncaa1', 'ncaa2', 'ncaa3', 'naia'] },
     { t: 'Youth', leagues: ['mlsnext', 'ecnlb', 'ecrlb', 'ea'] }
   ],
@@ -1823,7 +1827,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260815a')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260817f')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -2103,7 +2107,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260815a')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260817f')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -2364,7 +2368,7 @@ function wireLeaders(lgs) {
 }
 async function screenWire() {
   crumb.textContent = 'The Wire';
-  const lgs = (sex === 'w' ? ['nwsl', 'uslw'] : ['mls', 'uslc', 'usl1', 'mnp', 'npsl']).filter(g => LEAGUES[g]);
+  const lgs = (sex === 'w' ? ['nwsl', 'uslw'] : ['mls', 'uslc', 'usl1', 'mnp', 'usl2', 'npsl']).filter(g => LEAGUES[g]);
   if (wireLg !== 'all' && !lgs.includes(wireLg)) wireLg = 'all';
   const active = wireLg === 'all' ? lgs : [wireLg];
   const leaders = wireLeaders(active).map(it => `

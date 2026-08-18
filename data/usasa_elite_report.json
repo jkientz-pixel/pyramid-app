@@ -1,0 +1,48 @@
+{
+ "skipped_existing": [
+  "eplwa: Bellingham United FC (already in this league)",
+  "eplwa: FC Olympia (already in this league)",
+  "eplwa: Port Orchard FC (already in this league)",
+  "eplwa: WE SURF SC (already in this league)",
+  "eplwa: Wenatchee All Stars FC (already in this league)",
+  "eplwa: Yakima United FC (already in this league)",
+  "sfsfl: Lands End FC (already in this league)",
+  "sfsfl: Mexicali FC (already in this league)",
+  "sfsfl: Olympic Club (already in this league)",
+  "sfsfl: SF Celtic SC (already in this league)",
+  "sfsfl: SF Elite SC (already in this league)",
+  "sfsfl: SF Glens SC (already in this league)",
+  "sfsfl: SF Hibernian FC (already in this league)",
+  "sfsfl: SF Vikings SC (already in this league)",
+  "sfsfl: SFIAC (already in this league)",
+  "csl: Braza Futbol (already in this league)",
+  "csl: Central Park Rangers II (already in this league)",
+  "csl: Hoboken FC 1912 II (already in this league)",
+  "csl: Laberia FC (already in this league)",
+  "csl: Manhattan Celtic (already in this league)",
+  "csl: Manhattan Kickers (already in this league)",
+  "csl: NY Galicia (already in this league)",
+  "csl: NY Ukrainians (already in this league)",
+  "csl: Polonia SC (already in this league)",
+  "lisfl: NY Irish Rovers (already in this league)",
+  "lisfl: NY Polet (already in this league)",
+  "lisfl: Istria SC (already in this league)",
+  "lisfl: Eleftheria SC (already in this league)",
+  "lisfl: Asteras FC (already in this league)",
+  "lisfl: Hellas New York FC (already in this league)"
+ ],
+ "held_no_city": [
+  "eplwa: Skagit Athletic FC",
+  "csl: New Amsterdam FC",
+  "lisfl: Port Jefferson",
+  "lisfl: Guyana Juniors AP Generals"
+ ],
+ "geocode_failed": [],
+ "no_crest": [],
+ "added": {
+  "eplwa": 0,
+  "sfsfl": 3,
+  "csl": 2,
+  "lisfl": 0
+ }
+}
