@@ -103,14 +103,49 @@ def main():
                 p.goto(url, timeout=60000)
                 if not cf_wait(p): raise Exception('cf wall')
                 try:
-                    img = p.wait_for_selector('img[src*="cdn/logos"]', timeout=12000)
+                    p.wait_for_selector('img[src*="cdn/logos"]', timeout=12000)
                 except Exception:
-                    img = p.query_selector('.team-logo img, header img[alt*="ogo"], img[class*="logo"]')
-                if not img: raise Exception('no logo img on team page')
-                p.evaluate("(el) => { el.style.width='128px'; el.style.height='128px'; el.style.objectFit='contain'; }", img)
-                p.wait_for_timeout(300)
-                img.screenshot(path=dest, omit_background=True)
-                if os.path.getsize(dest) < 400: raise Exception('empty screenshot')
+                    pass
+                # 2025-26 layout clips the in-page <img> to a narrow column
+                # (every capture came out 77x128 with page furniture in
+                # frame) — so take the highest-res logo URL and render it
+                # alone on a blank page instead; the browser context still
+                # carries the headers the CDN demands
+                srcs = p.evaluate(
+                    '() => {'
+                    '  const imgs = [...document.querySelectorAll('
+                    '    \'img[src*="cdn/logos"], .team-logo img, header img[alt*="ogo"], img[class*="logo"]\')];'
+                    '  return [...new Set(imgs.filter(i => i.naturalWidth >= 40).map(i => i.src))];'
+                    '}')
+                if not srcs: raise Exception('no logo img on team page')
+                # DOM order: the team crest precedes the site-wide NAIA
+                # banner; render isolated and hash-reject the banner (28 of
+                # 31 captures were that identical league mark when picking
+                # by size)
+                import hashlib
+                from PIL import Image
+                LEAGUE_MARK = 'c007bc4a76429158a6da937fb0648660'
+                ok = False
+                for src in srcs[:4]:
+                    p.goto('about:blank')
+                    p.set_content('<body style="margin:0"><img src="' + src + '" '
+                                  'style="width:128px;height:128px;object-fit:contain"></body>')
+                    el = p.wait_for_selector('img', timeout=15000)
+                    p.wait_for_function('document.querySelector("img").complete '
+                                        '&& document.querySelector("img").naturalWidth > 0', timeout=15000)
+                    el.screenshot(path=dest, omit_background=True)
+                    if os.path.getsize(dest) < 400: continue
+                    if hashlib.md5(open(dest, 'rb').read()).hexdigest() == LEAGUE_MARK: continue
+                    _im = Image.open(dest)
+                    if _im.size != (128, 128): continue
+                    _a = _im.convert('RGBA').getchannel('A')
+                    if sum(n for v, n in enumerate(_a.histogram()) if v >= 200) / (128 * 128) < 0.08:
+                        continue
+                    ok = True
+                    break
+                if not ok:
+                    if os.path.exists(dest): os.remove(dest)
+                    raise Exception('no non-generic logo render')
                 sub = subprocess.run(['sips', '-Z', '128', dest], capture_output=True)
                 c['img'] = fn
                 got += 1
