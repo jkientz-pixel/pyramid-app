@@ -675,6 +675,7 @@ function screenMap() {
           const p2 = squadFor(c2)[+parts2[1]]; return p2 ? `<a class="chip" href="#/player/${id}" style="text-decoration:none">&#9733; ${esc(p2.name)}</a>` : ''; }).join('') + `</div>`;
     })()}
     <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>Upsets, rating swings, golden-boot races &mdash; generated live from real results.</span></a>
+    <a class="fa-card" href="#/sim"><b>&#128200; Rank Simulator</b><span>Pick any club, invent a scoreline, and watch its rank move &mdash; powered by the real ratings.</span></a>
     <a class="fa-card" href="#/freeagents"><b>&#9733; Free Agents</b><span>No club right now? Get seen by every club on this map.</span></a>
     ${adSlot('map', 'National map')}
     <p class="note">Tap a state to zoom in. Tap a pin for the club. Pinch, scroll, or use +/&minus; to zoom further.</p>
@@ -1519,7 +1520,7 @@ async function screenClub(ref) {
       <a class="lgchip" href="#/league/${c.g}" style="background:${m.color}">${m.img ? `<img class="lgimg" src="${m.img}" alt="">` : ''}${m.label}</a>
       <span class="sub" style="margin-left:8px">${c.ct ? `${esc(c.ct)}, ${c.st}` : (STATE_NAME[c.st] || PROV_NAME[c.st] || c.st)}</span>${c.ia ? `<span class="sub" style="margin-left:8px;color:#C77F1E;border:1px solid #C77F1E;border-radius:6px;padding:1px 7px;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">Inactive &middot; not in current league listings</span>` : ''}</div>
     </div>
-    <div class="btnrow">${favBtn('clubs', c.id)}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.url ? `<a class="hdrlink" href="${safeHref(c.url)}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${safeHref(c.si)}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${safeHref(c.sx)}" target="_blank" rel="noopener">X</a>` : ''}</div>
+    <div class="btnrow">${favBtn('clubs', c.id)}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.r ? `<button class="predictbtn2" data-sim="${c.id}">&#128200; Rank Simulator</button>` : ''}${c.url ? `<a class="hdrlink" href="${safeHref(c.url)}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${safeHref(c.si)}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${safeHref(c.sx)}" target="_blank" rel="noopener">X</a>` : ''}</div>
     ${(HONOURS[rosterKey(c)] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[rosterKey(c)] || []).map(h2 => `<li><b>${esc(h2.t)}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
       <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : DTAG + 'Rating'}${c.pv ? ' · provisional' : ''}</span></div>
@@ -1587,6 +1588,8 @@ async function screenClub(ref) {
   wireFav();
   const pb = view.querySelector('.predictbtn2');
   if (pb) pb.addEventListener('click', () => openPredict(pb.dataset.predict));
+  const sb = view.querySelector('[data-sim]');
+  if (sb) sb.addEventListener('click', () => { location.hash = '#/sim/' + sb.dataset.sim; });
 }
 
 function screenAbout() {
@@ -2261,6 +2264,232 @@ function openPredict(ci) {
   addEventListener('hashchange', close, { once: true });
 }
 
+/* ---- Rank Simulator: book hypothetical results and watch the league rank
+   move. Rating deltas mirror scripts/compute_elo.py exactly (K=64, +30 home
+   edge, ln(margin+1) goal multiplier) so the simulator predicts what the real
+   pipeline would do with those scores; the win-chance line reuses oddsFor()
+   so odds always agree with the Predict sheet. Nothing is persisted. ---- */
+const SIM_K = 64, SIM_HOME = 30;
+function simDelta(us, them, venue, gf, ga) {
+  const edge = venue === 'h' ? SIM_HOME : venue === 'a' ? -SIM_HOME : 0;
+  const exp = 1 / (1 + Math.pow(10, (them - (us + edge)) / 400));
+  const score = gf > ga ? 1 : gf < ga ? 0 : 0.5;
+  const margin = Math.log(Math.abs(gf - ga) + 1) || 1;
+  return SIM_K * margin * (score - exp);
+}
+const simTable = g => CLUBS.filter(c => c.g === g && !c.h && c.r).sort((a, b) => b.r - a.r);
+const simRank = (r, table, selfId) => 1 + table.filter(c => c.id !== selfId && c.r > r).length;
+
+let _sim = null; // { ci, oi, v, gf, ga, simR, log: [] } — survives route changes in-session
+
+/* club picker sheet: the Predict sheet's level chips + search, plus a league
+   dropdown that lists the WHOLE league ranked (for people who don't know club
+   names and want to browse) and a dice button for a random pick */
+function simPickerSheet(title, filter, onPick) {
+  document.querySelector('.sheet')?.remove();
+  let lvl = 'all';
+  const base = CLUBS.map((c, i) => ({ c, i })).filter(o => o.c.r && !o.c.h && (!filter || filter(o.c)));
+  const lgs = [...new Set(base.map(o => o.c.g))]
+    .sort((a, b) => LEAGUES[a].label.localeCompare(LEAGUES[b].label));
+  const sheet = document.createElement('div');
+  sheet.className = 'sheet';
+  sheet.innerHTML = `<div class="sheet-panel">
+    <div class="sheet-head"><b>${title}</b><button class="sheet-x" aria-label="Close">&times;</button></div>
+    <div class="chips" id="simlvl">${['all', 'pro', 'amateur', 'college'].map(k =>
+      `<button class="chip solid" data-plvl="${k}" aria-pressed="${k === 'all'}">${k === 'all' ? 'All levels' : k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div>
+    <div class="simpickrow">
+      <select id="simlg" aria-label="League filter"><option value="">All leagues &mdash; or pick one to browse</option>${lgs.map(g =>
+        `<option value="${g}">${esc(LEAGUES[g].label)}${LEAGUES[g].sex === 'w' ? ' (W)' : ''} &middot; ${base.filter(o => o.c.g === g).length}</option>`).join('')}</select>
+      <button class="chip solid" id="simrand" aria-pressed="false">&#127922; Random</button>
+    </div>
+    <input id="simq" type="search" placeholder="Search any club" autocomplete="off">
+    <div class="sheet-list" id="simlist"></div>
+  </div>`;
+  document.querySelector('.screen').appendChild(sheet);
+  const list = sheet.querySelector('#simlist'), q = sheet.querySelector('#simq'), lg = sheet.querySelector('#simlg');
+  const pool = () => {
+    let cands = base;
+    if (lg.value) cands = cands.filter(o => o.c.g === lg.value);
+    else if (LEVELS[lvl]) cands = cands.filter(o => LEVELS[lvl].includes(o.c.g));
+    const term = q.value.trim().toLowerCase();
+    if (term) cands = cands.filter(o => o.c.n.toLowerCase().includes(term));
+    return [...cands].sort((a, b) => b.c.r - a.c.r);
+  };
+  const renderList = () => {
+    const rows = pool();
+    // a chosen league lists every club in it (that's the browse case);
+    // otherwise cap like the Predict sheet so the all-clubs list stays snappy
+    const shown = lg.value ? rows : rows.slice(0, 40);
+    list.innerHTML = shown.map(o =>
+      `<a class="qrow" data-pick="${o.i}" href="javascript:void(0)">${crestHtml(o.c)}<span><b>${esc(o.c.n)}</b><i>#${simRank(o.c.r, simTable(o.c.g), o.c.id)} in ${LEAGUES[o.c.g].label} &middot; ${o.c.st} &middot; ${o.c.r}</i></span></a>`).join('')
+      || '<div class="qrow qnone">No matches &mdash; try All leagues</div>';
+  };
+  renderList();
+  q.addEventListener('input', renderList);
+  lg.addEventListener('change', renderList);
+  sheet.querySelector('#simlvl').addEventListener('click', e => {
+    const b = e.target.closest('[data-plvl]'); if (!b) return;
+    lvl = b.dataset.plvl; lg.value = '';
+    sheet.querySelectorAll('#simlvl .chip').forEach(x => x.setAttribute('aria-pressed', x.dataset.plvl === lvl));
+    renderList();
+  });
+  const done = c => { sheet.remove(); onPick(c); };
+  sheet.querySelector('#simrand').addEventListener('click', () => {
+    const rows = pool(); if (!rows.length) return;
+    done(rows[Math.floor(Math.random() * rows.length)].c);
+  });
+  list.addEventListener('click', e => {
+    const a = e.target.closest('[data-pick]'); if (!a) return;
+    done(CLUBS[+a.dataset.pick]);
+  });
+  const close = () => sheet.remove();
+  sheet.querySelector('.sheet-x').addEventListener('click', close);
+  sheet.addEventListener('click', e => { if (e.target === sheet) close(); });
+  addEventListener('hashchange', close, { once: true });
+  q.focus();
+}
+
+function screenSimulator(ref) {
+  crumb.textContent = 'Rank Simulator';
+  if (ref != null) {
+    const ci = clubIdx(ref);
+    const c0 = CLUBS[ci];
+    if (ci >= 0 && c0 && c0.r && !c0.h) {
+      if (String(ref) !== c0.id) { location.replace('#/sim/' + c0.id); return; }
+      if (!_sim || _sim.ci !== ci) _sim = { ci, oi: null, v: 'h', gf: 2, ga: 1, simR: c0.r, log: [] };
+    }
+  }
+  const c = _sim && CLUBS[_sim.ci];
+  if (!c) {
+    view.innerHTML = `
+      <div class="kicker">What-if machine &middot; real ratings</div>
+      <h2 class="disp">Rank Simulator</h2>
+      <p class="note" style="font-size:.85rem;max-width:52ch">Pick any rated club, enter the
+      score you think a match would end, and watch its league rank move. Points move by the
+      same math as the real rankings &mdash; beating a club rated above you pays big; beating a
+      weaker one pays almost nothing. Nothing is saved, and the real table never moves.</p>
+      <div class="btnrow" style="margin-top:10px">
+        <button class="predictbtn2" id="simpick">Choose your club</button>
+        <button class="predictbtn2" id="simlucky">&#127922; Surprise me</button>
+      </div>`;
+    view.querySelector('#simpick').addEventListener('click', () =>
+      simPickerSheet('Choose your club', null, c2 => { location.hash = '#/sim/' + c2.id; }));
+    view.querySelector('#simlucky').addEventListener('click', () => {
+      const pool = CLUBS.filter(x => x.r && !x.h);
+      location.hash = '#/sim/' + pool[Math.floor(Math.random() * pool.length)].id;
+    });
+    return;
+  }
+  const table = simTable(c.g);
+  if (_sim.oi == null) {
+    // default opponent: the club one rank above — the one you're chasing
+    const idx = table.findIndex(x => x.id === c.id);
+    const def = idx > 0 ? table[idx - 1] : table[1];
+    if (def) _sim.oi = CLUB_BY_ID.get(def.id);
+  }
+  const o = _sim.oi != null ? CLUBS[_sim.oi] : null;
+  const rank0 = simRank(c.r, table, c.id), rank1 = simRank(_sim.simR, table, c.id);
+  const dTot = _sim.simR - c.r;
+  const passed = table.filter(x => x.id !== c.id && x.r <= _sim.simR && x.r > c.r).map(x => x.n);
+  const dropped = table.filter(x => x.id !== c.id && x.r > _sim.simR && x.r <= c.r).length;
+  let previewLine = '';
+  if (o) {
+    const mine = { ...c, r: Math.round(_sim.simR) };
+    const odds = _sim.v === 'h' ? oddsFor(mine, o) : oddsFor(o, mine);
+    const winP = _sim.v === 'h' ? odds.pH : odds.pA;
+    const d = simDelta(_sim.simR, o.r, _sim.v, _sim.gf, _sim.ga);
+    const word = _sim.gf > _sim.ga ? 'win' : _sim.gf === _sim.ga ? 'draw' : 'loss';
+    previewLine = `About a <b>${Math.round(winP * 100)}%</b> chance of beating ${esc(o.n)} ${_sim.v === 'h' ? 'at home' : 'away'} &mdash; a ${_sim.gf}&ndash;${_sim.ga} ${word} would ${d >= 0 ? 'gain' : 'cost'} <b>${d >= 0 ? '+' : ''}${d.toFixed(1)} points</b>.`;
+  }
+  view.innerHTML = `
+    <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/club/${c.id}'">&larr; Back</button>
+    <div class="kicker">Rank Simulator &middot; hypothetical &middot; nothing is saved</div>
+    <h2 class="disp">${esc(c.n)}</h2>
+    <div class="simclubrow">
+      ${crestHtml(c)}<span><b>#${rank0} in ${LEAGUES[c.g].label}</b><i>${c.r} points &middot; ${table.length} rated clubs</i></span>
+      <button class="chip solid" id="simswap" aria-pressed="false">Change club</button>
+    </div>
+    <div class="kicker" style="margin-top:14px">Predict a match</div>
+    <div class="simclubrow">
+      ${o ? crestHtml(o) : ''}<span>${o ? `<b>${esc(o.n)}</b><i>${LEAGUES[o.g].label} &middot; ${o.r} points</i>` : '<b>Choose an opponent</b><i>any league, any level</i>'}</span>
+      <button class="chip solid" id="simopp" aria-pressed="false">${o ? 'Change opponent' : 'Choose'}</button>
+    </div>
+    <div class="chips seg" id="simvenue" style="margin-top:10px">
+      <button class="chip solid" data-v="h" aria-pressed="${_sim.v === 'h'}">Home</button>
+      <button class="chip solid" data-v="a" aria-pressed="${_sim.v === 'a'}">Away</button>
+    </div>
+    <div class="simgoals">
+      <label>Your goals<input id="simgf" type="number" min="0" max="15" value="${_sim.gf}"></label>
+      <label>Their goals<input id="simga" type="number" min="0" max="15" value="${_sim.ga}"></label>
+      <button class="predictbtn2" id="simbook"${o ? '' : ' disabled'}>Add this result</button>
+      <button class="chip solid" id="simreset" aria-pressed="false">Start over</button>
+    </div>
+    <p class="note" id="simprev">${previewLine}</p>
+    <div class="kicker" style="margin-top:14px">Where you'd land</div>
+    <div class="statgrid">
+      <div class="stat"><b>${rank1 === rank0 ? '#' + rank1 : `#${rank0} <span class="simarrow">&rarr;</span> <span class="${rank1 < rank0 ? 'sim-up' : 'sim-down'}">#${rank1}</span>`}</b><span>League rank</span></div>
+      <div class="stat"><b>${_sim.log.length ? `${c.r} <span class="simarrow">&rarr;</span> ${Math.round(_sim.simR)}` : c.r}</b><span>Points</span></div>
+      <div class="stat"><b>${_sim.log.length ? `<span class="${dTot >= 0 ? 'sim-up' : 'sim-down'}">${dTot >= 0 ? '+' : ''}${Math.round(dTot)}</span>` : '&mdash;'}</b><span>Gained / lost</span></div>
+    </div>
+    ${passed.length ? `<p class="note sim-up">You'd pass: ${passed.slice(0, 5).map(esc).join(', ')}${passed.length > 5 ? ` +${passed.length - 5} more` : ''}</p>`
+      : dropped ? `<p class="note sim-down">${dropped} club${dropped > 1 ? 's' : ''} would pass you.</p>`
+      : `<p class="note">Add a result and these numbers move.</p>`}
+    ${_sim.log.length ? `<ul class="simlog">${_sim.log.map(m =>
+      `<li><span>${m.gf > m.ga ? '&#9989; Won' : m.gf === m.ga ? '&#10134; Drew' : '&#10060; Lost'} ${m.gf}&ndash;${m.ga} ${m.v === 'h' ? 'vs' : 'at'} ${esc(m.n)}${m.xlg ? ` <i>(${esc(m.xlg)})</i>` : ''}</span><span class="${m.d >= 0 ? 'sim-up' : 'sim-down'}">${m.d >= 0 ? '+' : ''}${m.d.toFixed(1)}</span></li>`).join('')}</ul>` : ''}
+    <div class="kicker" style="margin-top:14px">What would it take?</div>
+    <div class="simgoals">
+      <label>Rank you want<input id="simtarget" type="number" min="1" value="${Math.max(1, rank0 - 5)}"></label>
+      <button class="predictbtn2" id="simsolve">Show me</button>
+    </div>
+    <p class="note" id="simroad"></p>
+    <p class="note" style="margin-top:14px">Hypothetical results only &mdash; the real rankings
+    never move. Rating changes use the production Elo math (K=64, +30 home edge, goal-margin
+    multiplier); win chances match the Predict sheet. Estimates for entertainment and analysis,
+    not betting advice.</p>`;
+  view.querySelector('#simswap').addEventListener('click', () =>
+    simPickerSheet('Choose your club', null, c2 => {
+      if (c2.id === c.id) return;
+      _sim = null; location.hash = '#/sim/' + c2.id;
+    }));
+  view.querySelector('#simopp').addEventListener('click', () =>
+    simPickerSheet('Choose an opponent', x => x.x === c.x && x.id !== c.id, o2 => {
+      _sim.oi = CLUB_BY_ID.get(o2.id); screenSimulator();
+    }));
+  view.querySelector('#simvenue').addEventListener('click', e => {
+    const b = e.target.closest('[data-v]'); if (!b) return;
+    _sim.v = b.dataset.v; screenSimulator();
+  });
+  const clampG = n => Math.max(0, Math.min(15, Math.round(+n || 0)));
+  ['simgf', 'simga'].forEach(id => view.querySelector('#' + id).addEventListener('change', e => {
+    _sim[id === 'simgf' ? 'gf' : 'ga'] = clampG(e.target.value); screenSimulator();
+  }));
+  view.querySelector('#simbook').addEventListener('click', () => {
+    if (_sim.oi == null) return;
+    const opp = CLUBS[_sim.oi];
+    const d = simDelta(_sim.simR, opp.r, _sim.v, _sim.gf, _sim.ga);
+    _sim.simR += d;
+    _sim.log.push({ n: opp.n, v: _sim.v, gf: _sim.gf, ga: _sim.ga, d,
+                    xlg: opp.g !== c.g ? LEAGUES[opp.g].label : null });
+    screenSimulator();
+  });
+  view.querySelector('#simreset').addEventListener('click', () => {
+    _sim.simR = c.r; _sim.log = []; screenSimulator();
+  });
+  view.querySelector('#simsolve').addEventListener('click', () => {
+    const t = Math.max(1, Math.round(+view.querySelector('#simtarget').value || 1));
+    const others = table.filter(x => x.id !== c.id).map(x => x.r).sort((a, b) => a - b);
+    const median = others[Math.floor(others.length / 2)] ?? c.r;
+    let r = c.r, wins = 0;
+    while (simRank(r, table, c.id) > t && wins < 20) { r += simDelta(r, median, 'h', 1, 0); wins++; }
+    const now = simRank(c.r, table, c.id);
+    view.querySelector('#simroad').innerHTML = now <= t
+      ? `Already there &mdash; ${esc(c.n)} sits at #${now}.`
+      : simRank(r, table, c.id) <= t
+        ? `From #${now} to <b>#${t}</b>: about <b class="sim-up">${wins === 1 ? 'one 1&ndash;0 home win' : wins + ' straight 1&ndash;0 home wins'}</b> over a typical ${LEAGUES[c.g].label} side (rated ${Math.round(median)}). Beating stronger clubs gets there in fewer games.`
+        : `Even 20 straight wins over a typical side wouldn't reach #${t} &mdash; it would take results against the top of the table.`;
+  });
+}
+
 function screenClubTools() {
   crumb.textContent = 'Club tools';
   view.innerHTML = `
@@ -2410,7 +2639,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
 let routedOnce = false;
 function route() {
   const h = location.hash || '#/map';
@@ -2441,6 +2670,7 @@ function route() {
   else if (parts[0] === 'table') screenTable();
   else if (parts[0] === 'matches') screenMatches(parts[1]);
   else if (parts[0] === 'wire') screenWire();
+  else if (parts[0] === 'sim') screenSimulator(parts[1]);
   else if (parts[0] === 'about') screenAbout();
   else if (parts[0] === 'state') screenState(parts[1]);
   else if (parts[0] === 'region') screenRegion(parts[1]);
