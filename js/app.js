@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260818f';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260818f';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260818h';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260818h';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260818f')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260818h')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260818f';
+const BUILDV = '20260818h';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -949,7 +949,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260818f')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260818h')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -958,8 +958,8 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa, usl2] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260818f'), grab('data/wire_asa.json?v=20260818f'),
-    grab('data/wire_usl2.json?v=20260818f')]);
+    grab('data/wire_npsl.json?v=20260818h'), grab('data/wire_asa.json?v=20260818h'),
+    grab('data/wire_usl2.json?v=20260818h')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' }))
     .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })))
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
@@ -985,7 +985,7 @@ async function hydrateWireHook() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260818f')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260818h')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -998,12 +998,12 @@ function fmtKick(iso) {
 /* Matchup Machine — one renderer, two homes: inline on #/matches and the
    standalone #/predict screen (the feature is a headliner, not a footnote) */
 function matchupMachineHtml(rated, preH) {
-  const pickBox = (id, sel) => `<span class="pickwrap"><input class="pickq" id="${id}" role="combobox" aria-expanded="false" aria-label="${id === 'pickH' ? 'Home' : 'Away'} club" autocomplete="off" spellcheck="false" data-idx="${CLUBS.indexOf(sel)}" value="${esc(sel.n)}"><div class="pickres" hidden></div></span>`;
+  const pickBox = (id, sel) => `<span class="pickwrap"><button type="button" class="pickq pickbtn" id="${id}" aria-haspopup="dialog" aria-label="${id === 'pickH' ? 'Home' : 'Away'} club &mdash; tap to change" data-idx="${CLUBS.indexOf(sel)}">${esc(sel.n)}</button></span>`;
   const home = CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0];
   return `
     <div class="kicker">Predictor · any club v any club · model estimate</div>
     <h2 class="disp">Matchup Machine</h2>
-    <p class="note" style="margin:2px 0 6px">Type to search any rated club &mdash; ${rated.length.toLocaleString()} to choose from.</p>
+    <p class="note" style="margin:2px 0 6px">Tap either club to swap it &mdash; search or browse all ${rated.length.toLocaleString()} rated clubs.</p>
     <div class="pickrow">
       ${pickBox('pickH', home)}
       <span class="vs">V</span>
@@ -1017,28 +1017,18 @@ function wireMatchupMachine(rated) {
     const a = CLUBS[+view.querySelector('#pickA').dataset.idx];
     if (h && a) view.querySelector('#pickout').innerHTML = matchCard(h, a, 'HYPOTHETICAL');
   };
-  /* type-ahead picker — a 1,500-option dropdown made clubs impossible to
-     find; substring search over rated clubs, tap a result to lock it in */
+  /* both pickers open the same sheet the Rank Simulator and club-page
+     Predict Result use — level chips, league browse, search and random —
+     scoped to the current rated pool, minus the club in the other slot */
   const wirePick = id => {
-    const q = view.querySelector('#' + id), res = q.parentElement.querySelector('.pickres');
-    const close = () => { res.hidden = true; q.setAttribute('aria-expanded', 'false'); };
-    q.addEventListener('focus', () => q.select());
-    q.addEventListener('input', () => {
-      const term = q.value.trim().toLowerCase();
-      if (term.length < 2) { close(); return; }
-      const hits = rated.filter(c => c.n.toLowerCase().includes(term)).slice(0, 8);
-      if (!hits.length) { res.innerHTML = '<div class="qrow qnone">No rated club matches</div>'; res.hidden = false; return; }
-      res.innerHTML = hits.map(c => `<button class="qrow" data-i="${CLUBS.indexOf(c)}">${crestHtml(c)}<span><b>${esc(c.n)}</b><i>${LEAGUES[c.g].label} &middot; ${c.r}</i></span></button>`).join('');
-      res.hidden = false; q.setAttribute('aria-expanded', 'true');
+    const btn = view.querySelector('#' + id);
+    btn.addEventListener('click', () => {
+      const other = CLUBS[+view.querySelector('#' + (id === 'pickH' ? 'pickA' : 'pickH')).dataset.idx];
+      const ok = new Set(rated.map(c => c.id));
+      simPickerSheet(id === 'pickH' ? 'Home club' : 'Away club',
+        c => ok.has(c.id) && c !== other,
+        c => { btn.dataset.idx = CLUBS.indexOf(c); btn.textContent = c.n; redo(); });
     });
-    res.addEventListener('click', e => {
-      const b = e.target.closest('[data-i]'); if (!b) return;
-      q.dataset.idx = b.dataset.i;
-      q.value = CLUBS[+b.dataset.i].n;
-      close(); redo();
-    });
-    q.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-    q.addEventListener('blur', () => setTimeout(() => { if (!res.contains(document.activeElement)) close(); }, 150));
   };
   wirePick('pickH'); wirePick('pickA');
 }
@@ -1187,7 +1177,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260818f')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260818h')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1460,35 +1450,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260818f')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260818h')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260818f')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260818h')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260818f')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260818h')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260818f')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260818h')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260818f')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260818h')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1901,7 +1891,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260818f')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260818h')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -2192,7 +2182,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260818f')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260818h')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -2443,23 +2433,14 @@ function screenSimulator(ref) {
   }
   const c = _sim && CLUBS[_sim.ci];
   if (!c) {
-    view.innerHTML = `
-      <div class="kicker">What-if machine &middot; real ratings</div>
-      <h2 class="disp">Rank Simulator</h2>
-      <p class="note" style="font-size:.85rem;max-width:52ch">Pick any rated club, enter the
-      score you think a match would end, and watch its league rank move. Points move by the
-      same math as the real rankings &mdash; beating a club rated above you pays big; beating a
-      weaker one pays almost nothing. Nothing is saved, and the real table never moves.</p>
-      <div class="btnrow" style="margin-top:10px">
-        <button class="predictbtn2" id="simpick">Choose your club</button>
-        <button class="predictbtn2" id="simlucky">&#127922; Surprise me</button>
-      </div>`;
-    view.querySelector('#simpick').addEventListener('click', () =>
-      simPickerSheet('Choose your club', null, c2 => { location.hash = '#/sim/' + c2.id; }));
-    view.querySelector('#simlucky').addEventListener('click', () => {
-      const pool = CLUBS.filter(x => x.r && !x.h);
-      location.hash = '#/sim/' + pool[Math.floor(Math.random() * pool.length)].id;
-    });
+    /* no club yet: land straight in the simulator — the intro screen cost a
+       tap. First followed club when one exists, else a random rated club;
+       the club button on the sim header still swaps clubs */
+    const favc = favs().clubs.map(id => CLUBS[CLUB_BY_ID.get(id)]).find(x => x && x.r && !x.h);
+    const pool2 = CLUBS.filter(x => x.r && !x.h);
+    const start = favc || pool2[Math.floor(Math.random() * pool2.length)];
+    if (!start) return screenMap();
+    location.replace('#/sim/' + start.id);
     return;
   }
   const table = simTable(c.g);
@@ -2731,7 +2712,7 @@ function route() {
   const parts = h.slice(2).split('/');
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active',
     a.dataset.tab === (['state', 'region', 'club', 'player'].includes(parts[0]) ? 'map'
-      : parts[0] === 'predict' ? 'matches' : parts[0])));
+      : parts[0])));
   view.scrollTop = 0;
   /* these views read ROSTERS synchronously; any view shows followed-player
      chips, so a user with player favorites also waits for the module */

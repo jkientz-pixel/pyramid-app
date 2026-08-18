@@ -51,10 +51,12 @@ main{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolli
 /* programmatic focus target for route changes — never draw the UA ring on it */
 main:focus{outline:none}
 .tabbar{position:absolute;bottom:0;left:0;right:0;display:flex;background:var(--bar);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);backdrop-filter:blur(10px);z-index:30}
-/* stays at .66rem: six labels must fit a 320px bar; icons carry the affordance */
-.tabbar a{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 2px 7px;color:var(--ink-dim);text-decoration:none;font-size:.62rem;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tabbar a svg{width:22px;height:22px}
+/* nine labels must fit a 320px bar; icons carry the affordance, so the
+   labels run small and the longest tab reads Follow, not Following */
+.tabbar a{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 1px 7px;color:var(--ink-dim);text-decoration:none;font-size:.56rem;letter-spacing:.01em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tabbar a svg{width:21px;height:21px}
 .tabbar a.active{color:var(--accent)}
+@media (max-width:359px){.tabbar a{font-size:.5rem}}
 
 /* shared */
 h2{margin:4px 0 2px;font-size:1.35rem}
@@ -119,9 +121,7 @@ svg.usmap{width:100%;height:auto;max-height:72vh;display:block;touch-action:mani
 .pickwrap{position:relative;flex:1;min-width:0}
 .pickq{width:100%;box-sizing:border-box;background:var(--raise);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:inherit;padding:9px 12px}
 .pickq:focus{outline:2px solid var(--accent);outline-offset:-1px}
-.pickres{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:40;background:var(--raise);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 12px 30px rgba(10,18,12,.25)}
-.pickres .qrow{width:100%;background:none;border:0;font:inherit;text-align:left;cursor:pointer}
-.pickres .qrow:hover{background:var(--ground2)}
+button.pickq{text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-appearance:none}
 
 /* club detail */
 .clubhead{display:flex;gap:14px;align-items:center;margin:8px 0 4px}
@@ -469,7 +469,7 @@ a.wirelink:hover .side{color:var(--accent)}
 
 /* ---- Rank Simulator ---- */
 .simclubrow{display:flex;align-items:center;gap:10px;background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px}
-.simclubrow>span{flex:1;min-width:0}
+.simclubrow>span:not(.crest){flex:1;min-width:0}
 .simclubrow i{display:block;font-style:normal;color:var(--ink-dim);font-size:.75rem}
 .simclubrow .chip{flex:none}
 .simpickrow{display:flex;gap:8px;align-items:center;margin-bottom:8px}
