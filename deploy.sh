@@ -67,9 +67,19 @@ verify_url() {
   echo "DEPLOY VERIFY FAILED: $1" >&2
   return 1
 }
+# /app.html 308s to /app, an un-tokened URL the edge caches — a check fired
+# right after "Deployment complete" can still see the previous build, so this
+# gets the same retry window the data files do (2026-08-18 false alarm).
+verify_token() {
+  for i in 1 2 3 4 5; do
+    curl -sfL "$LIVE/app.html" | grep -q "$NEWV" && return 0
+    sleep 3
+  done
+  echo "DEPLOY VERIFY FAILED: live app.html is not serving v$NEWV" >&2
+  return 1
+}
 vfail=0
-curl -sfL "$LIVE/app.html" | grep -q "$NEWV" || \
-  { echo "DEPLOY VERIFY FAILED: live app.html is not serving v$NEWV" >&2; vfail=1; }
+verify_token || vfail=1
 for f in "$STAGE"/data/*.json; do
   verify_url "$LIVE/data/$(basename "$f")?v=$NEWV" || vfail=1
 done
