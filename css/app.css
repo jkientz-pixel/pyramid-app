@@ -469,7 +469,7 @@ a.wirelink:hover .side{color:var(--accent)}
 
 /* ---- Rank Simulator ---- */
 .simclubrow{display:flex;align-items:center;gap:10px;background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px}
-.simclubrow>span{flex:1;min-width:0}
+.simclubrow>span:not(.crest){flex:1;min-width:0}
 .simclubrow i{display:block;font-style:normal;color:var(--ink-dim);font-size:.75rem}
 .simclubrow .chip{flex:none}
 .simpickrow{display:flex;gap:8px;align-items:center;margin-bottom:8px}
