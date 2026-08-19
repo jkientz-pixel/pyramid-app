@@ -16,6 +16,9 @@ env:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    # normal run is ~3-4 min even with scrape retries; don't let a wedged
+    # mirror or source hold a runner for the 6h Actions ceiling
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

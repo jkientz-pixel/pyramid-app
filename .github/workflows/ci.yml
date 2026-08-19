@@ -20,6 +20,9 @@ jobs:
   smoke:
     name: Playwright smoke suite
     runs-on: ubuntu-latest
+    # the suite finishes in ~2-4 min; a wedged apt mirror once held the
+    # browser-install step open for the full 6h Actions ceiling (2026-08-18)
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
