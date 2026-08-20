@@ -163,6 +163,28 @@ try:
 except Exception as e:
     fail.append(f'minors redaction check: {e}')
 
+# deploy.sh stages a HARDCODED list of top-level pages, so a new page can be
+# committed, linked and sitemapped while never actually shipping — it 404s in
+# production and nothing upstream complains. radar.html did exactly that.
+# Every page the sitemap promises must be in that cp list.
+try:
+    dep = (ROOT / 'deploy.sh').read_text()
+    smap = (ROOT / 'sitemap.xml').read_text()
+    import re as _re
+    promised = set()
+    for loc in _re.findall(r'<loc>https://www\.rankedxi\.com/([a-z0-9-]*)</loc>', smap):
+        if loc and '/' not in loc:
+            promised.add(loc + '.html')
+    unstaged = sorted(f for f in promised
+                      if (ROOT / f).exists() and _re.search(r'\b' + _re.escape(f) + r'\b', dep) is None)
+    if unstaged:
+        fail.append('deploy.sh does not stage: ' + ', '.join(unstaged)
+                    + ' (in sitemap but would 404 in production)')
+    else:
+        print(f'  deploy.sh stages every sitemapped page ({len(promised)} checked)')
+except Exception as e:
+    fail.append(f'deploy staging check: {e}')
+
 if fail:
     print('\nPREFLIGHT FAILED:', file=sys.stderr)
     for f in fail: print('  ✗', f, file=sys.stderr)
