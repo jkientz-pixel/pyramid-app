@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260820g';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260820g';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260820h';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260820h';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260820g')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260820h')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260820g';
+const BUILDV = '20260820h';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -965,7 +965,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260820g')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260820h')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -974,8 +974,8 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa, usl2] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260820g'), grab('data/wire_asa.json?v=20260820g'),
-    grab('data/wire_usl2.json?v=20260820g')]);
+    grab('data/wire_npsl.json?v=20260820h'), grab('data/wire_asa.json?v=20260820h'),
+    grab('data/wire_usl2.json?v=20260820h')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' }))
     .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })))
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
@@ -1001,7 +1001,7 @@ async function hydrateWireHook() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260820g')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260820h')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1099,8 +1099,8 @@ async function screenPlayerSim() {
     + '<p class="note">Loading player data&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _coachData || fetch('data/coach_players.json?v=20260820g').then(r => r.json()),
-      import('./player-sim.js?v=20260820g'),
+      _coachData || fetch('data/coach_players.json?v=20260820h').then(r => r.json()),
+      import('./player-sim.js?v=20260820h'),
     ]);
     _coachData = data;
     if (!location.hash.startsWith('#/player-sim')) return;   // routed away mid-load
@@ -1118,8 +1118,8 @@ async function screenRadar() {
     + '<p class="note">Loading player data&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _radarData || fetch('data/player_radar.json?v=20260820g').then(r => r.json()),
-      import('./playerradar.js?v=20260820g'),
+      _radarData || fetch('data/player_radar.json?v=20260820h').then(r => r.json()),
+      import('./playerradar.js?v=20260820h'),
     ]);
     _radarData = data;
     if (!location.hash.startsWith('#/radar')) return;   // routed away mid-load
@@ -1135,7 +1135,7 @@ async function screenShots() {
   view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
     + '<p class="note">Loading&hellip;</p>';
   try {
-    const mod = await import('./shotmap.js?v=20260820g');
+    const mod = await import('./shotmap.js?v=20260820h');
     if (!location.hash.startsWith('#/shots')) return;
     mod.render(view);
   } catch (e) {
@@ -1290,7 +1290,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260820g')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260820h')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1563,35 +1563,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260820g')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260820h')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260820g')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260820h')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260820g')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260820h')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260820g')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260820h')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260820g')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260820h')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1644,7 +1644,7 @@ function verifyBadge(c) {
    here has to think about the minors policy. */
 let _usl2apps = null;
 async function usl2Apps() {
-  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260820g')
+  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260820h')
     .then(r => r.json()).catch(() => ({}));
   return _usl2apps;
 }
@@ -2022,7 +2022,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260820g')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260820h')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -2104,10 +2104,18 @@ function screenFreeAgents() {
         <span class="cl-rt" style="font-size:.7rem;color:var(--ink-dim)">${f.seeks}${f.video ? ' · film' : ''}</span></a></li>`).join('')}</ul>
     <p class="note">Sample listings — the real board opens with player claims. Listings are for players <b>18 and older</b>, arrive by email, and every one is human-reviewed before it publishes — nothing posts to this board automatically.</p>
     ${adSlot('freeagents', 'Free Agents board')}
-    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent listing request')}&body=${encodeURIComponent('I confirm I am 18 or older: \nName:\nPosition:\nAge:\nRegion:\nLast club/level:\nLevel seeking:\nHighlight film link:\n')}">List yourself — $25 per season</a>
-    <p class="note">Flat listing fee. No commissions, no placement cuts — your deal is yours. Clubs: browsing is free, and posting open-tryout dates is free too — <a href="#/tryouts" style="color:var(--accent)">post on the Tryouts board</a>. <a href="#/pricing" style="color:var(--accent)">See all pricing &rarr;</a></p>
+    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent listing request')}&body=${encodeURIComponent('I confirm I am 18 or older: \nName:\nPosition:\nAge:\nRegion:\nLast club/level:\nLevel seeking:\nHighlight film link:\n')}">List yourself — ${FA_PRICE_CTA}</a>
+    <p class="note">${FA_PRICE_NOTE} Clubs: browsing is free, and posting open-tryout dates is free too — <a href="#/tryouts" style="color:var(--accent)">post on the Tryouts board</a>. <a href="#/pricing" style="color:var(--accent)">See all pricing &rarr;</a></p>
     <p class="note"><a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('Report a free agent listing')}&body=${encodeURIComponent('Listing (name shown):\nWhat is wrong (impersonation, inaccurate, inappropriate, other):\n')}" style="color:var(--accent)">Report a listing</a> — reports are reviewed within days; a listing that misrepresents someone comes down first, questions after.</p>`;
 }
+
+/* Founding free-agent listings are free until the market proves itself — the
+   pricing page said so while the board and the sample page both charged
+   "$25 per season", so the one page a stranger reads before trusting us with
+   money contradicted itself twice. All three read these. */
+const FA_PRICE_CTA = 'free while we\u2019re founding';
+const FA_PRICE_NOTE = 'Founding listings are free \u2014 the price turns on only once '
+  + 'players are getting contacted. No commissions, no placement cuts: your deal is yours.';
 
 let tryoutSex = 'all', tryoutSort = 'date';
 async function screenTryouts() {
@@ -2232,7 +2240,7 @@ function screenPricing() {
     <h2 class="disp">Ranked XI Pricing</h2>
     <div class="pricecard"><b>The app · Free, always</b>
       <p>Map, tables, every club and player page, predictions, history. Rankings stay free — that's the point.</p></div>
-    <div class="pricecard"><b>Founding Free Agent listing · Free now, $25/season later</b>
+    <div class="pricecard"><b>Founding Free Agent listing · ${FA_PRICE_CTA[0].toUpperCase() + FA_PRICE_CTA.slice(1)} · $25/season later</b>
       <p>Not "exposure" — proof and delivery: a <b>verified badge</b> backed by league data we already hold, your film front and center, <b>alerts sent to clubs in your region and level</b>, and a receipt: how many clubs viewed you. Founding listings are free while the market proves itself; the price turns on only when players are getting contacted.</p>
       <a class="claim" href="#/freeagent/sample">See a complete player listing</a></div>
     <div class="pricecard paid"><b>Free Agent Pro · $50/season</b>
@@ -2314,7 +2322,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260820g')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260820h')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -2328,8 +2336,8 @@ async function screenUpsets() {
     + '<p class="note">Loading Open Cup results&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _opencup || fetch('data/opencup_matches.json?v=20260820g').then(r => r.json()),
-      import('./opencup.js?v=20260820g'),
+      _opencup || fetch('data/opencup_matches.json?v=20260820h').then(r => r.json()),
+      import('./opencup.js?v=20260820h'),
     ]);
     _opencup = data;
     if (!location.hash.startsWith('#/upsets')) return;
@@ -2356,9 +2364,9 @@ async function screenCollege(team) {
   view.innerHTML = '<p class="note">Loading college results&hellip;</p>';
   try {
     const [data, map, mod] = await Promise.all([
-      _college || fetch('data/espn_college_2025.json?v=20260820g').then(r => r.json()),
-      _collegeMap || fetch('data/espn_club_map.json?v=20260820g').then(r => r.json()),
-      import('./college.js?v=20260820g'),
+      _college || fetch('data/espn_college_2025.json?v=20260820h').then(r => r.json()),
+      _collegeMap || fetch('data/espn_club_map.json?v=20260820h').then(r => r.json()),
+      import('./college.js?v=20260820h'),
     ]);
     _college = data; _collegeMap = map;
     if (!location.hash.startsWith('#/college')) return;
@@ -2459,7 +2467,7 @@ function screenFASample() {
       <a href="#/freeagent/sample">Instagram</a>
       <a href="#/freeagent/sample">Hudl</a>
     </div>
-    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent listing request')}">Get your page — $25 per season</a>
+    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent listing request')}">Get your page — ${FA_PRICE_CTA}</a>
     <p class="note">Every element above is included: film slot, physicals, verified season history, awards, coach references, direct contact. Clubs browse free. Listings are for players 18+, submitted by email and human-reviewed before publication.</p>
     <p class="note"><a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('Report a free agent listing')}" style="color:var(--accent)">Report this listing</a></p>`;
 }
@@ -2888,11 +2896,53 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player', notfound: 'Page not found' };
+/* Hash routes people actually type or get sent. Every one of these was a
+   plausible guess at a real screen that silently rendered the map instead —
+   a stranger following a link from a DM concluded the site was broken rather
+   than that the URL was wrong. Guesses redirect to the real screen; anything
+   left over gets an honest not-found. */
+const ROUTE_ALIAS = {
+  'free-agents': 'freeagents', 'free-agent': 'freeagent', freeagency: 'freeagents',
+  claim: 'clubtools', 'claim-club': 'clubtools', 'club-tools': 'clubtools',
+  sponsorships: 'advertise', sponsorship: 'advertise', sponsor: 'advertise',
+  ads: 'advertise', advertising: 'advertise',
+  follow: 'following', favorites: 'following', favourites: 'following',
+  leagues: 'tiers', pyramid: 'tiers', 'national-table': 'table',
+  rankings: 'table', standings: 'table', 'open-tryouts': 'tryouts',
+  prices: 'pricing', plans: 'pricing', terms: 'legal', privacy: 'legal',
+  'national-teams': 'nt', usmnt: 'nt', uswnt: 'nt',
+};
+
+function screenNotFound(hash) {
+  crumb.textContent = 'Not found';
+  view.innerHTML = `<div class="about">
+    <div class="kicker">404</div>
+    <h2 class="disp">That page isn't here</h2>
+    <p>Nothing lives at <code>${esc(hash)}</code>. The link was probably mistyped, or
+       pointed at a screen that has since moved.</p>
+    <div class="linkrow">
+      <a href="#/map"><b>The national map</b></a>
+      <a href="#/table"><b>National table</b></a>
+      <a href="#/tiers"><b>The pyramid</b></a>
+      <a href="#/wire"><b>The Wire</b></a>
+      <a href="#/tools"><b>Tools</b></a>
+      <a href="#/freeagents"><b>Free agents</b></a>
+    </div>
+    <p style="margin-top:14px">Looking for a club? Every rated club has its own page —
+       search the <a href="#/table">national table</a> or open the
+       <a href="#/map">map</a>.</p>
+  </div>`;
+}
+
 let routedOnce = false;
 function route() {
   const h = location.hash || '#/map';
   const parts = h.slice(2).split('/');
+  if (ROUTE_ALIAS[parts[0]]) {
+    location.replace('#/' + [ROUTE_ALIAS[parts[0]], ...parts.slice(1)].join('/'));
+    return;
+  }
   /* the Tools tab is a hub: its own screens (predict, sim) keep it lit, and
      club/player detail routes stay under Map the way they always have */
   const TAB_OF = { state: 'map', region: 'map', club: 'map', player: 'map',
@@ -2939,7 +2989,8 @@ function route() {
   else if (parts[0] === 'region') screenRegion(parts[1]);
   else if (parts[0] === 'club') screenClub(parts[1]);
   else if (parts[0] === 'player') screenPlayer(parts[1], parts[2]);
-  else screenMap();
+  else if (parts[0] === 'map' || parts[0] === '') screenMap();
+  else { screenNotFound(h); parts[0] = 'notfound'; }
   document.title = `${ROUTE_TITLES[parts[0]] || 'Map'} — Ranked XI`;
   if (routedOnce) view.focus({ preventScroll: true });
   routedOnce = true;

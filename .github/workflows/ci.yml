@@ -42,6 +42,14 @@ jobs:
       - run: npm ci
       - name: Install Playwright chromium
         run: npx playwright install --with-deps chromium
+      # club/, league/ and state/ are generated, not committed (see .gitignore).
+      # The SEO specs assert on them, and running the generators here is also
+      # the only CI coverage they get. gen_og_cards.py is skipped: it needs
+      # Pillow, and club pages fall back to the site-wide og.png without it.
+      - name: Generate the static page tree
+        run: |
+          python3 scripts/gen_seo_pages.py
+          python3 scripts/gen_club_pages.py
       - name: Run smoke tests
         run: npm test
       - name: Upload trace on failure
