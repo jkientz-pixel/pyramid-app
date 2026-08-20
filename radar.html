@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Player Radar — Ranked XI</title>
+<meta name="description" content="Percentile radars for 2,046 players across six US pro leagues, built on goals added: shooting, dribbling, passing, receiving, interrupting and fouling.">
+<link rel="canonical" href="https://www.rankedxi.com/radar">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
+<style>
+@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/barlow-condensed-latin-700.woff2) format("woff2")}
+:root{--ground:#FAFBF8;--ink:#16211B;--dim:#61705F;--line:#DCE2D8;--accent:#C77F1E}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.55 -apple-system,"Segoe UI",Roboto,sans-serif}
+.disp{font-family:"Barlow Condensed","Avenir Next Condensed","Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.02em}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px clamp(20px,5vw,64px);border-bottom:1px solid var(--line)}
+.mark{font-weight:700;font-size:1.2rem;text-decoration:none;color:var(--ink)}
+main{max-width:820px;margin:0 auto;padding:28px clamp(20px,5vw,64px) 40px}
+h1{margin:0 0 4px;font-size:2rem}
+.sub{color:var(--dim);margin:0 0 22px;font-size:.95rem}
+section{margin-bottom:20px}
+h2{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+p{margin:0 0 8px}
+a{color:var(--accent)}
+.cta{display:inline-block;margin:10px 0 4px;padding:11px 20px;border-radius:999px;background:var(--accent);
+  color:#fff;text-decoration:none;font-weight:600}
+.cta:hover{filter:brightness(1.08)}
+ul{margin:0 0 8px;padding-left:20px}
+footer{color:var(--dim);font-size:.8rem;padding:18px clamp(20px,5vw,64px) 40px;border-top:1px solid var(--line);max-width:820px;margin:0 auto}
+</style>
+</head>
+<body>
+<header><a class="mark disp" href="/">Ranked XI</a><a href="/app" style="color:var(--dim);font-size:.85rem">Open the app &rarr;</a></header>
+<main>
+  <h1 class="disp">Player Radar</h1>
+  <p class="sub">Where a player's value comes from</p>
+
+  <a class="cta" href="/app#/radar">Open Player Radar &rarr;</a>
+
+  <section>
+    <h2>What it shows</h2>
+    <p>Six axes, one for each of the ways a player can add value to their team: shooting,
+    dribbling, passing, receiving, interrupting and drawing fouls. The radar plots a
+    <b>percentile</b> &mdash; 90 on the passing axis means the player passes better than 90% of
+    the players they're being compared with, not that they scored 90 out of 100.</p>
+    <p>Underneath, the same six numbers appear as goals added per 96 minutes, which is the part
+    the percentile hides. Two players can both sit in the 70th percentile for dribbling while one
+    of them is worth three times as much.</p>
+    <p>You can put a second player on the radar, move the minutes floor to change who counts as a
+    peer, and switch the comparison between a player's exact position, their position group, or
+    the whole league.</p>
+  </section>
+
+  <section>
+    <h2>Who a player gets compared to</h2>
+    <p>By default, other players in the same position and the same league. When that pool is too
+    small to mean anything &mdash; the USL Super League has four attacking midfielders past the
+    minutes floor &mdash; the comparison widens one step to the position group, and the page tells
+    you it did. It never quietly ranks somebody against a handful of peers and prints the number
+    as though it were solid.</p>
+  </section>
+
+  <section>
+    <h2>Leagues covered</h2>
+    <p>MLS, NWSL, USL Championship, USL League One, MLS Next Pro and USL Super League &mdash;
+    2,046 outfield players.</p>
+    <p><b>Outfield only:</b> goalkeepers are modelled through a different set of actions, so a
+    keeper on these six axes would be six axes of nothing. They're left off rather than faked.</p>
+  </section>
+
+  <section>
+    <h2>Where the numbers come from</h2>
+    <p>Goals added (g+) from
+    <a href="https://www.americansocceranalysis.com/" rel="noopener">American Soccer Analysis</a>.
+    It puts a value on every action a player takes, based on how much that action moved their
+    team's chance of scoring and of conceding, then reports it against an average player in the
+    same position. Everything here is per 96 minutes and covers the season so far.</p>
+    <p>A note on what this isn't: clubs at the top of the game build radars like these on optical
+    tracking data &mdash; high-speed runs, sprint distance, top speed. Nobody publishes that for
+    American soccer, so it isn't here. What is here is the ball-in-play half of the same question.
+    See the <a href="/methodology">methodology &amp; disclaimer</a>.</p>
+  </section>
+
+  <a class="cta" href="/app#/radar">Open Player Radar &rarr;</a>
+</main>
+<footer>Ranked XI &middot; <a href="/">home</a> &middot; <a href="/app#/tools">all tools</a> &middot;
+<a href="/methodology">methodology &amp; disclaimer</a> &middot; <a href="/privacy">privacy</a></footer>
+</body>
+</html>

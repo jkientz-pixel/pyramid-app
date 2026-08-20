@@ -8,16 +8,17 @@ const { trackErrors, viewRendered, gotoRoute } = require('./helpers');
    palette. These tests guard the two things that silently break: a card losing
    its link, and the tab going dark on a screen that lives under it. */
 
-test('the Tools hub lists all four tools', async ({ page }) => {
+test('the Tools hub lists all five tools', async ({ page }) => {
   const errors = trackErrors(page);
   await gotoRoute(page, '#/tools');
   const cards = page.locator('.toolcard');
-  await expect(cards).toHaveCount(4);
+  await expect(cards).toHaveCount(5);
   for (const [name, href] of [
     ['Matchup Machine', '#/predict'],
     ['Rank Simulator', '#/sim'],
     ['Player Simulator', '#/player-sim'],
     ['Shot Maps', '#/shots'],
+    ['Player Radar', '#/radar'],
   ]) {
     await expect(page.locator(`.toolcard:has-text("${name}")`)).toHaveAttribute('href', href);
   }
@@ -25,7 +26,7 @@ test('the Tools hub lists all four tools', async ({ page }) => {
 });
 
 test('every tool screen keeps the Tools tab lit', async ({ page }) => {
-  for (const hash of ['#/predict', '#/sim', '#/player-sim', '#/shots']) {
+  for (const hash of ['#/predict', '#/sim', '#/player-sim', '#/shots', '#/radar']) {
     await gotoRoute(page, hash);
     await expect(page.locator('.tabbar a[data-tab="tools"]')).toHaveClass(/active/);
   }

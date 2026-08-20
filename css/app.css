@@ -592,13 +592,79 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 .sh-table td.num{font-variant-numeric:tabular-nums}
 .sh-details{margin-top:10px}
 .sh-details summary{cursor:pointer;color:var(--accent);font-size:.8rem}
-.sh-tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .12s ease;z-index:60;
+.sh-tip,.pr-tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .12s ease;z-index:60;
   background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:8px 11px;
   font-size:.76rem;max-width:240px;box-shadow:0 8px 24px rgba(0,0,0,.28)}
-.sh-tip .k{color:var(--ink-dim)}
+.sh-tip .k,.pr-tip .k{color:var(--ink-dim)}
 
 @media (max-width:640px){.cch-wide{grid-column:span 1}}
 @media (prefers-reduced-motion:reduce){.cch-lever,.sh-tip{transition:none}}
+
+/* ---- player radar (#/radar) ---------------------------------------------
+   Two hues only, and they mean exactly one thing: series identity. Both come
+   straight from the shot map's pair, which the dataviz validator clears at
+   ΔE 23.5 for protanopes. Polarity on the bars is carried by side-of-zero,
+   filled-vs-hollow and a signed label instead of a third and fourth hue —
+   note the site's --sim-up/--sim-down green/red pair FAILS that same check at
+   ΔE 4.3 for deuteranopes, so it is deliberately not used here. */
+.pr-a{--pr-hue:var(--shot-home)}
+.pr-b{--pr-hue:var(--shot-away)}
+.pr-swatch{width:11px;height:11px;border-radius:3px;display:inline-block;flex:none;background:var(--pr-hue)}
+
+.pr-card{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  background:var(--raise);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:4px 0 2px}
+.pr-who b{font-family:var(--font-disp);font-size:1.5rem;letter-spacing:.02em;display:block;line-height:1.15}
+.pr-who span{color:var(--ink-dim);font-size:.76rem}
+.pr-hero{display:flex;align-items:baseline;gap:9px;flex:none}
+.pr-hero b{font-family:var(--font-disp);font-size:2.6rem;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+.pr-hero span{color:var(--ink-dim);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;line-height:1.25}
+
+/* Side by side once there is room for both to stay legible; stacked before. */
+.pr-charts{display:grid;grid-template-columns:1fr;gap:6px}
+@media (min-width:900px){.pr-charts{grid-template-columns:minmax(0,420px) minmax(0,1fr);align-items:start}}
+.pr-fig{margin:14px 0 0;padding:0;min-width:0}
+.pr-fig figcaption{margin-bottom:4px}
+/* Capped rather than fluid: these viewBoxes are ~660 units wide, so letting
+   them fill a 1120px column scales every 12px label to 20px and the dots to
+   golf balls. Capping keeps the charts at the size they were drawn for. */
+.pr-radar,.pr-bars,.pr-swarm-svg,.pr-scatter{width:100%;height:auto;display:block;overflow:visible}
+.pr-radar{max-width:420px;margin:0 auto}
+.pr-bars{max-width:660px}
+.pr-swarm-svg,.pr-scatter{max-width:720px}
+/* Below ~500px these three squeeze their own labels under 8px. Same answer the
+   shot map gives its pitch: let the chart keep its drawn size and scroll
+   inside its own box, so the page itself never scrolls sideways. */
+.pr-scroll{overflow-x:auto}
+.pr-bars{min-width:470px}
+.pr-scatter{min-width:520px}
+.pr-swarm-svg{min-width:440px}
+.pr-cmpbars{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.cch-inline{margin:6px 0 2px;max-width:260px}
+
+/* Recessive scaffolding: the grid is there to be measured against, not read. */
+.pr-ring{fill:none;stroke:var(--line);stroke-width:1.2}
+.pr-ring-out{stroke:var(--shot-chalk)}
+.pr-spoke{stroke:var(--line);stroke-width:1}
+.pr-zero{stroke:var(--shot-chalk);stroke-width:1.4}
+.pr-med{stroke:var(--line);stroke-width:1.4;stroke-dasharray:5 4}
+.pr-plot{fill:var(--ground2);stroke:var(--line);stroke-width:1}
+.pr-axis{fill:var(--ink-dim);font-size:12px;font-family:inherit}
+.pr-quad{fill:var(--ink-dim);font-size:11px;opacity:.75;font-family:inherit}
+.pr-blabel{fill:var(--ink);font-size:13px;font-family:inherit}
+.pr-bval{fill:var(--ink-dim);font-size:12px;font-variant-numeric:tabular-nums;font-family:inherit}
+.pr-point-label{fill:var(--ink);font-size:12px;font-weight:600;font-family:inherit;
+  stroke:var(--raise);stroke-width:3;paint-order:stroke}
+
+/* The 2px surface ring is what keeps overlapping polygons and dots readable. */
+.pr-poly{fill:var(--pr-hue);fill-opacity:.17;stroke:var(--pr-hue);stroke-width:2.4;
+  stroke-linejoin:round;paint-order:stroke}
+.pr-node{fill:var(--pr-hue);stroke:var(--raise);stroke-width:2}
+.pr-bar.pr-pos{fill:var(--pr-hue);fill-opacity:.92}
+.pr-bar.pr-neg{fill:var(--pr-hue);fill-opacity:.12;stroke:var(--pr-hue);stroke-width:1.5}
+.pr-swarm{fill:var(--ink-dim);fill-opacity:.32}
+.pr-swarm-sel{fill:var(--accent);stroke:var(--raise);stroke-width:2.5}
+
+@media (prefers-reduced-motion:reduce){.pr-tip{transition:none}}
 
 /* ---- Giant-Killings (#/upsets) ------------------------------------------- */
 .gk-cta{display:inline-block;margin:12px 0 2px;padding:9px 16px;border-radius:999px;
