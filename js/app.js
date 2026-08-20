@@ -2277,6 +2277,35 @@ async function cupsDb() {
   catch { _cups = {}; }
   return _cups;
 }
+/* Giant-Killings (#/upsets): the Open Cup rounds where the pyramid actually
+   meets. cups.json only ever held finals, so the 1,584 match rows sat unused.
+   Module is lazy — the file is 270KB and nobody lands here first. */
+let _opencup = null;
+async function screenUpsets() {
+  crumb.textContent = 'Giant-killings';
+  view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/cups\'">&larr; Trophy Room</button>'
+    + '<p class="note">Loading Open Cup results&hellip;</p>';
+  try {
+    const [data, mod] = await Promise.all([
+      _opencup || fetch('data/opencup_matches.json?v=20260820c').then(r => r.json()),
+      import('./opencup.js?v=20260820c'),
+    ]);
+    _opencup = data;
+    if (!location.hash.startsWith('#/upsets')) return;
+    /* the cup rows are bare club names; only link one when it resolves to a
+       single men's non-college club, the same rule the Trophy Room uses */
+    const okMen = c => c.x === 'm' && !LEVELS.college.includes(c.g);
+    const linkClub = nm => {
+      const i = clubIdxByName(nm, okMen);
+      return i >= 0 ? `<a href="#/club/${CLUBS[i].id}">${esc(nm)}</a>` : esc(nm);
+    };
+    mod.render(view, data, { esc, linkClub });
+  } catch (e) {
+    if (!location.hash.startsWith('#/upsets')) return;
+    view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/cups\'">&larr; Trophy Room</button>'
+      + '<p class="note">Open Cup results could not load. Check your connection and try again.</p>';
+  }
+}
 async function screenCups() {
   crumb.textContent = 'Trophies';
   const cups = await cupsDb();
@@ -2315,6 +2344,7 @@ async function screenCups() {
       const ks = keys.filter(k => cups[k].kind === kind);
       return ks.length ? `<div class="kicker" style="margin-top:14px">${label}</div>` + ks.map(cupBlock).join('') : '';
     }).join('')}
+    <a class="gk-cta" href="#/upsets">See the giant-killings &rarr;</a>
     <p class="note">The U.S. Open Cup is the pyramid's connective tissue — the one competition where any tier can play any other. Its results are what let cross-league ratings be measured instead of assumed. A finished season's champion appears once the result lands on the record — never before the final is played. UPSL histories are omitted until a reliable source exists. Histories from Wikipedia (CC BY-SA).</p>`;
 }
 
@@ -2796,7 +2826,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', coach: 'Player Coach', shots: 'Shot Maps', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', coach: 'Player Coach', shots: 'Shot Maps', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
 let routedOnce = false;
 function route() {
   const h = location.hash || '#/map';
@@ -2832,6 +2862,7 @@ function route() {
   else if (parts[0] === 'matches') screenMatches(parts[1]);
   else if (parts[0] === 'tools') screenTools();
   else if (parts[0] === 'coach') screenCoach();
+  else if (parts[0] === 'upsets') screenUpsets();
   else if (parts[0] === 'shots') screenShots();
   else if (parts[0] === 'predict') screenPredict(parts[1]);
   else if (parts[0] === 'wire') screenWire();

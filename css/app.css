@@ -599,3 +599,29 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 
 @media (max-width:640px){.cch-wide{grid-column:span 1}}
 @media (prefers-reduced-motion:reduce){.cch-lever,.sh-tip{transition:none}}
+
+/* ---- Giant-Killings (#/upsets) ------------------------------------------- */
+.gk-cta{display:inline-block;margin:12px 0 2px;padding:9px 16px;border-radius:999px;
+  border:1px solid var(--accent);color:var(--accent);text-decoration:none;font-size:.8rem;font-weight:600}
+.gk-cta:hover{background:var(--accent);color:var(--ground)}
+.gk-list{list-style:none;margin:10px 0;padding:0;border:1px solid var(--line);border-radius:12px;
+  overflow:hidden;background:var(--raise)}
+.gk-row{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line)}
+.gk-row:last-child{border-bottom:none}
+.gk-yr{flex:none;width:2.9em;color:var(--ink-dim);font-size:.78rem;font-variant-numeric:tabular-nums;padding-top:1px}
+.gk-body{flex:1 1 auto;min-width:0}
+.gk-line{display:block;font-size:.86rem;line-height:1.45}
+.gk-line a{color:var(--accent);text-decoration:none}
+.gk-line a:hover{text-decoration:underline}
+.gk-beat{color:var(--ink-dim);font-size:.76rem;margin:0 2px}
+.gk-meta{display:block;color:var(--ink-dim);font-size:.72rem;margin-top:2px}
+.gk-score{flex:none;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:.86rem}
+.gk-score small{display:block;font-weight:400;font-size:.63rem;color:var(--ink-dim)}
+/* tier badges reuse the pyramid's sense of depth: darker = higher up */
+.gk-tier{display:inline-block;border:1px solid var(--line);border-radius:5px;padding:0 5px;
+  font-size:.63rem;letter-spacing:.04em;color:var(--ink-dim);vertical-align:1px;white-space:nowrap}
+.gk-t1{border-color:var(--mls);color:var(--mls)}
+.gk-t2{border-color:var(--uslc);color:var(--uslc)}
+.gk-t3{border-color:var(--usl1);color:var(--usl1)}
+.gk-t4{border-color:var(--loc);color:var(--loc)}
+.gk-t5{border-color:var(--ink-dim);color:var(--ink-dim)}
