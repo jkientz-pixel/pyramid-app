@@ -2,20 +2,21 @@
 const { test, expect } = require('@playwright/test');
 const { trackErrors, gotoRoute } = require('./helpers');
 
-/* Player Coach was a 427KB standalone page that inlined its whole dataset and
-   hard-coded a dark palette. It is an app route now, lazily importing
-   js/coach.js and fetching data/coach_players.json. These tests cover the
-   seams that move introduced: the lazy import, the split-out payload, and the
-   theme support the old page never had. */
+/* Player Simulator — named to pair with Rank Simulator; it shipped as "Player
+   Coach" at /coach on 2026-08-17. It was a 427KB standalone page that inlined
+   its whole dataset and hard-coded a dark palette, and is an app route now,
+   lazily importing js/player-sim.js and fetching data/coach_players.json. These
+   tests cover the seams that move introduced: the lazy import, the split-out
+   payload, and the theme support the old page never had. */
 
 const ready = async page => {
   await page.waitForSelector('#cch-rating');
   await page.waitForFunction(() => document.querySelector('#cch-rating')?.textContent !== '—');
 };
 
-test('the coach loads a player and rates them', async ({ page }) => {
+test('the simulator loads a player and rates them', async ({ page }) => {
   const errors = trackErrors(page);
-  await gotoRoute(page, '#/coach');
+  await gotoRoute(page, '#/player-sim');
   await ready(page);
   await expect(page.locator('#cch-rating')).toHaveText(/^\d{2}$/);
   await expect(page.locator('#cch-pname')).not.toHaveText('—');
@@ -25,7 +26,7 @@ test('the coach loads a player and rates them', async ({ page }) => {
 });
 
 test('applying a target moves the rating and reports the delta', async ({ page }) => {
-  await gotoRoute(page, '#/coach');
+  await gotoRoute(page, '#/player-sim');
   await ready(page);
   const before = Number(await page.textContent('#cch-rating'));
   await page.locator('.cch-gain').first().click();
@@ -35,7 +36,7 @@ test('applying a target moves the rating and reports the delta', async ({ page }
 });
 
 test('reset returns the simulation to the real stats', async ({ page }) => {
-  await gotoRoute(page, '#/coach');
+  await gotoRoute(page, '#/player-sim');
   await ready(page);
   const real = await page.textContent('#cch-rating');
   await page.locator('.cch-gain').first().click();
@@ -46,7 +47,7 @@ test('reset returns the simulation to the real stats', async ({ page }) => {
 });
 
 test('switching league reloads the roster from that league', async ({ page }) => {
-  await gotoRoute(page, '#/coach');
+  await gotoRoute(page, '#/player-sim');
   await ready(page);
   const first = await page.textContent('#cch-pname');
   await page.selectOption('#cch-lg', 'nwsl');
@@ -56,8 +57,8 @@ test('switching league reloads the roster from that league', async ({ page }) =>
 
 /* The standalone page could not do this at all: it read its colours out of
    getComputedStyle once at load, so a theme change left it dark. */
-test('the coach follows the app theme', async ({ page }) => {
-  await gotoRoute(page, '#/coach');
+test('the simulator follows the app theme', async ({ page }) => {
+  await gotoRoute(page, '#/player-sim');
   await ready(page);
   const bg = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
   const before = await bg();
@@ -75,6 +76,6 @@ test('the payload is a separate cacheable file, not inlined in the page', async 
   const total = Object.values(data).reduce((n, d) => n + d.players.length, 0);
   expect(total).toBeGreaterThan(1500);
   /* and the landing page must stay small now that it no longer carries it */
-  const page404 = await page.request.get('/coach');
-  expect((await page404.body()).length).toBeLessThan(50_000);
+  const landing = await page.request.get('/player-simulator');
+  expect((await landing.body()).length).toBeLessThan(50_000);
 });

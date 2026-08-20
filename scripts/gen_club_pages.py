@@ -115,7 +115,7 @@ urls = [f'{SITE}/', f'{SITE}/app', f'{SITE}/upsl-rankings',
         # can't see, so these two static pages are their only search surface.
         # They were hand-added to sitemap.xml once and silently dropped by
         # every subsequent deploy, because this list is what regenerates it.
-        f'{SITE}/coach', f'{SITE}/shots'] + \
+        f'{SITE}/player-simulator', f'{SITE}/shots'] + \
        [f'{SITE}/club/{c["id"]}' for c in rated]
 sm = ['<?xml version="1.0" encoding="UTF-8"?>',
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'] + \

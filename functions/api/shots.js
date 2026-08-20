@@ -1,7 +1,7 @@
 // Shot-map data proxy.
 //
 // American Soccer Analysis serves shot-level data for the six pro leagues the
-// Player Coach already uses, but it sends no CORS header — and our own CSP is
+// Player Simulator already uses, but it sends no CORS header — and our own CSP is
 // connect-src 'self'. Both block a direct browser fetch, so the page calls
 // here and this Function calls ASA server-side.
 //

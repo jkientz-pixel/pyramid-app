@@ -19,7 +19,7 @@ const ROUTES = [
   '#/tools',
   '#/predict',
   '#/sim',
-  '#/coach',
+  '#/player-sim',
   '#/shots',
   '#/pricing',
   '#/advertise',

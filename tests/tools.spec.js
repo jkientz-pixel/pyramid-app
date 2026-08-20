@@ -16,7 +16,7 @@ test('the Tools hub lists all four tools', async ({ page }) => {
   for (const [name, href] of [
     ['Matchup Machine', '#/predict'],
     ['Rank Simulator', '#/sim'],
-    ['Player Coach', '#/coach'],
+    ['Player Simulator', '#/player-sim'],
     ['Shot Maps', '#/shots'],
   ]) {
     await expect(page.locator(`.toolcard:has-text("${name}")`)).toHaveAttribute('href', href);
@@ -25,7 +25,7 @@ test('the Tools hub lists all four tools', async ({ page }) => {
 });
 
 test('every tool screen keeps the Tools tab lit', async ({ page }) => {
-  for (const hash of ['#/predict', '#/sim', '#/coach', '#/shots']) {
+  for (const hash of ['#/predict', '#/sim', '#/player-sim', '#/shots']) {
     await gotoRoute(page, hash);
     await expect(page.locator('.tabbar a[data-tab="tools"]')).toHaveClass(/active/);
   }
@@ -52,9 +52,26 @@ test('the old Predict and Sim tabs are gone from the tab bar', async ({ page }) 
    only crawlable surface for tools that otherwise live behind a hash route.
    They are landing pages now, and their job is to lead into the app. */
 test('the tool landing pages lead into the app routes', async ({ page }) => {
-  for (const [path, hash] of [['/shots', '/app#/shots'], ['/coach', '/app#/coach']]) {
+  for (const [path, hash] of [['/shots', '/app#/shots'],
+    ['/player-simulator', '/app#/player-sim']]) {
     await page.goto(path);
     await expect(page.locator(`a.cta[href="${hash}"]`).first()).toBeVisible();
     await expect(page.locator('a[href="/app#/tools"]')).toHaveCount(1);
+  }
+});
+
+/* The tool shipped as "Player Coach" at /coach and #/coach before it was
+   renamed to pair with Rank Simulator. Both old entry points still resolve,
+   so a bookmark or an indexed link does not dead-end. */
+test('the old coach URLs still reach the simulator', async ({ page }) => {
+  await page.goto('/app.html#/coach');
+  await page.waitForFunction(() => location.hash === '#/player-sim');
+  await page.waitForSelector('#cch-rating');
+});
+
+test('no surface still calls it Player Coach', async ({ page }) => {
+  for (const path of ['/app', '/player-simulator', '/']) {
+    const body = await (await page.request.get(path)).text();
+    expect(body).not.toContain('Player Coach');
   }
 });

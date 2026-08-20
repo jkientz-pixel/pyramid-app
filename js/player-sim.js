@@ -1,4 +1,4 @@
-/* Player Coach screen — lazily imported by app.js on #/coach.
+/* Player Simulator screen — lazily imported by app.js on #/player-sim.
    Was a standalone 427KB coach.html with its own dark-only palette; the model
    below is that page's logic unchanged, but the shell is gone: this renders
    into the app's view element and inherits the appbar, tab bar, theme toggle

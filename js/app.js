@@ -1049,9 +1049,9 @@ function wireMatchupMachine(rated) {
   wirePick('pickH'); wirePick('pickA');
 }
 /* The Tools hub. Four things that answer a question about a specific club,
-   player, or match rather than about the pyramid as a whole. Two are app
-   routes; Player Coach and Shot Maps are their own pages, so they carry an
-   external hint and a link back to here. */
+   player, or match rather than about the pyramid as a whole. All four are app
+   routes — Player Simulator and Shot Maps were standalone pages until they
+   were ported in, which is why each still has a landing page of its own. */
 const TOOLS = [
   { href: '#/predict', title: 'Matchup Machine', tag: 'Every rated club',
     blurb: 'Pick two clubs and get win odds, a likely scoreline, and the Elo gap behind them.',
@@ -1059,7 +1059,7 @@ const TOOLS = [
   { href: '#/sim', title: 'Rank Simulator', tag: 'Every rated club',
     blurb: 'Book results for your club one at a time and watch the rating and the national rank move.',
     icon: '<path d="M4 20.5h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4.5 16l5-5 3.5 3 6.5-7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.5 7h5v5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>' },
-  { href: '#/coach', title: 'Player Coach', tag: 'Six pro leagues',
+  { href: '#/player-sim', title: 'Player Simulator', tag: 'Six pro leagues',
     blurb: "Rate a player on per-96 numbers weighted for their position, then simulate what improving one of them is worth.",
     icon: '<circle cx="12" cy="7.5" r="3.3" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M5 20.5c0-3.9 3.1-6.5 7-6.5s7 2.6 7 6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>' },
   { href: '#/shots', title: 'Shot Maps', tag: 'Six pro leagues',
@@ -1079,9 +1079,9 @@ function screenTools() {
         <span class="tt">${t.tag}</span>
       </a>`).join('')}
     </div>
-    <p class="note">Player Coach and Shot Maps cover MLS, NWSL, USL Championship, USL League One, MLS Next Pro and USL Super League, because those are the leagues that publish per-player and per-shot data.</p>`;
+    <p class="note">Player Simulator and Shot Maps cover MLS, NWSL, USL Championship, USL League One, MLS Next Pro and USL Super League, because those are the leagues that publish per-player and per-shot data.</p>`;
 }
-/* Player Coach and Shot Maps live in their own modules: both are big enough to
+/* Player Simulator and Shot Maps live in their own modules: both are big enough to
    hurt first paint and neither is on the path most visitors take, so the route
    pulls them in on demand. The coach's 2,021-player payload is fetched here
    rather than inside the module for two reasons — bump_version.py only rewrites
@@ -1090,22 +1090,22 @@ function screenTools() {
    note the grep is blind to comments, so never write that pattern out in one
    here: a fake path lands in the staging list and the deploy dies on cp. */
 let _coachData = null;
-async function screenCoach() {
-  crumb.textContent = 'Player Coach';
+async function screenPlayerSim() {
+  crumb.textContent = 'Player Simulator';
   view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
     + '<p class="note">Loading player data&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
       _coachData || fetch('data/coach_players.json?v=20260820c').then(r => r.json()),
-      import('./coach.js?v=20260820c'),
+      import('./player-sim.js?v=20260820c'),
     ]);
     _coachData = data;
-    if (!location.hash.startsWith('#/coach')) return;   // routed away mid-load
+    if (!location.hash.startsWith('#/player-sim')) return;   // routed away mid-load
     mod.render(view, data);
   } catch (e) {
-    if (!location.hash.startsWith('#/coach')) return;
+    if (!location.hash.startsWith('#/player-sim')) return;
     view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
-      + '<p class="note">Player Coach could not load. Check your connection and try again.</p>';
+      + '<p class="note">Player Simulator could not load. Check your connection and try again.</p>';
   }
 }
 async function screenShots() {
@@ -2866,7 +2866,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', coach: 'Player Coach', shots: 'Shot Maps', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', 'player-sim': 'Player Simulator', shots: 'Shot Maps', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
 let routedOnce = false;
 function route() {
   const h = location.hash || '#/map';
@@ -2874,7 +2874,7 @@ function route() {
   /* the Tools tab is a hub: its own screens (predict, sim) keep it lit, and
      club/player detail routes stay under Map the way they always have */
   const TAB_OF = { state: 'map', region: 'map', club: 'map', player: 'map',
-    predict: 'tools', sim: 'tools', coach: 'tools', shots: 'tools' };
+    predict: 'tools', sim: 'tools', 'player-sim': 'tools', shots: 'tools' };
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active',
     a.dataset.tab === (TAB_OF[parts[0]] || parts[0])));
   view.scrollTop = 0;
@@ -2901,7 +2901,10 @@ function route() {
   else if (parts[0] === 'table') screenTable();
   else if (parts[0] === 'matches') screenMatches(parts[1]);
   else if (parts[0] === 'tools') screenTools();
-  else if (parts[0] === 'coach') screenCoach();
+  else if (parts[0] === 'player-sim') screenPlayerSim();
+  /* #/coach was the route while the tool was called Player Coach and it
+     shipped to production under that name; keep the old hash working */
+  else if (parts[0] === 'coach') { location.replace('#/player-sim'); return; }
   else if (parts[0] === 'upsets') screenUpsets();
   else if (parts[0] === 'college') screenCollege(parts[1] && decodeURIComponent(parts[1]));
   else if (parts[0] === 'shots') screenShots();

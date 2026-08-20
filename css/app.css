@@ -509,7 +509,7 @@ a.wirelink:hover .side{color:var(--accent)}
 @media (min-width:1160px){[data-layout="wide"] .toolgrid{grid-template-columns:1fr 1fr;gap:12px}}
 @media (prefers-reduced-motion:reduce){.toolcard{transition:none}.toolcard:hover,.toolcard:focus-visible{transform:none}}
 
-/* ---- Player Coach (#/coach) and Shot Maps (#/shots) -----------------------
+/* ---- Player Simulator (#/player-sim) and Shot Maps (#/shots) --------------
    Both screens were standalone pages with a hard-coded dark palette and no
    theme support at all; everything below is expressed in app tokens so they
    follow the theme toggle like every other screen. */
