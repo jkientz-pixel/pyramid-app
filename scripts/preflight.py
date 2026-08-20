@@ -146,6 +146,23 @@ try:
 except Exception as e:
     fail.append(f'national_teams.json: {e}')
 
+# Under-18 birth years must never reach a commit: this repo is public, so
+# committed is published, and the policy is name-yes / birth-year-blanked with
+# personal opt-in. usl2_rosters.json was redacted when the policy was set and
+# usl2_lineups.json was not, which published 1,150 rows for 376 minors through
+# GitHub for months. A scrape refresh would have done it again, so the check
+# lives here rather than in anyone's memory.
+try:
+    import subprocess
+    r = subprocess.run([sys.executable, str(ROOT / 'scripts' / 'redact_minors.py'), '--check'],
+                       capture_output=True, text=True)
+    if r.returncode:
+        fail.append((r.stderr.strip().splitlines() or ['minors redaction check failed'])[-1])
+    else:
+        print('  no under-18 birth years in committed player data')
+except Exception as e:
+    fail.append(f'minors redaction check: {e}')
+
 if fail:
     print('\nPREFLIGHT FAILED:', file=sys.stderr)
     for f in fail: print('  ✗', f, file=sys.stderr)
