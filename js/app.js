@@ -1086,7 +1086,9 @@ function screenTools() {
    pulls them in on demand. The coach's 2,021-player payload is fetched here
    rather than inside the module for two reasons — bump_version.py only rewrites
    ?v= tokens in this file, and deploy.sh decides which data/*.json to stage by
-   grepping this file for fetch('data/...'). Keep the literal below intact. */
+   grepping this file for the literal fetch call below. Keep it intact — and
+   note the grep is blind to comments, so never write that pattern out in one
+   here: a fake path lands in the staging list and the deploy dies on cp. */
 let _coachData = null;
 async function screenCoach() {
   crumb.textContent = 'Player Coach';

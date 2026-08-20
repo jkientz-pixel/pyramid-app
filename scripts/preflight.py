@@ -52,15 +52,25 @@ if len(vers) != 1:
 else:
     print(f'  cache version consistent: {vers.pop()}')
 
+# This list is also what deploy.sh stages, so a path that matches the pattern
+# but does not exist kills the deploy at the cp. The pattern is blind to
+# comments: writing fetch + ('data/ + ... in prose here puts a fake path in the
+# staging list, which is how it happened once.
+_data_ok = True
 for jf in re.findall(r"fetch\('(data/[^?']+)", (ROOT / 'js' / 'app.js').read_text()):
     p = ROOT / jf
     if not p.exists():
-        fail.append(f'{jf}: fetched by app.js but missing'); continue
+        fail.append(f'{jf}: fetched by app.js but missing (deploy.sh stages this list — '
+                    f'if it came from a comment, reword the comment)')
+        _data_ok = False
+        continue
     try:
         json.loads(p.read_text())
     except Exception as e:
         fail.append(f'{jf}: invalid JSON ({e})')
-print('  fetched data/*.json OK')
+        _data_ok = False
+if _data_ok:
+    print('  fetched data/*.json OK')
 
 # 4. cups.json structural sanity — the Wikipedia parser once shipped an MVP
 #    (a person) as an MLS Cup champion and future host cities as winners;
