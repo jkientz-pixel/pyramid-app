@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260820d';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260820d';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260820e';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260820e';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260820d')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260820e')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260820d';
+const BUILDV = '20260820e';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -965,7 +965,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260820d')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260820e')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -974,8 +974,8 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa, usl2] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260820d'), grab('data/wire_asa.json?v=20260820d'),
-    grab('data/wire_usl2.json?v=20260820d')]);
+    grab('data/wire_npsl.json?v=20260820e'), grab('data/wire_asa.json?v=20260820e'),
+    grab('data/wire_usl2.json?v=20260820e')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' }))
     .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })))
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
@@ -1001,7 +1001,7 @@ async function hydrateWireHook() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260820d')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260820e')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1065,6 +1065,9 @@ const TOOLS = [
   { href: '#/shots', title: 'Shot Maps', tag: 'Six pro leagues',
     blurb: 'Every shot in a match placed where it was struck and sized by expected goals. Filled circles are goals.',
     icon: '<rect x="3.5" y="5.5" width="17" height="13" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 5.5v13" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16.5" cy="14" r="1.5" fill="currentColor"/><circle cx="9.5" cy="15" r="1.2" fill="none" stroke="currentColor" stroke-width="1.3"/>' },
+  { href: '#/radar', title: 'Player Radar', tag: 'Six pro leagues',
+    blurb: 'Where a player\'s value comes from, as a percentile against the players they actually compete with.',
+    icon: '<path d="M12 2.6l8.2 4.7v9.4L12 21.4 3.8 16.7V7.3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 7l4.4 2.5v5L12 17l-4.4-2.5v-5z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" opacity=".55"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>' },
 ];
 function screenTools() {
   crumb.textContent = 'Tools';
@@ -1079,7 +1082,7 @@ function screenTools() {
         <span class="tt">${t.tag}</span>
       </a>`).join('')}
     </div>
-    <p class="note">Player Simulator and Shot Maps cover MLS, NWSL, USL Championship, USL League One, MLS Next Pro and USL Super League, because those are the leagues that publish per-player and per-shot data.</p>`;
+    <p class="note">Player Simulator, Shot Maps and Player Radar cover MLS, NWSL, USL Championship, USL League One, MLS Next Pro and USL Super League, because those are the leagues that publish per-player and per-shot data.</p>`;
 }
 /* Player Simulator and Shot Maps live in their own modules: both are big enough to
    hurt first paint and neither is on the path most visitors take, so the route
@@ -1096,8 +1099,8 @@ async function screenPlayerSim() {
     + '<p class="note">Loading player data&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _coachData || fetch('data/coach_players.json?v=20260820d').then(r => r.json()),
-      import('./player-sim.js?v=20260820d'),
+      _coachData || fetch('data/coach_players.json?v=20260820e').then(r => r.json()),
+      import('./player-sim.js?v=20260820e'),
     ]);
     _coachData = data;
     if (!location.hash.startsWith('#/player-sim')) return;   // routed away mid-load
@@ -1108,12 +1111,31 @@ async function screenPlayerSim() {
       + '<p class="note">Player Simulator could not load. Check your connection and try again.</p>';
   }
 }
+let _radarData = null;
+async function screenRadar() {
+  crumb.textContent = 'Player Radar';
+  view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
+    + '<p class="note">Loading player data&hellip;</p>';
+  try {
+    const [data, mod] = await Promise.all([
+      _radarData || fetch('data/player_radar.json?v=20260820e').then(r => r.json()),
+      import('./playerradar.js?v=20260820e'),
+    ]);
+    _radarData = data;
+    if (!location.hash.startsWith('#/radar')) return;   // routed away mid-load
+    mod.render(view, data);
+  } catch (e) {
+    if (!location.hash.startsWith('#/radar')) return;
+    view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
+      + '<p class="note">Player Radar could not load. Check your connection and try again.</p>';
+  }
+}
 async function screenShots() {
   crumb.textContent = 'Shot Maps';
   view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
     + '<p class="note">Loading&hellip;</p>';
   try {
-    const mod = await import('./shotmap.js?v=20260820d');
+    const mod = await import('./shotmap.js?v=20260820e');
     if (!location.hash.startsWith('#/shots')) return;
     mod.render(view);
   } catch (e) {
@@ -1268,7 +1290,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260820d')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260820e')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1541,35 +1563,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260820d')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260820e')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260820d')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260820e')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260820d')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260820e')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260820d')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260820e')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260820d')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260820e')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1622,7 +1644,7 @@ function verifyBadge(c) {
    here has to think about the minors policy. */
 let _usl2apps = null;
 async function usl2Apps() {
-  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260820d')
+  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260820e')
     .then(r => r.json()).catch(() => ({}));
   return _usl2apps;
 }
@@ -2000,7 +2022,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260820d')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260820e')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -2292,7 +2314,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260820d')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260820e')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -2306,8 +2328,8 @@ async function screenUpsets() {
     + '<p class="note">Loading Open Cup results&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _opencup || fetch('data/opencup_matches.json?v=20260820d').then(r => r.json()),
-      import('./opencup.js?v=20260820d'),
+      _opencup || fetch('data/opencup_matches.json?v=20260820e').then(r => r.json()),
+      import('./opencup.js?v=20260820e'),
     ]);
     _opencup = data;
     if (!location.hash.startsWith('#/upsets')) return;
@@ -2334,9 +2356,9 @@ async function screenCollege(team) {
   view.innerHTML = '<p class="note">Loading college results&hellip;</p>';
   try {
     const [data, map, mod] = await Promise.all([
-      _college || fetch('data/espn_college_2025.json?v=20260820d').then(r => r.json()),
-      _collegeMap || fetch('data/espn_club_map.json?v=20260820d').then(r => r.json()),
-      import('./college.js?v=20260820d'),
+      _college || fetch('data/espn_college_2025.json?v=20260820e').then(r => r.json()),
+      _collegeMap || fetch('data/espn_club_map.json?v=20260820e').then(r => r.json()),
+      import('./college.js?v=20260820e'),
     ]);
     _college = data; _collegeMap = map;
     if (!location.hash.startsWith('#/college')) return;
@@ -2866,7 +2888,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', 'player-sim': 'Player Simulator', shots: 'Shot Maps', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
 let routedOnce = false;
 function route() {
   const h = location.hash || '#/map';
@@ -2874,7 +2896,7 @@ function route() {
   /* the Tools tab is a hub: its own screens (predict, sim) keep it lit, and
      club/player detail routes stay under Map the way they always have */
   const TAB_OF = { state: 'map', region: 'map', club: 'map', player: 'map',
-    predict: 'tools', sim: 'tools', 'player-sim': 'tools', shots: 'tools' };
+    predict: 'tools', sim: 'tools', 'player-sim': 'tools', shots: 'tools', radar: 'tools' };
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active',
     a.dataset.tab === (TAB_OF[parts[0]] || parts[0])));
   view.scrollTop = 0;
@@ -2908,6 +2930,7 @@ function route() {
   else if (parts[0] === 'upsets') screenUpsets();
   else if (parts[0] === 'college') screenCollege(parts[1] && decodeURIComponent(parts[1]));
   else if (parts[0] === 'shots') screenShots();
+  else if (parts[0] === 'radar') screenRadar();
   else if (parts[0] === 'predict') screenPredict(parts[1]);
   else if (parts[0] === 'wire') screenWire();
   else if (parts[0] === 'sim') screenSimulator(parts[1]);
