@@ -163,25 +163,45 @@ try:
 except Exception as e:
     fail.append(f'minors redaction check: {e}')
 
-# deploy.sh stages a HARDCODED list of top-level pages, so a new page can be
-# committed, linked and sitemapped while never actually shipping — it 404s in
-# production and nothing upstream complains. radar.html did exactly that.
-# Every page the sitemap promises must be in that cp list.
+# Two hardcoded lists decide whether a new page actually reaches users, and
+# neither errors when you forget it:
+#   1. deploy.sh's cp list  — miss it and the page 404s in production
+#   2. gen_club_pages.py's  — miss it and the page is dropped from the sitemap
+#      static urls            on the NEXT deploy, because that script rewrites
+#                             sitemap.xml wholesale (editing sitemap.xml by
+#                             hand is useless; it is a generated file)
+# radar.html hit BOTH on the way out, and shots/player-simulator hit #2 before
+# it. Checking the live sitemap can't catch #2 — the check has to read the
+# generator's list.
 try:
-    dep = (ROOT / 'deploy.sh').read_text()
-    smap = (ROOT / 'sitemap.xml').read_text()
     import re as _re
-    promised = set()
-    for loc in _re.findall(r'<loc>https://www\.rankedxi\.com/([a-z0-9-]*)</loc>', smap):
-        if loc and '/' not in loc:
-            promised.add(loc + '.html')
-    unstaged = sorted(f for f in promised
-                      if (ROOT / f).exists() and _re.search(r'\b' + _re.escape(f) + r'\b', dep) is None)
+    dep = (ROOT / 'deploy.sh').read_text()
+    gen = (ROOT / 'scripts' / 'gen_club_pages.py').read_text()
+    # pages deploy.sh ships, minus the ones that are infrastructure rather than
+    # a search surface (404 has no canonical URL; index/app are already listed)
+    INFRA = {'404.html', 'index.html', 'app.html'}
+    staged = set(_re.findall(r'\b([a-z0-9-]+\.html)\b', dep.split('cp -R', 1)[-1].split('\n\n', 1)[0])) - INFRA
+    missing_sitemap = sorted(f for f in staged
+                             if not _re.search(r"SITE\}/" + _re.escape(f[:-5]) + r"'", gen))
+    if missing_sitemap:
+        fail.append('gen_club_pages.py sitemap list is missing: '
+                    + ', '.join(missing_sitemap)
+                    + ' (deployed, but the next deploy drops it from sitemap.xml)')
+    # and the reverse. The generator's list is the source of truth for what we
+    # INTEND to publish — sitemap.xml on disk only reflects the last deploy, so
+    # a page added to the generator but not to deploy.sh is invisible to a
+    # sitemap.xml-based check until after it has already shipped broken.
+    intended = {n + '.html' for n in _re.findall(r"SITE\}/([a-z0-9-]+)'", gen)}
+    smap = (ROOT / 'sitemap.xml').read_text()
+    intended |= {loc + '.html' for loc in
+                 _re.findall(r'<loc>https://www\.rankedxi\.com/([a-z0-9-]+)</loc>', smap)}
+    unstaged = sorted(f for f in intended
+                      if (ROOT / f).exists() and not _re.search(r'\b' + _re.escape(f) + r'\b', dep))
     if unstaged:
         fail.append('deploy.sh does not stage: ' + ', '.join(unstaged)
-                    + ' (in sitemap but would 404 in production)')
-    else:
-        print(f'  deploy.sh stages every sitemapped page ({len(promised)} checked)')
+                    + ' (meant to be published, but would 404 in production)')
+    if not missing_sitemap and not unstaged:
+        print(f'  every landing page is both staged and sitemapped ({len(staged)} checked)')
 except Exception as e:
     fail.append(f'deploy staging check: {e}')
 
