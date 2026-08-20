@@ -3,9 +3,10 @@ const { test, expect } = require('@playwright/test');
 const { trackErrors, viewRendered, gotoRoute } = require('./helpers');
 
 /* The Tools tab is a hub: it replaced the separate Predict and Sim tabs and is
-   the only in-app door to the two standalone tool pages. These tests guard the
-   two things that silently break — a card losing its link, and the tab going
-   dark on a screen that lives under it. */
+   the only in-app door to the other two tools. All four are app routes now —
+   Player Coach and Shot Maps used to be standalone pages with their own
+   palette. These tests guard the two things that silently break: a card losing
+   its link, and the tab going dark on a screen that lives under it. */
 
 test('the Tools hub lists all four tools', async ({ page }) => {
   const errors = trackErrors(page);
@@ -15,16 +16,16 @@ test('the Tools hub lists all four tools', async ({ page }) => {
   for (const [name, href] of [
     ['Matchup Machine', '#/predict'],
     ['Rank Simulator', '#/sim'],
-    ['Player Coach', '/coach'],
-    ['Shot Maps', '/shots'],
+    ['Player Coach', '#/coach'],
+    ['Shot Maps', '#/shots'],
   ]) {
     await expect(page.locator(`.toolcard:has-text("${name}")`)).toHaveAttribute('href', href);
   }
   expect(errors).toEqual([]);
 });
 
-test('Predict and Sim keep the Tools tab lit', async ({ page }) => {
-  for (const hash of ['#/predict', '#/sim']) {
+test('every tool screen keeps the Tools tab lit', async ({ page }) => {
+  for (const hash of ['#/predict', '#/sim', '#/coach', '#/shots']) {
     await gotoRoute(page, hash);
     await expect(page.locator('.tabbar a[data-tab="tools"]')).toHaveClass(/active/);
   }
@@ -47,9 +48,13 @@ test('the old Predict and Sim tabs are gone from the tab bar', async ({ page }) 
   await expect(page.locator('.tabbar a')).toHaveCount(8);
 });
 
-test('the standalone tool pages link back to the hub', async ({ page }) => {
-  for (const path of ['/shots', '/coach']) {
+/* /coach and /shots are still real URLs — they are in the sitemap and are the
+   only crawlable surface for tools that otherwise live behind a hash route.
+   They are landing pages now, and their job is to lead into the app. */
+test('the tool landing pages lead into the app routes', async ({ page }) => {
+  for (const [path, hash] of [['/shots', '/app#/shots'], ['/coach', '/app#/coach']]) {
     await page.goto(path);
-    await expect(page.locator('a.back')).toHaveAttribute('href', '/app#/tools');
+    await expect(page.locator(`a.cta[href="${hash}"]`).first()).toBeVisible();
+    await expect(page.locator('a[href="/app#/tools"]')).toHaveCount(1);
   }
 });
