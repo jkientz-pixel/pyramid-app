@@ -14,6 +14,8 @@ const ROUTES = [
   '#/cups',
   '#/nt',
   '#/wire',
+  '#/tools',
+  '#/predict',
   '#/sim',
   '#/pricing',
   '#/advertise',
@@ -103,7 +105,7 @@ test('theme toggle flips and persists the theme', async ({ page }) => {
 test('tab bar navigates between sections', async ({ page }) => {
   const errors = trackErrors(page);
   await gotoRoute(page, '#/map');
-  for (const tab of ['tiers', 'table', 'matches', 'following', 'about']) {
+  for (const tab of ['tiers', 'table', 'matches', 'tools', 'following', 'about']) {
     await page.click(`.tabbar a[data-tab="${tab}"]`);
     await viewRendered(page);
     await expect(page.locator(`.tabbar a[data-tab="${tab}"]`)).toHaveClass(/active/);

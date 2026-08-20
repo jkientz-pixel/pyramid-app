@@ -484,3 +484,21 @@ a.wirelink:hover .side{color:var(--accent)}
 .simlog li{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:.85rem;font-variant-numeric:tabular-nums}
 .simlog li:last-child{border-bottom:none}
 .simlog i{font-style:normal;color:var(--ink-dim);font-size:.75rem}
+
+/* Tools hub: four cards, one per tool. Icon sits in the left gutter so the
+   title and blurb share one text column and the cards read as a list, not a
+   grid of tiles. Two columns once there's room for it. */
+.toolgrid{display:grid;gap:10px;margin:14px 0 4px}
+.toolcard{display:grid;grid-template-columns:38px 1fr;grid-template-areas:"i t" "i b" "i g";gap:2px 12px;align-content:start;
+  border:1px solid var(--line);border-radius:14px;background:var(--raise);padding:14px 16px;text-decoration:none;color:var(--ink);
+  transition:border-color var(--dur,160ms) ease,transform var(--dur,160ms) ease}
+.toolcard .ti{grid-area:i;align-self:start;width:26px;height:26px;color:var(--accent);margin-top:1px}
+.toolcard b{grid-area:t;font-size:.98rem;letter-spacing:.01em}
+.toolcard .tx{color:var(--ink-dim);font-weight:400;font-size:.8em;margin-left:5px}
+.toolcard .tb{grid-area:b;color:var(--ink-dim);font-size:.86rem;line-height:1.45}
+.toolcard .tt{grid-area:g;margin-top:6px;justify-self:start;color:var(--ink-dim);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+  border:1px solid var(--line);border-radius:999px;padding:3px 9px}
+.toolcard:hover,.toolcard:focus-visible{border-color:var(--accent);transform:translateY(-1px)}
+.toolcard:hover b,.toolcard:focus-visible b{color:var(--accent)}
+@media (min-width:1160px){[data-layout="wide"] .toolgrid{grid-template-columns:1fr 1fr;gap:12px}}
+@media (prefers-reduced-motion:reduce){.toolcard{transition:none}.toolcard:hover,.toolcard:focus-visible{transform:none}}

@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260819b';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260819b';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260819c';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260819c';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260819b')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260819c')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260819b';
+const BUILDV = '20260819c';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -949,7 +949,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260819b')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260819c')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -958,8 +958,8 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa, usl2] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260819b'), grab('data/wire_asa.json?v=20260819b'),
-    grab('data/wire_usl2.json?v=20260819b')]);
+    grab('data/wire_npsl.json?v=20260819c'), grab('data/wire_asa.json?v=20260819c'),
+    grab('data/wire_usl2.json?v=20260819c')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' }))
     .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })))
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
@@ -985,7 +985,7 @@ async function hydrateWireHook() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260819b')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260819c')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1032,11 +1032,45 @@ function wireMatchupMachine(rated) {
   };
   wirePick('pickH'); wirePick('pickA');
 }
+/* The Tools hub. Four things that answer a question about a specific club,
+   player, or match rather than about the pyramid as a whole. Two are app
+   routes; Player Coach and Shot Maps are their own pages, so they carry an
+   external hint and a link back to here. */
+const TOOLS = [
+  { href: '#/predict', title: 'Matchup Machine', tag: 'Every rated club',
+    blurb: 'Pick two clubs and get win odds, a likely scoreline, and the Elo gap behind them.',
+    icon: '<path d="M4.5 4.5l15 15M19.5 4.5l-15 15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M14.5 4.5h5v5M4.5 14.5v5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>' },
+  { href: '#/sim', title: 'Rank Simulator', tag: 'Every rated club',
+    blurb: 'Book results for your club one at a time and watch the rating and the national rank move.',
+    icon: '<path d="M4 20.5h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4.5 16l5-5 3.5 3 6.5-7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.5 7h5v5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>' },
+  { href: '/coach', title: 'Player Coach', tag: 'Six pro leagues', ext: true,
+    blurb: "Rate a player on per-96 numbers weighted for their position, then simulate what improving one of them is worth.",
+    icon: '<circle cx="12" cy="7.5" r="3.3" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M5 20.5c0-3.9 3.1-6.5 7-6.5s7 2.6 7 6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>' },
+  { href: '/shots', title: 'Shot Maps', tag: 'Six pro leagues', ext: true,
+    blurb: 'Every shot in a match placed where it was struck and sized by expected goals. Filled circles are goals.',
+    icon: '<rect x="3.5" y="5.5" width="17" height="13" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 5.5v13" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16.5" cy="14" r="1.5" fill="currentColor"/><circle cx="9.5" cy="15" r="1.2" fill="none" stroke="currentColor" stroke-width="1.3"/>' },
+];
+function screenTools() {
+  crumb.textContent = 'Tools';
+  view.innerHTML = `
+    <div class="kicker">One club, one player, one match</div>
+    <h2 class="disp">Tools</h2>
+    <div class="toolgrid">
+      ${TOOLS.map(t => `<a class="toolcard" href="${t.href}">
+        <svg class="ti" viewBox="0 0 24 24" aria-hidden="true">${t.icon}</svg>
+        <b>${t.title}${t.ext ? '<span class="tx" aria-label="opens its own page">&#8599;</span>' : ''}</b>
+        <span class="tb">${t.blurb}</span>
+        <span class="tt">${t.tag}</span>
+      </a>`).join('')}
+    </div>
+    <p class="note">Player Coach and Shot Maps open as their own full-width pages and link back here. Both cover MLS, NWSL, USL Championship, USL League One, MLS Next Pro and USL Super League, because those are the leagues that publish per-player and per-shot data.</p>`;
+}
 function screenPredict(preH) {
   crumb.textContent = 'Predict';
   const rated = pool().filter(c => c.r).sort((a, b) => b.r - a.r);
   if (rated.length < 2) return screenMap();
   view.innerHTML = `
+    <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/tools'">&larr; Back</button>
     ${sexToggle()}
     ${matchupMachineHtml(rated, preH)}
     <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Predictions, not betting advice.</p>
@@ -1177,7 +1211,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260819b')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260819c')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1450,35 +1484,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260819b')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260819c')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260819b')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260819c')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260819b')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260819c')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260819b')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260819c')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260819b')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260819c')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1891,7 +1925,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260819b')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260819c')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -2182,7 +2216,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260819b')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260819c')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -2705,14 +2739,17 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
 let routedOnce = false;
 function route() {
   const h = location.hash || '#/map';
   const parts = h.slice(2).split('/');
+  /* the Tools tab is a hub: its own screens (predict, sim) keep it lit, and
+     club/player detail routes stay under Map the way they always have */
+  const TAB_OF = { state: 'map', region: 'map', club: 'map', player: 'map',
+    predict: 'tools', sim: 'tools' };
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active',
-    a.dataset.tab === (['state', 'region', 'club', 'player'].includes(parts[0]) ? 'map'
-      : parts[0])));
+    a.dataset.tab === (TAB_OF[parts[0]] || parts[0])));
   view.scrollTop = 0;
   /* these views read ROSTERS synchronously; any view shows followed-player
      chips, so a user with player favorites also waits for the module */
@@ -2736,6 +2773,7 @@ function route() {
   else if (parts[0] === 'legal') screenLegal();
   else if (parts[0] === 'table') screenTable();
   else if (parts[0] === 'matches') screenMatches(parts[1]);
+  else if (parts[0] === 'tools') screenTools();
   else if (parts[0] === 'predict') screenPredict(parts[1]);
   else if (parts[0] === 'wire') screenWire();
   else if (parts[0] === 'sim') screenSimulator(parts[1]);
