@@ -17,6 +17,16 @@ jobs:
       - name: Run preflight gate
         run: python3 scripts/preflight.py
 
+      # the roster bot deploys and bumps the cache-bust token on master twice
+      # a day, so any branch more than a few hours old carries a token master
+      # already shipped. Merging that serves returning browsers the build they
+      # cached under it — the change looks deployed and nobody sees it.
+      - name: Cache-bust token must be ahead of master
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --depth=1 origin master:refs/remotes/origin/master
+          python3 scripts/check_token_ahead.py
+
   smoke:
     name: Playwright smoke suite
     runs-on: ubuntu-latest

@@ -78,8 +78,23 @@ verify_token() {
   echo "DEPLOY VERIFY FAILED: live app.html is not serving v$NEWV" >&2
   return 1
 }
+# A Function route or a standalone page can 404 in production while every
+# tokened asset is fine — that is exactly how the wire JSONs went missing.
+# /api/shots is asserted via its no-league 400 rather than a real query: the
+# route must exist, but a green deploy must not depend on ASA's uptime.
+verify_status() {
+  for i in 1 2 3 4 5; do
+    [ "$(curl -so /dev/null -w '%{http_code}' "$1")" = "$2" ] && return 0
+    sleep 3
+  done
+  echo "DEPLOY VERIFY FAILED: $1 did not return $2" >&2
+  return 1
+}
 vfail=0
 verify_token || vfail=1
+verify_url "$LIVE/coach" || vfail=1
+verify_url "$LIVE/shots" || vfail=1
+verify_status "$LIVE/api/shots" 400 || vfail=1
 for f in "$STAGE"/data/*.json; do
   verify_url "$LIVE/data/$(basename "$f")?v=$NEWV" || vfail=1
 done
