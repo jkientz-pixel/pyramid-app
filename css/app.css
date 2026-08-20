@@ -418,6 +418,7 @@ a.wirelink:hover .side{color:var(--accent)}
   [data-layout="wide"] .searchwrap.global{width:min(720px,60%);margin:14px auto 0}
   [data-layout="wide"] main{padding:18px max(36px,calc((100% - 1120px)/2)) 48px}
   [data-layout="wide"] svg.usmap{max-height:calc(100dvh - 270px)}
+  [data-layout="wide"] .leafmap{max-height:calc(100dvh - 270px)}
   /* no bottom tab bar to clear in wide mode */
   [data-layout="wide"] .mapctl{bottom:20px}
   /* the audit could see 9 clubs on a 1440px screen; two columns shows ~30.
@@ -430,7 +431,10 @@ a.wirelink:hover .side{color:var(--accent)}
 }
 
 /* Detailed basemap mode (Leaflet + OSM) */
-.leafmap{height:min(72vh,540px);width:100%}
+/* same box as the illustrated map (svg.usmap viewBox 980x580) so toggling
+   modes doesn't jump the page height, and so the contiguous states fill
+   the frame in both instead of floating in a band of Canada and Mexico */
+.leafmap{width:100%;aspect-ratio:980/580;height:auto;max-height:72vh}
 .leafmap[hidden]{display:none}
 .mapbox[data-mode="street"] svg.usmap,.mapbox[data-mode="street"] .mapctl,.mapbox[data-mode="street"] .maptip{display:none}
 .mapmode{position:absolute;top:10px;left:10px;z-index:800;display:flex;border:1px solid var(--line);border-radius:10px;overflow:clip;box-shadow:0 2px 8px rgba(30,40,32,.18)}
@@ -449,7 +453,7 @@ a.wirelink:hover .side{color:var(--accent)}
 .leafmap::after{content:'';position:absolute;inset:0;z-index:350;pointer-events:none;opacity:.16;mix-blend-mode:soft-light;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="180" height="180" filter="url(%23n)"/></svg>')}
 .leafmap::before{content:'';position:absolute;inset:0;z-index:351;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(5,8,10,.38) 100%)}
 .leafmap .leaflet-marker-icon{filter:drop-shadow(0 0 3px rgba(0,0,0,.85)) drop-shadow(0 1px 2px rgba(0,0,0,.6))}
-.leafmap.leaflet-container .leaflet-control-attribution{background:rgba(12,16,19,.7);color:#9aa7b0}
+.leafmap.leaflet-container .leaflet-control-attribution{background:rgba(12,16,19,.7);color:#9aa7b0;font-size:.62rem;line-height:1.5;padding:0 5px}
 .leafmap.leaflet-container .leaflet-control-attribution a{color:#c7d2da}
 
 /* inline data-correction form (community fixes) */

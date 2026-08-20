@@ -425,6 +425,8 @@ function wireMap(scopeStates, mapClubs, frameClubs) {
    The chosen mode persists and survives the full re-render that league/sex
    toggles trigger, because wireMap re-reads it on every screen build. */
 const MAPMODE_KEY = 'rxi-mapmode';
+/* states the illustrated map puts in inset boxes rather than in place */
+const OFFSHORE_ST = new Set(['AK', 'HI', 'PR', 'VI', 'GU']);
 function wireBasemap(scopeStates, mapClubs, frameClubs) {
   const box = view.querySelector('.mapbox');
   const modeCtl = box && box.querySelector('.mapmode');
@@ -445,6 +447,12 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     const pts = mapClubs.filter(c => isFinite(c.la) && isFinite(c.lo));
     leafMap = L.map(leafEl, { zoomSnap: 0.25, wheelPxPerZoomLevel: 90, preferCanvas: true, zoomControl: false });
     L.control.zoom({ position: 'topright' }).addTo(leafMap);
+    /* drop Leaflet's own courtesy prefix (BSD, not required in-UI) so the
+       tile credits that ARE required fit on one line in the map box */
+    leafMap.attributionControl.setPrefix('');
+    /* test hook: the opening frame is a product decision (offshore clubs plot
+       but don't widen it), and there is no other way to read it from outside */
+    leafEl._rxiMap = leafMap;
     /* two-layer dark relief cartography: Esri hillshade gives the embossed
        charcoal terrain (the look Jeremy asked for), and a faint inverted OSM
        overlay adds state lines, roads, and town labels on top. CSS handles
@@ -460,8 +468,16 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     /* frame the scoped clubs (state/region) but plot everything, so panning
        past a border reveals the neighbors instead of empty map */
     const frame = frameClubs.filter(c => isFinite(c.la) && isFinite(c.lo));
+    /* ...and the offshore clubs don't get a vote on the opening frame. The
+       illustrated map draws Alaska and Hawaii as insets, so the contiguous
+       states fill the canvas; fitting Leaflet to every club instead spans
+       19.7N-64.8N and shrinks the lower 48 to a strip. They still plot, and
+       zooming out still finds them, which is where people look anyway.
+       Falling back to the full frame keeps a scope that IS Alaska working. */
+    const core = frame.filter(c => !OFFSHORE_ST.has(c.st));
+    const fitSet = core.length ? core : frame;
     const fitFrame = () => {
-      if (frame.length) leafMap.fitBounds(L.latLngBounds(frame.map(c => [c.la, c.lo])).pad(0.08));
+      if (fitSet.length) leafMap.fitBounds(L.latLngBounds(fitSet.map(c => [c.la, c.lo])).pad(0.08));
       else if (pts.length) leafMap.fitBounds(L.latLngBounds(pts.map(c => [c.la, c.lo])).pad(0.08));
       else leafMap.setView([39.5, -98.35], 4);
     };
