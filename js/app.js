@@ -2037,6 +2037,7 @@ function screenPyramid() {
     </div>
     <a class="fa-card" href="#/cups"><b>&#127942; The Trophy Room</b><span>16 national trophies, every tier — MLS Cup to the NPSL, the College Cups, and the Open Cup back to 1914.</span></a>
     <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>Above the pyramid — USA youth national teams in Concacaf and FIFA competition, with fixtures and how to watch.</span></a>
+    <a class="gk-cta" href="#/college">College results, 2025 season &rarr;</a>
     ${adSlot('tiers', 'The Pyramid')}
     <p class="note">Tiers are organizational, not sporting — US soccer has no promotion and relegation between most levels. The pathway runs through players, not clubs: youth to college to the amateur leagues to the pro game. Tap a league for its page &mdash; every club, where to watch, and the official site.</p>`;
   wireSexToggle();
@@ -2304,6 +2305,27 @@ async function screenUpsets() {
     if (!location.hash.startsWith('#/upsets')) return;
     view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/cups\'">&larr; Trophy Room</button>'
       + '<p class="note">Open Cup results could not load. Check your connection and try again.</p>';
+  }
+}
+/* College Results (#/college): the 2025 NCAA D1 seasons behind the Massey
+   rating snapshots the college layers rank by. Two files — the results and the
+   ESPN-name-to-club map — both lazy, both only needed on this route. */
+let _college = null, _collegeMap = null;
+async function screenCollege(team) {
+  crumb.textContent = 'College results';
+  view.innerHTML = '<p class="note">Loading college results&hellip;</p>';
+  try {
+    const [data, map, mod] = await Promise.all([
+      _college || fetch('data/espn_college_2025.json?v=20260820c').then(r => r.json()),
+      _collegeMap || fetch('data/espn_club_map.json?v=20260820c').then(r => r.json()),
+      import('./college.js?v=20260820c'),
+    ]);
+    _college = data; _collegeMap = map;
+    if (!location.hash.startsWith('#/college')) return;
+    mod.render(view, data, map, { esc }, team);
+  } catch (e) {
+    if (!location.hash.startsWith('#/college')) return;
+    view.innerHTML = '<p class="note">College results could not load. Check your connection and try again.</p>';
   }
 }
 async function screenCups() {
@@ -2826,7 +2848,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', coach: 'Player Coach', shots: 'Shot Maps', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', coach: 'Player Coach', shots: 'Shot Maps', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
 let routedOnce = false;
 function route() {
   const h = location.hash || '#/map';
@@ -2863,6 +2885,7 @@ function route() {
   else if (parts[0] === 'tools') screenTools();
   else if (parts[0] === 'coach') screenCoach();
   else if (parts[0] === 'upsets') screenUpsets();
+  else if (parts[0] === 'college') screenCollege(parts[1] && decodeURIComponent(parts[1]));
   else if (parts[0] === 'shots') screenShots();
   else if (parts[0] === 'predict') screenPredict(parts[1]);
   else if (parts[0] === 'wire') screenWire();

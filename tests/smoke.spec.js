@@ -13,6 +13,7 @@ const ROUTES = [
   '#/about',
   '#/cups',
   '#/upsets',
+  '#/college',
   '#/nt',
   '#/wire',
   '#/tools',
