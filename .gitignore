@@ -23,6 +23,8 @@ playwright-report/
 .deploy-stage/
 .wrangler/
 club/
+league/
+state/
 og/
 .venv/
 crests/_svg_tmp/

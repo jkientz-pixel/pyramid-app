@@ -200,6 +200,19 @@ try:
     if unstaged:
         fail.append('deploy.sh does not stage: ' + ', '.join(unstaged)
                     + ' (meant to be published, but would 404 in production)')
+    # The .html checks above only see top-level files. gen_club_pages.py also
+    # emits whole directories (club/, league/, state/) — miss one in deploy.sh's
+    # cp list and thousands of sitemapped URLs 404 in production with nothing
+    # failing. Every directory the generator freshens must be staged.
+    gen_dirs = sorted(set(_re.findall(r"fresh\('([a-z0-9-]+)'\)", gen)))
+    cp_block = dep.split('cp -R', 1)[-1].split('\n\n', 1)[0]
+    unstaged_dirs = [d for d in gen_dirs if not _re.search(r'(?<![\w/-])' + d + r'(?![\w/-])', cp_block)]
+    if unstaged_dirs:
+        fail.append('deploy.sh does not stage generated directories: '
+                    + ', '.join(unstaged_dirs)
+                    + ' (sitemapped, but every URL under them would 404)')
+    elif gen_dirs:
+        print(f'  generated dirs staged: {", ".join(gen_dirs)}')
     if not missing_sitemap and not unstaged:
         print(f'  every landing page is both staged and sitemapped ({len(staged)} checked)')
 except Exception as e:

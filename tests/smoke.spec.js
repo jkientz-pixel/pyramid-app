@@ -61,12 +61,38 @@ test('default route falls back to the map', async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
-test('unknown route falls back to the map without errors', async ({ page }) => {
+/* This used to assert the map rendered. Silently showing the map for a bad
+   hash is the worst available failure mode: a stranger following a mistyped
+   link from a DM concludes the site is broken, not that the URL was wrong.
+   An unknown route now says so. */
+test('unknown route renders an honest not-found, not the map', async ({ page }) => {
   const errors = trackErrors(page);
   await gotoRoute(page, '#/definitely-not-a-route');
-  await expect(page.locator('#regionchips')).toBeVisible();
+  await expect(page.locator('#view')).toContainText("That page isn't here");
+  await expect(page.locator('#regionchips')).toHaveCount(0);
+  await expect(page).toHaveTitle(/Page not found/);
   expect(errors).toEqual([]);
 });
+
+/* Every alias below is a URL somebody plausibly types or gets sent; each one
+   used to render the map with no explanation. */
+for (const [typed, lands] of [
+  ['#/free-agents', 'freeagents'],
+  ['#/claim', 'clubtools'],
+  ['#/sponsorships', 'advertise'],
+  ['#/follow', 'following'],
+  ['#/standings', 'table'],
+  ['#/pyramid', 'tiers'],
+]) {
+  test(`${typed} redirects to #/${lands}`, async ({ page }) => {
+    const errors = trackErrors(page);
+    await gotoRoute(page, typed);
+    await page.waitForFunction(h => location.hash === h, `#/${lands}`);
+    await viewRendered(page);
+    await expect(page.locator('#view')).not.toContainText("That page isn't here");
+    expect(errors).toEqual([]);
+  });
+}
 
 test('legacy numeric club id redirects to the permanent slug', async ({ page }) => {
   const errors = trackErrors(page);

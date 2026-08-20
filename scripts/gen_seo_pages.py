@@ -72,10 +72,18 @@ counts = {
     'statlines': sum(1 for arr in rosters.values() for p in arr if p.get('st')),
     'leagues': len(leagues),
 }
-index_path = os.path.join(ROOT, 'index.html')
-idx = open(index_path).read()
-for key, value in counts.items():
-    idx = re.sub(f'(data-stat="{key}">)[^<]*', lambda m, v=value: m.group(1) + format(v, ','), idx)
-open(index_path, 'w').write(idx)
-print(f"index.html counts baked: {counts['clubs']:,} clubs · "
+for fname in ('index.html', 'app.html'):
+    path = os.path.join(ROOT, fname)
+    page = open(path).read()
+    for key, value in counts.items():
+        page = re.sub(f'(data-stat="{key}">)[^<]*',
+                      lambda m, v=value: m.group(1) + format(v, ','), page)
+    # og:description is what crawlers and every social unfurl read; app.html
+    # carried a hand-written "3,900+" there and in the pre-hydration
+    # placeholder long after the database passed 4,285, so the three surfaces
+    # disagreed with each other. Both are derived here now.
+    page = re.sub(r'([\d,]+)\+? clubs from MLS to the grassroots',
+                  f"{counts['clubs']:,} clubs from MLS to the grassroots", page)
+    open(path, 'w').write(page)
+print(f"index.html + app.html counts baked: {counts['clubs']:,} clubs · "
       f"{counts['statlines']:,} stat lines · {counts['leagues']} leagues")

@@ -7,9 +7,10 @@ cd "$(dirname "$0")"
 # replaces the manual ?v= sed ritual; preflight still verifies consistency
 NEWV=$(python3 scripts/bump_version.py | tail -1 | awk '{print $NF}')
 
-# regenerate the static SEO surface from current data: league landing pages,
-# per-club share cards (og/ — must run before club pages so they can point
-# og:image at the cards), per-club pages (club/), and the full sitemap
+# regenerate the static SEO surface from current data: the two hand-tuned
+# league landing pages, per-club share cards (og/ — must run before club pages
+# so they can point og:image at the cards), then the generated hub-and-leaf
+# tree (club/, league/, state/) and the full sitemap that indexes it
 python3 scripts/gen_seo_pages.py
 python3 scripts/gen_og_cards.py
 python3 scripts/gen_club_pages.py
@@ -32,7 +33,8 @@ trap 'rm -rf "$STAGE"' EXIT
 # 404.html must ship: its presence is what turns off the Pages SPA fallback,
 # so bad URLs return a real 404 instead of the homepage with HTTP 200
 cp -R app.html index.html 404.html npsl-rankings.html upsl-rankings.html \
-      methodology.html privacy.html player-simulator.html shots.html radar.html club .well-known \
+      methodology.html privacy.html player-simulator.html shots.html radar.html \
+      club league state .well-known \
       manifest.webmanifest sw.js robots.txt sitemap.xml _headers _redirects \
       js css crests fonts \
       icon-192.png icon-512.png apple-touch-icon.png og.png google-play-badge.png "$STAGE/"
