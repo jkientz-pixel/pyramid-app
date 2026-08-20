@@ -32,8 +32,8 @@ trap 'rm -rf "$STAGE"' EXIT
 # 404.html must ship: its presence is what turns off the Pages SPA fallback,
 # so bad URLs return a real 404 instead of the homepage with HTTP 200
 cp -R app.html index.html 404.html npsl-rankings.html upsl-rankings.html \
-      methodology.html privacy.html coach.html club .well-known \
-      manifest.webmanifest sw.js robots.txt sitemap.xml _headers \
+      methodology.html privacy.html player-simulator.html shots.html club .well-known \
+      manifest.webmanifest sw.js robots.txt sitemap.xml _headers _redirects \
       js css crests fonts \
       icon-192.png icon-512.png apple-touch-icon.png og.png google-play-badge.png "$STAGE/"
 # per-club share cards (skipped gracefully when gen_og_cards had no Pillow)
@@ -78,8 +78,23 @@ verify_token() {
   echo "DEPLOY VERIFY FAILED: live app.html is not serving v$NEWV" >&2
   return 1
 }
+# A Function route or a standalone page can 404 in production while every
+# tokened asset is fine — that is exactly how the wire JSONs went missing.
+# /api/shots is asserted via its no-league 400 rather than a real query: the
+# route must exist, but a green deploy must not depend on ASA's uptime.
+verify_status() {
+  for i in 1 2 3 4 5; do
+    [ "$(curl -so /dev/null -w '%{http_code}' "$1")" = "$2" ] && return 0
+    sleep 3
+  done
+  echo "DEPLOY VERIFY FAILED: $1 did not return $2" >&2
+  return 1
+}
 vfail=0
 verify_token || vfail=1
+verify_url "$LIVE/player-simulator" || vfail=1
+verify_url "$LIVE/shots" || vfail=1
+verify_status "$LIVE/api/shots" 400 || vfail=1
 for f in "$STAGE"/data/*.json; do
   verify_url "$LIVE/data/$(basename "$f")?v=$NEWV" || vfail=1
 done

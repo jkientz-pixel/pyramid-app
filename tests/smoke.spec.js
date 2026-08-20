@@ -12,9 +12,15 @@ const ROUTES = [
   '#/following',
   '#/about',
   '#/cups',
+  '#/upsets',
+  '#/college',
   '#/nt',
   '#/wire',
+  '#/tools',
+  '#/predict',
   '#/sim',
+  '#/player-sim',
+  '#/shots',
   '#/pricing',
   '#/advertise',
   '#/freeagents',
@@ -27,6 +33,18 @@ const ROUTES = [
   '#/club/atlanta-united',
   '#/legends/atlanta-united',
 ];
+
+/* /api/shots is a Cloudflare Pages Function; scripts/dev_server.py serves
+   static files only, so the real call 404s locally. Stubbing it keeps this
+   sweep's "no errors at all" assertion strict instead of teaching it to
+   ignore 404s, which is exactly the class of bug it exists to catch. The
+   endpoint itself is covered where it can be: deploy.sh fails a deploy unless
+   the live route answers 400 to a bare call, and tests/shots.spec.js drives
+   the unavailable-feed path on purpose. */
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/shots**', r =>
+    r.fulfill({ status: 200, contentType: 'application/json', body: '{"games":[]}' }));
+});
 
 for (const route of ROUTES) {
   test(`route ${route} renders without errors`, async ({ page }) => {
@@ -103,7 +121,7 @@ test('theme toggle flips and persists the theme', async ({ page }) => {
 test('tab bar navigates between sections', async ({ page }) => {
   const errors = trackErrors(page);
   await gotoRoute(page, '#/map');
-  for (const tab of ['tiers', 'table', 'matches', 'following', 'about']) {
+  for (const tab of ['tiers', 'table', 'matches', 'tools', 'following', 'about']) {
     await page.click(`.tabbar a[data-tab="${tab}"]`);
     await viewRendered(page);
     await expect(page.locator(`.tabbar a[data-tab="${tab}"]`)).toHaveClass(/active/);

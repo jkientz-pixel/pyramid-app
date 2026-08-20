@@ -11,6 +11,7 @@
   --mls:#4D8FD1; --uslc:#D9534F; --usl1:#E07B54; --mnp:#2FA69E;
   --nisa:#DD9426; --wom:#9B7ED9; --loc:#4FA35B;
   --sim-up:#2E7D4F; --sim-down:#B3453E;
+  --shot-home:#3C7FC4; --shot-away:#C77F1E; --shot-grass:#EDF2EA; --shot-chalk:#A8B5A3;
   --font-disp:"Barlow Condensed","Avenir Next Condensed","Arial Narrow",Impact,sans-serif;
 }
 *{box-sizing:border-box}
@@ -365,6 +366,7 @@ a.tierlg:hover{border-color:var(--accent)}
   --ink:#F2F4EF; --ink-dim:#9DABA3; --accent:#E8A33D;
   --map-fill:#1E2E26; --map-stroke:#E8EFEA; --map-hover:#273B30; --map-label:#D5DFD8; --bar:rgba(12,21,18,.92);
   --sim-up:#5DBE7F; --sim-down:#E0736B;
+  --shot-home:#5B9FDD; --shot-away:#E39A3E; --shot-grass:#101A13; --shot-chalk:#4A5F52;
 }
 [data-theme="dark"] body{background:#07100C}
 [data-theme="dark"] .ladder li.me{background:#2A2416;color:var(--ink)}
@@ -418,6 +420,7 @@ a.wirelink:hover .side{color:var(--accent)}
   [data-layout="wide"] .searchwrap.global{width:min(720px,60%);margin:14px auto 0}
   [data-layout="wide"] main{padding:18px max(36px,calc((100% - 1120px)/2)) 48px}
   [data-layout="wide"] svg.usmap{max-height:calc(100dvh - 270px)}
+  [data-layout="wide"] .leafmap{max-height:calc(100dvh - 270px)}
   /* no bottom tab bar to clear in wide mode */
   [data-layout="wide"] .mapctl{bottom:20px}
   /* the audit could see 9 clubs on a 1440px screen; two columns shows ~30.
@@ -430,7 +433,10 @@ a.wirelink:hover .side{color:var(--accent)}
 }
 
 /* Detailed basemap mode (Leaflet + OSM) */
-.leafmap{height:min(72vh,540px);width:100%}
+/* same box as the illustrated map (svg.usmap viewBox 980x580) so toggling
+   modes doesn't jump the page height, and so the contiguous states fill
+   the frame in both instead of floating in a band of Canada and Mexico */
+.leafmap{width:100%;aspect-ratio:980/580;height:auto;max-height:72vh}
 .leafmap[hidden]{display:none}
 .mapbox[data-mode="street"] svg.usmap,.mapbox[data-mode="street"] .mapctl,.mapbox[data-mode="street"] .maptip{display:none}
 .mapmode{position:absolute;top:10px;left:10px;z-index:800;display:flex;border:1px solid var(--line);border-radius:10px;overflow:clip;box-shadow:0 2px 8px rgba(30,40,32,.18)}
@@ -449,7 +455,7 @@ a.wirelink:hover .side{color:var(--accent)}
 .leafmap::after{content:'';position:absolute;inset:0;z-index:350;pointer-events:none;opacity:.16;mix-blend-mode:soft-light;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="180" height="180" filter="url(%23n)"/></svg>')}
 .leafmap::before{content:'';position:absolute;inset:0;z-index:351;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(5,8,10,.38) 100%)}
 .leafmap .leaflet-marker-icon{filter:drop-shadow(0 0 3px rgba(0,0,0,.85)) drop-shadow(0 1px 2px rgba(0,0,0,.6))}
-.leafmap.leaflet-container .leaflet-control-attribution{background:rgba(12,16,19,.7);color:#9aa7b0}
+.leafmap.leaflet-container .leaflet-control-attribution{background:rgba(12,16,19,.7);color:#9aa7b0;font-size:.62rem;line-height:1.5;padding:0 5px}
 .leafmap.leaflet-container .leaflet-control-attribution a{color:#c7d2da}
 
 /* inline data-correction form (community fixes) */
@@ -484,3 +490,167 @@ a.wirelink:hover .side{color:var(--accent)}
 .simlog li{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:.85rem;font-variant-numeric:tabular-nums}
 .simlog li:last-child{border-bottom:none}
 .simlog i{font-style:normal;color:var(--ink-dim);font-size:.75rem}
+
+/* Tools hub: four cards, one per tool. Icon sits in the left gutter so the
+   title and blurb share one text column and the cards read as a list, not a
+   grid of tiles. Two columns once there's room for it. */
+.toolgrid{display:grid;gap:10px;margin:14px 0 4px}
+.toolcard{display:grid;grid-template-columns:38px 1fr;grid-template-areas:"i t" "i b" "i g";gap:2px 12px;align-content:start;
+  border:1px solid var(--line);border-radius:14px;background:var(--raise);padding:14px 16px;text-decoration:none;color:var(--ink);
+  transition:border-color var(--dur,160ms) ease,transform var(--dur,160ms) ease}
+.toolcard .ti{grid-area:i;align-self:start;width:26px;height:26px;color:var(--accent);margin-top:1px}
+.toolcard b{grid-area:t;font-size:.98rem;letter-spacing:.01em}
+.toolcard .tx{color:var(--ink-dim);font-weight:400;font-size:.8em;margin-left:5px}
+.toolcard .tb{grid-area:b;color:var(--ink-dim);font-size:.86rem;line-height:1.45}
+.toolcard .tt{grid-area:g;margin-top:6px;justify-self:start;color:var(--ink-dim);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+  border:1px solid var(--line);border-radius:999px;padding:3px 9px}
+.toolcard:hover,.toolcard:focus-visible{border-color:var(--accent);transform:translateY(-1px)}
+.toolcard:hover b,.toolcard:focus-visible b{color:var(--accent)}
+@media (min-width:1160px){[data-layout="wide"] .toolgrid{grid-template-columns:1fr 1fr;gap:12px}}
+@media (prefers-reduced-motion:reduce){.toolcard{transition:none}.toolcard:hover,.toolcard:focus-visible{transform:none}}
+
+/* ---- Player Simulator (#/player-sim) and Shot Maps (#/shots) --------------
+   Both screens were standalone pages with a hard-coded dark palette and no
+   theme support at all; everything below is expressed in app tokens so they
+   follow the theme toggle like every other screen. */
+.cch-pickers{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.cch-f{display:flex;flex-direction:column;gap:5px;min-width:0}
+.cch-f>span{color:var(--ink-dim);font-size:.7rem;letter-spacing:.09em;text-transform:uppercase}
+.cch-wide{grid-column:span 2}
+.cch-f select,.cch-f input{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:10px;
+  background:var(--raise);color:var(--ink);font:inherit;font-size:.85rem}
+.cch-f select:focus-visible,.cch-f input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.cch-dim{color:var(--ink-dim)}
+
+.cch-hero{display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:var(--raise);
+  border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+.cch-rating{line-height:1;text-align:center;flex:none}
+.cch-rating>span{font-size:4rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent)}
+.cch-rating small{display:block;font-family:var(--font-disp);font-size:.64rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-dim);margin-top:4px}
+.cch-who{min-width:0;flex:1 1 12em}
+.cch-who>b{font-size:1.2rem}
+.cch-meta,.cch-rankline{color:var(--ink-dim);font-size:.8rem;margin-top:3px;font-variant-numeric:tabular-nums}
+.chip.up{border-color:var(--sim-up);color:var(--sim-up)}
+.chip.down{border-color:var(--sim-down);color:var(--sim-down)}
+
+.cch-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:18px}
+.cch-lever{border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:9px;
+  background:var(--raise);transition:border-color var(--dur,.2s) ease}
+.cch-lever.on{border-color:var(--accent)}
+.cch-lhead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cch-stat{font-weight:600;font-size:.88rem}
+.cch-advice{color:var(--ink-dim);font-size:.76rem;margin:3px 0 7px}
+.cch-gain{flex:none;border:1px solid var(--line);background:none;color:var(--sim-up);border-radius:999px;
+  padding:3px 10px;font:inherit;font-size:.72rem;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums}
+.cch-gain:hover{border-color:var(--sim-up)}
+.cch-gain.applied{background:var(--sim-up);color:var(--ground);border-color:var(--sim-up)}
+.cch-gain.zero{color:var(--ink-dim);cursor:default}
+.cch-lever input[type=range]{width:100%;accent-color:var(--accent);margin:2px 0}
+.cch-nums{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  color:var(--ink-dim);font-size:.74rem;font-variant-numeric:tabular-nums}
+.cch-nums b{color:var(--ink)}
+.cch-delta.up{color:var(--sim-up)}
+.cch-delta.down{color:var(--sim-down)}
+.cch-payline{font-size:1.02rem;margin:6px 0 9px}
+.cch-payline b{color:var(--sim-up);font-variant-numeric:tabular-nums}
+.cch-passes{display:flex;flex-wrap:wrap;gap:6px}
+.cch-pass{border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:.75rem;background:var(--raise)}
+.cch-pass .r{color:var(--ink-dim);margin-left:6px;font-variant-numeric:tabular-nums}
+.cch-warn{border-left:3px solid var(--accent);padding-left:10px}
+
+/* ---- shot map ---- */
+.sh-ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.sh-score{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:.85rem;margin-bottom:8px}
+.sh-side{display:inline-flex;align-items:center;gap:6px}
+.sh-nums{font-size:1.4rem;font-weight:700;letter-spacing:.05em;font-variant-numeric:tabular-nums}
+.sh-swatch{width:11px;height:11px;border-radius:3px;display:inline-block;flex:none}
+.sh-swatch.sh-home{background:var(--shot-home)}
+.sh-swatch.sh-away{background:var(--shot-away)}
+.sh-pitchwrap{background:var(--shot-grass);border:1px solid var(--line);border-radius:14px;padding:10px;overflow-x:auto}
+.sh-pitch{width:100%;height:auto;display:block;min-width:460px}
+.sh-line{stroke:var(--shot-chalk);stroke-width:2;fill:none}
+.sh-edge{stroke-width:3}
+.sh-goalframe{stroke-width:4}
+.sh-spot{fill:var(--shot-chalk)}
+.sh-mark{cursor:pointer}
+.sh-mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+circle.sh-home{fill:var(--shot-home);stroke:var(--shot-home);stroke-width:3}
+circle.sh-away{fill:var(--shot-away);stroke:var(--shot-away);stroke-width:3}
+circle.sh-goal{fill-opacity:.92}
+circle.sh-shot{fill-opacity:.10}
+circle.sh-blocked{stroke-dasharray:7 5}
+circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
+.sh-legend{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-top:9px;
+  color:var(--ink-dim);font-size:.74rem}
+.sh-grp{display:inline-flex;align-items:center;gap:5px}
+.sh-tablewrap{overflow-x:auto}
+.sh-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:6px}
+.sh-table th,.sh-table td{text-align:left;padding:6px 9px;border-bottom:1px solid var(--line);white-space:nowrap}
+.sh-table th{color:var(--ink-dim);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.sh-table th .sh-swatch{margin-right:5px}
+.sh-table td.num{font-variant-numeric:tabular-nums}
+.sh-details{margin-top:10px}
+.sh-details summary{cursor:pointer;color:var(--accent);font-size:.8rem}
+.sh-tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .12s ease;z-index:60;
+  background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:8px 11px;
+  font-size:.76rem;max-width:240px;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+.sh-tip .k{color:var(--ink-dim)}
+
+@media (max-width:640px){.cch-wide{grid-column:span 1}}
+@media (prefers-reduced-motion:reduce){.cch-lever,.sh-tip{transition:none}}
+
+/* ---- Giant-Killings (#/upsets) ------------------------------------------- */
+.gk-cta{display:inline-block;margin:12px 0 2px;padding:9px 16px;border-radius:999px;
+  border:1px solid var(--accent);color:var(--accent);text-decoration:none;font-size:.8rem;font-weight:600}
+.gk-cta:hover{background:var(--accent);color:var(--ground)}
+.gk-list{list-style:none;margin:10px 0;padding:0;border:1px solid var(--line);border-radius:12px;
+  overflow:hidden;background:var(--raise)}
+.gk-row{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line)}
+.gk-row:last-child{border-bottom:none}
+.gk-yr{flex:none;width:2.9em;color:var(--ink-dim);font-size:.78rem;font-variant-numeric:tabular-nums;padding-top:1px}
+.gk-body{flex:1 1 auto;min-width:0}
+.gk-line{display:block;font-size:.86rem;line-height:1.45}
+.gk-line a{color:var(--accent);text-decoration:none}
+.gk-line a:hover{text-decoration:underline}
+.gk-beat{color:var(--ink-dim);font-size:.76rem;margin:0 2px}
+.gk-meta{display:block;color:var(--ink-dim);font-size:.72rem;margin-top:2px}
+.gk-score{flex:none;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:.86rem}
+.gk-score small{display:block;font-weight:400;font-size:.63rem;color:var(--ink-dim)}
+/* tier badges reuse the pyramid's sense of depth: darker = higher up */
+.gk-tier{display:inline-block;border:1px solid var(--line);border-radius:5px;padding:0 5px;
+  font-size:.63rem;letter-spacing:.04em;color:var(--ink-dim);vertical-align:1px;white-space:nowrap}
+.gk-t1{border-color:var(--mls);color:var(--mls)}
+.gk-t2{border-color:var(--uslc);color:var(--uslc)}
+.gk-t3{border-color:var(--usl1);color:var(--usl1)}
+.gk-t4{border-color:var(--loc);color:var(--loc)}
+.gk-t5{border-color:var(--ink-dim);color:var(--ink-dim)}
+
+/* ---- College Results (#/college) ----------------------------------------- */
+.col-list{list-style:none;margin:10px 0;padding:0;border:1px solid var(--line);border-radius:12px;
+  overflow:hidden;background:var(--raise)}
+.col-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line)}
+.col-row:last-child{border-bottom:none}
+.col-res{flex:none;width:1.5rem;height:1.5rem;border-radius:6px;display:grid;place-items:center;
+  font-size:.66rem;font-weight:700;letter-spacing:.02em}
+.col-w{background:var(--sim-up);color:var(--ground)}
+.col-l{background:var(--sim-down);color:var(--ground)}
+.col-d{background:var(--line);color:var(--ink-dim)}
+.col-body{flex:1 1 auto;min-width:0}
+.col-line{display:block;font-size:.86rem}
+.col-line a{color:var(--accent);text-decoration:none}
+.col-line a:hover{text-decoration:underline}
+.col-at{color:var(--ink-dim);font-size:.74rem}
+.col-meta{display:block;color:var(--ink-dim);font-size:.72rem;margin-top:1px}
+.col-score{flex:none;font-variant-numeric:tabular-nums;font-weight:600;font-size:.86rem}
+
+/* ---- USL2 squad appearances (club page) ---------------------------------- */
+.apps-list{list-style:none;margin:8px 0;padding:0;border:1px solid var(--line);border-radius:12px;
+  overflow:hidden;background:var(--raise);max-height:420px;overflow-y:auto}
+.apps-row{display:flex;align-items:center;gap:10px;padding:6px 12px;border-bottom:1px solid var(--line)}
+.apps-row:last-child{border-bottom:none}
+.apps-name{flex:1 1 auto;min-width:0;font-size:.84rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.apps-bar{flex:0 0 68px;height:5px;border-radius:3px;background:var(--ground2);overflow:hidden}
+.apps-bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.apps-n{flex:none;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:.84rem}
+.apps-n small{display:block;font-weight:400;font-size:.63rem;color:var(--ink-dim)}

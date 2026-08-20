@@ -77,6 +77,7 @@ for c in rated:
     page = f"""<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
 <link rel="canonical" href="{SITE}/club/{c['id']}">
@@ -109,7 +110,12 @@ ul{{padding-left:20px;line-height:1.9}}p.note{{color:#8FA598;font-size:.85rem;ma
 # extensionless URLs only: the .html forms 308 to these, so listing .html in
 # the sitemap sent every crawler entry through a redirect (external audit #5)
 urls = [f'{SITE}/', f'{SITE}/app', f'{SITE}/upsl-rankings',
-        f'{SITE}/npsl-rankings', f'{SITE}/methodology', f'{SITE}/privacy'] + \
+        f'{SITE}/npsl-rankings', f'{SITE}/methodology', f'{SITE}/privacy',
+        # tool landing pages: the tools themselves are hash routes a crawler
+        # can't see, so these two static pages are their only search surface.
+        # They were hand-added to sitemap.xml once and silently dropped by
+        # every subsequent deploy, because this list is what regenerates it.
+        f'{SITE}/player-simulator', f'{SITE}/shots'] + \
        [f'{SITE}/club/{c["id"]}' for c in rated]
 sm = ['<?xml version="1.0" encoding="UTF-8"?>',
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'] + \

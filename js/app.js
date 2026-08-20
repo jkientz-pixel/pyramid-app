@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260820b';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260820b';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260820c';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260820c';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260820b')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260820c')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260820b';
+const BUILDV = '20260820c';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -425,6 +425,8 @@ function wireMap(scopeStates, mapClubs, frameClubs) {
    The chosen mode persists and survives the full re-render that league/sex
    toggles trigger, because wireMap re-reads it on every screen build. */
 const MAPMODE_KEY = 'rxi-mapmode';
+/* states the illustrated map puts in inset boxes rather than in place */
+const OFFSHORE_ST = new Set(['AK', 'HI', 'PR', 'VI', 'GU']);
 function wireBasemap(scopeStates, mapClubs, frameClubs) {
   const box = view.querySelector('.mapbox');
   const modeCtl = box && box.querySelector('.mapmode');
@@ -445,6 +447,12 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     const pts = mapClubs.filter(c => isFinite(c.la) && isFinite(c.lo));
     leafMap = L.map(leafEl, { zoomSnap: 0.25, wheelPxPerZoomLevel: 90, preferCanvas: true, zoomControl: false });
     L.control.zoom({ position: 'topright' }).addTo(leafMap);
+    /* drop Leaflet's own courtesy prefix (BSD, not required in-UI) so the
+       tile credits that ARE required fit on one line in the map box */
+    leafMap.attributionControl.setPrefix('');
+    /* test hook: the opening frame is a product decision (offshore clubs plot
+       but don't widen it), and there is no other way to read it from outside */
+    leafEl._rxiMap = leafMap;
     /* two-layer dark relief cartography: Esri hillshade gives the embossed
        charcoal terrain (the look Jeremy asked for), and a faint inverted OSM
        overlay adds state lines, roads, and town labels on top. CSS handles
@@ -460,8 +468,16 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     /* frame the scoped clubs (state/region) but plot everything, so panning
        past a border reveals the neighbors instead of empty map */
     const frame = frameClubs.filter(c => isFinite(c.la) && isFinite(c.lo));
+    /* ...and the offshore clubs don't get a vote on the opening frame. The
+       illustrated map draws Alaska and Hawaii as insets, so the contiguous
+       states fill the canvas; fitting Leaflet to every club instead spans
+       19.7N-64.8N and shrinks the lower 48 to a strip. They still plot, and
+       zooming out still finds them, which is where people look anyway.
+       Falling back to the full frame keeps a scope that IS Alaska working. */
+    const core = frame.filter(c => !OFFSHORE_ST.has(c.st));
+    const fitSet = core.length ? core : frame;
     const fitFrame = () => {
-      if (frame.length) leafMap.fitBounds(L.latLngBounds(frame.map(c => [c.la, c.lo])).pad(0.08));
+      if (fitSet.length) leafMap.fitBounds(L.latLngBounds(fitSet.map(c => [c.la, c.lo])).pad(0.08));
       else if (pts.length) leafMap.fitBounds(L.latLngBounds(pts.map(c => [c.la, c.lo])).pad(0.08));
       else leafMap.setView([39.5, -98.35], 4);
     };
@@ -949,7 +965,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260820b')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260820c')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -958,8 +974,8 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa, usl2] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260820b'), grab('data/wire_asa.json?v=20260820b'),
-    grab('data/wire_usl2.json?v=20260820b')]);
+    grab('data/wire_npsl.json?v=20260820c'), grab('data/wire_asa.json?v=20260820c'),
+    grab('data/wire_usl2.json?v=20260820c')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' }))
     .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })))
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
@@ -985,7 +1001,7 @@ async function hydrateWireHook() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260820b')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260820c')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1032,11 +1048,86 @@ function wireMatchupMachine(rated) {
   };
   wirePick('pickH'); wirePick('pickA');
 }
+/* The Tools hub. Four things that answer a question about a specific club,
+   player, or match rather than about the pyramid as a whole. All four are app
+   routes — Player Simulator and Shot Maps were standalone pages until they
+   were ported in, which is why each still has a landing page of its own. */
+const TOOLS = [
+  { href: '#/predict', title: 'Matchup Machine', tag: 'Every rated club',
+    blurb: 'Pick two clubs and get win odds, a likely scoreline, and the Elo gap behind them.',
+    icon: '<path d="M4.5 4.5l15 15M19.5 4.5l-15 15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M14.5 4.5h5v5M4.5 14.5v5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>' },
+  { href: '#/sim', title: 'Rank Simulator', tag: 'Every rated club',
+    blurb: 'Book results for your club one at a time and watch the rating and the national rank move.',
+    icon: '<path d="M4 20.5h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4.5 16l5-5 3.5 3 6.5-7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.5 7h5v5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>' },
+  { href: '#/player-sim', title: 'Player Simulator', tag: 'Six pro leagues',
+    blurb: "Rate a player on per-96 numbers weighted for their position, then simulate what improving one of them is worth.",
+    icon: '<circle cx="12" cy="7.5" r="3.3" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M5 20.5c0-3.9 3.1-6.5 7-6.5s7 2.6 7 6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>' },
+  { href: '#/shots', title: 'Shot Maps', tag: 'Six pro leagues',
+    blurb: 'Every shot in a match placed where it was struck and sized by expected goals. Filled circles are goals.',
+    icon: '<rect x="3.5" y="5.5" width="17" height="13" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 5.5v13" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16.5" cy="14" r="1.5" fill="currentColor"/><circle cx="9.5" cy="15" r="1.2" fill="none" stroke="currentColor" stroke-width="1.3"/>' },
+];
+function screenTools() {
+  crumb.textContent = 'Tools';
+  view.innerHTML = `
+    <div class="kicker">One club, one player, one match</div>
+    <h2 class="disp">Tools</h2>
+    <div class="toolgrid">
+      ${TOOLS.map(t => `<a class="toolcard" href="${t.href}">
+        <svg class="ti" viewBox="0 0 24 24" aria-hidden="true">${t.icon}</svg>
+        <b>${t.title}${t.ext ? '<span class="tx" aria-label="opens its own page">&#8599;</span>' : ''}</b>
+        <span class="tb">${t.blurb}</span>
+        <span class="tt">${t.tag}</span>
+      </a>`).join('')}
+    </div>
+    <p class="note">Player Simulator and Shot Maps cover MLS, NWSL, USL Championship, USL League One, MLS Next Pro and USL Super League, because those are the leagues that publish per-player and per-shot data.</p>`;
+}
+/* Player Simulator and Shot Maps live in their own modules: both are big enough to
+   hurt first paint and neither is on the path most visitors take, so the route
+   pulls them in on demand. The coach's 2,021-player payload is fetched here
+   rather than inside the module for two reasons — bump_version.py only rewrites
+   ?v= tokens in this file, and deploy.sh decides which data/*.json to stage by
+   grepping this file for the literal fetch call below. Keep it intact — and
+   note the grep is blind to comments, so never write that pattern out in one
+   here: a fake path lands in the staging list and the deploy dies on cp. */
+let _coachData = null;
+async function screenPlayerSim() {
+  crumb.textContent = 'Player Simulator';
+  view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
+    + '<p class="note">Loading player data&hellip;</p>';
+  try {
+    const [data, mod] = await Promise.all([
+      _coachData || fetch('data/coach_players.json?v=20260820c').then(r => r.json()),
+      import('./player-sim.js?v=20260820c'),
+    ]);
+    _coachData = data;
+    if (!location.hash.startsWith('#/player-sim')) return;   // routed away mid-load
+    mod.render(view, data);
+  } catch (e) {
+    if (!location.hash.startsWith('#/player-sim')) return;
+    view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
+      + '<p class="note">Player Simulator could not load. Check your connection and try again.</p>';
+  }
+}
+async function screenShots() {
+  crumb.textContent = 'Shot Maps';
+  view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
+    + '<p class="note">Loading&hellip;</p>';
+  try {
+    const mod = await import('./shotmap.js?v=20260820c');
+    if (!location.hash.startsWith('#/shots')) return;
+    mod.render(view);
+  } catch (e) {
+    if (!location.hash.startsWith('#/shots')) return;
+    view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
+      + '<p class="note">Shot Maps could not load. Check your connection and try again.</p>';
+  }
+}
 function screenPredict(preH) {
   crumb.textContent = 'Predict';
   const rated = pool().filter(c => c.r).sort((a, b) => b.r - a.r);
   if (rated.length < 2) return screenMap();
   view.innerHTML = `
+    <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/tools'">&larr; Back</button>
     ${sexToggle()}
     ${matchupMachineHtml(rated, preH)}
     <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Predictions, not betting advice.</p>
@@ -1177,7 +1268,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260820b')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260820c')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1450,35 +1541,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260820b')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260820c')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260820b')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260820c')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260820b')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260820c')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260820b')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260820c')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260820b')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260820c')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1525,6 +1616,16 @@ function verifyBadge(c) {
     : '<span class="badge d">Stats: illustrative · club-submitted reporting planned</span>';
 }
 
+/* USL2 squads from banked lineups: who actually played, and how often. Only
+   fetched on a usl2 club page — 220KB nobody else needs. The file carries no
+   birth years by construction (scripts/build_usl2_appearances.py), so nothing
+   here has to think about the minors policy. */
+let _usl2apps = null;
+async function usl2Apps() {
+  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260820c')
+    .then(r => r.json()).catch(() => ({}));
+  return _usl2apps;
+}
 async function screenClub(ref) {
   const idx = clubIdx(String(ref));
   if (idx < 0) return screenMap();
@@ -1534,6 +1635,7 @@ async function screenClub(ref) {
   const hist = c.g === 'mls' ? (await mlsHistory()) : null;
   const hasLegends = c.g === 'mls' && !!((await legendsDb())[c.n] || []).length;
   const cupRec = (await cupDb())[c.id] || [];
+  const apps = c.g === 'usl2' ? (await usl2Apps())[c.id] : null;
   /* board listings that belong to this club — moderation sets clubId; the
      name match catches listings posted before the id was attached */
   const tToday = new Date().toISOString().slice(0, 10);
@@ -1586,7 +1688,14 @@ async function screenClub(ref) {
       `<li><span class="sq-num">${st2.tag}</span><span class="sq-name">${esc(st2.name)}</span><span class="sq-pos">${st2.role}</span><span class="sq-age">${st2.age}</span><span class="sq-form"></span></li>`).join('')}</ul>
     <ul class="squad">${squadFor(c).map((pl, pi) =>
       `<li><a href="#/player/${c.id}/${pi}"><span class="sq-num">${pl.num}</span><span class="sq-name">${esc(pl.name)}</span><span class="sq-pos">${pl.pos}</span><span class="sq-age">${pl.real ? (pl.nat || '') : ''}</span><span class="sq-ga">${pl.pos === 'GK' ? pl.cs + ' CS' : pl.goals + 'g ' + pl.assists + 'a'}</span><span class="sq-form">${pl.pvr}</span></a></li>`).join('')}</ul>
-    ` : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p><a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim club: ' + c.n)}" style="margin-top:6px">Run this club? Add your roster</a>`}
+    ` : apps && apps.players.length ? `<div class="kicker" style="margin-top:14px">Squad &middot; ${apps.players.length} players used</div>
+    <ul class="apps-list">${apps.players.map(pl => `<li class="apps-row">
+      <span class="apps-name">${esc(pl.n)}</span>
+      <span class="apps-bar" aria-hidden="true"><i style="width:${Math.round(100 * pl.st / Math.max(1, apps.players[0].st + apps.players[0].sub))}%"></i></span>
+      <span class="apps-n">${pl.st + pl.sub}<small>${pl.st} start${pl.st === 1 ? '' : 's'}${pl.sub ? ` &middot; ${pl.sub} sub` : ''}</small></span></li>`).join('')}</ul>
+    <p class="note">Every player named in a matchday squad this season, most-used first, from banked USL League Two team sheets. Appearances count matchday squads, not minutes &mdash; the source lists the eleven and the reserves, not who came on. No ages: players under 18 keep their name and lose their birth year here, and an appearance count never needed one.</p>
+    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim club: ' + c.n)}" style="margin-top:6px">Run this club? Claim this page</a>`
+    : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p><a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim club: ' + c.n)}" style="margin-top:6px">Run this club? Add your roster</a>`}
     ${worldLadder(c)}` : LEVELS.youth.includes(c.g) ? `<p class="note" style="font-size:.9rem">Youth directory listing — an active ${LEAGUES[c.g].label} member club. Youth organizations carry no ratings, fixtures, or player data here; the entry is name, league, and league-stated location only.</p>` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
     ${(() => {
       if (!hist) return '';
@@ -1891,7 +2000,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260820b')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260820c')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -1946,6 +2055,7 @@ function screenPyramid() {
     </div>
     <a class="fa-card" href="#/cups"><b>&#127942; The Trophy Room</b><span>16 national trophies, every tier — MLS Cup to the NPSL, the College Cups, and the Open Cup back to 1914.</span></a>
     <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>Above the pyramid — USA youth national teams in Concacaf and FIFA competition, with fixtures and how to watch.</span></a>
+    <a class="gk-cta" href="#/college">College results, 2025 season &rarr;</a>
     ${adSlot('tiers', 'The Pyramid')}
     <p class="note">Tiers are organizational, not sporting — US soccer has no promotion and relegation between most levels. The pathway runs through players, not clubs: youth to college to the amateur leagues to the pro game. Tap a league for its page &mdash; every club, where to watch, and the official site.</p>`;
   wireSexToggle();
@@ -2182,9 +2292,59 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260820b')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260820c')).json(); }
   catch { _cups = {}; }
   return _cups;
+}
+/* Giant-Killings (#/upsets): the Open Cup rounds where the pyramid actually
+   meets. cups.json only ever held finals, so the 1,584 match rows sat unused.
+   Module is lazy — the file is 270KB and nobody lands here first. */
+let _opencup = null;
+async function screenUpsets() {
+  crumb.textContent = 'Giant-killings';
+  view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/cups\'">&larr; Trophy Room</button>'
+    + '<p class="note">Loading Open Cup results&hellip;</p>';
+  try {
+    const [data, mod] = await Promise.all([
+      _opencup || fetch('data/opencup_matches.json?v=20260820c').then(r => r.json()),
+      import('./opencup.js?v=20260820c'),
+    ]);
+    _opencup = data;
+    if (!location.hash.startsWith('#/upsets')) return;
+    /* the cup rows are bare club names; only link one when it resolves to a
+       single men's non-college club, the same rule the Trophy Room uses */
+    const okMen = c => c.x === 'm' && !LEVELS.college.includes(c.g);
+    const linkClub = nm => {
+      const i = clubIdxByName(nm, okMen);
+      return i >= 0 ? `<a href="#/club/${CLUBS[i].id}">${esc(nm)}</a>` : esc(nm);
+    };
+    mod.render(view, data, { esc, linkClub });
+  } catch (e) {
+    if (!location.hash.startsWith('#/upsets')) return;
+    view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/cups\'">&larr; Trophy Room</button>'
+      + '<p class="note">Open Cup results could not load. Check your connection and try again.</p>';
+  }
+}
+/* College Results (#/college): the 2025 NCAA D1 seasons behind the Massey
+   rating snapshots the college layers rank by. Two files — the results and the
+   ESPN-name-to-club map — both lazy, both only needed on this route. */
+let _college = null, _collegeMap = null;
+async function screenCollege(team) {
+  crumb.textContent = 'College results';
+  view.innerHTML = '<p class="note">Loading college results&hellip;</p>';
+  try {
+    const [data, map, mod] = await Promise.all([
+      _college || fetch('data/espn_college_2025.json?v=20260820c').then(r => r.json()),
+      _collegeMap || fetch('data/espn_club_map.json?v=20260820c').then(r => r.json()),
+      import('./college.js?v=20260820c'),
+    ]);
+    _college = data; _collegeMap = map;
+    if (!location.hash.startsWith('#/college')) return;
+    mod.render(view, data, map, { esc }, team);
+  } catch (e) {
+    if (!location.hash.startsWith('#/college')) return;
+    view.innerHTML = '<p class="note">College results could not load. Check your connection and try again.</p>';
+  }
 }
 async function screenCups() {
   crumb.textContent = 'Trophies';
@@ -2224,6 +2384,7 @@ async function screenCups() {
       const ks = keys.filter(k => cups[k].kind === kind);
       return ks.length ? `<div class="kicker" style="margin-top:14px">${label}</div>` + ks.map(cupBlock).join('') : '';
     }).join('')}
+    <a class="gk-cta" href="#/upsets">See the giant-killings &rarr;</a>
     <p class="note">The U.S. Open Cup is the pyramid's connective tissue — the one competition where any tier can play any other. Its results are what let cross-league ratings be measured instead of assumed. A finished season's champion appears once the result lands on the record — never before the final is played. UPSL histories are omitted until a reliable source exists. Histories from Wikipedia (CC BY-SA).</p>`;
 }
 
@@ -2705,14 +2866,17 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', 'player-sim': 'Player Simulator', shots: 'Shot Maps', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player' };
 let routedOnce = false;
 function route() {
   const h = location.hash || '#/map';
   const parts = h.slice(2).split('/');
+  /* the Tools tab is a hub: its own screens (predict, sim) keep it lit, and
+     club/player detail routes stay under Map the way they always have */
+  const TAB_OF = { state: 'map', region: 'map', club: 'map', player: 'map',
+    predict: 'tools', sim: 'tools', 'player-sim': 'tools', shots: 'tools' };
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active',
-    a.dataset.tab === (['state', 'region', 'club', 'player'].includes(parts[0]) ? 'map'
-      : parts[0])));
+    a.dataset.tab === (TAB_OF[parts[0]] || parts[0])));
   view.scrollTop = 0;
   /* these views read ROSTERS synchronously; any view shows followed-player
      chips, so a user with player favorites also waits for the module */
@@ -2736,6 +2900,14 @@ function route() {
   else if (parts[0] === 'legal') screenLegal();
   else if (parts[0] === 'table') screenTable();
   else if (parts[0] === 'matches') screenMatches(parts[1]);
+  else if (parts[0] === 'tools') screenTools();
+  else if (parts[0] === 'player-sim') screenPlayerSim();
+  /* #/coach was the route while the tool was called Player Coach and it
+     shipped to production under that name; keep the old hash working */
+  else if (parts[0] === 'coach') { location.replace('#/player-sim'); return; }
+  else if (parts[0] === 'upsets') screenUpsets();
+  else if (parts[0] === 'college') screenCollege(parts[1] && decodeURIComponent(parts[1]));
+  else if (parts[0] === 'shots') screenShots();
   else if (parts[0] === 'predict') screenPredict(parts[1]);
   else if (parts[0] === 'wire') screenWire();
   else if (parts[0] === 'sim') screenSimulator(parts[1]);
