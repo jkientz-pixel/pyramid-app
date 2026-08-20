@@ -51,6 +51,10 @@
   Cache-Control: no-cache
 /coach.html
   Cache-Control: no-cache
+/shots
+  Cache-Control: no-cache
+/shots.html
+  Cache-Control: no-cache
 
 # Everything below is referenced with a ?v= token that deploy.sh re-stamps on
 # every deploy (scripts/bump_version.py), so the URL changes whenever content

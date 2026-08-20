@@ -32,7 +32,7 @@ trap 'rm -rf "$STAGE"' EXIT
 # 404.html must ship: its presence is what turns off the Pages SPA fallback,
 # so bad URLs return a real 404 instead of the homepage with HTTP 200
 cp -R app.html index.html 404.html npsl-rankings.html upsl-rankings.html \
-      methodology.html privacy.html coach.html club .well-known \
+      methodology.html privacy.html coach.html shots.html club .well-known \
       manifest.webmanifest sw.js robots.txt sitemap.xml _headers \
       js css crests fonts \
       icon-192.png icon-512.png apple-touch-icon.png og.png google-play-badge.png "$STAGE/"

@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ranked XI Shot Maps</title>
+<meta name="description" content="Every shot from six American pro leagues, placed on the pitch and sized by expected goals. Real shot-level data, not estimates.">
+<link rel="canonical" href="https://www.rankedxi.com/shots">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
+<meta property="og:title" content="Ranked XI Shot Maps">
+<meta property="og:description" content="Every shot, placed and sized by expected goals — six American pro leagues.">
+<meta property="og:url" content="https://www.rankedxi.com/shots">
+<meta property="og:image" content="https://www.rankedxi.com/og.png">
+<style>
+@font-face{font-family:"Archivo";font-style:normal;font-weight:100 900;font-display:swap;src:url(/fonts/archivo-latin-var.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/ibm-plex-mono-latin-400.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/ibm-plex-mono-latin-600.woff2) format("woff2")}
+  /* Matches /coach: deliberate single-theme night-match dark, painted explicitly. */
+  :root{
+    --pitch:#0c120e; --panel:#131a15; --panel2:#1a231d; --line:#28352c;
+    --text:#e9f0ea; --dim:#96a69b;
+    --gold:#e6c46a; --gold-ink:#171204;
+    /* Two-team categorical pair. Both are existing Ranked XI tokens and the
+       pair clears all six checks of the palette validator in light AND dark
+       (CVD ΔE 23.5 protan / 24.6 tritan, well above the 8 threshold). */
+    --home:#4D8FD1; --away:#C77F1E;
+    --grass:#101a13; --chalk:#4a5f52;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box; margin:0}
+  html{color-scheme:dark}
+  body{background:var(--pitch); color:var(--text);
+    font:16px/1.55 "Archivo",-apple-system,"Segoe UI",Roboto,sans-serif;
+    padding:2rem 1rem 5rem}
+  .wrap{max-width:940px; margin:0 auto; display:flex; flex-direction:column; gap:.9rem}
+  .eyebrow{font-size:.72rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--dim)}
+  .eyebrow b{color:var(--gold); font-weight:800}
+  h1{font-size:2rem; font-weight:900; letter-spacing:-.02em; text-wrap:balance}
+  .intro{color:var(--dim); max-width:62ch; margin-bottom:.4rem}
+  .intro b{color:var(--text); font-weight:700}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:1.1rem 1.25rem}
+  h2{font-size:.82rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); margin-bottom:.8rem}
+
+  /* filters in one row above the chart */
+  .ctrls{display:flex; flex-wrap:wrap; gap:.85rem}
+  .ctrl{display:flex; flex-direction:column; gap:.3rem; flex:1 1 190px; min-width:0}
+  .ctrl label{font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--dim)}
+  select{width:100%; background:var(--panel2); color:var(--text); border:1px solid var(--line);
+    border-radius:9px; padding:.6rem .7rem; font:inherit; font-size:.9rem}
+  select:focus-visible{outline:2px solid var(--gold); outline-offset:1px}
+
+  /* scoreline */
+  .score{display:flex; align-items:center; justify-content:center; gap:1rem; flex-wrap:wrap; text-align:center}
+  .score .side{display:flex; align-items:center; gap:.5rem; font-weight:800; font-size:1.05rem}
+  .swatch{display:inline-block; width:12px; height:12px; border-radius:3px; flex:none; vertical-align:baseline}
+  .score .nums{font-family:var(--mono); font-size:1.6rem; font-weight:600; letter-spacing:.06em}
+  .score .meta{width:100%; color:var(--dim); font-size:.78rem}
+
+  .pitchwrap{overflow-x:auto}
+  svg.pitch{display:block; width:100%; min-width:520px; height:auto; background:var(--grass); border-radius:10px}
+  .mark{cursor:pointer}
+  .mark:focus-visible{outline:none}
+  .mark:focus-visible circle{stroke:var(--gold); stroke-width:5}
+
+  /* legend — always present, identity never by colour alone */
+  .legend{display:flex; flex-wrap:wrap; gap:.6rem 1.4rem; align-items:center; margin-top:.9rem;
+    font-size:.78rem; color:var(--dim)}
+  .legend .grp{display:flex; align-items:center; gap:.45rem}
+  .ramp{display:flex; align-items:flex-end; gap:.35rem}
+
+  /* totals */
+  table{width:100%; border-collapse:collapse; font-size:.88rem}
+  th,td{padding:.45rem .3rem; text-align:right; border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left; color:var(--dim)}
+  thead th{font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--dim); font-weight:700}
+  td.num{font-family:var(--mono); font-variant-numeric:tabular-nums}
+  .teamhead{display:inline-flex; align-items:center; gap:.4rem; font-weight:800; color:var(--text)}
+
+  details{margin-top:.6rem}
+  summary{cursor:pointer; color:var(--gold); font-size:.82rem; font-weight:600}
+  details table{margin-top:.7rem}
+  details td,details th{font-size:.8rem}
+
+  .tip{position:fixed; pointer-events:none; z-index:50; background:#050a07; border:1px solid var(--line);
+    border-radius:8px; padding:.5rem .65rem; font-size:.78rem; line-height:1.4; max-width:230px;
+    box-shadow:0 6px 22px rgba(0,0,0,.5); opacity:0; transition:opacity .1s}
+  .tip b{display:block; font-size:.85rem}
+  .tip .k{color:var(--dim)}
+  .foot{color:var(--dim); font-size:.76rem; line-height:1.5}
+  .foot a{color:var(--gold)}
+  .msg{color:var(--dim); padding:1.4rem 0; text-align:center}
+  .back{display:inline-block; color:var(--gold); text-decoration:none; font-weight:600; font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="/app">&larr; Ranked XI</a>
+  <p class="eyebrow"><b>RANKED XI</b> · SHOT MAP · SIX PRO LEAGUES, REAL SHOT DATA</p>
+  <h1>Where the chances actually came from</h1>
+  <p class="intro">
+    Every shot in the match, placed where it was struck and sized by <b>expected goals</b> —
+    the chance an average finisher scores from that spot. Filled circles are goals.
+    A team can win the shot count and lose the map.
+    <b>Pro leagues only:</b> these are real logged shot locations, so the amateur and youth
+    pyramid isn't here — we don't have shot data for those, and we'd rather show nothing
+    than draw something we guessed.
+  </p>
+
+  <div class="card">
+    <div class="ctrls">
+      <div class="ctrl">
+        <label for="lg">League</label>
+        <select id="lg">
+          <option value="mls">MLS</option>
+          <option value="nwsl">NWSL</option>
+          <option value="uslc">USL Championship</option>
+          <option value="usl1">USL League One</option>
+          <option value="mlsnp">MLS Next Pro</option>
+          <option value="usls">USL Super League</option>
+        </select>
+      </div>
+      <div class="ctrl" style="flex:2 1 300px">
+        <label for="gm">Match</label>
+        <select id="gm"><option>Loading…</option></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="mapcard">
+    <div class="score" id="score"></div>
+    <div class="pitchwrap"><svg class="pitch" id="pitch" viewBox="0 0 1150 750" role="img"
+      aria-label="Shot map: every shot placed on the pitch, sized by expected goals"></svg></div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <div class="card">
+    <h2>Totals</h2>
+    <div id="totals"></div>
+    <details>
+      <summary>Every shot as a table</summary>
+      <div id="shottable"></div>
+    </details>
+  </div>
+
+  <p class="foot">
+    Shot locations, expected goals and post-shot expected goals from
+    <a href="https://www.americansocceranalysis.com/" rel="noopener">American Soccer Analysis</a>.
+    Expected goals estimates the scoring chance of a shot from its location and type.
+    Post-shot xG additionally accounts for where the shot ended up, so it only exists for
+    shots on target.
+  </p>
+</div>
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const HOME = getComputedStyle(document.documentElement).getPropertyValue('--home').trim();
+const AWAY = getComputedStyle(document.documentElement).getPropertyValue('--away').trim();
+
+// Pitch is drawn 115 x 75 yards at 10 units per yard.
+const L = 1150, W = 750, YD = 10;
+
+function pitchMarkings(){
+  const c = '#4a5f52', s = 'fill="none" stroke="'+c+'" stroke-width="2"';
+  let p = `<rect x="0" y="0" width="${L}" height="${W}" fill="none" stroke="${c}" stroke-width="3"/>`;
+  p += `<line x1="${L/2}" y1="0" x2="${L/2}" y2="${W}" stroke="${c}" stroke-width="2"/>`;
+  p += `<circle cx="${L/2}" cy="${W/2}" r="${10*YD}" ${s}/>`;
+  p += `<circle cx="${L/2}" cy="${W/2}" r="4" fill="${c}"/>`;
+  for (const left of [true,false]){
+    const x0 = left ? 0 : L;
+    const dir = left ? 1 : -1;
+    // penalty area 18 x 44, six-yard box 6 x 20, goal 8 wide
+    p += `<rect x="${left?0:L-18*YD}" y="${(W-44*YD)/2}" width="${18*YD}" height="${44*YD}" ${s}/>`;
+    p += `<rect x="${left?0:L-6*YD}" y="${(W-20*YD)/2}" width="${6*YD}" height="${20*YD}" ${s}/>`;
+    p += `<circle cx="${x0+dir*12*YD}" cy="${W/2}" r="4" fill="${c}"/>`;
+    // drawn just inside the touchline: outside the viewBox they clipped away
+    p += `<rect x="${left?0:L-9}" y="${(W-8*YD)/2}" width="9" height="${8*YD}" fill="none" stroke="${c}" stroke-width="4"/>`;
+    // penalty arc: the part of the 10yd circle outside the box
+    const sweep = left ? 1 : 0;
+    const ax = x0 + dir*18*YD;
+    const dy = Math.sqrt((10*YD)**2 - (6*YD)**2);
+    p += `<path d="M ${ax} ${W/2-dy} A ${10*YD} ${10*YD} 0 0 ${sweep} ${ax} ${W/2+dy}" ${s}/>`;
+  }
+  return p;
+}
+
+// Radius encodes xG by area, with a floor so a 0.02 chance is still clickable.
+const rOf = xg => 10 + Math.sqrt(Math.max(xg,0)) * 36;
+
+let SHOTS = [], TEAMS = [];
+
+function draw(){
+  const svg = $('pitch');
+  if (!SHOTS.length){ svg.innerHTML = pitchMarkings(); return; }
+  let out = pitchMarkings();
+  // Home attacks right, away attacks left — so the two teams' chances sit at
+  // opposite ends, the way you'd watch the match. ASA normalises every shot to
+  // attacking-right, so the away side is rotated 180°.
+  const rows = SHOTS.map((s,i) => {
+    const isHome = s.team === TEAMS[0].id;
+    const x = isHome ? (s.x/100)*L : L - (s.x/100)*L;
+    const y = isHome ? (s.y/100)*W : W - (s.y/100)*W;
+    const col = isHome ? HOME : AWAY;
+    const r = rOf(s.xg);
+    const goal = s.goal && !s.ownGoal;
+    // 2px surface ring keeps overlapping marks readable
+    const ring = `stroke="${'#0c120e'}" stroke-width="2"`;
+    const body = goal
+      ? `<circle cx="${x}" cy="${y}" r="${r}" fill="${col}" fill-opacity=".92" stroke="${col}" stroke-width="3"/>`
+      : `<circle cx="${x}" cy="${y}" r="${r}" fill="${col}" fill-opacity=".10" stroke="${col}" stroke-width="3" ${s.blocked?'stroke-dasharray="7 5"':''}/>`;
+    const label = `${s.player}, ${s.minute}' — ${goal?'goal':'shot'}, ${s.xg.toFixed(2)} expected goals`;
+    return `<g class="mark" tabindex="0" role="listitem" data-i="${i}" aria-label="${esc(label)}">`
+         + `<circle cx="${x}" cy="${y}" r="${r+3}" fill="transparent" ${ring} stroke-opacity="0"/>`
+         + body + `</g>`;
+  }).join('');
+  svg.innerHTML = out + `<g role="list">` + rows + `</g>`;
+  svg.querySelectorAll('.mark').forEach(g => {
+    g.addEventListener('mouseenter', e => tip(SHOTS[+g.dataset.i], e));
+    g.addEventListener('mousemove', e => tip(SHOTS[+g.dataset.i], e));
+    g.addEventListener('mouseleave', hideTip);
+    g.addEventListener('focus', () => {
+      const b = g.getBoundingClientRect();
+      tip(SHOTS[+g.dataset.i], {clientX:b.left+b.width/2, clientY:b.top});
+    });
+    g.addEventListener('blur', hideTip);
+  });
+}
+
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function tip(s, e){
+  const t = $('tip');
+  const kind = s.ownGoal ? 'Own goal' : s.goal ? 'Goal' : s.blocked ? 'Blocked' : s.psxg > 0 ? 'On target' : 'Off target';
+  t.innerHTML = `<b>${esc(s.player)}</b>`
+    + `<span class="k">${esc(s.teamName)} · ${s.minute}'</span><br>`
+    + `${kind} · ${s.yards ? s.yards.toFixed(0)+' yds' : ''}<br>`
+    + `<span class="k">xG</span> ${s.xg.toFixed(2)}`
+    + (s.psxg ? ` · <span class="k">PSxG</span> ${s.psxg.toFixed(2)}` : '')
+    + (s.head ? '<br><span class="k">Header</span>' : '')
+    + (s.pattern && s.pattern !== 'Regular' ? `<br><span class="k">${esc(s.pattern)}</span>` : '')
+    + (s.assist ? `<br><span class="k">Assist</span> ${esc(s.assist)}` : '');
+  const pad = 14;
+  let x = e.clientX + pad, y = e.clientY + pad;
+  if (x + 240 > innerWidth) x = e.clientX - 240;
+  if (y + 130 > innerHeight) y = e.clientY - 130;
+  t.style.left = x+'px'; t.style.top = y+'px'; t.style.opacity = 1;
+}
+const hideTip = () => { $('tip').style.opacity = 0; };
+
+function legend(){
+  if (!TEAMS.length){ $('legend').innerHTML=''; return; }
+  const sw = c => `<span class="swatch" style="background:${c}"></span>`;
+  $('legend').innerHTML =
+      `<span class="grp">${sw(HOME)} ${esc(TEAMS[0].name)} <span style="opacity:.7">attacking right</span></span>`
+    + `<span class="grp">${sw(AWAY)} ${esc(TEAMS[1].name)} <span style="opacity:.7">attacking left</span></span>`
+    + `<span class="grp"><svg width="20" height="20"><circle cx="10" cy="10" r="7" fill="${HOME}" fill-opacity=".92" stroke="${HOME}" stroke-width="2"/></svg> Goal</span>`
+    + `<span class="grp"><svg width="20" height="20"><circle cx="10" cy="10" r="7" fill="${HOME}" fill-opacity=".10" stroke="${HOME}" stroke-width="2"/></svg> Shot</span>`
+    + `<span class="grp"><svg width="26" height="20"><circle cx="13" cy="10" r="7" fill="none" stroke="${HOME}" stroke-width="2" stroke-dasharray="4 3"/></svg> Blocked</span>`
+    + `<span class="grp ramp">`
+      + [0.05,0.25,0.75].map(v => {
+          const r = rOf(v)/3;
+          return `<svg width="${r*2+4}" height="30" aria-hidden="true"><circle cx="${r+2}" cy="15" r="${r}" fill="none" stroke="#96a69b" stroke-width="1.6"/></svg>`;
+        }).join('')
+      + `&nbsp;low → high xG</span>`;
+}
+
+function totals(){
+  if (!TEAMS.length){ $('totals').innerHTML=''; return; }
+  const agg = TEAMS.map(t => {
+    const s = SHOTS.filter(x => x.team === t.id);
+    const xg = s.reduce((a,b)=>a+b.xg,0);
+    return {
+      name: t.name, colour: t.colour,
+      shots: s.length,
+      goals: s.filter(x=>x.goal && !x.ownGoal).length,
+      ontarget: s.filter(x=>x.psxg>0).length,
+      xg, per: s.length ? xg/s.length : 0,
+      psxg: s.reduce((a,b)=>a+(b.psxg||0),0),
+    };
+  });
+  const row = (label, pick, dp) => `<tr><td>${label}</td>`
+    + agg.map(a => `<td class="num">${dp===null?pick(a):pick(a).toFixed(dp)}</td>`).join('') + `</tr>`;
+  $('totals').innerHTML = `<table><thead><tr><th>Metric</th>`
+    + agg.map(a => `<th><span class="teamhead"><span class="swatch" style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${a.colour}"></span>${esc(a.name)}</span></th>`).join('')
+    + `</tr></thead><tbody>`
+    + row('Shots', a=>a.shots, null)
+    + row('On target', a=>a.ontarget, null)
+    + row('Goals', a=>a.goals, null)
+    + row('xG', a=>a.xg, 2)
+    + row('xG per shot', a=>a.per, 2)
+    + row('Post-shot xG', a=>a.psxg, 2)
+    + `</tbody></table>`;
+
+  // Full table view — the accessible equivalent of the map.
+  const rows = SHOTS.slice().sort((a,b)=>a.minute-b.minute).map(s => `<tr>`
+    + `<td class="num">${s.minute}'</td><td>${esc(s.player)}</td><td>${esc(s.teamName)}</td>`
+    + `<td>${s.ownGoal?'Own goal':s.goal?'Goal':s.blocked?'Blocked':s.psxg>0?'On target':'Off target'}</td>`
+    + `<td class="num">${s.yards?s.yards.toFixed(0):'—'}</td>`
+    + `<td class="num">${s.xg.toFixed(2)}</td></tr>`).join('');
+  $('shottable').innerHTML = `<table><thead><tr><th>Min</th><th>Player</th><th>Team</th>`
+    + `<th>Outcome</th><th>Yards</th><th>xG</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+async function loadGames(){
+  const lg = $('lg').value;
+  $('gm').innerHTML = '<option>Loading…</option>';
+  SHOTS = []; TEAMS = []; draw(); legend(); totals();
+  $('score').innerHTML = '<span class="meta">Loading matches…</span>';
+  try{
+    const r = await fetch(`/api/shots?league=${lg}&season=2026`);
+    if(!r.ok) throw new Error();
+    const d = await r.json();
+    if(!d.games.length){ $('gm').innerHTML = '<option>No completed matches yet</option>';
+      $('score').innerHTML='<span class="meta">No completed matches in this league yet.</span>'; return; }
+    $('gm').innerHTML = d.games.map(g =>
+      `<option value="${g.id}">${esc(g.date.slice(0,10))} — ${esc(g.home)} ${g.hs}–${g.as} ${esc(g.away)}</option>`
+    ).join('');
+    GAMES = d.games;
+    loadShots();
+  }catch(e){
+    $('gm').innerHTML = '<option>Unavailable</option>';
+    $('score').innerHTML = '<span class="meta">Match data is unavailable right now.</span>';
+  }
+}
+
+let GAMES = [];
+async function loadShots(){
+  const id = $('gm').value, lg = $('lg').value;
+  const g = GAMES.find(x => x.id === id);
+  if(!g) return;
+  $('score').innerHTML = '<span class="meta">Loading shots…</span>';
+  try{
+    const r = await fetch(`/api/shots?league=${lg}&game_id=${encodeURIComponent(id)}`);
+    if(!r.ok) throw new Error();
+    const d = await r.json();
+    SHOTS = d.shots;
+    // ASA gives team ids on shots but not which side was home; match on name.
+    const ids = [...new Set(SHOTS.map(s=>s.team))];
+    const byName = {};
+    SHOTS.forEach(s => byName[s.team] = s.teamName);
+    const homeId = ids.find(i => byName[i] === g.home) ?? ids[0];
+    const awayId = ids.find(i => i !== homeId) ?? ids[1];
+    TEAMS = [
+      {id:homeId, name:byName[homeId]||g.home, colour:HOME},
+      {id:awayId, name:byName[awayId]||g.away, colour:AWAY},
+    ];
+    $('score').innerHTML =
+        `<span class="side"><span class="swatch" style="background:${HOME}"></span>${esc(g.home)}</span>`
+      + `<span class="nums">${g.hs}–${g.as}</span>`
+      + `<span class="side"><span class="swatch" style="background:${AWAY}"></span>${esc(g.away)}</span>`
+      + `<span class="meta">${esc(g.date.slice(0,10))} · ${SHOTS.length} shots</span>`;
+    draw(); legend(); totals();
+  }catch(e){
+    $('score').innerHTML = '<span class="meta">Shot data is unavailable for this match.</span>';
+    SHOTS=[]; TEAMS=[]; draw(); legend(); totals();
+  }
+}
+
+$('lg').addEventListener('change', loadGames);
+$('gm').addEventListener('change', loadShots);
+draw();
+loadGames();
+</script>
+</body>
+</html>
