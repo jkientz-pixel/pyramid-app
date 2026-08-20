@@ -1616,6 +1616,16 @@ function verifyBadge(c) {
     : '<span class="badge d">Stats: illustrative · club-submitted reporting planned</span>';
 }
 
+/* USL2 squads from banked lineups: who actually played, and how often. Only
+   fetched on a usl2 club page — 220KB nobody else needs. The file carries no
+   birth years by construction (scripts/build_usl2_appearances.py), so nothing
+   here has to think about the minors policy. */
+let _usl2apps = null;
+async function usl2Apps() {
+  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260820c')
+    .then(r => r.json()).catch(() => ({}));
+  return _usl2apps;
+}
 async function screenClub(ref) {
   const idx = clubIdx(String(ref));
   if (idx < 0) return screenMap();
@@ -1625,6 +1635,7 @@ async function screenClub(ref) {
   const hist = c.g === 'mls' ? (await mlsHistory()) : null;
   const hasLegends = c.g === 'mls' && !!((await legendsDb())[c.n] || []).length;
   const cupRec = (await cupDb())[c.id] || [];
+  const apps = c.g === 'usl2' ? (await usl2Apps())[c.id] : null;
   /* board listings that belong to this club — moderation sets clubId; the
      name match catches listings posted before the id was attached */
   const tToday = new Date().toISOString().slice(0, 10);
@@ -1677,7 +1688,14 @@ async function screenClub(ref) {
       `<li><span class="sq-num">${st2.tag}</span><span class="sq-name">${esc(st2.name)}</span><span class="sq-pos">${st2.role}</span><span class="sq-age">${st2.age}</span><span class="sq-form"></span></li>`).join('')}</ul>
     <ul class="squad">${squadFor(c).map((pl, pi) =>
       `<li><a href="#/player/${c.id}/${pi}"><span class="sq-num">${pl.num}</span><span class="sq-name">${esc(pl.name)}</span><span class="sq-pos">${pl.pos}</span><span class="sq-age">${pl.real ? (pl.nat || '') : ''}</span><span class="sq-ga">${pl.pos === 'GK' ? pl.cs + ' CS' : pl.goals + 'g ' + pl.assists + 'a'}</span><span class="sq-form">${pl.pvr}</span></a></li>`).join('')}</ul>
-    ` : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p><a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim club: ' + c.n)}" style="margin-top:6px">Run this club? Add your roster</a>`}
+    ` : apps && apps.players.length ? `<div class="kicker" style="margin-top:14px">Squad &middot; ${apps.players.length} players used</div>
+    <ul class="apps-list">${apps.players.map(pl => `<li class="apps-row">
+      <span class="apps-name">${esc(pl.n)}</span>
+      <span class="apps-bar" aria-hidden="true"><i style="width:${Math.round(100 * pl.st / Math.max(1, apps.players[0].st + apps.players[0].sub))}%"></i></span>
+      <span class="apps-n">${pl.st + pl.sub}<small>${pl.st} start${pl.st === 1 ? '' : 's'}${pl.sub ? ` &middot; ${pl.sub} sub` : ''}</small></span></li>`).join('')}</ul>
+    <p class="note">Every player named in a matchday squad this season, most-used first, from banked USL League Two team sheets. Appearances count matchday squads, not minutes &mdash; the source lists the eleven and the reserves, not who came on. No ages: players under 18 keep their name and lose their birth year here, and an appearance count never needed one.</p>
+    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim club: ' + c.n)}" style="margin-top:6px">Run this club? Claim this page</a>`
+    : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p><a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim club: ' + c.n)}" style="margin-top:6px">Run this club? Add your roster</a>`}
     ${worldLadder(c)}` : LEVELS.youth.includes(c.g) ? `<p class="note" style="font-size:.9rem">Youth directory listing — an active ${LEAGUES[c.g].label} member club. Youth organizations carry no ratings, fixtures, or player data here; the entry is name, league, and league-stated location only.</p>` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
     ${(() => {
       if (!hist) return '';

@@ -643,3 +643,14 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 .col-at{color:var(--ink-dim);font-size:.74rem}
 .col-meta{display:block;color:var(--ink-dim);font-size:.72rem;margin-top:1px}
 .col-score{flex:none;font-variant-numeric:tabular-nums;font-weight:600;font-size:.86rem}
+
+/* ---- USL2 squad appearances (club page) ---------------------------------- */
+.apps-list{list-style:none;margin:8px 0;padding:0;border:1px solid var(--line);border-radius:12px;
+  overflow:hidden;background:var(--raise);max-height:420px;overflow-y:auto}
+.apps-row{display:flex;align-items:center;gap:10px;padding:6px 12px;border-bottom:1px solid var(--line)}
+.apps-row:last-child{border-bottom:none}
+.apps-name{flex:1 1 auto;min-width:0;font-size:.84rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.apps-bar{flex:0 0 68px;height:5px;border-radius:3px;background:var(--ground2);overflow:hidden}
+.apps-bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.apps-n{flex:none;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:.84rem}
+.apps-n small{display:block;font-weight:400;font-size:.63rem;color:var(--ink-dim)}
