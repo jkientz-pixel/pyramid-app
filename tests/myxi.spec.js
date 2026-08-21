@@ -172,3 +172,21 @@ test('a followed player pins to My XI and the empty prompt goes away', async ({ 
   await expect(page.locator('#view')).toContainText('Your players · 1');
   await expect(page.locator('#view a[href="#/table/players"]')).toHaveCount(1); // picker link only
 });
+
+test('two picks of the same kind share one heading', async ({ page }) => {
+  await seed(page, { clubs: [], players: [] }, { picks: [
+    { t: 'league', id: 'npsl' }, { t: 'league', id: 'mls' },
+    { t: 'nt', id: 'usmnt' }, { t: 'nt', id: 'uswnt' },
+  ] });
+  await gotoRoute(page, '#/myxi');
+  await page.waitForSelector('.mx-count');
+  const text = await page.locator('#view').innerText();
+  const count = needle => text.split(needle).length - 1;
+  expect(count('YOUR NATIONAL TEAM')).toBe(1);   // "Your national teams", once
+  expect(count('YOUR LEAGUE')).toBe(1);
+  await expect(page.locator('#view')).toContainText('Your leagues');
+  await expect(page.locator('#view')).toContainText('Your national teams');
+  // both picks still render their own card
+  await expect(page.locator('#view a[href^="#/nt/"]')).toHaveCount(2);
+  await expect(page.locator('#view a[href^="#/league/"]')).toHaveCount(2);
+});

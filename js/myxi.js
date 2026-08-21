@@ -276,34 +276,39 @@ export async function render(view, ctx) {
       <li><a href="#/club/${c.id}"><span class="rk">${i + 1}</span>${mcrest(c)}
         <span class="cl-name"><b>${esc(c.n)}</b><span>${esc(LEAGUES[c.g].label)} · ${esc(c.st)}</span></span>
         <span class="cl-rt">${c.r || '&mdash;'}</span></a></li>`).join('');
-    return ex.map(p => {
-      if (p.t === 'league') {
-        const m = LEAGUES[p.id]; if (!m) return '';
-        const rows = CLUBS.filter(c => c.g === p.id && !c.h && c.r).sort(eloRank);
-        return `<div class="kicker" style="margin-top:18px">Your league</div>
-          <a class="mx-head" href="#/league/${p.id}"><b>${esc(m.label)}</b><span>${rows.length} rated clubs &middot; full league &rarr;</span></a>
-          <ul class="clublist">${top5(rows)}</ul>`;
-      }
-      if (p.t === 'state') {
-        /* a state holds both games, and the two rating scales are not
-           comparable — one merged list would rank an NWSL side against an MLS
-           side on numbers that were never fitted against each other */
-        const inState = sx => CLUBS.filter(c => c.st === p.id && c.x === sx && !c.h && c.r).sort(eloRank);
-        const men = inState('m'), women = inState('w');
-        const half = (rows, label) => rows.length
-          ? `<div class="kicker" style="margin-top:8px">${label} &middot; ${rows.length} rated</div><ul class="clublist">${top5(rows)}</ul>`
-          : '';
-        return `<div class="kicker" style="margin-top:18px">Your state</div>
-          <a class="mx-head" href="#/state/${p.id}"><b>${esc(STATE_NAME[p.id] || p.id)}</b><span>every club in the state &rarr;</span></a>
-          ${half(men, "Men's")}${half(women, "Women's")}`;
-      }
-      if (p.t === 'nt') {
-        const label = (QUICK_NT.find(q => q[0] === p.id) || [p.id, p.id.toUpperCase()])[1];
-        return `<div class="kicker" style="margin-top:18px">Your national team</div>
-          <a class="fa-card" href="#/nt/${esc(p.id)}"><b>&#127482;&#127480; ${esc(label)}</b><span>Fixtures, how to watch, squad history and player bios &rarr;</span></a>`;
-      }
-      return '';
-    }).join('');
+
+    /* one heading per pick TYPE, not per pick — two leagues used to print
+       "Your league" twice and read like the page had repeated itself */
+    const section = (label, items) => items.length
+      ? `<div class="kicker" style="margin-top:18px">${label}</div>${items.join('')}` : '';
+
+    const leagues = ex.filter(p => p.t === 'league' && LEAGUES[p.id]).map(p => {
+      const m = LEAGUES[p.id];
+      const rows = CLUBS.filter(c => c.g === p.id && !c.h && c.r).sort(eloRank);
+      return `<a class="mx-head" href="#/league/${p.id}"><b>${esc(m.label)}</b><span>${rows.length} rated clubs &middot; full league &rarr;</span></a>
+        <ul class="clublist">${top5(rows)}</ul>`;
+    });
+
+    const states = ex.filter(p => p.t === 'state').map(p => {
+      /* a state holds both games, and the two rating scales are not
+         comparable — one merged list would rank an NWSL side against an MLS
+         side on numbers that were never fitted against each other */
+      const inState = sx => CLUBS.filter(c => c.st === p.id && c.x === sx && !c.h && c.r).sort(eloRank);
+      const half = (rows, label) => rows.length
+        ? `<div class="kicker" style="margin-top:8px">${label} &middot; ${rows.length} rated</div><ul class="clublist">${top5(rows)}</ul>`
+        : '';
+      return `<a class="mx-head" href="#/state/${p.id}"><b>${esc(STATE_NAME[p.id] || p.id)}</b><span>every club in the state &rarr;</span></a>
+        ${half(inState('m'), "Men's")}${half(inState('w'), "Women's")}`;
+    });
+
+    const teams = ex.filter(p => p.t === 'nt').map(p => {
+      const label = (QUICK_NT.find(q => q[0] === p.id) || [p.id, p.id.toUpperCase()])[1];
+      return `<a class="fa-card" href="#/nt/${esc(p.id)}"><b>&#127482;&#127480; ${esc(label)}</b><span>Fixtures, how to watch, squad history and player bios &rarr;</span></a>`;
+    });
+
+    return section(leagues.length > 1 ? 'Your leagues' : 'Your league', leagues)
+      + section(states.length > 1 ? 'Your states' : 'Your state', states)
+      + section(teams.length > 1 ? 'Your national teams' : 'Your national team', teams);
   }
 
   function addBlock() {
