@@ -199,13 +199,31 @@ for c in rated:
     riv_rows = ''.join(
         f'<li><a href="/club/{p["id"]}">{html.escape(p["n"])}</a> · '
         f'{html.escape(lg_label(p["g"]))} · {p["r"]}</li>' for p in rivals(c))
-    ld = json.dumps({
+    # official site + social profiles: sameAs is how schema.org disambiguates
+    # an entity, and for a lower-league club these links are often the only
+    # other place on the web that names it
+    same_as = [c[k] for k in ('si', 'sx', 'sf') if c.get(k)]
+    ld_obj = {
         '@context': 'https://schema.org', '@type': 'SportsTeam', 'name': c['n'],
         'sport': 'Soccer', 'url': f'{SITE}/club/{c["id"]}',
         'address': {'@type': 'PostalAddress', 'addressLocality': c.get('ct', ''), 'addressRegion': c.get('st', '')},
         'memberOf': {'@type': 'SportsOrganization', 'name': label,
-                     'url': f'{SITE}{lg_href(g)}'}})
+                     'url': f'{SITE}{lg_href(g)}'}}
+    if c.get('url'):
+        ld_obj['sameAs'] = [c['url']] + same_as
+    elif same_as:
+        ld_obj['sameAs'] = same_as
+    ld = json.dumps(ld_obj)
     # the club's two parent hubs, so every leaf page feeds its league and state
+    off = []
+    for lbl, key in (('Official site', 'url'), ('Instagram', 'si'),
+                     ('X', 'sx'), ('Facebook', 'sf')):
+        if c.get(key):
+            off.append(f'<li><a href="{html.escape(c[key], quote=True)}" '
+                       f'target="_blank" rel="noopener">{lbl} &nearr;</a></li>')
+    off_html = (f'<h2>Official {name} links</h2><ul class="chips">{"".join(off)}</ul>'
+                if off else '')
+
     up = [f'<li><a href="{lg_href(g)}">All {html.escape(label)} rankings</a></li>']
     if c.get('st') in PLACE_NAME:
         up.append(f'<li><a href="/state/{c["st"].lower()}">'
@@ -223,6 +241,7 @@ for c in rated:
 <a class="cta" href="/app#/club/{c['id']}">Full profile in the app — map, matchups, players →</a>
 {f'<h2>Nearest rated rivals</h2><ul>{riv_rows}</ul>' if riv_rows else ''}
 <h2>Where {name} sits</h2><ul class="chips">{''.join(up)}</ul>
+{off_html}
 """ + FOOT)
     open(os.path.join(out_dir, f"{c['id']}.html"), 'w').write(page)
 
