@@ -1,0 +1,39 @@
+Handles that share no word or acronym with the club name.
+Usually a sponsor, a site vendor, or a neighbouring club. Confirm or drop.
+
+06 United FC                     Flushing, NY         http://06united.com                facebook  06united
+06 United FC                     Flushing, NY         http://06united.com                instagram 06united
+06 United FC                     Flushing, NY         http://06united.com                twitter   the06united
+AFC Academy                      New York, NY         https://afcacademy.org             facebook  BestChurchWebsiteBuilder
+AFC Academy II                   New York, NY         https://afcacademy.org             facebook  BestChurchWebsiteBuilder
+Alianza Miami                    Hallandale, FL       https://www.alianzamiami.com/      facebook  americancolombia
+Alianza Miami                    Hallandale, FL       https://www.alianzamiami.com/      twitter   idiomasamerican
+Bellevue Athletic                Bellevue, WA         https://bellevueathletic.com       twitter   BelAthleticFC
+Bellevue Athletic II             Bellevue, WA         https://bellevueathletic.com       twitter   BelAthleticFC
+Capo FC                          San Juan Capistrano, https://fccapistrano.org/          facebook  CapistranoFC
+Capo FC                          San Juan Capistrano, https://fccapistrano.org/          instagram capistrano_fc
+Capo FC                          San Juan Capistrano, https://fccapistrano.org/          twitter   capistrano_fc
+Central Valley Premier FC        Visalia, CA          https://centralvalleypremierfc.com instagram losleonesrojoofficial
+Chivas Kansas                    Lenexa, KS           https://chivaskansas.com           facebook  uniformesdalton
+East Coast FC                    Long Island, NY      https://ecsurfsoccer.com/          facebook  nysurfsoccer
+GFI Academy                      Houston, TX          https://gfiacademy.com             facebook  GlobalFootbalInnovationAcademy
+LTFC                             Lake Travis, TX      https://www.ltfc.org/              facebook  ltelitesoccer
+NC Ballers FC                    Charlotte, NC        https://ncballers.com              instagram ncballerfc
+Next Level Soccer II             Gilbert, AZ          https://www.nextlevelsoccer.com/   twitter   NLS_SoccerAZ
+Olé Sporting                     Chesapeake, VA       https://www.olesporting.com/       facebook  LIDFNorfolk
+Provo Utah FC                    Provo, UT            https://provo-utah.us/             facebook  sharer.php
+SA City SC                       San Antonio, TX      https://www.sacitysc.com/          facebook  sacitysc
+SA City SC                       San Antonio, TX      https://www.sacitysc.com/          instagram sacitysc
+SA City SC                       San Antonio, TX      https://www.sacitysc.com/          twitter   sacitysc
+Scenic City Soccer Club          Chattanooga, GA      https://www.visitchattanooga.com/  facebook  VisitChatt
+Scenic City Soccer Club          Chattanooga, GA      https://www.visitchattanooga.com/  instagram visitchatt
+Scenic City Soccer Club          Chattanooga, GA      https://www.visitchattanooga.com/  twitter   visitchatt
+Scenic City Soccer Club II       Chattanooga, GA      https://www.visitchattanooga.com/  facebook  VisitChatt
+Scenic City Soccer Club II       Chattanooga, GA      https://www.visitchattanooga.com/  instagram visitchatt
+Scenic City Soccer Club II       Chattanooga, GA      https://www.visitchattanooga.com/  twitter   visitchatt
+St. Croix SC                     Stillwater, MN       https://www.stcroix.org/           facebook  SCIWC
+St. Croix SC II                  Stillwater, MN       https://www.stcroix.org/           facebook  SCIWC
+Summit Valley United             Winchester, VA       https://www.summitvalleyunited.com instagram berryvillefc
+Utah Athletic                    Provo, UT            http://athleticsoccerclub.org/regi instagram socalathleticsc
+Utah Athletic II                 Salt Lake City, UT   http://athleticsoccerclub.org/regi instagram socalathleticsc
+Vancouver Victory                Vancouver, WA        https://www.vancouvervictoryfc.com twitter   V2FCsoccer
