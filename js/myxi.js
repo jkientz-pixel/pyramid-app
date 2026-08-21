@@ -94,8 +94,19 @@ export async function render(view, ctx) {
   const {
     esc, CLUBS, LEAGUES, STATE_NAME, clubIdx, clubIdxByName, crestHtml, mcrest, initials,
     eloRank, neighbors, milesApart, matchCard, squadFor, AVATAR, favs, favToggle,
-    fixturesDb, wireDb, isUpset, fmtWireDay, fmtKick, importPayload, reroute,
+    fixturesDb, wireDb, isUpset, fmtWireDay, fmtKick, importPayload,
   } = ctx;
+
+  /* Picking is the one action taken from this page, and every pick changes
+     what the page shows — so it has to re-render. Going back through the
+     router reset the scroll to the top, which threw the visitor away from the
+     chip they had just tapped. Re-render in place and put the scroll back:
+     innerHTML is written synchronously below, so this lands before paint. */
+  const refresh = () => {
+    const y = view.scrollTop;
+    render(view, { ...ctx, importPayload: null });
+    view.scrollTop = y;
+  };
 
   /* ---- resolve the XI --------------------------------------------------- */
   const f = favs();
@@ -183,6 +194,7 @@ export async function render(view, ctx) {
       </div>
       <div class="kicker" style="margin-top:16px">Start here</div>
       <a class="fa-card" href="#/table"><b>&#9733; Follow a club</b><span>Open any club and tap Follow &mdash; the national table is the fastest way to find one.</span></a>
+      <a class="fa-card" href="#/table/players"><b>&#9733; Follow a player</b><span>The player table, ranked across every league &mdash; open one and tap Follow.</span></a>
       <a class="fa-card" href="#/map"><b>&#128205; Find your local side</b><span>4,000+ clubs on the map. Somebody near you is on it.</span></a>
       ${addBlock()}
       ${socialBlock()}`;
@@ -194,13 +206,13 @@ export async function render(view, ctx) {
   const topClub = clubs.filter(c => c.r).sort(eloRank)[0] || clubs[0];
 
   view.innerHTML = head + importBox
+    + addBlock()
     + `<div id="mx-move"></div>`
     + `<div id="mx-next"><div class="kicker" style="margin-top:16px">Next up</div><p class="note">Checking fixtures&hellip;</p></div>`
     + clubsBlock()
     + playersBlock()
     + extrasBlock()
     + `<div id="mx-wire"></div>`
-    + addBlock()
     + homeBlock()
     + shareBlock()
     + socialBlock()
@@ -244,7 +256,13 @@ export async function render(view, ctx) {
   }
 
   function playersBlock() {
-    if (!players.length) return '';
+    if (!players.length) {
+      /* players have a Follow button of their own but no obvious route to one
+         from here — without this the feature reads as missing entirely */
+      return `<div class="kicker" style="margin-top:18px">Your players</div>
+        <a class="fa-card" href="#/table/players"><b>&#9733; Follow a player</b><span>Every rated player, ranked across all six pro leagues &mdash; open one and tap Follow to pin them here.</span></a>
+        <p class="note" style="margin:2px 0 0">You can also search any player by name at the top of the app, or open a club and tap a name in the squad.</p>`;
+    }
     return `<div class="kicker" style="margin-top:18px">Your players · ${players.length}</div>
       <ul class="clublist">${players.map(({ id, c, pl }) => `
         <li><a href="#/player/${id}"><img class="crest imgcrest" src="${AVATAR}" alt="">
@@ -294,7 +312,9 @@ export async function render(view, ctx) {
     const mine = extras().find(p => p.t === 'state');
     return `
       <div class="kicker" style="margin-top:20px">Add to your XI</div>
-      <p class="note" style="margin:2px 0 8px">Leagues, a state and national teams have no Follow button of their own &mdash; pick them here.</p>
+      <p class="note" style="margin:2px 0 8px">Leagues, a state and national teams have no Follow button of their own &mdash; pick them here.
+         Clubs and players are followed from <a href="#/table" style="color:var(--accent)">their own pages</a>
+         (<a href="#/table/players" style="color:var(--accent)">player table &rarr;</a>).</p>
       <div class="chips" id="mxadd">
         ${QUICK_LEAGUES.filter(g => LEAGUES[g]).map(g => chip('league', g, LEAGUES[g].label)).join('')}
         ${QUICK_NT.map(([id, label]) => chip('nt', id, label)).join('')}
@@ -411,12 +431,12 @@ export async function render(view, ctx) {
     view.querySelector('#mxadd')?.addEventListener('click', e => {
       const b = e.target.closest('[data-add]'); if (!b) return;
       toggleExtra(b.dataset.add, b.dataset.id);
-      reroute();
+      refresh();
     });
     view.querySelector('#mxstate')?.addEventListener('change', e => {
       const v = e.target.value;
       setExtras(extras().filter(p => p.t !== 'state').concat(v ? [{ t: 'state', id: v }] : []));
-      reroute();
+      refresh();
     });
     view.querySelector('#mxhome')?.addEventListener('change', e => setHome(e.target.checked));
 

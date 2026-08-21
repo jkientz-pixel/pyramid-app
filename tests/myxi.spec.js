@@ -118,3 +118,57 @@ test('the pyramid narrows towards the top', async ({ page }) => {
   expect(widths[widths.length - 1]).toBe(Math.max(...widths));
   expect(errors).toEqual([]);
 });
+
+test('picking from the top of the page does not move the page', async ({ page }) => {
+  await seed(page, { clubs: ['atlanta-united'], players: [] });
+  await gotoRoute(page, '#/myxi');
+  await page.waitForSelector('#mxadd');
+  // the picker sits above the content a pick would add, not below it
+  const order = await page.evaluate(() => {
+    const ids = ['mxadd', 'mx-move', 'mx-next'];
+    return ids.map(id => {
+      const el = document.getElementById(id);
+      return el ? [...document.querySelector('#view').children].indexOf(el.closest('#view > *')) : -1;
+    });
+  });
+  expect(order[0]).toBeLessThan(order[2]);
+  // and toggling a chip re-renders in place instead of jumping to the top.
+  // The click is dispatched rather than page.click'd on purpose: Playwright
+  // scrolls a target into view before clicking, which would zero the scroll
+  // itself and make this assert nothing.
+  const kept = await page.evaluate(() => {
+    const v = document.querySelector('#view');
+    v.scrollTop = 240;
+    if (!v.scrollTop) return 'page too short to scroll';
+    document.querySelector('#mxadd [data-add="league"][data-id="npsl"]').click();
+    return v.scrollTop;
+  });
+  expect(kept).toBe(240);
+  await expect(page.locator('#mxadd [data-add="league"][data-id="npsl"]'))
+    .toHaveAttribute('aria-pressed', 'true');
+  // picking never goes through the router — the hash must not move
+  expect(await page.evaluate(() => location.hash)).toBe('#/myxi');
+  await expect(page.locator('#view')).toContainText('Your league');
+});
+
+test('My XI offers a route to following players', async ({ page }) => {
+  await seed(page, { clubs: ['atlanta-united'], players: [] });
+  await gotoRoute(page, '#/myxi');
+  await page.waitForSelector('.mx-clubs');
+  // with no players followed the section is an invitation, not an absence
+  await expect(page.locator('#view')).toContainText('Your players');
+  await page.click('#view a[href="#/table/players"]');
+  await viewRendered(page);
+  await expect(page.locator('[data-mode="players"]')).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('a followed player pins to My XI and the empty prompt goes away', async ({ page }) => {
+  await gotoRoute(page, '#/table/players');
+  await page.click('.clublist a[href^="#/player/"]');
+  await viewRendered(page);
+  await page.click('.favbtn[data-ft="players"]');
+  await gotoRoute(page, '#/myxi');
+  await page.waitForSelector('.mx-count');
+  await expect(page.locator('#view')).toContainText('Your players · 1');
+  await expect(page.locator('#view a[href="#/table/players"]')).toHaveCount(1); // picker link only
+});
