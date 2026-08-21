@@ -7,7 +7,13 @@ Usage: python3 scripts/bump_version.py [YYYYMMDDx]   (default: today + next lett
 import re, subprocess, sys, pathlib, datetime, string
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-FILES = [ROOT / 'app.html', ROOT / 'index.html', ROOT / 'js' / 'app.js', ROOT / 'sw.js']
+# Every shipped page that carries a ?v= token belongs here. The standalone
+# pages below have no assets of their own — they carry the token only for the
+# analytics ping — but leaving them out would freeze that script at whatever
+# token they shipped with, and /js/* is served immutable for a year.
+FILES = [ROOT / 'app.html', ROOT / 'index.html', ROOT / 'js' / 'app.js', ROOT / 'sw.js'] + [
+    ROOT / n for n in ('privacy.html', 'methodology.html', 'shots.html',
+                       'radar.html', 'player-simulator.html', '404.html')]
 TOKEN = re.compile(r'2026\d{4}[a-z]')
 
 cur = set()

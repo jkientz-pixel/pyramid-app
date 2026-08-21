@@ -9,6 +9,19 @@ src = open(os.path.join(ROOT, 'js', 'data.js')).read()
 clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', src, re.S).group(1))
 leagues = json.loads(re.search(r'export const LEAGUES=(\{.*?\});', src, re.S).group(1))
 
+# /js/* is served immutable for a year, so an untokened script URL here would
+# pin every returning visitor to the copy of rxi-a.js they first cached — on
+# the club/league/state pages, which are most of the site. Read the token
+# deploy.sh just stamped into app.html rather than restating it.
+def _asset_token():
+    m = re.search(r'2026\d{4}[a-z]', open(os.path.join(ROOT, 'app.html')).read())
+    if not m:
+        raise SystemExit('FATAL: no cache-bust token in app.html')
+    return m.group(0)
+
+
+VTOKEN = _asset_token()
+
 FONT_FACE = ('@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:700;'
              'font-display:swap;src:url(/fonts/barlow-condensed-latin-700.woff2) format("woff2")}')
 DISP_STACK = '"Barlow Condensed","Avenir Next Condensed","Arial Narrow",sans-serif'
@@ -50,7 +63,7 @@ td,th{{padding:7px 10px;border-bottom:1px solid #24352C;text-align:left;font-siz
 th{{color:#8FA598;text-transform:uppercase;font-size:.72rem;letter-spacing:.06em}}
 .cta{{display:inline-block;background:#C77F1E;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;margin:10px 0}}
 p.note{{color:#8FA598;font-size:.85rem;max-width:60em}}</style>
-<script src="/js/rxi-a.js" defer></script>
+<script src="/js/rxi-a.js?v={VTOKEN}" defer></script>
 </head><body>
 <p><a href="/">Rank XI</a> · updated {today}</p>
 <h1>{html.escape(title.split('—')[0].strip())}</h1>

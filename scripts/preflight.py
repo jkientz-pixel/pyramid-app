@@ -215,6 +215,29 @@ try:
         print(f'  generated dirs staged: {", ".join(gen_dirs)}')
     if not missing_sitemap and not unstaged:
         print(f'  every landing page is both staged and sitemapped ({len(staged)} checked)')
+    # Five shipped pages went live with no pageview ping at all, so /coach and
+    # /methodology were invisible in our own numbers. A page is only measured if
+    # it carries the tag, and the tag is only updatable if it carries the token
+    # (/js/* is served immutable for a year).
+    untagged, untokened = [], []
+    for f in sorted(staged):
+        src = (ROOT / f).read_text() if (ROOT / f).exists() else ''
+        if not src:
+            continue
+        if 'rxi-a.js' not in src:
+            untagged.append(f)
+        elif not _re.search(r'rxi-a\.js\?v=2026\d{4}[a-z]', src):
+            untokened.append(f)
+    if untagged:
+        fail.append('shipped pages carry no analytics ping: ' + ', '.join(untagged)
+                    + ' (add <script src="/js/rxi-a.js?v=TOKEN" defer> and list the'
+                    + ' page in scripts/bump_version.py FILES)')
+    if untokened:
+        fail.append('analytics ping is untokened on: ' + ', '.join(untokened)
+                    + ' (/js/* is immutable for a year — returning visitors would'
+                    + ' never receive a fixed rxi-a.js)')
+    if not untagged and not untokened:
+        print(f'  every staged page reports pageviews ({len(staged)} checked)')
 except Exception as e:
     fail.append(f'deploy staging check: {e}')
 

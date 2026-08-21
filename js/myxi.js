@@ -24,6 +24,7 @@
 const SOCIALS = [
   { id: 'x', label: 'X', handle: '@rankedxi', url: 'https://x.com/rankedxi' },
   { id: 'ig', label: 'Instagram', handle: '@rankedxi.app', url: 'https://www.instagram.com/rankedxi.app/' },
+  { id: 'fb', label: 'Facebook', handle: 'Ranked XI', url: 'https://www.facebook.com/rankedxi' },
   { id: 'li', label: 'LinkedIn', handle: 'Ranked XI', url: 'https://www.linkedin.com/company/rankedxi/' },
 ];
 
