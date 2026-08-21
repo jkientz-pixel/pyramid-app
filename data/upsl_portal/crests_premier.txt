@@ -1,0 +1,11 @@
+alaskathornsfc|Alaska Thorns FC|sites/5/2023/05/800396.jpg
+arlingtonsa|Arlington SA|sites/5/2022/05/085806-4.jpg
+ashgoldfc|Ash Gold FC|sites/5/2026/06/061913-1.jpg
+corpuschristifcsharks|Corpus Christi FC-Sharks|sites/5/2024/01/349636-1.jpg
+cosmosb|Cosmos B|sites/5/2024/08/022688-3.jpg
+georgiarevolutionfc|Georgia Revolution FC|sites/5/2024/01/285117-2.jpg
+matsuunitedfc|Mat-Su United FC|https://res.cloudinary.com/hn2szl8kc/image/upload/team-logos/957684.png
+neuseriverfa|Neuse River FA|sites/5/2026/08/866427.jpg
+pennsylvaniaclassics|Pennsylvania Classics|sites/5/2026/06/871025-1.jpg
+potrosfc|Potros FC|sites/5/2022/05/041217-3.jpg
+renofc|Reno FC|sites/5/2026/07/024578.jpg

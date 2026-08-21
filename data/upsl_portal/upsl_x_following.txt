@@ -1,0 +1,22 @@
+opencup|U.S. Open Cup|media
+ProtagonistUSA|Protagonist Soccer|media
+usopencup|TheCup.us|media
+JohnPMotta|John Paul Motta|governance
+SavCloversFC|Savannah Clovers Football Club|club
+BavarianSC_Mens|Bavarian United Men's Team|club
+USAdultSoccer|USASA US Adult Soccer|governance
+VyreNetwork|VyreNetwork|media
+ScuHeat|SCU Heat|club
+TheSoccerWire|SoccerWire|media
+FlashFCOfficial|Flash FC|club
+EvolutionRLFC|Round Lake Evolution FC|club
+storm_futbol|Storm Futbol|club
+tntempofc|Beaman United FC|club
+Isthmus_City_FC|Isthmus City FC|club
+ChicagoThunder_|Chicago Thunder FC|club
+EscondidoFc|Escondido FC|club
+AtleticoEliteFC|Atletico Elite FC|club
+culturesutdfc|Cultures United FC|club
+IowaDemonHawks|Iowa Demon Hawks|club
+SWFirstTeam|Sporting Wichita First Team|club
+DodgeCityToros|Dodge City Toros FC|club
