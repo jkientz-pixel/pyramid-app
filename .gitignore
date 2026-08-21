@@ -16,7 +16,11 @@ __pycache__/
 js/*.js.bak
 js/*.js.tmp
 
-node_modules/
+# no trailing slash: "node_modules/" matches directories only, so a node_modules
+# *symlink* sailed past it and got committed in PR #71 — which replaced the real
+# directory on pull and silently broke npx (a deploy staged and then died with no
+# output). This form matches the symlink too.
+node_modules
 test-results/
 playwright-report/
 .playwright-mcp/
