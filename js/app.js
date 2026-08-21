@@ -1015,7 +1015,10 @@ function fmtKick(iso) {
    standalone #/predict screen (the feature is a headliner, not a footnote) */
 function matchupMachineHtml(rated, preH) {
   const pickBox = (id, sel) => `<span class="pickwrap"><button type="button" class="pickq pickbtn" id="${id}" aria-haspopup="dialog" aria-label="${id === 'pickH' ? 'Home' : 'Away'} club &mdash; tap to change" data-idx="${CLUBS.indexOf(sel)}">${esc(sel.n)}</button></span>`;
-  const home = CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0];
+  /* preH arrives as a club slug from My XI and as a numeric index from the
+     older in-app links — clubIdx resolves both, -1 falls through to rated[0] */
+  const preC = CLUBS[clubIdx(preH)];
+  const home = preC && preC.r ? preC : rated[0];
   return `
     <div class="kicker">Predictor · any club v any club · model estimate</div>
     <h2 class="disp">Matchup Machine</h2>
@@ -2138,8 +2141,8 @@ function screenPyramid() {
     ${sexToggle()}
     <div class="kicker">The structure of American soccer</div>
     <h2 class="disp">The Pyramid</h2>
-    <div class="tiers">${TIERS[sex].map((tier, i) => `
-      <div class="tier" style="width:${100 - i * (52 / TIERS[sex].length)}%">
+    <div class="tiers">${TIERS[sex].map((tier, i, all) => `
+      <div class="tier" style="width:${100 - (all.length - 1 - i) * (52 / all.length)}%">
         <div class="tier-label">${tier.t}${tier.pro ? ' · pro' : ''}</div>
         <div class="tier-leagues">
           ${(tier.leagues || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img class="${m.inv ? 'inv-' + m.inv : ''}" src="${m.img}" alt="" onerror="this.style.display='none'">` : `<span class="dot" style="background:${m.color}"></span>`}<b>${m.label}</b><span>${count(g)} clubs</span>`; return `<a class="tierlg" href="#/league/${g}">${inner}</a>`; }).join('')}
@@ -2336,24 +2339,33 @@ function screenPricing() {
       <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Youth club directory interest')}">Join the waitlist</a></div>
     <p class="note">Honesty policy: paid tiers switch on only after the marketplace demonstrably works — players getting contacted, clubs filling spots. Reserving is free and locks founding rates. No commissions, ever: your deals are yours.</p>`;
 }
-function screenFollowing() {
-  crumb.textContent = 'Following';
-  const f = favs();
-  const clubRows = f.clubs.map(fid => { const i2 = clubIdx(fid); return i2 >= 0 ? clubRow(CLUBS[i2]) : ''; }).join('');
-  const playerRows = f.players.map(id => {
-    const [ci, pi] = id.split('/'); const c = CLUBS[clubIdx(ci)]; if (!c) return '';
-    const pl = squadFor(c)[+pi]; if (!pl) return '';
-    return `<li><a href="#/player/${id}"><img class="crest imgcrest" src="${AVATAR}" alt="">
-      <span class="cl-name"><b>${esc(pl.name)}</b><span>${pl.pos} · ${esc(c.n)}</span></span>
-      <span class="cl-rt">${pl.pvr}</span></a></li>`;
-  }).join('');
-  view.innerHTML = `
-    <div class="kicker">Your clubs and players</div>
-    <h2 class="disp">Following</h2>
-    ${(!f.clubs.length && !f.players.length) ? `<p class="note" style="font-size:.9rem">Nothing yet. Tap <b>&#9734; Follow</b> on any club or player page and they'll live here — quick access from every visit, and match alerts once notifications land.</p>` : ''}
-    ${f.clubs.length ? `<div class="kicker" style="margin-top:8px">Clubs · ${f.clubs.length}</div><ul class="clublist">${clubRows}</ul>` : ''}
-    ${f.players.length ? `<div class="kicker" style="margin-top:12px">Players · ${f.players.length}</div><ul class="clublist">${playerRows}</ul>` : ''}
-    ${(f.clubs.length || f.players.length) ? '<p class="note">To unfollow, open the page and tap the star again.</p>' : ''}`;
+/* My XI (#/myxi) — the personalized front page that replaced the Follow tab.
+   The screen itself lives in js/myxi.js: it is the only view that needs the
+   rank tables, the wire, the fixtures and the matchup engine at once, and
+   app.js is already 3,000 lines. Loaded on demand, idle-prefetched after
+   first paint so the tab feels instant for the people who live in it. */
+let _myxi = null;
+const myxiMod = () => _myxi ||= import('./myxi.js?v=20260821b')
+  .catch(e => { _myxi = null; throw e; });
+
+function screenMyXi(payload) {
+  crumb.textContent = 'My XI';
+  view.innerHTML = '<p class="note">Loading your XI&hellip;</p>';
+  myxiMod().then(mod => {
+    if (!location.hash.startsWith('#/myxi')) return;   /* routed away mid-load */
+    mod.render(view, {
+      esc, CLUBS, LEAGUES, STATE_NAME, clubIdx, clubIdxByName, crestHtml, mcrest,
+      initials, eloRank, neighbors, milesApart, matchCard, squadFor, AVATAR,
+      favs, favToggle, fixturesDb, wireDb, isUpset, fmtWireDay, fmtKick,
+      importPayload: payload, reroute: route,
+    });
+  }).catch(() => {
+    if (!location.hash.startsWith('#/myxi')) return;
+    view.innerHTML = `<div class="kicker">My XI</div>
+      <h2 class="disp">Couldn't load your XI</h2>
+      <p class="note">Check your connection and try again &mdash; your picks are safe in this browser.</p>
+      <a class="fa-card" href="#/map"><b>&#128205; The national map</b><span>Every club in American soccer.</span></a>`;
+  });
 }
 
 let legendSort = 'apps';
@@ -2972,7 +2984,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player', notfound: 'Page not found' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player', notfound: 'Page not found' };
 /* Hash routes people actually type or get sent. Every one of these was a
    plausible guess at a real screen that silently rendered the map instead —
    a stranger following a link from a DM concluded the site was broken rather
@@ -2983,7 +2995,8 @@ const ROUTE_ALIAS = {
   claim: 'clubtools', 'claim-club': 'clubtools', 'club-tools': 'clubtools',
   sponsorships: 'advertise', sponsorship: 'advertise', sponsor: 'advertise',
   ads: 'advertise', advertising: 'advertise',
-  follow: 'following', favorites: 'following', favourites: 'following',
+  following: 'myxi', follow: 'myxi', favorites: 'myxi', favourites: 'myxi',
+  'my-xi': 'myxi', myxi11: 'myxi', home: 'myxi',
   leagues: 'tiers', pyramid: 'tiers', 'national-table': 'table',
   rankings: 'table', standings: 'table', 'open-tryouts': 'tryouts',
   prices: 'pricing', plans: 'pricing', terms: 'legal', privacy: 'legal',
@@ -3028,7 +3041,7 @@ function route() {
   view.scrollTop = 0;
   /* these views read ROSTERS synchronously; any view shows followed-player
      chips, so a user with player favorites also waits for the module */
-  const needsRosters = ['club', 'player', 'following', 'table'].includes(parts[0])
+  const needsRosters = ['club', 'player', 'myxi', 'table'].includes(parts[0])
     || favs().players.length > 0;
   if (needsRosters) { loadRosters().then(dispatch, dispatch); return; }
   dispatch();
@@ -3038,7 +3051,8 @@ function route() {
   else if (parts[0] === 'tryouts') screenTryouts();
   else if (parts[0] === 'pricing') screenPricing();
   else if (parts[0] === 'advertise') screenAdvertise();
-  else if (parts[0] === 'following') screenFollowing();
+  /* #/myxi/i/<payload> is a shared XI arriving from another device */
+  else if (parts[0] === 'myxi') screenMyXi(parts[1] === 'i' ? decodeURIComponent(parts.slice(2).join('/')) : null);
   else if (parts[0] === 'legends') screenLegends(parts[1]);
   else if (parts[0] === 'cups') screenCups();
   else if (parts[0] === 'nt') screenNationalTeams(parts[1], parts[2]);
@@ -3099,9 +3113,27 @@ document.getElementById('themebtn')?.addEventListener('click', () => {
     paint();
   });
 }
+/* "Make this your home": browsers give no API to set a homepage, so the
+   honest version is the app's own start screen. manifest start_url is /app
+   with no hash, so an installed launch lands here with an empty hash and
+   this is the only place the preference can apply. A typed or shared URL
+   always carries its own hash and is never overridden. */
+if (!location.hash) {
+  let home = null;
+  try { home = (JSON.parse(localStorage.getItem('rxi-myxi')) || {}).home === true ? '#/myxi' : null; } catch {}
+  if (home) location.replace(home);
+}
+/* Chrome fires beforeinstallprompt once, early — My XI's install button
+   renders long after, so the event is parked here for it to claim. */
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); window.__rxiInstall = e; });
+addEventListener('appinstalled', () => { window.__rxiInstall = null; });
+
 addEventListener('hashchange', route);
 route();
 wireSearch();
 { const cc = document.getElementById('clubcount'); if (cc) cc.textContent = CLUBS.filter(c => !c.h).length.toLocaleString(); }
 /* prefetch rosters once the first view has painted so club taps are instant */
-(self.requestIdleCallback || (f => setTimeout(f, 2000)))(() => loadRosters().catch(() => {}));
+(self.requestIdleCallback || (f => setTimeout(f, 2000)))(() => {
+  loadRosters().catch(() => {});
+  myxiMod().catch(() => {});
+});
