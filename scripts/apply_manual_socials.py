@@ -24,24 +24,30 @@ def main():
     by_id = {c['id']: c for c in clubs}
     manual = json.load(open(SRC))['clubs']
 
-    added = skipped = 0
+    added = skipped = replaced = 0
     missing = []
     for cid, row in manual.items():
         club = by_id.get(cid)
         if club is None:
             missing.append(cid)
             continue
+        allow_replace = set(row.get('replace', ()))
         for f in FIELDS:
             if not row.get(f):
                 continue
-            if club.get(f):
+            if club.get(f) and f not in allow_replace:
                 skipped += 1
                 continue
+            if club.get(f) and club[f] != row[f]:
+                print('  %-28s %-4s REPLACED %s' % (cid, f, club[f]))
+                replaced += 1
+            elif not club.get(f):
+                added += 1
             club[f] = row[f]
-            added += 1
             print('  %-28s %-4s -> %s' % (cid, f, row[f]))
 
-    print('fields added: %d   left alone (already set): %d' % (added, skipped))
+    print('fields added: %d   replaced: %d   left alone (already set): %d'
+          % (added, replaced, skipped))
     if missing:
         print('UNKNOWN club ids (nothing applied): %s' % missing)
         return 1

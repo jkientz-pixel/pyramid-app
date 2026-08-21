@@ -1,5 +1,5 @@
 {
-  "_note": "Hand-verified club links for entries the UPSL scrape cannot reach (other leagues, or a club fielding sides in several). Same rule as the scrape: every row records the page the handle was read from. Applied by scripts/apply_manual_socials.py, additive only.",
+  "_note": "Hand-verified club links for entries the UPSL scrape cannot reach (other leagues, or a club fielding sides in several). Same rule as the scrape: every row records the page the handle was read from. Applied by scripts/apply_manual_socials.py, additive by default -- a field is only allowed to overwrite an existing value when it is named in that club's \"replace\" list, so replacing curated data is always deliberate and reviewable.",
   "clubs": {
     "arkansas-wolves-nisa": {
       "why": "Arkansas Wolves FC's flagship entry had a website but no socials; arkansaswolves.com is the umbrella club (Youth, NPSL, UWS, UPSL Men, MWPL, NISA) and carries the club's real handles.",
@@ -15,6 +15,14 @@
       "si": "https://www.instagram.com/arkwolvesfc",
       "sx": "https://x.com/arkwolvesfc",
       "sf": "https://www.facebook.com/arkwolvesfc",
+      "source_url": "https://arkansaswolves.com/"
+    },
+    "arkansas-wolves-2": {
+      "why": "UPSL side of Arkansas Wolves FC. Its url pointed at arkansaswolvesfc.sportzstudio.com, a separate 'Arkansas Wolves SC' microsite carrying @livestrongwolves rather than the club's @arkwolvesfc. Confirmed stale by Jeremy 2026-08-21; repointed at the club's own site.",
+      "url": "https://arkansaswolves.com/",
+      "replace": [
+        "url"
+      ],
       "source_url": "https://arkansaswolves.com/"
     }
   }

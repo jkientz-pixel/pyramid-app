@@ -263,6 +263,29 @@ try:
 except Exception as e:
     fail.append(f'deploy staging check: {e}')
 
+# ---------------------------------------------------------------- merge scars
+# An unresolved merge leaves literal <<<<<<< / >>>>>>> in the file. Every other
+# check here passed with six shipped pages in exactly that state (2026-08-21),
+# because a conflicted page is still valid-enough HTML to parse. Nothing else
+# looks for it, so a bad merge could reach production intact.
+try:
+    scarred = []
+    _marker = re.compile(r'^(<{7} |={7}$|>{7} )', re.M)
+    for _pat in ('*.html', 'js/*.js', 'css/*.css', 'scripts/*.py', 'data/*.json'):
+        for _f in sorted(ROOT.glob(_pat)):
+            try:
+                if _marker.search(_f.read_text(encoding='utf8', errors='ignore')):
+                    scarred.append(str(_f.relative_to(ROOT)))
+            except OSError:
+                pass
+    if scarred:
+        fail.append('unresolved merge conflict markers in: ' + ', '.join(sorted(scarred))
+                    + ' — resolve the merge before deploying')
+    else:
+        print('  no unresolved merge conflict markers')
+except Exception as e:
+    fail.append(f'conflict-marker check: {e}')
+
 if fail:
     print('\nPREFLIGHT FAILED:', file=sys.stderr)
     for f in fail: print('  ✗', f, file=sys.stderr)
