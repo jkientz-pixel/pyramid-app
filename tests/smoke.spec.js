@@ -80,7 +80,8 @@ for (const [typed, lands] of [
   ['#/free-agents', 'freeagents'],
   ['#/claim', 'clubtools'],
   ['#/sponsorships', 'advertise'],
-  ['#/follow', 'following'],
+  ['#/follow', 'myxi'],
+  ['#/following', 'myxi'],
   ['#/standings', 'table'],
   ['#/pyramid', 'tiers'],
 ]) {
@@ -147,7 +148,7 @@ test('theme toggle flips and persists the theme', async ({ page }) => {
 test('tab bar navigates between sections', async ({ page }) => {
   const errors = trackErrors(page);
   await gotoRoute(page, '#/map');
-  for (const tab of ['tiers', 'table', 'matches', 'tools', 'following', 'about']) {
+  for (const tab of ['tiers', 'table', 'matches', 'tools', 'myxi', 'about']) {
     await page.click(`.tabbar a[data-tab="${tab}"]`);
     await viewRendered(page);
     await expect(page.locator(`.tabbar a[data-tab="${tab}"]`)).toHaveClass(/active/);

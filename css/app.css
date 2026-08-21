@@ -295,7 +295,7 @@ a.lgchip{text-decoration:none}
 .qrow.qnone{color:var(--ink-dim)}
 image.pin{cursor:pointer}
 .tiers{display:flex;flex-direction:column;align-items:center;gap:8px;margin:14px 0}
-.tier{background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:240px}
+.tier{background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:186px}
 .tier-label{color:var(--ink-dim);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;text-align:center;margin-bottom:7px}
 .tier-leagues{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
 .tierlg{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--ground);border-radius:999px;padding:6px 12px;font:inherit;font-size:.78rem;cursor:pointer;color:var(--ink)}
@@ -727,3 +727,71 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 .apps-bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
 .apps-n{flex:none;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:.84rem}
 .apps-n small{display:block;font-weight:400;font-size:.63rem;color:var(--ink-dim)}
+
+/* ---- My XI (#/myxi) ------------------------------------------------------
+   The personalized front page. Everything here is built from the existing
+   tokens so both themes come for free — no literal colors below. */
+.mx-count{display:flex;align-items:center;gap:10px;margin:0 0 4px;color:var(--ink-dim);font-size:.78rem}
+.mx-meter{display:inline-flex;gap:3px}
+.mx-meter i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.mx-meter i.on{background:var(--accent)}
+.mx-empty{background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:12px 0 0}
+.mx-empty p{margin:0 0 8px}
+.mx-empty p:last-child{margin:0}
+
+.mx-up{color:var(--sim-up)}
+.mx-dn{color:var(--sim-down)}
+.mx-moves{list-style:none;margin:8px 0 0;padding:0;border:1px solid var(--accent);border-radius:12px;
+  overflow:hidden;background:var(--raise)}
+.mx-moves li{border-bottom:1px solid var(--line)}
+.mx-moves li:last-child{border-bottom:none}
+.mx-moves a{display:flex;align-items:center;gap:10px;padding:10px 12px;color:inherit;text-decoration:none}
+.mx-mname{flex:1;min-width:0}
+.mx-mname b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mx-mname>span{font-size:.76rem;color:var(--ink-dim)}
+
+/* the rival line hangs under its club row rather than beside it — a second
+   tappable target inside one .clublist row is a 44px-target problem on phones */
+.mx-clubs li{padding-bottom:2px}
+.mx-rival{display:block;padding:0 4px 9px 46px;color:var(--ink-dim);font-size:.74rem;text-decoration:none}
+.mx-rival:active{color:var(--accent)}
+
+.mx-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  padding:8px 0 2px;color:inherit;text-decoration:none}
+.mx-head b{font-family:var(--font-disp);text-transform:uppercase;letter-spacing:.03em;font-size:1.15rem}
+.mx-head span{color:var(--accent);font-size:.74rem}
+
+.mx-wire{list-style:none;margin:8px 0 0;padding:0;border:1px solid var(--line);border-radius:12px;
+  overflow:hidden;background:var(--raise)}
+.mx-wire li{border-bottom:1px solid var(--line)}
+.mx-wire li:last-child{border-bottom:none}
+.mx-wire a{display:block;padding:9px 12px;color:inherit;text-decoration:none}
+.mx-wl{display:block;font-size:.86rem}
+.mx-wl .mcrest{display:inline-block;vertical-align:-4px;width:16px;height:16px;margin:0 3px}
+.mx-wl .mcrest.ini{display:inline-grid}
+.mx-wl i{font-style:normal;font-variant-numeric:tabular-nums;font-weight:700;margin:0 4px}
+.mx-wm{display:block;color:var(--ink-dim);font-size:.72rem;margin-top:2px}
+
+.mx-state{display:flex;align-items:center;gap:10px;margin:8px 0 0;font-size:.84rem;color:var(--ink-dim)}
+.mx-state select{flex:1;min-width:0;font:inherit;padding:8px 10px;border-radius:10px;
+  border:1px solid var(--line);background:var(--raise);color:var(--ink)}
+
+.mx-home,.mx-share,.mx-import{background:var(--raise);border:1px solid var(--line);border-radius:12px;
+  padding:12px 14px;margin:8px 0 0}
+.mx-import{border-color:var(--accent);margin:12px 0 0}
+.mx-import b{display:block;margin-bottom:4px}
+.mx-import p{margin:0 0 10px;font-size:.84rem;color:var(--ink-dim)}
+.mx-home label.ck{display:flex;gap:9px;align-items:center;font-size:.9rem;cursor:pointer}
+.mx-home label.ck input{flex:0 0 auto;width:18px;height:18px;accent-color:var(--accent)}
+.mx-home .joinbtn,.mx-share .joinbtn,.mx-import .joinbtn{background:var(--accent);color:#fff;font-weight:700;
+  border:0;border-radius:10px;padding:11px 16px;font:inherit;cursor:pointer;margin-top:10px}
+.mx-import .joinbtn{margin-top:0}
+.mx-url{display:inline-block;margin-top:4px;word-break:break-all;font-size:.72rem;color:var(--ink)}
+
+.mx-social{display:flex;gap:8px;flex-wrap:wrap}
+.mx-social a{flex:1 1 30%;min-width:100px;background:var(--raise);border:1px solid var(--line);
+  border-radius:12px;padding:10px 12px;color:inherit;text-decoration:none;text-align:center}
+.mx-social a:active{border-color:var(--accent)}
+.mx-social b{display:block;font-family:var(--font-disp);text-transform:uppercase;letter-spacing:.04em;font-size:1rem}
+.mx-social span{display:block;color:var(--ink-dim);font-size:.72rem;margin-top:1px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

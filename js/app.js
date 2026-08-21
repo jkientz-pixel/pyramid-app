@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260821b';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260821b';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260821d';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260821d';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260821b')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260821d')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260821b';
+const BUILDV = '20260821d';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -965,7 +965,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260821b')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260821d')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -974,8 +974,8 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa, usl2] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260821b'), grab('data/wire_asa.json?v=20260821b'),
-    grab('data/wire_usl2.json?v=20260821b')]);
+    grab('data/wire_npsl.json?v=20260821d'), grab('data/wire_asa.json?v=20260821d'),
+    grab('data/wire_usl2.json?v=20260821d')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' }))
     .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })))
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
@@ -1001,7 +1001,7 @@ async function hydrateWireHook() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260821b')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260821d')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1015,7 +1015,10 @@ function fmtKick(iso) {
    standalone #/predict screen (the feature is a headliner, not a footnote) */
 function matchupMachineHtml(rated, preH) {
   const pickBox = (id, sel) => `<span class="pickwrap"><button type="button" class="pickq pickbtn" id="${id}" aria-haspopup="dialog" aria-label="${id === 'pickH' ? 'Home' : 'Away'} club &mdash; tap to change" data-idx="${CLUBS.indexOf(sel)}">${esc(sel.n)}</button></span>`;
-  const home = CLUBS[+preH] && CLUBS[+preH].r ? CLUBS[+preH] : rated[0];
+  /* preH arrives as a club slug from My XI and as a numeric index from the
+     older in-app links — clubIdx resolves both, -1 falls through to rated[0] */
+  const preC = CLUBS[clubIdx(preH)];
+  const home = preC && preC.r ? preC : rated[0];
   return `
     <div class="kicker">Predictor · any club v any club · model estimate</div>
     <h2 class="disp">Matchup Machine</h2>
@@ -1099,8 +1102,8 @@ async function screenPlayerSim() {
     + '<p class="note">Loading player data&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _coachData || fetch('data/coach_players.json?v=20260821b').then(r => r.json()),
-      import('./player-sim.js?v=20260821b'),
+      _coachData || fetch('data/coach_players.json?v=20260821d').then(r => r.json()),
+      import('./player-sim.js?v=20260821d'),
     ]);
     _coachData = data;
     if (!location.hash.startsWith('#/player-sim')) return;   // routed away mid-load
@@ -1118,8 +1121,8 @@ async function screenRadar() {
     + '<p class="note">Loading player data&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _radarData || fetch('data/player_radar.json?v=20260821b').then(r => r.json()),
-      import('./playerradar.js?v=20260821b'),
+      _radarData || fetch('data/player_radar.json?v=20260821d').then(r => r.json()),
+      import('./playerradar.js?v=20260821d'),
     ]);
     _radarData = data;
     if (!location.hash.startsWith('#/radar')) return;   // routed away mid-load
@@ -1135,7 +1138,7 @@ async function screenShots() {
   view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
     + '<p class="note">Loading&hellip;</p>';
   try {
-    const mod = await import('./shotmap.js?v=20260821b');
+    const mod = await import('./shotmap.js?v=20260821d');
     if (!location.hash.startsWith('#/shots')) return;
     mod.render(view);
   } catch (e) {
@@ -1290,7 +1293,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260821b')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260821d')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1639,35 +1642,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260821b')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260821d')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260821b')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260821d')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260821b')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260821d')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260821b')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260821d')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260821b')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260821d')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1720,7 +1723,7 @@ function verifyBadge(c) {
    here has to think about the minors policy. */
 let _usl2apps = null;
 async function usl2Apps() {
-  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260821b')
+  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260821d')
     .then(r => r.json()).catch(() => ({}));
   return _usl2apps;
 }
@@ -2098,7 +2101,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260821b')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260821d')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -2138,8 +2141,8 @@ function screenPyramid() {
     ${sexToggle()}
     <div class="kicker">The structure of American soccer</div>
     <h2 class="disp">The Pyramid</h2>
-    <div class="tiers">${TIERS[sex].map((tier, i) => `
-      <div class="tier" style="width:${100 - i * (52 / TIERS[sex].length)}%">
+    <div class="tiers">${TIERS[sex].map((tier, i, all) => `
+      <div class="tier" style="width:${100 - (all.length - 1 - i) * (52 / all.length)}%">
         <div class="tier-label">${tier.t}${tier.pro ? ' · pro' : ''}</div>
         <div class="tier-leagues">
           ${(tier.leagues || []).map(g => { const m = LEAGUES[g]; const inner = `${m.img ? `<img class="${m.inv ? 'inv-' + m.inv : ''}" src="${m.img}" alt="" onerror="this.style.display='none'">` : `<span class="dot" style="background:${m.color}"></span>`}<b>${m.label}</b><span>${count(g)} clubs</span>`; return `<a class="tierlg" href="#/league/${g}">${inner}</a>`; }).join('')}
@@ -2336,24 +2339,33 @@ function screenPricing() {
       <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Youth club directory interest')}">Join the waitlist</a></div>
     <p class="note">Honesty policy: paid tiers switch on only after the marketplace demonstrably works — players getting contacted, clubs filling spots. Reserving is free and locks founding rates. No commissions, ever: your deals are yours.</p>`;
 }
-function screenFollowing() {
-  crumb.textContent = 'Following';
-  const f = favs();
-  const clubRows = f.clubs.map(fid => { const i2 = clubIdx(fid); return i2 >= 0 ? clubRow(CLUBS[i2]) : ''; }).join('');
-  const playerRows = f.players.map(id => {
-    const [ci, pi] = id.split('/'); const c = CLUBS[clubIdx(ci)]; if (!c) return '';
-    const pl = squadFor(c)[+pi]; if (!pl) return '';
-    return `<li><a href="#/player/${id}"><img class="crest imgcrest" src="${AVATAR}" alt="">
-      <span class="cl-name"><b>${esc(pl.name)}</b><span>${pl.pos} · ${esc(c.n)}</span></span>
-      <span class="cl-rt">${pl.pvr}</span></a></li>`;
-  }).join('');
-  view.innerHTML = `
-    <div class="kicker">Your clubs and players</div>
-    <h2 class="disp">Following</h2>
-    ${(!f.clubs.length && !f.players.length) ? `<p class="note" style="font-size:.9rem">Nothing yet. Tap <b>&#9734; Follow</b> on any club or player page and they'll live here — quick access from every visit, and match alerts once notifications land.</p>` : ''}
-    ${f.clubs.length ? `<div class="kicker" style="margin-top:8px">Clubs · ${f.clubs.length}</div><ul class="clublist">${clubRows}</ul>` : ''}
-    ${f.players.length ? `<div class="kicker" style="margin-top:12px">Players · ${f.players.length}</div><ul class="clublist">${playerRows}</ul>` : ''}
-    ${(f.clubs.length || f.players.length) ? '<p class="note">To unfollow, open the page and tap the star again.</p>' : ''}`;
+/* My XI (#/myxi) — the personalized front page that replaced the Follow tab.
+   The screen itself lives in js/myxi.js: it is the only view that needs the
+   rank tables, the wire, the fixtures and the matchup engine at once, and
+   app.js is already 3,000 lines. Loaded on demand, idle-prefetched after
+   first paint so the tab feels instant for the people who live in it. */
+let _myxi = null;
+const myxiMod = () => _myxi ||= import('./myxi.js?v=20260821d')
+  .catch(e => { _myxi = null; throw e; });
+
+function screenMyXi(payload) {
+  crumb.textContent = 'My XI';
+  view.innerHTML = '<p class="note">Loading your XI&hellip;</p>';
+  myxiMod().then(mod => {
+    if (!location.hash.startsWith('#/myxi')) return;   /* routed away mid-load */
+    mod.render(view, {
+      esc, CLUBS, LEAGUES, STATE_NAME, clubIdx, clubIdxByName, crestHtml, mcrest,
+      initials, eloRank, neighbors, milesApart, matchCard, squadFor, AVATAR,
+      favs, favToggle, fixturesDb, wireDb, isUpset, fmtWireDay, fmtKick,
+      importPayload: payload,
+    });
+  }).catch(() => {
+    if (!location.hash.startsWith('#/myxi')) return;
+    view.innerHTML = `<div class="kicker">My XI</div>
+      <h2 class="disp">Couldn't load your XI</h2>
+      <p class="note">Check your connection and try again &mdash; your picks are safe in this browser.</p>
+      <a class="fa-card" href="#/map"><b>&#128205; The national map</b><span>Every club in American soccer.</span></a>`;
+  });
 }
 
 let legendSort = 'apps';
@@ -2398,7 +2410,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260821b')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260821d')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -2412,8 +2424,8 @@ async function screenUpsets() {
     + '<p class="note">Loading Open Cup results&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _opencup || fetch('data/opencup_matches.json?v=20260821b').then(r => r.json()),
-      import('./opencup.js?v=20260821b'),
+      _opencup || fetch('data/opencup_matches.json?v=20260821d').then(r => r.json()),
+      import('./opencup.js?v=20260821d'),
     ]);
     _opencup = data;
     if (!location.hash.startsWith('#/upsets')) return;
@@ -2440,9 +2452,9 @@ async function screenCollege(team) {
   view.innerHTML = '<p class="note">Loading college results&hellip;</p>';
   try {
     const [data, map, mod] = await Promise.all([
-      _college || fetch('data/espn_college_2025.json?v=20260821b').then(r => r.json()),
-      _collegeMap || fetch('data/espn_club_map.json?v=20260821b').then(r => r.json()),
-      import('./college.js?v=20260821b'),
+      _college || fetch('data/espn_college_2025.json?v=20260821d').then(r => r.json()),
+      _collegeMap || fetch('data/espn_club_map.json?v=20260821d').then(r => r.json()),
+      import('./college.js?v=20260821d'),
     ]);
     _college = data; _collegeMap = map;
     if (!location.hash.startsWith('#/college')) return;
@@ -2972,7 +2984,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', following: 'Following', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player', notfound: 'Page not found' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player', notfound: 'Page not found' };
 /* Hash routes people actually type or get sent. Every one of these was a
    plausible guess at a real screen that silently rendered the map instead —
    a stranger following a link from a DM concluded the site was broken rather
@@ -2983,7 +2995,8 @@ const ROUTE_ALIAS = {
   claim: 'clubtools', 'claim-club': 'clubtools', 'club-tools': 'clubtools',
   sponsorships: 'advertise', sponsorship: 'advertise', sponsor: 'advertise',
   ads: 'advertise', advertising: 'advertise',
-  follow: 'following', favorites: 'following', favourites: 'following',
+  following: 'myxi', follow: 'myxi', favorites: 'myxi', favourites: 'myxi',
+  'my-xi': 'myxi', myxi11: 'myxi', home: 'myxi',
   leagues: 'tiers', pyramid: 'tiers', 'national-table': 'table',
   rankings: 'table', standings: 'table', 'open-tryouts': 'tryouts',
   prices: 'pricing', plans: 'pricing', terms: 'legal', privacy: 'legal',
@@ -3028,7 +3041,7 @@ function route() {
   view.scrollTop = 0;
   /* these views read ROSTERS synchronously; any view shows followed-player
      chips, so a user with player favorites also waits for the module */
-  const needsRosters = ['club', 'player', 'following', 'table'].includes(parts[0])
+  const needsRosters = ['club', 'player', 'myxi', 'table'].includes(parts[0])
     || favs().players.length > 0;
   if (needsRosters) { loadRosters().then(dispatch, dispatch); return; }
   dispatch();
@@ -3038,7 +3051,8 @@ function route() {
   else if (parts[0] === 'tryouts') screenTryouts();
   else if (parts[0] === 'pricing') screenPricing();
   else if (parts[0] === 'advertise') screenAdvertise();
-  else if (parts[0] === 'following') screenFollowing();
+  /* #/myxi/i/<payload> is a shared XI arriving from another device */
+  else if (parts[0] === 'myxi') screenMyXi(parts[1] === 'i' ? decodeURIComponent(parts.slice(2).join('/')) : null);
   else if (parts[0] === 'legends') screenLegends(parts[1]);
   else if (parts[0] === 'cups') screenCups();
   else if (parts[0] === 'nt') screenNationalTeams(parts[1], parts[2]);
@@ -3046,7 +3060,10 @@ function route() {
   else if (parts[0] === 'freeagent') screenFASample();
   else if (parts[0] === 'clubtools') screenClubTools();
   else if (parts[0] === 'legal') screenLegal();
-  else if (parts[0] === 'table') screenTable();
+  else if (parts[0] === 'table') {
+    if (parts[1] === 'players' || parts[1] === 'clubs') tableMode = parts[1];
+    screenTable();
+  }
   else if (parts[0] === 'matches') screenMatches(parts[1]);
   else if (parts[0] === 'tools') screenTools();
   else if (parts[0] === 'player-sim') screenPlayerSim();
@@ -3099,9 +3116,27 @@ document.getElementById('themebtn')?.addEventListener('click', () => {
     paint();
   });
 }
+/* "Make this your home": browsers give no API to set a homepage, so the
+   honest version is the app's own start screen. manifest start_url is /app
+   with no hash, so an installed launch lands here with an empty hash and
+   this is the only place the preference can apply. A typed or shared URL
+   always carries its own hash and is never overridden. */
+if (!location.hash) {
+  let home = null;
+  try { home = (JSON.parse(localStorage.getItem('rxi-myxi')) || {}).home === true ? '#/myxi' : null; } catch {}
+  if (home) location.replace(home);
+}
+/* Chrome fires beforeinstallprompt once, early — My XI's install button
+   renders long after, so the event is parked here for it to claim. */
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); window.__rxiInstall = e; });
+addEventListener('appinstalled', () => { window.__rxiInstall = null; });
+
 addEventListener('hashchange', route);
 route();
 wireSearch();
 { const cc = document.getElementById('clubcount'); if (cc) cc.textContent = CLUBS.filter(c => !c.h).length.toLocaleString(); }
 /* prefetch rosters once the first view has painted so club taps are instant */
-(self.requestIdleCallback || (f => setTimeout(f, 2000)))(() => loadRosters().catch(() => {}));
+(self.requestIdleCallback || (f => setTimeout(f, 2000)))(() => {
+  loadRosters().catch(() => {});
+  myxiMod().catch(() => {});
+});
