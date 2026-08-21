@@ -42,7 +42,7 @@ footer{color:var(--dim);font-size:.8rem;padding:18px clamp(20px,5vw,64px) 40px;b
 <h2>What stays on your device</h2>
 <p>Your preferences and activity live in your browser's own storage and never leave your device:</p>
 <ul>
-<li><b>Follows and favorites</b> — the clubs you follow are kept in local browser storage (IndexedDB) so your feed works. We have no copy.</li>
+<li><b>Follows and favorites</b> — the clubs you follow are kept in local browser storage (IndexedDB) so your feed works. We have no copy. Following a club sends us nothing; it is only if you separately type your email into the club-results form that we hold an address at all.</li>
 <li><b>Display settings</b> — theme and layout choices are kept in local storage.</li>
 <li><b>Offline cache</b> — a service worker caches app files on your device so the app loads fast and works offline.</li>
 </ul>
@@ -52,6 +52,8 @@ footer{color:var(--dim);font-size:.8rem;padding:18px clamp(20px,5vw,64px) 40px;b
 <section>
 <h2>What we store when you submit a form</h2>
 <p>If you join the updates list or send a request through a form, we store exactly what the form sends so we can reply and let you know when things ship: the date and time, the kind of request, and — as provided by you — your name, email address, role, state, and message, plus which page the form was on and your browser's user-agent string (spam control). This lives in a private database with access limited to the project owner. It is used only to respond to you and send the updates you asked for. It is never sold, shared, or used for advertising.</p>
+<p>One of those forms is the club-results email: if you ask for a club's results by email we store your address, that club's name, the date, your confirmation that you are 13 or older, and your user-agent. It is used to send you that club's results and nothing else. Every email carries an unsubscribe link, and unsubscribing is honored immediately.</p>
+<p><b>Age.</b> The club-results email is for people 13 and older, and we ask you to confirm that before we store anything. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has given us an address, write to us and it comes out same-day.</p>
 <p>To be removed or to see what we hold for your email address, write to <a href="mailto:hello@rankedxi.com?subject=Remove%20me">hello@rankedxi.com</a> — removal is honored within 7 days, no questions asked.</p>
 </section>
 

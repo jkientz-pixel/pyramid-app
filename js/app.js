@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260820j';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260820j';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260820k';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260820k';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260820j')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260820k')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260820j';
+const BUILDV = '20260820k';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -965,7 +965,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260820j')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260820k')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -974,8 +974,8 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa, usl2] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260820j'), grab('data/wire_asa.json?v=20260820j'),
-    grab('data/wire_usl2.json?v=20260820j')]);
+    grab('data/wire_npsl.json?v=20260820k'), grab('data/wire_asa.json?v=20260820k'),
+    grab('data/wire_usl2.json?v=20260820k')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' }))
     .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })))
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
@@ -1001,7 +1001,7 @@ async function hydrateWireHook() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260820j')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260820k')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1099,8 +1099,8 @@ async function screenPlayerSim() {
     + '<p class="note">Loading player data&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _coachData || fetch('data/coach_players.json?v=20260820j').then(r => r.json()),
-      import('./player-sim.js?v=20260820j'),
+      _coachData || fetch('data/coach_players.json?v=20260820k').then(r => r.json()),
+      import('./player-sim.js?v=20260820k'),
     ]);
     _coachData = data;
     if (!location.hash.startsWith('#/player-sim')) return;   // routed away mid-load
@@ -1118,8 +1118,8 @@ async function screenRadar() {
     + '<p class="note">Loading player data&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _radarData || fetch('data/player_radar.json?v=20260820j').then(r => r.json()),
-      import('./playerradar.js?v=20260820j'),
+      _radarData || fetch('data/player_radar.json?v=20260820k').then(r => r.json()),
+      import('./playerradar.js?v=20260820k'),
     ]);
     _radarData = data;
     if (!location.hash.startsWith('#/radar')) return;   // routed away mid-load
@@ -1135,7 +1135,7 @@ async function screenShots() {
   view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
     + '<p class="note">Loading&hellip;</p>';
   try {
-    const mod = await import('./shotmap.js?v=20260820j');
+    const mod = await import('./shotmap.js?v=20260820k');
     if (!location.hash.startsWith('#/shots')) return;
     mod.render(view);
   } catch (e) {
@@ -1290,7 +1290,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260820j')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260820k')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1510,11 +1510,87 @@ const isFav = (type, id) => favs()[type].includes(id);
 function favBtn(type, id) {
   return `<button class="favbtn${isFav(type, id) ? ' on' : ''}" data-ft="${type}" data-fi="${id}">${isFav(type, id) ? '&#9733; Following' : '&#9734; Follow'}</button>`;
 }
+/* Email capture at the one moment intent is highest — the visitor has just
+   followed a club. Three things this deliberately does NOT do:
+     · it does not gate the Follow. Tapping Follow still writes nothing but
+       localStorage, which is what the privacy page promises. The prompt
+       appears after the fact and the club is already followed either way.
+     · it does not nag. Subscribe or dismiss once and it never returns.
+     · it does not fire for players. Player follows are a different consent
+       question and route through the claim flow instead.
+   COPPA attaches to collecting personal information from under-13s, so the
+   13-or-older confirmation is required here and re-checked server-side. */
+const FOLLOWMAIL_KEY = 'rxi-followmail';
+function followMailState() {
+  try { return JSON.parse(localStorage.getItem(FOLLOWMAIL_KEY)) || {}; } catch { return {}; }
+}
+function followMailSet(patch) {
+  try {
+    localStorage.setItem(FOLLOWMAIL_KEY, JSON.stringify({ ...followMailState(), ...patch }));
+  } catch { /* private mode — the prompt simply reappears next visit */ }
+}
+
+function followMailForm(clubId, clubName) {
+  const el = document.createElement('div');
+  el.className = 'followmail';
+  el.innerHTML = `
+    <b>Get ${esc(clubName)} results by email</b>
+    <p>Their next result, rating move and rank change — nothing else. No account, and we
+       never pass your address on.</p>
+    <form class="joinform fmform" novalidate>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+      <label class="sr-only" for="fm-email">Email address</label>
+      <input id="fm-email" type="email" name="email" placeholder="you@email.com" required autocomplete="email" maxlength="254">
+      <label class="ck"><input type="checkbox" name="age13" value="1"> I'm 13 or older</label>
+      <button type="submit" class="joinbtn">Email me their results</button>
+    </form>
+    <p class="join-msg fm-msg" role="status" aria-live="polite"></p>
+    <button type="button" class="fm-no">No thanks</button>`;
+  const msg = el.querySelector('.fm-msg');
+  el.querySelector('.fm-no').addEventListener('click', () => {
+    followMailSet({ dismissed: true });
+    el.remove();
+  });
+  el.querySelector('.fmform').addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const email = String(f.get('email') || '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      msg.textContent = 'A real email address is required.'; return;
+    }
+    if (!f.get('age13')) {
+      msg.textContent = 'You need to be 13 or older to get emails.'; return;
+    }
+    msg.textContent = 'Saving\u2026';
+    try {
+      const r = await fetch('/api/follow', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email, club: clubId, age13: true,
+          source: 'follow-btn', website: f.get('website') })
+      });
+      const d = await r.json();
+      if (d.ok) {
+        followMailSet({ done: true });
+        el.innerHTML = `<b>You're on the list for ${esc(clubName)}.</b>
+          <p>First email goes out with the next Wire. Every one has an unsubscribe link.</p>`;
+      } else {
+        msg.textContent = d.error || 'Could not save right now — please try again.';
+      }
+    } catch { msg.textContent = 'Could not save right now — please try again.'; }
+  });
+  return el;
+}
+
 function wireFav() {
   view.querySelectorAll('.favbtn').forEach(b => b.addEventListener('click', () => {
     const on = favToggle(b.dataset.ft, b.dataset.fi);
     b.classList.toggle('on', on);
     b.innerHTML = on ? '&#9733; Following' : '&#9734; Follow';
+    const st = followMailState();
+    if (!on || b.dataset.ft !== 'clubs' || st.done || st.dismissed) return;
+    if (b.parentNode.querySelector('.followmail')) return;
+    const c = CLUBS[clubIdx(b.dataset.fi)];
+    if (c) b.insertAdjacentElement('afterend', followMailForm(c.id, c.n));
   }));
 }
 let _pcache = {};
@@ -1563,35 +1639,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260820j')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260820k')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260820j')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260820k')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260820j')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260820k')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260820j')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260820k')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260820j')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260820k')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1644,7 +1720,7 @@ function verifyBadge(c) {
    here has to think about the minors policy. */
 let _usl2apps = null;
 async function usl2Apps() {
-  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260820j')
+  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260820k')
     .then(r => r.json()).catch(() => ({}));
   return _usl2apps;
 }
@@ -2022,7 +2098,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260820j')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260820k')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -2322,7 +2398,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260820j')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260820k')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -2336,8 +2412,8 @@ async function screenUpsets() {
     + '<p class="note">Loading Open Cup results&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _opencup || fetch('data/opencup_matches.json?v=20260820j').then(r => r.json()),
-      import('./opencup.js?v=20260820j'),
+      _opencup || fetch('data/opencup_matches.json?v=20260820k').then(r => r.json()),
+      import('./opencup.js?v=20260820k'),
     ]);
     _opencup = data;
     if (!location.hash.startsWith('#/upsets')) return;
@@ -2364,9 +2440,9 @@ async function screenCollege(team) {
   view.innerHTML = '<p class="note">Loading college results&hellip;</p>';
   try {
     const [data, map, mod] = await Promise.all([
-      _college || fetch('data/espn_college_2025.json?v=20260820j').then(r => r.json()),
-      _collegeMap || fetch('data/espn_club_map.json?v=20260820j').then(r => r.json()),
-      import('./college.js?v=20260820j'),
+      _college || fetch('data/espn_college_2025.json?v=20260820k').then(r => r.json()),
+      _collegeMap || fetch('data/espn_club_map.json?v=20260820k').then(r => r.json()),
+      import('./college.js?v=20260820k'),
     ]);
     _college = data; _collegeMap = map;
     if (!location.hash.startsWith('#/college')) return;
@@ -2798,7 +2874,7 @@ function screenLegal() {
     <div class="linkrow">
       <a href="${fixNotice}"><b>File a correction notice</b></a>
     </div>
-    <p style="margin-top:14px"><b>Privacy.</b> No accounts, no tracking cookies, no analytics identifiers. Your favorites live in your browser's local storage and never leave your device. Email us and we see your email — that's it.</p>
+    <p style="margin-top:14px"><b>Privacy.</b> No accounts, no tracking cookies, no analytics identifiers, and no advertising pixels. Your favorites live in your browser's local storage and never leave your device — following a club sends us nothing. The only address we hold is one you typed in yourself: a form, or the club-results email (13 and older, unsubscribe in every send). We never sell or share it. <a href="/privacy">Full privacy policy</a>.</p>
     <p><b>Predictions.</b> Probabilities are statistical estimates for entertainment and analysis. They are not betting advice, and Ranked XI takes no wagers and no commissions on anything. Ratings and probabilities describe teams and organizations, never individual athletes.</p>
     <p><b>Illustrative data.</b> Anything wearing the dashed <span class="dtag">Illustrative</span> tag demonstrates the product, not the club. Real results, standings, and stats always say what they're based on.</p>
     <p><b>Youth clubs.</b> Youth league entries are organization listings only — name, league, and location from what the league publishes. Youth clubs carry no ratings, no fixtures, and no player data, and we never publish personal information about minors.</p>

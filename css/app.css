@@ -155,6 +155,13 @@ button.pickq{text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;t
 .join-msg{min-height:1.3em;margin:6px 0 0;font-size:.84rem;color:var(--ink-dim)}
 .joinform label.ck{flex:1 1 100%;display:flex;gap:8px;align-items:center;font-size:.84rem;color:var(--ink-dim)}
 .joinform label.ck input{min-width:0;padding:0;flex:0 0 auto}
+/* follow-email capture: reads as a quiet aside under the Follow button, not
+   a modal — it must never feel like the price of following a club */
+.followmail{border:1px solid var(--accent);border-radius:12px;background:var(--raise);padding:12px 14px;margin:4px 0 10px}
+.followmail b{font-size:.9rem;display:block}
+.followmail p{color:var(--ink-dim);font-size:.82rem;margin:.35em 0 .6em}
+.followmail .joinform{margin:0}
+.followmail .fm-no{display:block;margin:8px auto 0;background:none;border:0;color:var(--ink-dim);font:inherit;font-size:.78rem;text-decoration:underline;cursor:pointer;padding:4px}
 .tryform input{flex:1 1 130px}
 .tryform input[name=link],.tryform input[name=details]{flex:2 1 100%}
 .claimform input[name=note]{flex:2 1 100%}
