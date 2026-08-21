@@ -17,8 +17,11 @@ python3 scripts/gen_club_pages.py
 
 python3 scripts/preflight.py
 
-git diff --quiet app.html index.html js/app.js sw.js || \
-  git commit -m "chore: cache-bust v${NEWV}" -- app.html index.html js/app.js sw.js
+# bump_version.py owns the list of files that carry the token; ask it rather
+# than keeping a second copy that can fall behind.
+VERSIONED="$(python3 scripts/bump_version.py --list)"
+git diff --quiet -- $VERSIONED || \
+  git commit -m "chore: cache-bust v${NEWV}" -- $VERSIONED
 git push
 
 # Ship a staged tree, not the repo root. `wrangler pages deploy .` uploaded the

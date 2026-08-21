@@ -24,6 +24,19 @@ src = open(os.path.join(ROOT, 'js', 'data.js')).read()
 clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', src, re.S).group(1))
 leagues = json.loads(re.search(r'export const LEAGUES=(\{.*?\});', src, re.S).group(1))
 
+# /js/* is served immutable for a year, so an untokened script URL here would
+# pin every returning visitor to the copy of rxi-a.js they first cached — on
+# the club/league/state pages, which are most of the site. Read the token
+# deploy.sh just stamped into app.html rather than restating it.
+def _asset_token():
+    m = re.search(r'2026\d{4}[a-z]', open(os.path.join(ROOT, 'app.html')).read())
+    if not m:
+        raise SystemExit('FATAL: no cache-bust token in app.html')
+    return m.group(0)
+
+
+VTOKEN = _asset_token()
+
 # state/province labels are parsed out of app.js rather than restated here:
 # a second copy would drift the moment a province is added (Canada layer)
 _app = open(os.path.join(ROOT, 'js', 'app.js')).read()
@@ -100,7 +113,7 @@ def head(title, desc, path, ld, og_img=f'{SITE}/og.png', tw='summary'):
 <meta name="twitter:card" content="{tw}">
 <script type="application/ld+json">{ld}</script>
 <style>{STYLE}</style>
-<script src="/js/rxi-a.js" defer></script>
+<script src="/js/rxi-a.js?v={VTOKEN}" defer></script>
 </head><body>"""
 
 

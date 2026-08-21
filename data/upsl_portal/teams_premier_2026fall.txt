@@ -1,0 +1,182 @@
+732442|AFC Academy|NY|/teams/afc-academy-732442/
+52997|Acoreano Sport|CA|/teams/acoreano-sport-52997/
+504599|Alaska Rush|AK|/teams/arctic-rush-504599/
+648844|Alaska Thorns FC|AK|/teams/alaska-thorns-fc-648844/
+554873|Alaska Timbers|AK|/teams/alaska-timbers-554873/
+58717|Alexandria Reds|VA|/teams/alexandria-reds-58717/
+170010|Alexandria United FC|VA|/teams/alexandria-united-fc-170010/
+576793|Allstars FC|NJ|/teams/allstars-fc-576793/
+817524|Angelus|GA|/teams/angelus-817524/
+154734|Arizona Arsenal SC|AZ|/teams/arizona-arsenal-sc-154734/
+285579|Arlington SA|VA|/teams/olympiacos-dc-285579/
+187020|Ash Gold FC|TN|/teams/ash-gold-fc-187020/
+36920|Atlanta United Academy|GA|/teams/atlanta-united-academy-36920/
+62816|Barca Residency Academy USA|AZ|/teams/barca-residency-academy-usa-62816/
+385761|Beech Street Football Club|NH|/teams/beech-street-football-club-385761/
+244325|Benfica Residential Academy|FL|/teams/benfica-residential-academy-244325/
+212446|Berber City FC|IL|/teams/berber-city-fc-212446/
+87240|Blue Ridge FC|VA|/teams/blue-ridge-fc-87240/
+425611|Bold City SC|FL|/teams/bold-city-sc-425611/
+607565|Boston Emeralds FC|MA|/teams/boston-emeralds-fc-607565/
+994233|Boston Street FC|MA|/teams/boston-street-fc-994233/
+252062|Bowleys Athletic|MD|/teams/bowleys-athletic-252062/
+762278|Brevard SC|FL|/teams/brevard-sc-762278/
+754777|Briar United FC|NC|/teams/briar-united-fc-754777/
+12320|Bridge Sports Club|MD|/teams/bridge-sports-club-12320/
+587381|Brockton FC United|MA|/teams/brockton-fc-united-587381/
+431110|Brooklyn FC U20|NY|/teams/brooklyn-fc-u20-431110/
+259745|Cape Coral City FC|FL|/teams/cape-coral-city-fc-259745/
+759204|Capital City Islanders|PA|/teams/capital-city-islanders-759204/
+929904|Capitol City Futbol Club|CA|/teams/capitol-city-futbol-club-929904/
+312400|Cardinal FC|VA|/teams/cardinal-fc-312400/
+971962|Central Valley Premier FC|CA|/teams/central-valley-premier-fc-971962/
+59457|Chattanooga FC II|TN|/teams/chattanooga-fc-ii-59457/
+390327|Chattanooga Kaistorms FC|TN|/teams/chattanooga-kaistorms-fc-390327/
+287656|Chattanooga Red Wolves II|TN|/teams/chattanooga-red-wolves-2-287656/
+430068|Chicago Nation FC|IL|/teams/chicago-nation-fc-430068/
+815137|Chicago Strikers|IL|/teams/chicago-strikers-815137/
+431019|Cincy Nation FC|OH|/teams/cincinnati-football-club-431019/
+521621|Clearwater Chargers SC|FL|/teams/clearwater-chargers-sc-521621/
+312129|Cleveland United FC|TN|/teams/cleveland-united-fc-312129/
+838328|Columbus Astray|OH|/teams/columbus-astray-838328/
+470955|Columbus Crew Academy|OH|/teams/columbus-crew-academy-470955/
+118038|Columbus Rough Riders FC|OH|/teams/columbus-rough-riders-fc-118038/
+60668|Combine Academy|NC|/teams/combine-academy-60668/
+651229|Cook Inlet SC|AK|/teams/cook-inlet-sc-651229/
+97135|Corpus Christi FC-Sharks|TX|/teams/corpus-christi-fc-sharks-97135/
+887299|Cosmos B|NJ|/teams/cosmos-b-887299/
+321698|Cumberland Valley SC|PA|/teams/cumberland-valley-sc-321698/
+540451|Cyclones FC|FL|/teams/cyclones-fc-540451/
+197873|DC Hyper|DC|/teams/dc-hyper-197873/
+590978|Dade County FC|FL|/teams/dade-county-fc-590978/
+149179|Doradus FC|VA|/teams/doradus-fc-149179/
+973683|Eagles FC|UT|/teams/eagles-fc-973683/
+164477|East County Revolution FC|CA|/teams/east-county-revolution-fc-164477/
+822213|El Paso Locomotive FC|TX|/teams/el-paso-locomotive-fc-822213/
+41552|Emory FC|VA|/teams/emory-fc-41552/
+280203|Empire SC|FL|/teams/empire-sc-280203/
+558872|Ethos Academy Chicago|IL|/teams/ethos-academy-chicago-558872/
+331231|FC America Spurs|FL|/teams/fc-america-spurs-331231/
+325617|FC Bandera|CA|/teams/fc-bandera-325617/
+169279|FC Columbus Elite|GA|/teams/fc-columbus-elite-169279/
+477400|FC Miami City|FL|/teams/fc-miami-city-477400/
+942996|FC Tampa Rangers|FL|/teams/fc-tampa-rangers-942996/
+746047|FC Ulqini|NY|/teams/fc-ulqini-746047/
+37493|Fairbanks SC|AK|/teams/fairbanks-sc-37493/
+502882|Fall River FC|MA|/teams/fall-river-fc-502882/
+396795|Fc 1974 Libertyville|IL|/teams/fc-1974-libertyville-396795/
+289899|Five Rivers SC|NJ|/teams/five-rivers-sc-289899/
+553240|Florida Badgers FC|FL|/teams/florida-badgers-fc-553240/
+108774|Florida Celtic SC|FL|/teams/florida-celtic-sc-108774/
+824961|Florida Elite FC ESP|FL|/teams/florida-elite-fc-esp-824961/
+463488|Florida Elite FC Wolves|FL|/teams/florida-elite-fc-wolves-463488/
+22420|Florida Premier FC|FL|/teams/florida-premier-fc-22420/
+702614|Florida Soccer Soldiers|FL|/teams/florida-soccer-soldiers-702614/
+745489|Force Football Club|IL|/teams/force-football-club-745489/
+149983|Fut Ohio SC|OH|/teams/fut-ohio-sc-149983/
+961468|GZS Bridgeport FC|CT|/teams/gzs-bridgeport-fc-961468/
+788152|Gastonia City FC|NC|/teams/gastonia-city-fc-788152/
+910478|Gastonia FC Strikers|NC|/teams/gastonia-fc-strikers-910478/
+361498|Georgia Athletic Soccer Club|GA|/teams/georgia-athletic-soccer-club-361498/
+120703|Georgia Impact SC|GA|/teams/georgia-impact-sc-120703/
+540539|Georgia Revolution FC|GA|/teams/georgia-revolution-fc-540539/
+665010|Giuseppe Rossi Academy|NJ|/teams/giuseppe-rossi-academy-665010/
+218773|Grove United|VA|/teams/grove-united-218773/
+445019|Haiti United FC|NY|/teams/haiti-united-fc-445019/
+260506|Harbor City FC|FL|/teams/harbor-city-fc-260506/
+831745|Hartford Athletic II|CT|/teams/hartford-athletic-ii-831745/
+607926|Hub City Football Club|MD|/teams/hub-city-football-club-607926/
+132142|Icemen FC|AK|/teams/icemen-fc-132142/
+328567|Indy Gladiators SC|IN|/teams/indy-gladiators-sc-328567/
+808553|Inter City FC|FL|/teams/inter-city-fc-808553/
+475939|Inter Miami CF Academy|FL|/teams/inter-miami-cf-academy-475939/
+140424|Inter Miami CF U17|FL|/teams/inter-miami-cf-u17-140424/
+863853|Ironbound SCP|NJ|/teams/ironbound-scp-863853/
+910573|Jaguars United FC|MA|/teams/jaguars-united-fc-910573/
+185132|Jax United FC|FL|/teams/jax-united-fc-185132/
+603315|KS Wisloka Chicago|IL|/teams/ks-wisloka-chicago-603315/
+13080|Kalonji Pro-Profile|GA|/teams/kalonji-pro-profile-13080/
+656576|Kings FC|AZ|/teams/kings-fc-656576/
+300088|Kissimmee SC|FL|/teams/kissimmee-sc-300088/
+200719|L.A. Wolves FC|CA|/teams/l-a-wolves-fc-200719/
+895026|LAX FC|GA|/teams/lax-fc-895026/
+778330|LSA Mustangs|GA|/teams/lsa-mustangs-778330/
+403601|Lake Country United FC|GA|/teams/lake-country-united-fc-403601/
+83086|Lakeland United|FL|/teams/lakeland-united-83086/
+54419|Latin Power FC|NY|/teams/latin-power-fc-54419/
+350294|Lions Football Club|OH|/teams/lions-football-club-350294/
+726779|Los Toros|VA|/teams/los-toros-726779/
+517339|MSI|MD|/teams/msi-517339/
+36876|Mako Soccer Club|FL|/teams/psl-united-sc-36876/
+950870|Manu Ledesma Academy|OH|/teams/manu-ledesma-academy-950870/
+405246|Mat-Su United FC|AK|/teams/mat-su-united-fc-405246/
+66603|Miami FC U20|FL|/teams/miami-fc-u20-66603/
+857637|Mint Hill FC|NC|/teams/mint-hill-fc-857637/
+928397|MoCo 1776 FC|MD|/teams/moco-1776-fc-928397/
+223028|Montverde Academy|FL|/teams/montverde-academy-223028/
+526906|Morazan ZLA FC|TN|/teams/morazan-zla-fc-526906/
+640263|NY Empire FC|NY|/teams/ny-empire-fc-640263/
+894326|NY Renegades FC|NY|/teams/ny-renegades-fc-894326/
+929108|Neuse River FA|NC|/teams/neuse-river-fa-929108/
+54624|New Jersey Alliance FC|NJ|/teams/new-jersey-alliance-fc-54624/
+231208|New York Braveheart SC|NY|/teams/new-york-braveheart-sc-231208/
+621471|Next Level Soccer Premier|AZ|/teams/next-level-soccer-premier-621471/
+470618|Northern Virginia United|VA|/teams/northern-virginia-united-470618/
+250253|O.F.C Barca|FL|/teams/o-f-c-barca-250253/
+976796|PCU Pelicans SC|FL|/teams/pcu-pelicans-sc-976796/
+664333|Pachuca Georgia|GA|/teams/pachuca-georgia-664333/
+17896|Palm Beach Flames SC|FL|/teams/palm-beach-flames-sc-17896/
+401433|Parkland Soccer Club|FL|/teams/parkland-soccer-club-401433/
+220316|Pennsylvania Classics|PA|/teams/pennsylvania-classics-220316/
+75688|Pennsylvania Prime FC|PA|/teams/pennsylvania-prime-fc-75688/
+53567|Philadelphia Lone Star FC|PA|/teams/philadelphia-lone-star-fc-53567/
+149039|Philadelphia Union III|PA|/teams/philadelphia-union-iii-149039/
+241834|Plantation FC|FL|/teams/plantation-fc-241834/
+48875|Potros FC|GA|/teams/potros-fc-48875/
+819774|Pre-College DA|NC|/teams/pre-college-da-819774/
+883283|Premier FC|UT|/teams/premier-fc-883283/
+850141|Pro-finish Management FC|NC|/teams/pro-finish-management-fc-850141/
+219207|RSL Arizona|AZ|/teams/rsl-arizona-219207/
+506555|Red Hook Football Club|NY|/teams/red-hook-football-club-506555/
+223381|Red Top Soccer Club|GA|/teams/red-top-soccer-club-223381/
+684867|Reno FC|NV|/teams/reno-fc-684867/
+278004|Rosedale Soccer Club|NY|/teams/rosedale-soccer-club-278004/
+214513|Round Lake Evolution FC|IL|/teams/round-lake-evolution-fc-214513/
+613009|Rush Select Academy|FL|/teams/rush-select-academy-613009/
+24578|SCU Heat|SC|/teams/scu-heat-24578/
+388235|SFC 1924|NJ|/teams/sfc-1924-388235/
+818612|SWFL SC|FL|/teams/swfl-sc-818612/
+919336|Sacramento United|CA|/teams/sacramento-united-919336/
+503098|San Juan SC|CA|/teams/san-juan-sc-503098/
+56740|San Leandro United FC|CA|/teams/san-leandro-united-fc-56740/
+942234|Sanford Area Soccer League|NC|/teams/sanford-area-soccer-league-942234/
+954388|Sarasota Paradise|FL|/teams/sarasota-paradise-954388/
+998816|Scenic City Soccer Club|TN|/teams/scenic-city-soccer-club-998816/
+842990|Shark Coast FC|FL|/teams/shark-coast-fc-842990/
+478282|Shock City FC|FL|/teams/shock-city-fc-478282/
+662624|Skyline Elite SC|VA|/teams/skyline-elite-sc-662624/
+234105|Soccer Saves Lives FC|GA|/teams/soccer-saves-lives-fc-234105/
+344422|Sonoma Valley United FC|CA|/teams/sonoma-valley-united-fc-344422/
+842651|South Carolina Surf|SC|/teams/south-carolina-surf-842651/
+394330|South Coast Union|MA|/teams/south-coast-union-394330/
+862853|Southern Indiana FC|IN|/teams/southern-indiana-fc-862853/
+855006|Southern Indiana Guardians FC|IN|/teams/southern-indiana-guardians-fc-855006/
+281532|Southwest Florida Premier|FL|/teams/southwest-florida-premier-281532/
+852171|State 48 Sporting FC|AZ|/teams/state-48-sporting-fc-852171/
+844293|Stetson FA|FL|/teams/stetson-fa-844293/
+331118|Strikers Miami First Team|FL|/teams/strikers-miami-first-team-331118/
+734732|TBD FC|WI|/teams/tbd-fc-734732/
+709235|Tar Devils SC|NC|/teams/tar-devils-sc-709235/
+119228|Team Boca|FL|/teams/team-boca-119228/
+514627|Tennessee Tempo FC|TN|/teams/tennessee-tempo-fc-514627/
+392935|Tennessee United SC|TN|/teams/tennessee-united-sc-392935/
+786400|UFA Lawrenceville|GA|/teams/ufa-lawrenceville-786400/
+750267|UMA FC|GA|/teams/uma-fc-750267/
+624719|Unations FC|MA|/teams/unations-fc-624719/
+250100|Union SC|NJ|/teams/union-sc-250100/
+834569|United Africa Boston FC|MA|/teams/united-africa-boston-fc-834569/
+993266|Urbana City FC|IL|/teams/urbana-city-fc-993266/
+36268|Valley 559 FC|CA|/teams/valley-559-fc-36268/
+616358|Virginia Dream FC|VA|/teams/virginia-dream-fc-616358/
+108935|West Florida Flames|FL|/teams/west-florida-flames-108935/
+48640|YorkPA FC|PA|/teams/yorkpa-fc-48640/

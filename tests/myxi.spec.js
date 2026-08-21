@@ -35,7 +35,13 @@ test('empty My XI explains itself and offers a way in', async ({ page }) => {
   await expect(page.locator('#view a[href="#/table"]').first()).toBeVisible();
   await expect(page.locator('#view a[href="#/map"]').first()).toBeVisible();
   // and the app's own accounts are reachable from here
-  await expect(page.locator('.mx-social a')).toHaveCount(3);
+  await expect(page.locator('.mx-social a')).toHaveCount(4);
+  for (const href of ['https://x.com/rankedxi',
+                      'https://www.instagram.com/rankedxi.app/',
+                      'https://www.facebook.com/rankedxi',
+                      'https://www.linkedin.com/company/rankedxi/']) {
+    await expect(page.locator(`.mx-social a[href="${href}"]`)).toHaveCount(1);
+  }
   expect(errors).toEqual([]);
 });
 
