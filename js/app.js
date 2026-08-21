@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260820l';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260820l';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260820m';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260820m';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260820l')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260820m')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260820l';
+const BUILDV = '20260820m';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -965,7 +965,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260820l')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260820m')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -974,8 +974,8 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa, usl2] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260820l'), grab('data/wire_asa.json?v=20260820l'),
-    grab('data/wire_usl2.json?v=20260820l')]);
+    grab('data/wire_npsl.json?v=20260820m'), grab('data/wire_asa.json?v=20260820m'),
+    grab('data/wire_usl2.json?v=20260820m')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' }))
     .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })))
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
@@ -1001,7 +1001,7 @@ async function hydrateWireHook() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260820l')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260820m')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1099,8 +1099,8 @@ async function screenPlayerSim() {
     + '<p class="note">Loading player data&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _coachData || fetch('data/coach_players.json?v=20260820l').then(r => r.json()),
-      import('./player-sim.js?v=20260820l'),
+      _coachData || fetch('data/coach_players.json?v=20260820m').then(r => r.json()),
+      import('./player-sim.js?v=20260820m'),
     ]);
     _coachData = data;
     if (!location.hash.startsWith('#/player-sim')) return;   // routed away mid-load
@@ -1118,8 +1118,8 @@ async function screenRadar() {
     + '<p class="note">Loading player data&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _radarData || fetch('data/player_radar.json?v=20260820l').then(r => r.json()),
-      import('./playerradar.js?v=20260820l'),
+      _radarData || fetch('data/player_radar.json?v=20260820m').then(r => r.json()),
+      import('./playerradar.js?v=20260820m'),
     ]);
     _radarData = data;
     if (!location.hash.startsWith('#/radar')) return;   // routed away mid-load
@@ -1135,7 +1135,7 @@ async function screenShots() {
   view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
     + '<p class="note">Loading&hellip;</p>';
   try {
-    const mod = await import('./shotmap.js?v=20260820l');
+    const mod = await import('./shotmap.js?v=20260820m');
     if (!location.hash.startsWith('#/shots')) return;
     mod.render(view);
   } catch (e) {
@@ -1290,7 +1290,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260820l')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260820m')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1639,35 +1639,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260820l')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260820m')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260820l')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260820m')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260820l')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260820m')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260820l')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260820m')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260820l')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260820m')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1720,7 +1720,7 @@ function verifyBadge(c) {
    here has to think about the minors policy. */
 let _usl2apps = null;
 async function usl2Apps() {
-  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260820l')
+  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260820m')
     .then(r => r.json()).catch(() => ({}));
   return _usl2apps;
 }
@@ -2098,7 +2098,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260820l')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260820m')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -2398,7 +2398,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260820l')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260820m')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -2412,8 +2412,8 @@ async function screenUpsets() {
     + '<p class="note">Loading Open Cup results&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _opencup || fetch('data/opencup_matches.json?v=20260820l').then(r => r.json()),
-      import('./opencup.js?v=20260820l'),
+      _opencup || fetch('data/opencup_matches.json?v=20260820m').then(r => r.json()),
+      import('./opencup.js?v=20260820m'),
     ]);
     _opencup = data;
     if (!location.hash.startsWith('#/upsets')) return;
@@ -2440,9 +2440,9 @@ async function screenCollege(team) {
   view.innerHTML = '<p class="note">Loading college results&hellip;</p>';
   try {
     const [data, map, mod] = await Promise.all([
-      _college || fetch('data/espn_college_2025.json?v=20260820l').then(r => r.json()),
-      _collegeMap || fetch('data/espn_club_map.json?v=20260820l').then(r => r.json()),
-      import('./college.js?v=20260820l'),
+      _college || fetch('data/espn_college_2025.json?v=20260820m').then(r => r.json()),
+      _collegeMap || fetch('data/espn_club_map.json?v=20260820m').then(r => r.json()),
+      import('./college.js?v=20260820m'),
     ]);
     _college = data; _collegeMap = map;
     if (!location.hash.startsWith('#/college')) return;
@@ -2874,7 +2874,7 @@ function screenLegal() {
     <div class="linkrow">
       <a href="${fixNotice}"><b>File a correction notice</b></a>
     </div>
-    <p style="margin-top:14px"><b>Privacy.</b> No accounts, no tracking cookies, no analytics identifiers, and no advertising pixels. Your favorites live in your browser's local storage and never leave your device — following a club sends us nothing. The only address we hold is one you typed in yourself: a form, or the club-results email (13 and older, unsubscribe in every send). We never sell or share it. <a href="/privacy">Full privacy policy</a>.</p>
+    <p style="margin-top:14px"><b>Privacy.</b> No accounts, no tracking cookies, no third-party trackers and no advertising pixels. We count pageviews on our own servers without recording who you are, and we honor Do Not Track. Your favorites live in your browser's local storage and never leave your device — following a club sends us nothing. The only address we hold is one you typed in yourself: a form, or the club-results email (13 and older, unsubscribe in every send). We never sell or share it. <a href="/privacy">Full privacy policy</a>.</p>
     <p><b>Predictions.</b> Probabilities are statistical estimates for entertainment and analysis. They are not betting advice, and Ranked XI takes no wagers and no commissions on anything. Ratings and probabilities describe teams and organizations, never individual athletes.</p>
     <p><b>Illustrative data.</b> Anything wearing the dashed <span class="dtag">Illustrative</span> tag demonstrates the product, not the club. Real results, standings, and stats always say what they're based on.</p>
     <p><b>Youth clubs.</b> Youth league entries are organization listings only — name, league, and location from what the league publishes. Youth clubs carry no ratings, no fixtures, and no player data, and we never publish personal information about minors.</p>

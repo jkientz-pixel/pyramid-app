@@ -49,7 +49,9 @@ a{{color:#7FD1A8}}table{{border-collapse:collapse;width:100%;max-width:720px;mar
 td,th{{padding:7px 10px;border-bottom:1px solid #24352C;text-align:left;font-size:.92rem}}
 th{{color:#8FA598;text-transform:uppercase;font-size:.72rem;letter-spacing:.06em}}
 .cta{{display:inline-block;background:#C77F1E;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;margin:10px 0}}
-p.note{{color:#8FA598;font-size:.85rem;max-width:60em}}</style></head><body>
+p.note{{color:#8FA598;font-size:.85rem;max-width:60em}}</style>
+<script src="/js/rxi-a.js" defer></script>
+</head><body>
 <p><a href="/">Rank XI</a> · updated {today}</p>
 <h1>{html.escape(title.split('—')[0].strip())}</h1>
 <p>{html.escape(desc)}</p>
