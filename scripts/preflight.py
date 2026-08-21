@@ -6,7 +6,7 @@ ship a broken or stale build. Checks:
      and sw.js VERSION (drift = users served stale code);
   3. every data/*.json the app fetches exists and parses.
 """
-import json, re, pathlib, sys
+import json, re, pathlib, subprocess, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 fail = []
@@ -219,15 +219,36 @@ try:
     # /methodology were invisible in our own numbers. A page is only measured if
     # it carries the tag, and the tag is only updatable if it carries the token
     # (/js/* is served immutable for a year).
+    # gen_seo_pages.py rewrites some pages every deploy, so the token in a
+    # committed copy is always stale — those are checked via the generator's
+    # template instead. Pages bump_version.py maintains are NOT exempt even
+    # when the generator also touches them: it bakes counts into index.html
+    # and app.html, and exempting those would have skipped the two pages that
+    # carry the most traffic.
+    _versioned = set(subprocess.run(
+        [sys.executable, str(ROOT / 'scripts' / 'bump_version.py'), '--list'],
+        capture_output=True, text=True, check=True).stdout.split())
+    generated = set(_re.findall(r"'([a-z0-9-]+\.html)'",
+                                (ROOT / 'scripts' / 'gen_seo_pages.py').read_text())) - _versioned
+    # INFRA is excluded from the sitemap checks above because those pages are
+    # not landing pages — but they are still pages people load, so they are
+    # measured here.
+    measured = staged | INFRA
     untagged, untokened = [], []
-    for f in sorted(staged):
+    for f in sorted(measured):
         src = (ROOT / f).read_text() if (ROOT / f).exists() else ''
         if not src:
             continue
         if 'rxi-a.js' not in src:
             untagged.append(f)
-        elif not _re.search(r'rxi-a\.js\?v=2026\d{4}[a-z]', src):
+        elif f not in generated and not _re.search(r'rxi-a\.js\?v=2026\d{4}[a-z]', src):
             untokened.append(f)
+    for s in ('scripts/gen_seo_pages.py', 'scripts/gen_club_pages.py'):
+        body = (ROOT / s).read_text()
+        if 'rxi-a.js' not in body:
+            untagged.append(s)
+        elif 'rxi-a.js?v={VTOKEN}' not in body:
+            untokened.append(s)
     if untagged:
         fail.append('shipped pages carry no analytics ping: ' + ', '.join(untagged)
                     + ' (add <script src="/js/rxi-a.js?v=TOKEN" defer> and list the'
@@ -237,7 +258,8 @@ try:
                     + ' (/js/* is immutable for a year — returning visitors would'
                     + ' never receive a fixed rxi-a.js)')
     if not untagged and not untokened:
-        print(f'  every staged page reports pageviews ({len(staged)} checked)')
+        print(f'  every staged page reports pageviews ({len(measured)} checked, '
+              f'{len(generated)} via generator)')
 except Exception as e:
     fail.append(f'deploy staging check: {e}')
 
