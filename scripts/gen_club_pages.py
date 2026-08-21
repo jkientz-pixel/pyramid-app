@@ -99,7 +99,9 @@ def head(title, desc, path, ld, og_img=f'{SITE}/og.png', tw='summary'):
 <meta property="og:image" content="{og_img}"><meta property="og:type" content="website">
 <meta name="twitter:card" content="{tw}">
 <script type="application/ld+json">{ld}</script>
-<style>{STYLE}</style></head><body>"""
+<style>{STYLE}</style>
+<script src="/js/rxi-a.js" defer></script>
+</head><body>"""
 
 
 FOOT = ('<p class="note">Every Ranked XI rating labels its basis. Cross-league placement is '
