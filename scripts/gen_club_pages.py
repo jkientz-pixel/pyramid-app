@@ -302,5 +302,51 @@ sm = ['<?xml version="1.0" encoding="UTF-8"?>',
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'] + \
      [f'  <url><loc>{html.escape(u)}</loc></url>' for u in urls] + ['</urlset>']
 open(os.path.join(ROOT, 'sitemap.xml'), 'w').write('\n'.join(sm) + '\n')
+# ---- crawl path from the landing page into everything above ----
+# Search Console said it plainly on 2026-08-20: for /club/atlanta-united,
+# "URL is unknown to Google — no referring sitemaps detected, referring page:
+# none detected, last crawl: N/A". The homepage was indexed and linked only to
+# /app, /methodology and /privacy, so all 3,336 generated pages formed an
+# island with no way in. They are well connected to each other — state pages
+# list their clubs, club pages list rivals and their league — which is exactly
+# why one entry point is enough to open the whole tree.
+#
+# Generated rather than hand-written so the links can only ever name pages this
+# script actually produced. A hand-maintained list drifts and starts pointing at
+# 404s, which is worse for crawling than no list.
+def _chips(items):
+    return '\n'.join(f'<li><a href="{h}">{html.escape(n)}</a></li>' for h, n in items)
+
+
+leagues_in_browse = [(lg_href(g), lg_label(g)) for g in lg_ids]
+states_in_browse = [(f'/state/{s}', PLACE_NAME[s.upper()]) for s in st_ids]
+
+browse = f"""<!-- browse:start -->
+<nav class="browse" aria-label="Browse every club">
+<h2 class="disp">Browse every club</h2>
+<p>Every rated club has a page of its own — rating, national position,
+nearest rivals. Start from a league or a state.</p>
+<section>
+<h3>By league</h3>
+<ul>
+{_chips(leagues_in_browse)}
+</ul>
+</section>
+<section>
+<h3>By state</h3>
+<ul>
+{_chips(states_in_browse)}
+</ul>
+</section>
+</nav>
+<!-- browse:end -->"""
+
+idx_path = os.path.join(ROOT, 'index.html')
+idx = open(idx_path).read()
+start, end = idx.index('<!-- browse:start -->'), idx.index('<!-- browse:end -->') + len('<!-- browse:end -->')
+open(idx_path, 'w').write(idx[:start] + browse + idx[end:])
+print(f'index.html browse block: {len(leagues_in_browse)} leagues + '
+      f'{len(states_in_browse)} states linked')
+
 print(f'club pages: {len(rated)} · league pages: {len(lg_ids)} · '
       f'state pages: {len(st_ids)} · sitemap urls: {len(urls)}')
