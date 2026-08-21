@@ -2,7 +2,7 @@
    Keeps the app installable + resilient offline without ever serving
    stale data when the network is up. Bump VERSION with each deploy
    (use scripts/bump_version.py — it moves every file's token together). */
-const VERSION = 'rankxi-v20260821m';
+const VERSION = 'rankxi-v20260821n';
 /* Crests live in a cache that survives deploys (re-downloading ~26 MB per
    deploy is not acceptable). They are NOT strictly immutable — pixel-level
    fixes (strip_crest_bg.py) change content under the same filename — so crest
