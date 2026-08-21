@@ -1494,6 +1494,12 @@ function staffFor(c) {
   const real = COACHES[rosterKey(c)];
   return real ? [{ tag: 'HC', name: real.name, role: real.role, age: '' }] : [];
 }
+/* Accounts load lazily like every other non-core module: the app must paint
+   and be usable before anything auth-shaped is fetched, and a visitor who
+   never signs in should never pay for the code that signs people in. */
+let _acct;
+const acctMod = () => _acct ||= import('./account.js?v=20260821o');
+
 const favs = () => { try {
   const raw = localStorage.getItem('pyr-favs');
   const f = JSON.parse(raw) || { clubs: [], players: [] };
@@ -1507,7 +1513,13 @@ const favs = () => { try {
 function favToggle(type, id) {
   const f = favs(); const arr = f[type]; const i = arr.indexOf(id);
   if (i >= 0) arr.splice(i, 1); else arr.push(id);
-  localStorage.setItem('pyr-favs', JSON.stringify(f)); return i < 0;
+  localStorage.setItem('pyr-favs', JSON.stringify(f));
+  /* localStorage is written first and the caller re-renders off it, so the
+     star is already lit before this fires. The account push is a debounced
+     backup that is allowed to fail — starring a club must never wait on, or
+     be undone by, the network. Logged out this is a no-op. */
+  acctMod().then(m => m.touchAccount()).catch(() => {});
+  return i < 0;
 }
 const isFav = (type, id) => favs()[type].includes(id);
 function favBtn(type, id) {
@@ -1538,7 +1550,7 @@ function followMailForm(clubId, clubName) {
   el.className = 'followmail';
   el.innerHTML = `
     <b>Get ${esc(clubName)} results by email</b>
-    <p>Their next result, rating move and rank change — nothing else. No account, and we
+    <p>Their next result, rating move and rank change — nothing else. No sign-in needed, and we
        never pass your address on.</p>
     <form class="joinform fmform" novalidate>
       <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
@@ -2886,7 +2898,7 @@ function screenLegal() {
     <div class="linkrow">
       <a href="${fixNotice}"><b>File a correction notice</b></a>
     </div>
-    <p style="margin-top:14px"><b>Privacy.</b> No accounts, no tracking cookies, no third-party trackers and no advertising pixels. We count pageviews on our own servers without recording who you are, and we honor Do Not Track. Your favorites live in your browser's local storage and never leave your device — following a club sends us nothing. The only address we hold is one you typed in yourself: a form, or the club-results email (13 and older, unsubscribe in every send). We never sell or share it. <a href="/privacy">Full privacy policy</a>.</p>
+    <p style="margin-top:14px"><b>Privacy.</b> No tracking cookies, no third-party trackers and no advertising pixels. We count pageviews on our own servers without recording who you are, and we honor Do Not Track. Your favorites live in your browser's local storage and following a club still sends us nothing; we hold a copy only if you choose to save your XI to an email address, which is optional, passwordless and off by default. The only address we hold is one you typed in yourself: a form, the club-results email, or that saved XI (13 and older, unsubscribe in every send). We never sell or share it. <a href="/privacy">Full privacy policy</a>.</p>
     <p><b>Predictions.</b> Probabilities are statistical estimates for entertainment and analysis. They are not betting advice, and Ranked XI takes no wagers and no commissions on anything. Ratings and probabilities describe teams and organizations, never individual athletes.</p>
     <p><b>Illustrative data.</b> Anything wearing the dashed <span class="dtag">Illustrative</span> tag demonstrates the product, not the club. Real results, standings, and stats always say what they're based on.</p>
     <p><b>Youth clubs.</b> Youth league entries are organization listings only — name, league, and location from what the league publishes. Youth clubs carry no ratings, no fixtures, and no player data, and we never publish personal information about minors.</p>
@@ -3140,3 +3152,19 @@ wireSearch();
   loadRosters().catch(() => {});
   myxiMod().catch(() => {});
 });
+
+/* Restore the signed-in session and pull down anything another device added.
+   Deliberately after route(): first paint comes off localStorage and must not
+   wait for a round trip. When the merge actually changed this browser's XI and
+   the visitor is looking at My XI, re-route so they see it arrive rather than
+   a stale list. Any failure here leaves the app exactly as it was logged out. */
+acctMod()
+  .then(m => m.bootAccount())
+  .then(r => {
+    /* Re-render My XI when the session lands, not only when the merge moved
+       picks. An empty XI renders no account panel at all while the session is
+       unknown, so a signed-in visitor with nothing picked yet would otherwise
+       never see that they are signed in. */
+    if (r && (r.changed || r.signedIn) && location.hash.startsWith('#/myxi')) route();
+  })
+  .catch(() => {});

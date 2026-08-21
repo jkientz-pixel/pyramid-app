@@ -783,6 +783,23 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 .mx-state select{flex:1;min-width:0;font:inherit;padding:8px 10px;border-radius:10px;
   border:1px solid var(--line);background:var(--raise);color:var(--ink)}
 
+/* The account panel shares the card treatment of its neighbours, but the
+   resting (signed-out) state gets the accent border: it is the one block on
+   this screen asking for something, and a card identical to the two around it
+   read as another piece of furniture in testing. Signed in, it drops back to
+   the plain line — the ask is done. */
+.mx-acct{background:var(--raise);border:1px solid var(--accent);border-radius:12px;padding:13px 15px;margin:8px 0 0}
+.mx-acct.saved{border-color:var(--line)}
+.mx-acct b{display:block;font-size:.92rem;line-height:1.35}
+.mx-acct .joinform{margin:10px 0 0}
+.mx-acct .joinbtn{background:var(--accent);color:#fff;font-weight:700;border:0;border-radius:10px;
+  padding:12px;font:inherit;cursor:pointer;width:100%;margin-top:10px}
+.mx-acct .joinform .joinbtn{margin-top:0}
+.mx-acct .joinbtn[disabled]{opacity:.55;cursor:default}
+.mx-linkbtn{display:inline-block;background:none;border:0;color:var(--ink-dim);font:inherit;font-size:.78rem;
+  text-decoration:underline;cursor:pointer;padding:6px 0;margin-right:14px}
+.mx-linkbtn:hover,.mx-linkbtn:focus-visible{color:var(--accent)}
+
 .mx-home,.mx-share,.mx-import{background:var(--raise);border:1px solid var(--line);border-radius:12px;
   padding:12px 14px;margin:8px 0 0}
 .mx-import{border-color:var(--accent);margin:12px 0 0}

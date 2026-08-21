@@ -11,7 +11,11 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 # pages below have no assets of their own — they carry the token only for the
 # analytics ping — but leaving them out would freeze that script at whatever
 # token they shipped with, and /js/* is served immutable for a year.
-FILES = [ROOT / 'app.html', ROOT / 'index.html', ROOT / 'js' / 'app.js', ROOT / 'sw.js'] + [
+FILES = [ROOT / 'app.html', ROOT / 'index.html', ROOT / 'js' / 'app.js', ROOT / 'sw.js',
+         # js modules that import other js modules with a ?v= token. /js/* is
+         # served immutable for a year, so a token inside one of these that
+         # never gets rewritten pins every visitor to that build forever.
+         ROOT / 'js' / 'myxi.js', ROOT / 'js' / 'account.js'] + [
     ROOT / n for n in ('privacy.html', 'methodology.html', 'shots.html',
                        'radar.html', 'player-simulator.html', '404.html')]
 TOKEN = re.compile(r'2026\d{4}[a-z]')
