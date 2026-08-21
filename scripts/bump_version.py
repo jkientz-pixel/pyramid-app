@@ -14,7 +14,14 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 FILES = [ROOT / 'app.html', ROOT / 'index.html', ROOT / 'js' / 'app.js', ROOT / 'sw.js'] + [
     ROOT / n for n in ('privacy.html', 'methodology.html', 'shots.html',
                        'radar.html', 'player-simulator.html', '404.html')]
-TOKEN = re.compile(r'2026\d{4}[a-z]')
+TOKEN = re.compile(r'2026\\d{4}[a-z]')
+
+# deploy.sh asks for this list rather than keeping its own copy: a file
+# bumped here but not committed there leaves a partial bump behind, and the
+# next run aborts on 'files already disagree on version'.
+if '--list' in sys.argv:
+    print(' '.join(str(f.relative_to(ROOT)) for f in FILES))
+    sys.exit(0)
 
 cur = set()
 for f in FILES:
