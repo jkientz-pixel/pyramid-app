@@ -3,8 +3,12 @@
    Four design rules this screen is built on, in the order they were nearly
    broken while writing it:
 
-   1. NOT a social profile. No accounts, no public pages, no identity. Every
-      pick lives in this browser. The share link carries picks, never a person.
+   1. NOT a social profile. There is now an account (js/account.js), but it
+      buys exactly one thing: the same XI on every device, surviving Safari's
+      seven-day eviction of local storage. It is still not an identity — no
+      public page, no profile, no password, nothing another visitor can see.
+      Signing in remains optional and every pick is still written locally
+      first, so this screen works logged out exactly as it always did.
    2. Never an empty room. A UPSL or USASA side — exactly the club nobody else
       covers, and the reason someone would come here daily — can go weeks with
       no fixture and no result. So every card must be computable from data
@@ -18,6 +22,11 @@
       never deletes a follow the visitor made somewhere else.
 */
 
+import {
+  extras, setExtras, setHome, isHome, encodePicks, decodePicks,
+} from './picks.js?v=20260822b';
+import { accountBlock, wireAccount, accountState, touchAccount } from './account.js?v=20260822b';
+
 /* Ranked XI's own accounts. Facebook is deliberately absent: the page exists
    but its canonical URL was never recorded, and a dead social link on the
    home tab is worse than one fewer icon. Add it here when the URL is known. */
@@ -28,7 +37,10 @@ const SOCIALS = [
   { id: 'li', label: 'LinkedIn', handle: 'Ranked XI', url: 'https://www.linkedin.com/company/rankedxi/' },
 ];
 
-const PICKS_KEY = 'rxi-myxi';   /* extras + home preference — app.js reads .home at boot */
+/* Pick storage and the share-payload codec moved to js/picks.js when accounts
+   arrived: the sync engine needs the identical encoder, and two copies of a
+   format that has to round-trip against itself is how a share link and a
+   synced account quietly stop agreeing. */
 const SEEN_KEY = 'rxi-myxi-seen';
 const XI = 11;
 /* Deltas are "since your last visit", not "since the last render". Re-opening
@@ -39,45 +51,10 @@ const VISIT_MS = 6 * 36e5;
 const readJson = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch { return d; } };
 const writeJson = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private mode */ } };
 
-const store = () => readJson(PICKS_KEY, {});
-const extras = () => { const p = store().picks; return Array.isArray(p) ? p : []; };
-const setExtras = picks => writeJson(PICKS_KEY, { ...store(), picks });
-const setHome = on => writeJson(PICKS_KEY, { ...store(), home: !!on });
-const isHome = () => store().home === true;
-
 const hasExtra = (t, id) => extras().some(p => p.t === t && p.id === id);
 const toggleExtra = (t, id) => setExtras(hasExtra(t, id)
   ? extras().filter(p => !(p.t === t && p.id === id))
   : extras().concat([{ t, id }]));
-
-/* ---- share payload -------------------------------------------------------
-   Picks travel as one opaque token in the hash so an XI survives a new phone
-   without an account existing. Player ids contain "/", which would split the
-   route, so they are re-joined on "~". Nothing here identifies a person. */
-function encodePicks(f, ex) {
-  const parts = [];
-  if (f.clubs.length) parts.push('c:' + f.clubs.join(','));
-  if (f.players.length) parts.push('p:' + f.players.map(x => x.replace('/', '~')).join(','));
-  const of = t => ex.filter(p => p.t === t).map(p => p.id);
-  for (const [tag, t] of [['g', 'league'], ['s', 'state'], ['n', 'nt']]) {
-    const v = of(t); if (v.length) parts.push(tag + ':' + v.join(','));
-  }
-  return parts.join('|');
-}
-function decodePicks(payload) {
-  const out = { clubs: [], players: [], extras: [] };
-  const clean = s => String(s || '').split(',').map(x => x.trim()).filter(x => /^[A-Za-z0-9_~-]+$/.test(x)).slice(0, 60);
-  for (const seg of String(payload || '').split('|')) {
-    const i = seg.indexOf(':'); if (i < 0) continue;
-    const tag = seg.slice(0, i), vals = clean(seg.slice(i + 1));
-    if (tag === 'c') out.clubs = vals;
-    else if (tag === 'p') out.players = vals.map(v => v.replace('~', '/'));
-    else if (tag === 'g') out.extras.push(...vals.map(id => ({ t: 'league', id })));
-    else if (tag === 's') out.extras.push(...vals.map(id => ({ t: 'state', id })));
-    else if (tag === 'n') out.extras.push(...vals.map(id => ({ t: 'nt', id })));
-  }
-  return out;
-}
 
 /* ---- movement snapshot ---------------------------------------------------
    The one card that makes this page worth reopening: what moved while you
@@ -190,14 +167,15 @@ export async function render(view, ctx) {
            your state, a national team — and this becomes the only page you need.
            Rank moves, next fixtures and the results that matter to <i>you</i>, in one place.
            The rest of the app stays exactly where it is.</p>
-        <p class="note">No account, no sign-up. Picks live in this browser and never leave it
-           unless you share them yourself.</p>
+        <p class="note">No sign-up needed to start. Picks live in this browser — save them
+           to an email when you want them on your phone too.</p>
       </div>
       <div class="kicker" style="margin-top:16px">Start here</div>
       <a class="fa-card" href="#/table"><b>&#9733; Follow a club</b><span>Open any club and tap Follow &mdash; the national table is the fastest way to find one.</span></a>
       <a class="fa-card" href="#/table/players"><b>&#9733; Follow a player</b><span>The player table, ranked across every league &mdash; open one and tap Follow.</span></a>
       <a class="fa-card" href="#/map"><b>&#128205; Find your local side</b><span>4,000+ clubs on the map. Somebody near you is on it.</span></a>
       ${addBlock()}
+      ${accountState().signedIn ? accountBlock() : ''}
       ${socialBlock()}`;
     wire();
     return;
@@ -215,10 +193,12 @@ export async function render(view, ctx) {
     + extrasBlock()
     + `<div id="mx-wire"></div>`
     + homeBlock()
+    + accountBlock()
     + shareBlock()
     + socialBlock()
-    + `<p class="note" style="margin-top:16px">My XI is stored in this browser only &mdash; no account, no profile, nothing public.
-        Clearing site data clears your picks, so use <b>Share my XI</b> above to carry them to another device.
+    + `<p class="note" style="margin-top:16px">${accountState().signedIn
+          ? 'My XI is saved to your email and synced to every device you sign in on. Still no profile, still nothing public.'
+          : 'My XI is stored in this browser only &mdash; clearing site data clears your picks, and iPhones clear it for you after a week away. <b>Save my XI</b> above fixes both.'}
         <a href="#/about" style="color:var(--accent)">About &amp; methodology</a> &middot;
         <a href="#/legal" style="color:var(--accent)">Terms &amp; privacy</a></p>`;
 
@@ -434,17 +414,26 @@ export async function render(view, ctx) {
 
   /* ---- events ----------------------------------------------------------- */
   function wire() {
+    /* The account panel owns its own handlers and re-renders itself in place
+       for anything that only changes the sign-in step, so typing an email does
+       not repaint the whole screen underneath the cursor. It gets `refresh`
+       for the one case that does change the page: a sign-in whose merge pulled
+       picks in from another device. */
+    wireAccount(view, refresh);
+
     view.querySelector('#mxadd')?.addEventListener('click', e => {
       const b = e.target.closest('[data-add]'); if (!b) return;
       toggleExtra(b.dataset.add, b.dataset.id);
+      touchAccount();
       refresh();
     });
     view.querySelector('#mxstate')?.addEventListener('change', e => {
       const v = e.target.value;
       setExtras(extras().filter(p => p.t !== 'state').concat(v ? [{ t: 'state', id: v }] : []));
+      touchAccount();
       refresh();
     });
-    view.querySelector('#mxhome')?.addEventListener('change', e => setHome(e.target.checked));
+    view.querySelector('#mxhome')?.addEventListener('change', e => { setHome(e.target.checked); touchAccount(); });
 
     view.querySelector('#mxshare')?.addEventListener('click', async () => {
       const msg = view.querySelector('#mxsharemsg');
@@ -471,6 +460,7 @@ export async function render(view, ctx) {
       const have = extras();
       const add = inbound.extras.filter(p => !have.some(q => q.t === p.t && q.id === p.id));
       if (add.length) setExtras(have.concat(add));
+      touchAccount();
       location.replace('#/myxi');
     });
 

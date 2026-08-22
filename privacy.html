@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy Policy — Ranked XI</title>
-<meta name="description" content="Ranked XI's privacy policy: no accounts, no tracking, no ads. What the signup form stores, what stays on your device, and how to get anything removed.">
+<meta name="description" content="Ranked XI's privacy policy: no tracking, no ads, an optional passwordless account. What we store, what stays on your device, and how to get anything removed.">
 <link rel="canonical" href="https://www.rankedxi.com/privacy">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
 <style>
@@ -27,7 +27,7 @@ a{color:var(--accent)}
 footer{color:var(--dim);font-size:.8rem;padding:18px clamp(20px,5vw,64px) 40px;border-top:1px solid var(--line);max-width:820px;margin:0 auto}
 </style>
 <!-- first-party pageview ping; see js/rxi-a.js -->
-<script src="/js/rxi-a.js?v=20260822a" defer></script>
+<script src="/js/rxi-a.js?v=20260822b" defer></script>
 </head>
 <body>
 <header><a class="mark disp" href="/">Ranked XI</a><a href="/app" style="color:var(--dim);font-size:.85rem">Open the app →</a></header>
@@ -37,14 +37,14 @@ footer{color:var(--dim);font-size:.8rem;padding:18px clamp(20px,5vw,64px) 40px;b
 
 <section>
 <h2>The short version</h2>
-<p>No accounts, no ads, no tracking cookies, no third-party trackers, and nothing is ever sold or shared. We count pageviews ourselves, without recording who you are. The only personal information Ranked XI holds is what you type into a signup or request form — and one email removes it.</p>
+<p>No ads, no tracking cookies, no third-party trackers, and nothing is ever sold or shared. We count pageviews ourselves, without recording who you are. There is one optional account — you can save your My XI picks to an email address so they follow you between devices — and it is off unless you ask for it. The only personal information Ranked XI holds is what you type into a form or that account, and one email removes it.</p>
 </section>
 
 <section>
 <h2>What stays on your device</h2>
-<p>Your preferences and activity live in your browser's own storage and never leave your device:</p>
+<p>Your preferences and activity live in your browser's own storage. They leave your device only if you choose to save your XI to an email address (see below); otherwise we never see them:</p>
 <ul>
-<li><b>Follows and favorites</b> — the clubs you follow are kept in local browser storage (IndexedDB) so your feed works. We have no copy. Following a club sends us nothing; it is only if you separately type your email into the club-results form that we hold an address at all.</li>
+<li><b>Follows and favorites</b> — the clubs you follow are kept in local browser storage so your feed works. Following a club still sends us nothing. We hold a copy only if you have chosen to save your XI to an email address (below), or if you typed your email into the club-results form.</li>
 <li><b>Display settings</b> — theme and layout choices are kept in local storage.</li>
 <li><b>Offline cache</b> — a service worker caches app files on your device so the app loads fast and works offline.</li>
 </ul>
@@ -55,7 +55,12 @@ footer{color:var(--dim);font-size:.8rem;padding:18px clamp(20px,5vw,64px) 40px;b
 <h2>What we store when you submit a form</h2>
 <p>If you join the updates list or send a request through a form, we store exactly what the form sends so we can reply and let you know when things ship: the date and time, the kind of request, and — as provided by you — your name, email address, role, state, and message, plus which page the form was on and your browser's user-agent string (spam control). This lives in a private database with access limited to the project owner. It is used only to respond to you and send the updates you asked for. It is never sold, shared, or used for advertising.</p>
 <p>One of those forms is the club-results email: if you ask for a club's results by email we store your address, that club's name, the date, your confirmation that you are 13 or older, and your user-agent. It is used to send you that club's results and nothing else. Every email carries an unsubscribe link, and unsubscribing is honored immediately.</p>
-<p><b>Age.</b> The club-results email is for people 13 and older, and we ask you to confirm that before we store anything. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has given us an address, write to us and it comes out same-day.</p>
+<h3>Saving your XI (optional account)</h3>
+<p>My XI works with no account at all, and that is the default. The picks live in your browser and we never see them. But browser storage is per-device, and Safari deletes it after about a week without a visit — so an XI built on a phone can disappear, and an XI built on a laptop never reaches the phone. Saving your XI fixes both.</p>
+<p>If you choose to save it, we store: your email address, the list of things you picked, the date you signed up and last used it, your confirmation that you are 13 or older, and the browser user-agent of each device you sign in on. That is the entire record. There is no password — signing in sends a six-digit code to your email — so there is no password of yours for us to lose. There is no profile, no public page, no way for another visitor to see your XI or know you have an account.</p>
+<p>Your pick list is stored as an opaque code that we do not read or analyze. We do not use it for advertising, we do not sell or share it, and we do not email you because of it — club result emails are a separate opt-in.</p>
+<p>Signing out on a device ends that device's session and leaves your picks on it. To delete the saved copy entirely, or to see everything we hold for your address, write to <a href="mailto:hello@rankedxi.com?subject=Delete%20my%20XI">hello@rankedxi.com</a>.</p>
+<p><b>Age.</b> Saving your XI and the club-results email are both for people 13 and older, and we ask you to confirm that before we store anything. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has given us an address, write to us and it comes out same-day.</p>
 <p>To be removed or to see what we hold for your email address, write to <a href="mailto:hello@rankedxi.com?subject=Remove%20me">hello@rankedxi.com</a> — removal is honored within 7 days, no questions asked.</p>
 </section>
 
@@ -91,7 +96,7 @@ or Global Privacy Control signal, we count nothing at all.</p>
 
 <section>
 <h2>Children and minors</h2>
-<p>Ranked XI is a reference site, not a social product, and collects no personal information from anyone unless they submit a form. Our data policy for youth soccer content is stricter than the law requires: youth clubs appear as organization listings only, with no ratings and no player data, and we never publish personal information about minors.</p>
+<p>Ranked XI is a reference site, not a social product, and collects no personal information from anyone unless they submit a form or choose to save their XI. Our data policy for youth soccer content is stricter than the law requires: youth clubs appear as organization listings only, with no ratings and no player data, and we never publish personal information about minors.</p>
 </section>
 
 <section>
