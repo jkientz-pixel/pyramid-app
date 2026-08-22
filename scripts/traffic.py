@@ -68,6 +68,22 @@ table('Referrers', q(
     f"FROM hits WHERE d >= {SINCE} GROUP BY ref ORDER BY hits DESC LIMIT 20"),
     ['ref', 'hits', 'visitors'])
 
+# Channels. Referrers alone under-report social badly: platforms strip the
+# header, and a tap inside the Facebook or Reddit app arrives as "(direct)".
+# The campaign tag is carried only on a visit's landing pageview, so the whole
+# session is attributed by joining back to it on sid -- otherwise every page
+# someone reads after arriving would count as untagged.
+table('Channels (tagged links)', q(
+    f"SELECT COALESCE(s.src,'(untagged)') src, "
+    f"       COUNT(DISTINCT h.sid) sessions, "
+    f"       COUNT(DISTINCT h.vid) visitors, "
+    f"       COUNT(*) hits "
+    f"FROM hits h "
+    f"LEFT JOIN (SELECT sid, MIN(src) src FROM hits "
+    f"           WHERE src IS NOT NULL GROUP BY sid) s ON s.sid = h.sid "
+    f"WHERE h.d >= {SINCE} GROUP BY 1 ORDER BY sessions DESC, hits DESC LIMIT 20"),
+    ['src', 'sessions', 'visitors', 'hits'])
+
 table('Countries', q(
     f"SELECT COALESCE(ctry,'??') ctry, COUNT(DISTINCT vid) visitors "
     f"FROM hits WHERE d >= {SINCE} GROUP BY ctry ORDER BY visitors DESC LIMIT 10"),

@@ -53,6 +53,26 @@
   var sid = stored('sessionStorage', 'rxi_s', { minted: false });
   var fresh = first.minted;
 
+  /* The one query parameter we read, and the only one the server will store.
+     Social platforms strip or rewrite referrers — an iPhone tapping a link
+     inside the Facebook or Reddit app arrives looking like direct traffic — so
+     without this there is no way to tell which channel produced a visit.
+
+     Deliberately narrow: `utm_source` and nothing else. No utm_term, no
+     utm_content, no arbitrary query string. The shape below is checked again
+     server-side against a fixed list of our own channels, so a stray or
+     hand-crafted parameter is dropped rather than recorded. This identifies a
+     channel, never a person, and nothing here can follow anyone off the site. */
+  var SRC_OK = /^[a-z][a-z0-9_-]{0,23}$/;
+  var src = (function () {
+    try {
+      var m = /[?&]utm_source=([^&#]*)/.exec(location.search);
+      if (!m) return null;
+      var v = decodeURIComponent(m[1]).toLowerCase();
+      return SRC_OK.test(v) ? v : null;
+    } catch (e) { return null; }
+  })();
+
   var last = '';
   function send() {
     var path = location.pathname + (location.hash.indexOf('#/') === 0 ? location.hash : '');
@@ -64,9 +84,14 @@
       r: document.referrer || null,
       v: vid,
       s: sid,
-      n: fresh
+      n: fresh,
+      c: src
     });
     fresh = false; /* only the very first pageview of a new visitor counts as new */
+    /* Only the landing pageview carries the source. Later hits in the same
+       visit are tied to it by `sid`, so reporting attributes the whole session
+       without stamping the campaign tag on every row. */
+    src = null;
 
     try {
       if (navigator.sendBeacon &&

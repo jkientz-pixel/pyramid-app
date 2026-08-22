@@ -62,14 +62,38 @@ const refHost = (raw, selfHost) => {
 };
 
 /* Accepts "/club/atlanta-united" and SPA routes like "#/wire". Anything with a
-   query string is truncated at the '?' — tracking parameters are noise here and
-   some of them carry campaign identifiers we have no reason to keep. */
+   query string is still truncated at the '?' — arbitrary tracking parameters
+   are noise here and some of them carry identifiers we have no reason to keep.
+   The single exception is the campaign source, handled by srcOf below, which
+   arrives as its own field rather than riding along in the path. */
 const cleanPath = raw => {
   const v = clip(raw, 200);
   if (!v) return null;
   const p = v.split('?')[0].split('&')[0];
   if (!/^[/#][\w\-/#.]*$/.test(p)) return null;
   return p;
+};
+
+/* Which channel sent this visit. An allowlist rather than free text, because
+   the alternative is storing whatever any third party decides to append to our
+   URLs — which is the thing this site does not do.
+
+   The question it answers is the one the Sep 2026 iOS decision rides on: social
+   platforms strip referrers, so a tap from inside the Facebook or Reddit app is
+   indistinguishable from someone typing the address. Without this every channel
+   reads as "direct" and the marketing spend cannot be judged at all.
+
+   Anything not on this list becomes null: it is not recorded, not stored as
+   "other", and never echoed back. */
+const SOURCES = new Set([
+  'x', 'facebook', 'instagram', 'linkedin', 'reddit', 'youtube', 'tiktok',
+  'threads', 'bluesky', 'discord', 'email', 'newsletter', 'bio', 'qr', 'press',
+]);
+const srcOf = raw => {
+  const v = clip(raw, 24);
+  if (!v) return null;
+  const s = v.toLowerCase();
+  return SOURCES.has(s) ? s : null;
 };
 
 const ID_RE = /^[a-z0-9]{8,32}$/;
@@ -97,8 +121,8 @@ export async function onRequestPost({ request, env }) {
 
   try {
     await env.DB.prepare(
-      `INSERT INTO hits (ts, d, path, ref, vid, sid, plat, ctry, fresh)
-       VALUES (?,?,?,?,?,?,?,?,?)`
+      `INSERT INTO hits (ts, d, path, ref, vid, sid, plat, ctry, fresh, src)
+       VALUES (?,?,?,?,?,?,?,?,?,?)`
     ).bind(
       now.toISOString(),
       now.toISOString().slice(0, 10),
@@ -108,7 +132,8 @@ export async function onRequestPost({ request, env }) {
       sid,
       plat,
       clip(request.headers.get('cf-ipcountry'), 2),
-      body.n === true ? 1 : 0
+      body.n === true ? 1 : 0,
+      srcOf(body.c)
     ).run();
   } catch {
     /* A dropped pageview is not worth surfacing to the visitor, and retrying
