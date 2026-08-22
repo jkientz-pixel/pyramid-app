@@ -24,8 +24,8 @@
 
 import {
   extras, setExtras, setHome, isHome, encodePicks, decodePicks,
-} from './picks.js?v=20260822b';
-import { accountBlock, wireAccount, accountState, touchAccount } from './account.js?v=20260822b';
+} from './picks.js?v=20260822c';
+import { accountBlock, wireAccount, accountState, touchAccount } from './account.js?v=20260822c';
 
 /* Ranked XI's own accounts. Facebook is deliberately absent: the page exists
    but its canonical URL was never recorded, and a dead social link on the
