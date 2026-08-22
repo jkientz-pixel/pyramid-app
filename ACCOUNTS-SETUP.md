@@ -7,6 +7,22 @@ sender, two secrets, and a deploy. Until then the code is inert and harmless —
 pitch, and a visitor who tries to sign in is told sign-in isn't switched on yet.
 My XI keeps working on localStorage exactly as it does today.
 
+## Just run the wizard
+
+```sh
+./scripts/setup-accounts.sh
+```
+
+It walks all of it — opens each page, tells you exactly what to click, captures
+the values, sets the Cloudflare secrets, and deploys at the end. It confirms
+before anything irreversible, remembers values if you stop and re-run, and
+prints whatever you skipped with the exact command to finish it later.
+
+The rest of this document is the same procedure by hand, and the reference for
+when something goes wrong.
+
+---
+
 Run steps 1–4 in order. Total time is about fifteen minutes, most of it waiting
 on DNS.
 
