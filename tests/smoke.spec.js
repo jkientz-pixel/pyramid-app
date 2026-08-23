@@ -1,6 +1,6 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
-const { trackErrors, viewRendered, gotoRoute } = require('./helpers');
+const { trackErrors, viewRendered, gotoRoute, gotoIllustrated } = require('./helpers');
 
 /* Every top-level hash route the router dispatches (js/app.js route()).
    Each must render into #view without a single console/page error. */
@@ -180,6 +180,7 @@ test('appbar wordmark is a home link and resets the map framing', async ({ page 
   const errors = trackErrors(page);
   await gotoRoute(page, '#/tiers');
   await page.click('.appbar .brand');
+  await page.locator('.mapmode [data-mode="art"]').click();
   await viewRendered(page);
   expect(page.url()).toContain('#/map');
   const svg = page.locator('svg.usmap');
@@ -211,7 +212,7 @@ for (const path of ['/index.html', '/npsl-rankings.html', '/upsl-rankings.html']
 
 test('map pan stays anchored — drag cannot push the map out of the box', async ({ page }) => {
   const errors = trackErrors(page);
-  await gotoRoute(page, '#/map');
+  await gotoIllustrated(page, '#/map');
   const svg = page.locator('svg.usmap');
   await expect(svg).toBeVisible();
   // zoom in twice so there is room to pan, then drag hard past the edge

@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260822j';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260822j';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260822q';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260822q';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260822j')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260822q')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260822j';
+const BUILDV = '20260822q';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -180,7 +180,7 @@ window.submitInterest = (ev, f) => {
 /* crest-content generation: bump when crest PIXELS change under the same
    filename (e.g. a strip_crest_bg.py run) — crest URLs are cached immutable
    and cache-first, so only a new ?cv= reaches returning browsers */
-const CRESTV = '9';
+const CRESTV = '10';
 function crestHtml(c) {
   /* a failed crest load must degrade to the initials chip, never the
      browser's broken-image glyph with overflowing alt text */
@@ -264,7 +264,7 @@ function renderMapSvg(clubs, useCrests, crestNear) {
   }).join('');
   return `<div class="mapbox" data-mode="art"><svg class="usmap" viewBox="0 -20 980 580" role="img" aria-label="US and Canada soccer club map">${USMAP}${INSETS}<g id="pins">${pins}</g></svg>
     <div class="leafmap" hidden aria-label="Street map of clubs"></div>
-    <div class="mapmode" role="group" aria-label="Map style"><button data-mode="art" aria-pressed="true">Illustrated</button><button data-mode="street" aria-pressed="false">Detailed</button></div>
+    <div class="mapmode" role="group" aria-label="Map style"><button data-mode="art" aria-pressed="false">Illustrated</button><button data-mode="street" aria-pressed="true">Detailed</button></div>
     <div class="mapctl"><button data-z="in" aria-label="Zoom in">+</button><button data-z="out" aria-label="Zoom out">&minus;</button><button data-z="reset" aria-label="Reset zoom">&#8634;</button></div>
     <div class="maptip" hidden></div></div>`;
 }
@@ -305,8 +305,18 @@ function wireMap(scopeStates, mapClubs, frameClubs) {
   function rescalePins(vbW) {
     /* low floor: pins hold a near-constant screen size while zooming, instead
        of ballooning past ~8x and re-burying dense metros (Reddit launch
-       feedback: "can't zoom in far enough to see all the clubs") */
-    const f = Math.max(0.03, vbW / 980);
+       feedback: "can't zoom in far enough to see all the clubs").
+
+       The floor has to be relative to THIS screen's extent, not a constant.
+       0.03 was calibrated against the national viewBox (980 units): there the
+       zoom limit is 980/64 ≈ 15 units and the floor caps a crest at ~48px,
+       which is what it was tuned for. A scoped screen carries its own home
+       extent, and the Alaska inset is only 232 units wide — so its zoom limit
+       is 232/64 ≈ 3.6 units, and the same constant floor rendered a single
+       crest at ~150px, filling the box with one badge and no coastline
+       (reported on #/state/AK). Scaling the floor by the screen's own extent
+       gives every scope the same ~48px ceiling the national map already had. */
+    const f = Math.max(0.03 * (homeVB[2] / 980), vbW / 980);
     svg.querySelectorAll('circle.pin').forEach(c2 => c2.setAttribute('r', (+c2.dataset.r * f).toFixed(2)));
     svg.querySelectorAll('image.pin').forEach(im => {
       const sz = 22 * f;
@@ -550,10 +560,20 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
       maxZoom: 19, maxNativeZoom: 13, className: 'relieftiles',
       attribution: 'Esri, Maxar, Earthstar Geographics',
     }).addTo(leafMap);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19, opacity: 0.5, className: 'basetiles',
+    /* The street layer fades in with zoom instead of sitting at a flat 0.5.
+       At national zoom an inverted OSM raster at half opacity over dark
+       hillshade is mud — it buried the coastline and every state border, which
+       is exactly what you need to see when you are looking at the whole
+       country. Detail arrives when it becomes useful and legible, the way a
+       real map app reveals streets on approach, rather than being a mode the
+       viewer has to pick. */
+    const streets = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19, opacity: 0.18, className: 'basetiles',
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(leafMap);
+    /* z4 country -> z11 city. Tuned against the dark hillshade underneath:
+       past ~0.62 the inversion washes the terrain out entirely. */
+    const streetOpacity = z => Math.max(0.18, Math.min(0.62, 0.18 + (z - 4) * 0.063));
     /* frame the scoped clubs (state/region) but plot everything, so panning
        past a border reveals the neighbors instead of empty map */
     const frame = frameClubs.filter(c => isFinite(c.la) && isFinite(c.lo));
@@ -605,17 +625,34 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
       const ll = leafMap.unproject(L.point(p.x + r * Math.cos(a), p.y + r * Math.sin(a)), z);
       return [ll.lat, ll.lng];
     };
+    /* Pin size tracks zoom. A flat radius of 6 meant ~3,000 markers each 14px
+       across on a 400px-wide national view — the pins covered more area than
+       the country did, so the map read as coloured soup and you could not see
+       either the landmass or any individual club. Small dots at national zoom
+       make the same data read as club DENSITY, which is the actual story of
+       "every club in America"; they grow to a tappable target on the way in. */
+    const pinRadius = z => Math.max(2.2, Math.min(7, 2.2 + (z - 4) * 0.72));
+    const pinWeight = z => (z < 6 ? 0.8 : z < 8 ? 1.3 : 2);
+    const markers = [];
     const fanned = [];
     pts.forEach(c => {
       const lg = LEAGUES[c.g];
+      const z0 = leafMap.getZoom();
       const m = L.circleMarker(fanLatLng(c), {
-        radius: 6, color: lg.color, weight: 2,
+        radius: pinRadius(z0), color: lg.color, weight: pinWeight(z0),
         fillColor: lg.color, fillOpacity: lg.hollow ? 0.15 : 0.75,
       }).addTo(leafMap).bindTooltip(c.n)
         .on('click', () => { location.hash = clubHref(CLUBS.indexOf(c)); });
+      markers.push(m);
       if (fanIdx.get(c)) fanned.push([m, c]);
     });
-    leafMap.on('zoomend', () => fanned.forEach(([m, c]) => m.setLatLng(fanLatLng(c))));
+    const rescale = () => {
+      const z = leafMap.getZoom(), r = pinRadius(z), w = pinWeight(z);
+      markers.forEach(m => m.setStyle({ radius: r, weight: w }));
+      streets.setOpacity(streetOpacity(z));
+    };
+    rescale();
+    leafMap.on('zoomend', () => { fanned.forEach(([m, c]) => m.setLatLng(fanLatLng(c))); rescale(); });
     /* crest icons appear zoomed-in only, viewport-scoped and capped: 4k DOM
        image markers at national zoom would jank mobile for no visual gain */
     const crestLayer = L.layerGroup().addTo(leafMap);
@@ -656,8 +693,14 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     const b = e.target.closest('[data-mode]'); if (!b) return;
     setMode(b.dataset.mode, true);
   });
-  let saved = 'art';
-  try { saved = localStorage.getItem(MAPMODE_KEY) || 'art'; } catch {}
+  /* Detailed is the default. It is the map that answers the question people
+     actually arrive with — where is this club, what's near me, what town is
+     that — and now that pins scale with zoom and the streets fade in, it reads
+     at national zoom too. Illustrated stays one tap away and remains the
+     fallback when the tile layer can't load: it needs no network, so an
+     offline PWA still gets a map rather than an empty box. */
+  let saved = 'street';
+  try { saved = localStorage.getItem(MAPMODE_KEY) || 'street'; } catch {}
   if (saved === 'street') setMode('street', false);
 }
 
@@ -1022,7 +1065,7 @@ function matchCard(h, a, when, real) {
 let _fixtures = null;
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260822j')).json(); }
+  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260822q')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -1031,8 +1074,8 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa, usl2] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260822j'), grab('data/wire_asa.json?v=20260822j'),
-    grab('data/wire_usl2.json?v=20260822j')]);
+    grab('data/wire_npsl.json?v=20260822q'), grab('data/wire_asa.json?v=20260822q'),
+    grab('data/wire_usl2.json?v=20260822q')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' }))
     .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })))
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
@@ -1058,7 +1101,7 @@ async function hydrateWireHook() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260822j')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260822q')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1159,8 +1202,8 @@ async function screenPlayerSim() {
     + '<p class="note">Loading player data&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _coachData || fetch('data/coach_players.json?v=20260822j').then(r => r.json()),
-      import('./player-sim.js?v=20260822j'),
+      _coachData || fetch('data/coach_players.json?v=20260822q').then(r => r.json()),
+      import('./player-sim.js?v=20260822q'),
     ]);
     _coachData = data;
     if (!location.hash.startsWith('#/player-sim')) return;   // routed away mid-load
@@ -1178,8 +1221,8 @@ async function screenRadar() {
     + '<p class="note">Loading player data&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _radarData || fetch('data/player_radar.json?v=20260822j').then(r => r.json()),
-      import('./playerradar.js?v=20260822j'),
+      _radarData || fetch('data/player_radar.json?v=20260822q').then(r => r.json()),
+      import('./playerradar.js?v=20260822q'),
     ]);
     _radarData = data;
     if (!location.hash.startsWith('#/radar')) return;   // routed away mid-load
@@ -1195,7 +1238,7 @@ async function screenShots() {
   view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
     + '<p class="note">Loading&hellip;</p>';
   try {
-    const mod = await import('./shotmap.js?v=20260822j');
+    const mod = await import('./shotmap.js?v=20260822q');
     if (!location.hash.startsWith('#/shots')) return;
     mod.render(view);
   } catch (e) {
@@ -1350,7 +1393,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260822j')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260822q')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1555,7 +1598,7 @@ function staffFor(c) {
    and be usable before anything auth-shaped is fetched, and a visitor who
    never signs in should never pay for the code that signs people in. */
 let _acct;
-const acctMod = () => _acct ||= import('./account.js?v=20260822j');
+const acctMod = () => _acct ||= import('./account.js?v=20260822q');
 
 const favs = () => { try {
   const raw = localStorage.getItem('pyr-favs');
@@ -1711,35 +1754,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260822j')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260822q')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260822j')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260822q')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260822j')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260822q')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260822j')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260822q')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260822j')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260822q')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1792,7 +1835,7 @@ function verifyBadge(c) {
    here has to think about the minors policy. */
 let _usl2apps = null;
 async function usl2Apps() {
-  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260822j')
+  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260822q')
     .then(r => r.json()).catch(() => ({}));
   return _usl2apps;
 }
@@ -2175,7 +2218,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260822j')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260822q')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -2402,7 +2445,7 @@ function screenPricing() {
    app.js is already 3,000 lines. Loaded on demand, idle-prefetched after
    first paint so the tab feels instant for the people who live in it. */
 let _myxi = null;
-const myxiMod = () => _myxi ||= import('./myxi.js?v=20260822j')
+const myxiMod = () => _myxi ||= import('./myxi.js?v=20260822q')
   .catch(e => { _myxi = null; throw e; });
 
 function screenMyXi(payload) {
@@ -2467,7 +2510,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260822j')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260822q')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -2481,8 +2524,8 @@ async function screenUpsets() {
     + '<p class="note">Loading Open Cup results&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _opencup || fetch('data/opencup_matches.json?v=20260822j').then(r => r.json()),
-      import('./opencup.js?v=20260822j'),
+      _opencup || fetch('data/opencup_matches.json?v=20260822q').then(r => r.json()),
+      import('./opencup.js?v=20260822q'),
     ]);
     _opencup = data;
     if (!location.hash.startsWith('#/upsets')) return;
@@ -2509,9 +2552,9 @@ async function screenCollege(team) {
   view.innerHTML = '<p class="note">Loading college results&hellip;</p>';
   try {
     const [data, map, mod] = await Promise.all([
-      _college || fetch('data/espn_college_2025.json?v=20260822j').then(r => r.json()),
-      _collegeMap || fetch('data/espn_club_map.json?v=20260822j').then(r => r.json()),
-      import('./college.js?v=20260822j'),
+      _college || fetch('data/espn_college_2025.json?v=20260822q').then(r => r.json()),
+      _collegeMap || fetch('data/espn_club_map.json?v=20260822q').then(r => r.json()),
+      import('./college.js?v=20260822q'),
     ]);
     _college = data; _collegeMap = map;
     if (!location.hash.startsWith('#/college')) return;
