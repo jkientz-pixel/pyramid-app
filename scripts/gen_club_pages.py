@@ -26,16 +26,9 @@ leagues = json.loads(re.search(r'export const LEAGUES=(\{.*?\});', src, re.S).gr
 
 # /js/* is served immutable for a year, so an untokened script URL here would
 # pin every returning visitor to the copy of rxi-a.js they first cached — on
-# the club/league/state pages, which are most of the site. Read the token
-# deploy.sh just stamped into app.html rather than restating it.
-def _asset_token():
-    m = re.search(r'2026\d{4}[a-z]', open(os.path.join(ROOT, 'app.html')).read())
-    if not m:
-        raise SystemExit('FATAL: no cache-bust token in app.html')
-    return m.group(0)
-
-
-VTOKEN = _asset_token()
+# the club/league/state pages, which are most of the site. Emit the placeholder;
+# deploy.sh stamps the real token into the staged tree (scripts/cachebust.py).
+from cachebust import PLACEHOLDER as VTOKEN
 
 # state/province labels are parsed out of app.js rather than restated here:
 # a second copy would drift the moment a province is added (Canada layer)

@@ -100,7 +100,8 @@ cd ~/pyramid-app
 ./deploy.sh
 ```
 
-`deploy.sh` runs `bump_version.py`, which now also stamps `js/myxi.js` and
+`deploy.sh` stamps the cache-bust token (`scripts/cachebust.py`) into the
+staged tree, covering `js/myxi.js` and
 `js/account.js`. Do not hand-edit those tokens.
 
 ---

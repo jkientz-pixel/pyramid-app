@@ -16,12 +16,12 @@
       immediately; the push happens afterwards and is allowed to fail.
    3. Sync merges, never replaces. See mergePayloads in js/picks.js for why.
 
-   Version tokens: this file is listed in scripts/bump_version.py because it
+   Version tokens: this file is listed in preflight CB_FILES because it
    imports ./picks.js with a ?v= token, and /js/* is served immutable for a
    year. A token here that never gets rewritten would pin every visitor to the
    first build of picks.js forever. */
 
-import { localPayload, mergePayloads, applyPayload, isHome, setHome } from './picks.js?v=20260823f';
+import { localPayload, mergePayloads, applyPayload, isHome, setHome } from './picks.js?v=__RXIV__';
 
 const PUSH_DEBOUNCE = 1200;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
