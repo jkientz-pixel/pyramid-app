@@ -27,6 +27,11 @@ jobs:
       - run: python scripts/refresh_rosters.py
       - run: python scripts/fetch_asa.py
       - run: python scripts/fetch_asa_games.py
+      # fixtures carry a rolling three-week horizon, so they go stale on their
+      # own — this is the step that keeps #/matches answering "when do they
+      # play". It exits non-zero if every feed errors, so an ESPN block fails
+      # the run instead of quietly publishing an empty schedule.
+      - run: python scripts/fetch_fixtures.py
       # a broken scrape must never silently publish stale or empty data:
       # the gate diffs the fresh files against HEAD and fails on collapse
       - name: Gate — refuse empty or shrunken data
@@ -36,7 +41,7 @@ jobs:
         run: |
           git config user.name "roster-bot"
           git config user.email "actions@github.com"
-          git add js/rosters.js js/data.js data/wire_asa.json
+          git add js/rosters.js js/data.js data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
@@ -70,5 +75,5 @@ jobs:
             gh issue create -R "${{ github.repository }}" \
               --title "Roster refresh failed $(date -u +%F)" \
               --label scrape-failure \
-              --body "The scheduled roster refresh failed. Run: $url — nothing was committed; the site keeps serving the last good data. Check scripts/refresh_rosters.py / fetch_asa.py / fetch_asa_games.py and the verify_refresh.py gate output in the run log."
+              --body "The scheduled roster refresh failed. Run: $url — nothing was committed; the site keeps serving the last good data. Check scripts/refresh_rosters.py / fetch_asa.py / fetch_asa_games.py / fetch_fixtures.py and the verify_refresh.py gate output in the run log."
           fi

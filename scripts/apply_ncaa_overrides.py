@@ -267,6 +267,30 @@ OVERRIDES.update({
     'State University of New York at Morrisville Mustangs': 'suny-morrisville',
 })
 
+# Third pass, 2026-08-23. audit_crest_dupes.py blanked 50 crests where one
+# image was serving several clubs; 18 of them were college programs that the
+# token matcher had collapsed onto a single flagship slug — "Charleston",
+# "Colorado", "Missouri", "Nebraska", "Texas" and "St. Louis" each swallowed
+# their same-state neighbours. Blanking took the badge off the rightful owner
+# too, because the owner is indistinguishable from the copies once the bytes
+# match. These slugs disambiguate by hand; every one was probe-verified 200
+# with a distinct SVG payload against images/logos/schools/bgl/<slug>.svg on
+# 2026-08-23. Saint Louis was already above and is left alone.
+OVERRIDES.update({
+    'College of Charleston Cougars': 'col-of-charleston',
+    'University of Charleston Golden Eagles': 'charleston-wv',
+    'University of Colorado Boulder Buffaloes': 'colorado',
+    'Colorado College Tigers': 'colorado-col',
+    'University of Missouri\u2013Columbia Tigers': 'missouri',
+    'Missouri University of Science and Technology Miners': 'missouri-snt',
+    'University of Missouri\u2013St. Louis Tritons': 'mo-st-louis',
+    'University of Nebraska\u2013Lincoln Cornhuskers': 'nebraska',
+    'University of Nebraska at Kearney Lopers': 'neb-kearney',
+    'Texas Christian University Horned Frogs': 'tcu',
+    'The University of Texas at Austin Longhorns': 'texas',
+    "Texas Woman's University Pioneers": 'texas-womans',
+})
+
 def main():
     from playwright.sync_api import sync_playwright
     clubs = load_clubs()

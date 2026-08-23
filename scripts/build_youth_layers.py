@@ -61,7 +61,10 @@ TEAM_QUALIFIER = {'white', 'black', 'blue', 'red', 'gold', 'silver', 'ii'}
 CITY_FIX = {'Middle Villages': 'Middle Village', 'Cinncinati': 'Cincinnati'}
 # league-side placeholder rows that are not clubs (TGS shipped 'Test Club';
 # UPSL standings carry 'TBD' slots) — never let them into the dataset
-PLACEHOLDER_NAMES = {'test club', 'tbd', 'tbd fc', 'test'}
+PLACEHOLDER_NAMES = {'test club', 'tbd', 'tbd fc', 'test',
+                     # the ECNL boys/girls TGS feeds both carry this
+                     # staging row; it had been pinned in Kansas
+                     'testing prod qa club'}
 # continental North America incl. AK/HI: a geocode outside this box is a
 # resolver mistake ('MN, MN' once resolved to Mongolia), never a real pin
 LAT_OK = (14.0, 72.0)
@@ -86,6 +89,20 @@ def _cell(raw):
 
 
 def parse_mlsnext():
+    """Wikipedia's MLS Next club table, plus the Academy Division roster.
+
+    The Wikipedia table states a city per club, which is why it has always been
+    the source here. It is also much shorter than the league's own membership:
+    mlssoccer.com lists 229 Academy Division clubs and publishes no location for
+    any of them, so scrape_mlsnext_academy.py could only file them as
+    needs_location and the layer showed a fraction of the league.
+
+    audit_youth_locations.py closes most of that gap by finding those same
+    organisations in directories that DO state a city — the ECNL family on TGS,
+    the GA pages, and our own verified club records as a fallback. Those cities
+    are league-stated with the source recorded per club, so they are pins under
+    the no-guessed-locations policy, and this is where they enter the layer.
+    Anything still unresolved stays off the map rather than being guessed."""
     text = api({'action': 'parse', 'page': 'MLS Next', 'prop': 'wikitext',
                 'redirects': 1, 'format': 'json'})['parse']['wikitext']['*']
     i = text.find('== Clubs ==')
@@ -105,6 +122,14 @@ def parse_mlsnext():
         st = STATES.get(state_name.lower())
         if st:
             out.append({'name': name, 'city': city, 'st': st})
+    seen = {norm(r['name']) for r in out}
+    ap = os.path.join(ROOT, 'data', 'youth_location_audit.json')
+    if os.path.exists(ap):
+        audit = json.load(open(ap)).get('resolved', {}).get('mlsnext_academy', {})
+        for name, hit in audit.items():
+            if hit and norm(name) not in seen:
+                out.append({'name': name, 'city': hit['city'], 'st': hit['st']})
+                seen.add(norm(name))
     return out
 
 
@@ -273,9 +298,25 @@ def main():
     regen = {c['id']: c for c in new_youth}
     out, stale = [], []
     for c in clubs:
-        if c['g'] in YOUTH and c['id'] not in regen:
+        if c['g'] not in YOUTH:
+            out.append(c)
+            continue
+        fresh = regen.pop(c['id'], None)
+        if fresh is None:
             stale.append(c['n'])
-        out.append(regen.pop(c['id'], c) if c['g'] in YOUTH else c)
+            out.append(c)
+            continue
+        # MERGE, never replace. This rebuild only knows what the league
+        # directories publish — name, league, sex, city, state, coordinates.
+        # Everything else on a youth club was put there by another pass:
+        # crests, websites, socials, tombstones, location-accuracy flags. A
+        # straight overwrite silently stripped all of it — re-running after the
+        # crest sweep took the badge off 686 youth clubs in one go, which is a
+        # far worse failure than a stale city. The directory wins on the fields
+        # it actually owns; every other key survives untouched.
+        merged = dict(c)
+        merged.update(fresh)
+        out.append(merged)
     out.extend(regen.values())
     if stale:
         report['kept_stale'] = stale

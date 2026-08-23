@@ -1,0 +1,550 @@
+[
+ [
+  "ncaa1: UConn",
+  7
+ ],
+ [
+  "ncaa1: VMI",
+  7
+ ],
+ [
+  "ncaa1: NJIT",
+  6
+ ],
+ [
+  "ncaa1: Georgetown",
+  6
+ ],
+ [
+  "ncaa1: Indiana",
+  6
+ ],
+ [
+  "ncaa1w: Charleston",
+  6
+ ],
+ [
+  "ncaa1w: Alabama",
+  6
+ ],
+ [
+  "ncaa1w: Columbia",
+  6
+ ],
+ [
+  "ncaa1w: LSU",
+  6
+ ],
+ [
+  "ncaa1w: UL Monroe",
+  6
+ ],
+ [
+  "ncaa1w: Lafayette",
+  6
+ ],
+ [
+  "ncaa1w: Nevada",
+  6
+ ],
+ [
+  "ncaa1w: Missouri State",
+  6
+ ],
+ [
+  "ncaa1w: UT Martin",
+  6
+ ],
+ [
+  "ncaa1w: Miami (OH)",
+  6
+ ],
+ [
+  "ncaa1w: NC State",
+  6
+ ],
+ [
+  "ncaa1w: Northwestern",
+  6
+ ],
+ [
+  "ncaa1: Massachusetts",
+  5
+ ],
+ [
+  "ncaa1: Wisconsin",
+  5
+ ],
+ [
+  "ncaa1: NC State",
+  5
+ ],
+ [
+  "ncaa1: UCF",
+  5
+ ],
+ [
+  "ncaa1: American University",
+  5
+ ],
+ [
+  "ncaa1: Penn State",
+  5
+ ],
+ [
+  "ncaa1: Sacramento State",
+  5
+ ],
+ [
+  "ncaa1: West Florida",
+  5
+ ],
+ [
+  "ncaa1: Maryland",
+  5
+ ],
+ [
+  "ncaa1: South Carolina",
+  5
+ ],
+ [
+  "ncaa1: UAlbany",
+  5
+ ],
+ [
+  "ncaa1: San Jos\u00e9 State",
+  5
+ ],
+ [
+  "ncaa1w: NJIT",
+  5
+ ],
+ [
+  "ncaa1w: Purdue",
+  5
+ ],
+ [
+  "ncaa1w: St. Thomas",
+  5
+ ],
+ [
+  "ncaa1w: Miami",
+  5
+ ],
+ [
+  "ncaa1w: SE Louisiana",
+  5
+ ],
+ [
+  "ncaa1w: Missouri",
+  5
+ ],
+ [
+  "ncaa1w: Saint Mary's",
+  5
+ ],
+ [
+  "ncaa1w: California",
+  5
+ ],
+ [
+  "ncaa1w: Illinois",
+  5
+ ],
+ [
+  "ncaa1w: South Carolina",
+  5
+ ],
+ [
+  "ncaa1w: UCF",
+  5
+ ],
+ [
+  "ncaa1w: Virginia Tech",
+  5
+ ],
+ [
+  "ncaa1w: Maryland",
+  5
+ ],
+ [
+  "ncaa1w: Wisconsin",
+  5
+ ],
+ [
+  "ncaa1w: Cal State Fullerton",
+  5
+ ],
+ [
+  "ncaa1w: Louisiana",
+  5
+ ],
+ [
+  "ncaa1w: Southern Miss",
+  5
+ ],
+ [
+  "ncaa1w: Tennessee Tech",
+  5
+ ],
+ [
+  "ncaa1w: Seattle U",
+  5
+ ],
+ [
+  "ncaa1w: UAB",
+  5
+ ],
+ [
+  "ncaa1w: Long Beach State",
+  5
+ ],
+ [
+  "ncaa1w: Texas",
+  5
+ ],
+ [
+  "ncaa1w: VMI",
+  5
+ ],
+ [
+  "ncaa1w: Stephen F. Austin",
+  5
+ ],
+ [
+  "ncaa1w: Southern",
+  5
+ ],
+ [
+  "ncaa1w: East Texas A&M",
+  5
+ ],
+ [
+  "ncaa1: George Washington",
+  4
+ ],
+ [
+  "ncaa1: Virginia Tech",
+  4
+ ],
+ [
+  "ncaa1: Howard",
+  4
+ ],
+ [
+  "ncaa1: Charlotte",
+  4
+ ],
+ [
+  "ncaa1: North Carolina",
+  4
+ ],
+ [
+  "ncaa1: UAB",
+  4
+ ],
+ [
+  "ncaa1: California",
+  4
+ ],
+ [
+  "ncaa1w: North Carolina",
+  4
+ ],
+ [
+  "ncaa1w: Quinnipiac",
+  4
+ ],
+ [
+  "ncaa1w: St Bonaventure",
+  4
+ ],
+ [
+  "ncaa1w: Nebraska",
+  4
+ ],
+ [
+  "ncaa1w: St. John's",
+  4
+ ],
+ [
+  "ncaa1w: Sacramento State",
+  4
+ ],
+ [
+  "ncaa1w: Fresno State",
+  4
+ ],
+ [
+  "ncaa1w: UAlbany",
+  4
+ ],
+ [
+  "ncaa1w: Charlotte",
+  4
+ ],
+ [
+  "ncaa1w: Mount St. Mary's",
+  4
+ ],
+ [
+  "ncaa1w: Tennessee",
+  4
+ ],
+ [
+  "ncaa1w: Ohio",
+  4
+ ],
+ [
+  "ncaa1w: Massachusetts",
+  4
+ ],
+ [
+  "ncaa1w: Indiana",
+  4
+ ],
+ [
+  "ncaa1w: Robert Morris",
+  4
+ ],
+ [
+  "ncaa1w: Penn State",
+  4
+ ],
+ [
+  "ncaa1w: Arkansas",
+  4
+ ],
+ [
+  "ncaa1w: UT Rio Grande Valley",
+  4
+ ],
+ [
+  "ncaa1w: Texas A&M",
+  4
+ ],
+ [
+  "ncaa1w: Southern Illinois",
+  4
+ ],
+ [
+  "ncaa1: Seattle U",
+  3
+ ],
+ [
+  "ncaa1w: San Jos\u00e9 State",
+  3
+ ],
+ [
+  "ncaa1w: UConn",
+  3
+ ],
+ [
+  "ncaa1w: West Florida",
+  3
+ ],
+ [
+  "ncaa1w: Jacksonville",
+  3
+ ],
+ [
+  "ncaa1w: Hawai'i",
+  3
+ ],
+ [
+  "ncaa1: Warren Wilson",
+  2
+ ],
+ [
+  "ncaa1w: Bob Jones",
+  2
+ ],
+ [
+  "ncaa1w: Our Lady of the Lake",
+  2
+ ],
+ [
+  "ncaa1: SUNY Polytechnic",
+  1
+ ],
+ [
+  "ncaa1: Randolph",
+  1
+ ],
+ [
+  "ncaa1: Webber International",
+  1
+ ],
+ [
+  "ncaa1: Blackburn",
+  1
+ ],
+ [
+  "ncaa1: Waynesburg",
+  1
+ ],
+ [
+  "ncaa1: The Master's",
+  1
+ ],
+ [
+  "ncaa1: Southern Virginia",
+  1
+ ],
+ [
+  "ncaa1: Keystone",
+  1
+ ],
+ [
+  "ncaa1: Johnson & Wales-Charlotte",
+  1
+ ],
+ [
+  "ncaa1: Wartburg",
+  1
+ ],
+ [
+  "ncaa1: Illinois Springfield",
+  1
+ ],
+ [
+  "ncaa1: Northwest University",
+  1
+ ],
+ [
+  "ncaa1: St. Thomas (FL)",
+  1
+ ],
+ [
+  "ncaa1: Trinity Baptist",
+  1
+ ],
+ [
+  "ncaa1: SUNY MARITIME",
+  1
+ ],
+ [
+  "ncaa1: Our Lady of the Lake",
+  1
+ ],
+ [
+  "ncaa1: Bob Jones",
+  1
+ ],
+ [
+  "ncaa1: Florida Polytechnic",
+  1
+ ],
+ [
+  "ncaa1: Fisher",
+  1
+ ],
+ [
+  "ncaa1: Central Baptist",
+  1
+ ],
+ [
+  "ncaa1: William Peace",
+  1
+ ],
+ [
+  "ncaa1: Southern Oregon",
+  1
+ ],
+ [
+  "ncaa1: Defiance",
+  1
+ ],
+ [
+  "ncaa1: St. John Fisher",
+  1
+ ],
+ [
+  "ncaa1w: Morningside",
+  1
+ ],
+ [
+  "ncaa1w: West Chester",
+  1
+ ],
+ [
+  "ncaa1w: Friends",
+  1
+ ],
+ [
+  "ncaa1w: Central Baptist",
+  1
+ ],
+ [
+  "ncaa1w: Marywood",
+  1
+ ],
+ [
+  "ncaa1w: Grand View",
+  1
+ ],
+ [
+  "ncaa1w: St. Ambrose",
+  1
+ ],
+ [
+  "ncaa1w: Lethbridge",
+  1
+ ],
+ [
+  "ncaa1w: United States Sports University",
+  1
+ ],
+ [
+  "ncaa1w: Louisiana Christian",
+  1
+ ],
+ [
+  "ncaa1w: Holy Family",
+  1
+ ],
+ [
+  "ncaa1w: Texas A&M International",
+  1
+ ],
+ [
+  "ncaa1w: Tougaloo",
+  1
+ ],
+ [
+  "ncaa1w: Wayne State",
+  1
+ ],
+ [
+  "ncaa1w: Westmont",
+  1
+ ],
+ [
+  "ncaa1w: Justice",
+  1
+ ],
+ [
+  "ncaa1w: Rochester Christian",
+  1
+ ],
+ [
+  "ncaa1w: Delta State",
+  1
+ ],
+ [
+  "ncaa1w: Montreat",
+  1
+ ],
+ [
+  "ncaa1w: Texas A&M-San Antonio",
+  1
+ ],
+ [
+  "ncaa1w: Nelson",
+  1
+ ],
+ [
+  "ncaa1w: Indiana Tech",
+  1
+ ]
+]

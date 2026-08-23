@@ -1,6 +1,6 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
-const { viewRendered, gotoRoute } = require('./helpers');
+const { viewRendered, gotoRoute, gotoIllustrated } = require('./helpers');
 
 /* The detailed (Leaflet) map opens framed on the contiguous states, the same
    ground the illustrated map covers. Fitting it to every club instead spans
@@ -12,7 +12,6 @@ const HONOLULU = [21.31, -157.86];
 
 async function openDetailed(page, hash) {
   await gotoRoute(page, hash);
-  await page.click('.mapmode [data-mode="street"]');
   await page.waitForSelector('.leafmap.leaflet-container');
   await page.waitForFunction(() => document.querySelector('.leafmap')?._rxiMap?.getBounds());
   return page.evaluate(([ak, hi]) => {
@@ -35,15 +34,16 @@ test('an Alaska scope still frames Alaska', async ({ page }) => {
   expect(b.ak).toBe(true);
 });
 
-test('switching map modes does not change the box height', async ({ page }) => {
+/* The map box must not resize when the offline fallback stands in for the tile
+   map — a reader who loses the network should see the same shaped map, not a
+   layout jump. This used to be a mode-toggle test; the toggle is gone, the
+   invariant is not. */
+test('the offline fallback map is the same size as the tile map', async ({ page }) => {
   await gotoRoute(page, '#/map');
-  /* Detailed is the default now, so start from Illustrated to measure both */
-  await page.click('.mapmode [data-mode="art"]');
-  await page.waitForSelector('svg.usmap', { state: 'visible' });
-  const art = await page.locator('.mapbox').boundingBox();
-  await page.click('.mapmode [data-mode="street"]');
   await page.waitForSelector('.leafmap.leaflet-container');
   const street = await page.locator('.mapbox').boundingBox();
+  await gotoIllustrated(page, '#/map');
+  const art = await page.locator('.mapbox').boundingBox();
   expect(Math.abs(street.height - art.height)).toBeLessThan(2);
   expect(Math.abs(street.width - art.width)).toBeLessThan(2);
 });
@@ -55,8 +55,7 @@ test('switching map modes does not change the box height', async ({ page }) => {
    the screen's own extent. Alaska is the tightest scope we ship, so it is the
    one that guards this. */
 test('crests stay a sane size at max zoom on a tight scope (Alaska)', async ({ page }) => {
-  await gotoRoute(page, '#/state/AK');
-  await page.click('.mapmode [data-mode="art"]');
+  await gotoIllustrated(page, '#/state/AK');
   await page.waitForSelector('svg.usmap image.pin', { state: 'attached' });
   const zoomIn = page.locator('.mapctl [data-z="in"]');
   for (let i = 0; i < 12; i++) await zoomIn.click();
@@ -64,4 +63,51 @@ test('crests stay a sane size at max zoom on a tight scope (Alaska)', async ({ p
     el => el.getBoundingClientRect().width);
   expect(px).toBeGreaterThan(8);    // still visible
   expect(px).toBeLessThan(70);      // not a badge swallowing the map
+});
+
+/* Zooming to your town and then filtering to your division used to be
+   impossible: every league/level/sex toggle rebuilds the screen, and the
+   rebuild re-fitted the map to the national frame. So did routing into a club
+   page and back. Both threw away the only thing the reader had done. */
+async function mapView(page) {
+  await page.waitForSelector('.leafmap.leaflet-container');
+  await page.waitForFunction(() => document.querySelector('.leafmap')?._rxiMap?.getBounds());
+  return page.evaluate(() => {
+    const m = document.querySelector('.leafmap')._rxiMap;
+    const c = m.getCenter();
+    return { lat: c.lat, lng: c.lng, zoom: m.getZoom() };
+  });
+}
+async function zoomToPortland(page) {
+  await mapView(page);          // map built and bounded before we drive it
+  /* braces, not a bare arrow: setView returns the Leaflet map itself, and
+     Playwright cannot serialize that back across the boundary. */
+  await page.evaluate(() => { document.querySelector('.leafmap')._rxiMap.setView([45.52, -122.68], 9); });
+  await page.waitForFunction(() => document.querySelector('.leafmap')._rxiMap.getZoom() === 9);
+  return mapView(page);
+}
+
+test('the map viewport survives a level filter', async ({ page }) => {
+  await gotoRoute(page, '#/map');
+  const before = await zoomToPortland(page);
+  /* "Pro", not "All levels" — the default chip is already pressed, so it would
+     not force the rebuild this test exists to survive. */
+  await page.click('[data-lvl="pro"]');
+  await viewRendered(page);
+  const after = await mapView(page);
+  expect(after.zoom).toBe(before.zoom);
+  expect(Math.abs(after.lat - before.lat)).toBeLessThan(0.5);
+  expect(Math.abs(after.lng - before.lng)).toBeLessThan(0.5);
+});
+
+test('the map viewport survives a club round-trip', async ({ page }) => {
+  await gotoRoute(page, '#/map');
+  const before = await zoomToPortland(page);
+  await gotoRoute(page, '#/club/portland-timbers');
+  await page.goBack();
+  await viewRendered(page);
+  const after = await mapView(page);
+  expect(after.zoom).toBe(before.zoom);
+  expect(Math.abs(after.lat - before.lat)).toBeLessThan(0.5);
+  expect(Math.abs(after.lng - before.lng)).toBeLessThan(0.5);
 });

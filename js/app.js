@@ -1,19 +1,19 @@
-import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260823d';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260823d';
+import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=20260823e';
+import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=20260823e';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
    "Roster unclaimed" state as clubs with no real roster. */
 let ROSTERS = {}, COACHES = {}, HONOURS = {};
 let _rostersReady = null;
-const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260823d')
+const loadRosters = () => _rostersReady ||= import('./rosters.js?v=20260823e')
   .then(m => { ROSTERS = m.ROSTERS; COACHES = m.COACHES; HONOURS = m.HONOURS; })
   .catch(e => { _rostersReady = null; throw e; });
 
 /* bump_version.py rewrites this token with every deploy, and every deploy
    ships freshly refreshed data — so the footer date derives from it instead
    of a hand-edited string that drifts stale */
-const BUILDV = '20260823d';
+const BUILDV = '20260823e';
 const BUILD_DATE = new Date(+BUILDV.slice(0, 4), +BUILDV.slice(4, 6) - 1, +BUILDV.slice(6, 8))
   .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -180,7 +180,7 @@ window.submitInterest = (ev, f) => {
 /* crest-content generation: bump when crest PIXELS change under the same
    filename (e.g. a strip_crest_bg.py run) — crest URLs are cached immutable
    and cache-first, so only a new ?cv= reaches returning browsers */
-const CRESTV = '10';
+const CRESTV = '11';
 function crestHtml(c) {
   /* a failed crest load must degrade to the initials chip, never the
      browser's broken-image glyph with overflowing alt text */
@@ -264,7 +264,6 @@ function renderMapSvg(clubs, useCrests, crestNear) {
   }).join('');
   return `<div class="mapbox" data-mode="art"><svg class="usmap" viewBox="0 -20 980 580" role="img" aria-label="US and Canada soccer club map">${USMAP}${INSETS}<g id="pins">${pins}</g></svg>
     <div class="leafmap" hidden aria-label="Street map of clubs"></div>
-    <div class="mapmode" role="group" aria-label="Map style"><button data-mode="art" aria-pressed="false">Illustrated</button><button data-mode="street" aria-pressed="true">Detailed</button></div>
     <div class="mapctl"><button data-z="in" aria-label="Zoom in">+</button><button data-z="out" aria-label="Zoom out">&minus;</button><button data-z="reset" aria-label="Reset zoom">&#8634;</button></div>
     <div class="maptip" hidden></div></div>`;
 }
@@ -518,19 +517,36 @@ function wireMap(scopeStates, mapClubs, frameClubs) {
   });
 }
 
-/* "Detailed" basemap: real streets/towns/waterways via Leaflet + OSM tiles.
-   Leaflet is vendored and lazy-loaded only when the mode is first used, so
-   the illustrated map (default, offline-capable, brand look) costs nothing.
-   The chosen mode persists and survives the full re-render that league/sex
-   toggles trigger, because wireMap re-reads it on every screen build. */
-const MAPMODE_KEY = 'rxi-mapmode';
-/* states the illustrated map puts in inset boxes rather than in place */
+/* The map: real streets, towns and waterways via Leaflet + OSM tiles.
+   There used to be a second, illustrated SVG map behind an Illustrated/Detailed
+   toggle. It is gone as a choice (2026-08-23) — asking someone to pick a
+   cartography style before they can look up a club is a question the product
+   should answer for them, and the detailed map answers every question the
+   illustrated one did. The SVG still ships and is still drawn underneath,
+   because it is the only map that needs no network: if the vendored Leaflet or
+   the tile hosts can't be reached, setMode falls back to it and an offline PWA
+   shows a map instead of an empty box. Nothing surfaces it otherwise.
+
+   The viewport survives re-renders. Changing league, level or sex rebuilds the
+   whole screen, and so does routing to a club page and back; before this, every
+   one of those threw the reader back to the national frame, so zooming to your
+   town and then filtering to your division was impossible. _leafView remembers
+   where the map was, keyed by geographic scope — a genuinely new scope (a state
+   or region page) still gets framed to its own clubs. */
+/* states the illustrated fallback map puts in inset boxes rather than in place */
 const OFFSHORE_ST = new Set(['AK', 'HI', 'PR', 'VI', 'GU']);
+const MAPVIEW_KEY = 'rxi-mapview';
+let _leafView = null;
+try { _leafView = JSON.parse(sessionStorage.getItem(MAPVIEW_KEY) || 'null'); } catch {}
 function wireBasemap(scopeStates, mapClubs, frameClubs) {
   const box = view.querySelector('.mapbox');
-  const modeCtl = box && box.querySelector('.mapmode');
   const leafEl = box && box.querySelector('.leafmap');
-  if (!modeCtl || !leafEl) return;
+  if (!leafEl) return;
+  /* Scope, not filter: the saved view is reused when the reader is looking at
+     the same patch of country. #/state/TX and the national map are different
+     scopes; "all leagues" and "youth only" are the same scope. */
+  const scopeKey = scopeStates && scopeStates.length
+    ? [...scopeStates].sort().join(',') : 'national';
   let leafMap = null;
   const ensureLeaflet = () => window.L ? Promise.resolve() : new Promise((res, rej) => {
     if (!document.querySelector('link[data-leaf]')) {
@@ -585,7 +601,12 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
        Falling back to the full frame keeps a scope that IS Alaska working. */
     const core = frame.filter(c => !OFFSHORE_ST.has(c.st));
     const fitSet = core.length ? core : frame;
+    /* A saved view for THIS scope wins over the computed frame — that is the
+       whole point of remembering it. Anything else and a league filter would
+       still yank the reader back to the whole country. */
+    const restore = _leafView && _leafView.key === scopeKey ? _leafView : null;
     const fitFrame = () => {
+      if (restore) { leafMap.setView([restore.lat, restore.lng], restore.zoom); return; }
       if (fitSet.length) leafMap.fitBounds(L.latLngBounds(fitSet.map(c => [c.la, c.lo])).pad(0.08));
       else if (pts.length) leafMap.fitBounds(L.latLngBounds(pts.map(c => [c.la, c.lo])).pad(0.08));
       else leafMap.setView([39.5, -98.35], 4);
@@ -675,33 +696,29 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     };
     leafMap.on('zoomend moveend', refreshCrests);
     refreshCrests();
+    /* sessionStorage as well as the module variable: club routes are hash
+       navigations so the variable survives them, but a hard reload or an
+       external link back into the app would otherwise lose the reader's
+       place. Session-scoped on purpose — a visit tomorrow starts fresh. */
+    leafMap.on('moveend zoomend', () => {
+      const c = leafMap.getCenter();
+      _leafView = { key: scopeKey, lat: c.lat, lng: c.lng, zoom: leafMap.getZoom() };
+      try { sessionStorage.setItem(MAPVIEW_KEY, JSON.stringify(_leafView)); } catch {}
+    });
   }
-  async function setMode(mode, persist) {
-    if (mode === 'street') {
-      /* tiles need network — if the vendored lib can't load, stay illustrated */
-      try { await ensureLeaflet(); } catch { return; }
-      box.dataset.mode = 'street'; leafEl.hidden = false;
-      if (!leafMap) buildLeaf(); else leafMap.invalidateSize();
-    } else {
-      box.dataset.mode = 'art'; leafEl.hidden = true;
-    }
-    modeCtl.querySelectorAll('[data-mode]').forEach(b =>
-      b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
-    if (persist) try { localStorage.setItem(MAPMODE_KEY, mode); } catch {}
-  }
-  modeCtl.addEventListener('click', e => {
-    const b = e.target.closest('[data-mode]'); if (!b) return;
-    setMode(b.dataset.mode, true);
-  });
-  /* Detailed is the default. It is the map that answers the question people
-     actually arrive with — where is this club, what's near me, what town is
-     that — and now that pins scale with zoom and the streets fade in, it reads
-     at national zoom too. Illustrated stays one tap away and remains the
-     fallback when the tile layer can't load: it needs no network, so an
-     offline PWA still gets a map rather than an empty box. */
-  let saved = 'street';
-  try { saved = localStorage.getItem(MAPMODE_KEY) || 'street'; } catch {}
-  if (saved === 'street') setMode('street', false);
+  /* No mode argument any more: there is one map. If Leaflet or its stylesheet
+     can't load we leave data-mode="art" alone, which keeps the SVG visible —
+     the silent offline path, not a style the reader chose. */
+  (async function showMap() {
+    /* ?nobasemap=1 forces the offline path. The SVG fallback is not reachable
+       through the UI any more, so this is the only way to prove it still
+       renders — the tests that cover it use this, and nothing else does. */
+    if (/[?&]nobasemap=1/.test(location.search)) return;
+    try { await ensureLeaflet(); } catch { return; }
+    box.dataset.mode = 'street';
+    leafEl.hidden = false;
+    if (!leafMap) buildLeaf(); else leafMap.invalidateSize();
+  })();
 }
 
 function wireSearch() {
@@ -1063,9 +1080,14 @@ function matchCard(h, a, when, real) {
 }
 
 let _fixtures = null;
+/* Upcoming fixtures for the six leagues ESPN carries, built by
+   scripts/fetch_fixtures.py. Rows keep the {start,t1,t2,round,venue} shape the
+   old two-row NPSL file had — My XI and The Wire read it unchanged — and add
+   `lg` (our league key), `id1`/`id2` (club ids resolved at BUILD time, so the
+   browser never guesses which club a name means) and `tv`. */
 async function fixturesDb() {
   if (_fixtures) return _fixtures;
-  try { _fixtures = await (await fetch('data/npsl_fixtures.json?v=20260823d')).json(); }
+  try { _fixtures = await (await fetch('data/fixtures.json?v=20260823e')).json(); }
   catch { _fixtures = []; }
   return _fixtures;
 }
@@ -1074,8 +1096,8 @@ async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
   const [npsl, asa, usl2] = await Promise.all([
-    grab('data/wire_npsl.json?v=20260823d'), grab('data/wire_asa.json?v=20260823d'),
-    grab('data/wire_usl2.json?v=20260823d')]);
+    grab('data/wire_npsl.json?v=20260823e'), grab('data/wire_asa.json?v=20260823e'),
+    grab('data/wire_usl2.json?v=20260823e')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' }))
     .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })))
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
@@ -1101,7 +1123,7 @@ async function hydrateWireHook() {
 let _natTeams = null;
 async function natTeamsDb() {
   if (_natTeams) return _natTeams;
-  try { _natTeams = await (await fetch('data/national_teams.json?v=20260823d')).json(); }
+  try { _natTeams = await (await fetch('data/national_teams.json?v=20260823e')).json(); }
   catch { _natTeams = { teams: [] }; }
   return _natTeams;
 }
@@ -1202,8 +1224,8 @@ async function screenPlayerSim() {
     + '<p class="note">Loading player data&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _coachData || fetch('data/coach_players.json?v=20260823d').then(r => r.json()),
-      import('./player-sim.js?v=20260823d'),
+      _coachData || fetch('data/coach_players.json?v=20260823e').then(r => r.json()),
+      import('./player-sim.js?v=20260823e'),
     ]);
     _coachData = data;
     if (!location.hash.startsWith('#/player-sim')) return;   // routed away mid-load
@@ -1221,8 +1243,8 @@ async function screenRadar() {
     + '<p class="note">Loading player data&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _radarData || fetch('data/player_radar.json?v=20260823d').then(r => r.json()),
-      import('./playerradar.js?v=20260823d'),
+      _radarData || fetch('data/player_radar.json?v=20260823e').then(r => r.json()),
+      import('./playerradar.js?v=20260823e'),
     ]);
     _radarData = data;
     if (!location.hash.startsWith('#/radar')) return;   // routed away mid-load
@@ -1238,7 +1260,7 @@ async function screenShots() {
   view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
     + '<p class="note">Loading&hellip;</p>';
   try {
-    const mod = await import('./shotmap.js?v=20260823d');
+    const mod = await import('./shotmap.js?v=20260823e');
     if (!location.hash.startsWith('#/shots')) return;
     mod.render(view);
   } catch (e) {
@@ -1260,6 +1282,98 @@ function screenPredict(preH) {
     <p class="note">Every rated club page has a &#9876; Predict Result button that starts from that club.</p>`;
   wireSexToggle();
   wireMatchupMachine(rated);
+}
+/* ---- verified fixtures ----------------------------------------------------
+   1,500-odd real games land in the next three weeks, most of them college. A
+   matchCard each would be several thousand DOM nodes and a scroll nobody
+   finishes, so the list is compact rows grouped by day, and the full odds card
+   stays where it earns its place: the Matchup Machine and My XI. The row still
+   carries the one number that makes this ours rather than a schedule anyone
+   could copy — the model's home win probability, shown only when both clubs
+   are rated. */
+const fxDay = iso => new Date(iso).toLocaleDateString('en-US',
+  { weekday: 'short', month: 'short', day: 'numeric' });
+const fxTime = iso => new Date(iso).toLocaleTimeString('en-US',
+  { hour: 'numeric', minute: '2-digit' });
+/* build-time ids first. A name is only re-resolved in the browser when the
+   fetcher could not map it, and even then clubIdxByName refuses an ambiguous
+   match — an unresolved side renders as plain text, never as a guess. */
+function fxClub(id, nm) {
+  if (id) {
+    const i = CLUBS.findIndex(c => c.id === id);
+    if (i >= 0) return CLUBS[i];
+  }
+  const j = clubIdxByName(nm);
+  return j >= 0 ? CLUBS[j] : null;
+}
+function fixtureRow(f) {
+  const h = fxClub(f.id1, f.t1), a = fxClub(f.id2, f.t2);
+  /* Label with the feed's name, not ours. Our college records carry the full
+     legal name — "The University of Texas at Austin Longhorns" — which in a
+     two-column row truncates to "University o..." and tells the reader
+     nothing. ESPN uses the name the broadcast uses ("Texas", "UConn",
+     "Stetson"), which is both shorter and what someone scanning a schedule is
+     looking for. The crest and the link still come from the club we matched,
+     so the row is short to read and correct to follow. */
+  const side = (c, nm, cls) => c
+    ? `<a class="side ${cls}" href="#/club/${c.id}">${mcrest(c)}<span class="sn">${esc(nm || c.n)}</span></a>`
+    : `<span class="side ${cls}"><span class="sn">${esc(nm)}</span></span>`;
+  let edge = '';
+  if (h && a && h.r && a.r) {
+    const o = oddsFor(h, a);
+    edge = `<span class="fxodds" title="Model home win probability">${(o.pH * 100).toFixed(0)}%</span>`;
+  }
+  const bits = [fxTime(f.start)];
+  if (f.venue) bits.push(esc(f.venue));
+  if (f.tv) bits.push(esc(f.tv));
+  return `<div class="match fxrow">
+    <div class="mrow">${side(h, f.t1, '')}<span class="vs">${edge || 'v'}</span>${side(a, f.t2, 'away')}</div>
+    <div class="meta"><span>${bits.join(' · ')}</span><span>${lgIcon(f.lg)}${LEAGUES[f.lg] ? LEAGUES[f.lg].label : ''}</span></div>
+  </div>`;
+}
+let fxLg = 'all', fxLimit = 40;
+/* Rendered into #realfx by screenMatches. Kept out of the screen function so a
+   chip click or a Show-more re-renders just this block instead of rebuilding
+   the Matchup Machine and losing whatever clubs the reader had picked. */
+function renderFixtures(box, all, forSex) {
+  const mine = all.filter(f => LEAGUES[f.lg] && LEAGUES[f.lg].sex === forSex);
+  /* A stale feed must never present last month's games as upcoming — the
+     window is enforced here as well as in the fetcher, because the JSON is
+     cached and can outlive its own horizon. */
+  const now = Date.now();
+  const live = mine.filter(f => {
+    const t = Date.parse(f.start);
+    return t > now - 6 * 36e5 && t < now + 21 * 864e5;
+  }).sort((x, y) => x.start < y.start ? -1 : 1);
+  if (!live.length) {
+    box.innerHTML = `<div class="kicker">Verified fixtures</div>
+      <p class="note" style="margin:2px 0 14px">No verified fixtures in the next three weeks. Real fixtures land here straight from league feeds &mdash; nothing is ever invented to fill the space.</p>`;
+    return;
+  }
+  const lgs = [...new Set(live.map(f => f.lg))];
+  if (fxLg !== 'all' && !lgs.includes(fxLg)) fxLg = 'all';
+  const shown = fxLg === 'all' ? live : live.filter(f => f.lg === fxLg);
+  const page = shown.slice(0, fxLimit);
+  let day = '', rows = '';
+  for (const f of page) {
+    const d = fxDay(f.start);
+    if (d !== day) { day = d; rows += `<div class="fxday">${esc(d)}</div>`; }
+    rows += fixtureRow(f);
+  }
+  box.innerHTML = `<div class="kicker">Verified fixtures &middot; next three weeks &middot; live from league feeds</div>
+    <h2 class="disp">The Real Thing</h2>
+    <div class="chips" id="fxchips">${['all', ...lgs].map(g =>
+      `<button class="chip solid" data-fxlg="${g}" aria-pressed="${fxLg === g}">${g === 'all' ? `All (${live.length})` : `${LEAGUES[g].label} (${live.filter(f => f.lg === g).length})`}</button>`).join('')}</div>
+    ${rows}
+    ${shown.length > page.length ? `<button class="chip solid" id="fxmore" style="margin-top:8px">Show more (${shown.length - page.length} left)</button>` : ''}
+    <p class="note">Times are your local time. The percentage is the model's home win probability, shown only where both clubs are rated. Fixtures come from ESPN's public scoreboard; a club shown as plain text is one we could not match to a club page with confidence, and we would rather print the name than link the wrong club.</p>`;
+  box.querySelector('#fxchips').addEventListener('click', e => {
+    const b = e.target.closest('[data-fxlg]'); if (!b) return;
+    fxLg = b.dataset.fxlg; fxLimit = 40; renderFixtures(box, all, forSex);
+  });
+  box.querySelector('#fxmore')?.addEventListener('click', () => {
+    fxLimit += 60; renderFixtures(box, all, forSex);
+  });
 }
 function screenMatches(preH) {
   crumb.textContent = 'Matches';
@@ -1289,40 +1403,19 @@ function screenMatches(preH) {
     ${matchupMachineHtml(rated, preH)}
     <div class="kicker" style="margin-top:18px">Rivalry Radar · nearest matchups by geography</div>
     <h2 class="disp">Rivalry Radar</h2>
-    <p class="note" style="margin:2px 0 10px">Who's closest to whom — and how the model thinks it would go. A discovery feature, not a schedule: these games aren't scheduled, so there are no dates. Verified fixtures appear above as league feeds connect.</p>
+    <p class="note" style="margin:2px 0 10px">Who's closest to whom — and how the model thinks it would go. A discovery feature, not a schedule: these games aren't scheduled, so there are no dates. The real ones are above.</p>
     ${pairs.map(([h, a]) => matchCard(h, a, `${milesApart(h, a)} MI APART`)).join('')}
     <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Predictions, not betting advice.</p>`;
   wireSexToggle();
   wireMatchupMachine(rated);
-  /* NPSL is a men's league: its fixtures never render into the women's
-     view, including late async resolution after the user toggles sex —
-     the women's view gets the honest empty state instead */
+  /* Sex is captured before the await: a reader who toggles to the women's
+     view while this is in flight must not get the men's fixtures pasted in
+     underneath them. */
   const fxSex = sex;
   fixturesDb().then(all => {
     const box = view.querySelector('#realfx');
     if (!box || sex !== fxSex) return;
-    /* verified fixtures only, and only inside a two-week window — a stale
-       feed must never present last month's games as upcoming */
-    const now = Date.now(), TWO_WEEKS = 14 * 864e5;
-    const fx = (sex === 'm' ? all : []).filter(f => {
-      const t = Date.parse(f.start);
-      return t > now - 6 * 36e5 && t < now + TWO_WEEKS;
-    });
-    if (!fx.length) {
-      box.innerHTML = `<div class="kicker">Verified fixtures · next two weeks</div>
-        <p class="note" style="margin:2px 0 14px">No verified fixtures in the next two weeks. Real fixtures land here straight from league feeds — nothing is ever invented to fill the space.</p>`;
-      return;
-    }
-    box.innerHTML = `<div class="kicker">Verified fixtures · NPSL · live from the league</div>
-      <h2 class="disp">The Real Thing</h2>` + fx.map(f => {
-        const hi = clubIdxByName(f.t1), ai = clubIdxByName(f.t2);
-        const h = CLUBS[hi], a = CLUBS[ai];
-        const when = fmtKick(f.start);
-        if (!h || !a) return `<div class="match"><div class="mrow"><span class="side"><span class="sn">${esc(f.t1)}</span></span><span class="vs">v</span><span class="side away"><span class="sn">${esc(f.t2)}</span></span></div>
-          <div class="meta"><span>${when}</span><span>${esc(f.round)} · ${esc(f.venue || 'Venue TBD')}</span></div>
-          <p class="note" style="margin:6px 0 0">Pairing set once the semifinals finish.</p></div>`;
-        return matchCard(h, a, f.round.toUpperCase(), true) .replace('<div class="meta"><span>Elo', `<div class="meta"><span>${when} · ${esc(f.venue || '')}</span><span>${calBtn(`${h.n} v ${a.n}`, f.start, f.venue, 'NPSL ' + f.round)}</span></div><div class="meta"><span>Elo`);
-      }).join('') + `<p class="note">Times shown in Eastern and your local time. Odds from real-results Elo.</p>`;
+    renderFixtures(box, all, fxSex);
   });
 }
 
@@ -1393,7 +1486,7 @@ function ntTeamBlock(t, withHistoryLink) {
 let _ntHist = null;
 async function ntHistoryDb() {
   if (_ntHist) return _ntHist;
-  try { _ntHist = await (await fetch('data/nt_history.json?v=20260823d')).json(); }
+  try { _ntHist = await (await fetch('data/nt_history.json?v=20260823e')).json(); }
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
@@ -1598,7 +1691,7 @@ function staffFor(c) {
    and be usable before anything auth-shaped is fetched, and a visitor who
    never signs in should never pay for the code that signs people in. */
 let _acct;
-const acctMod = () => _acct ||= import('./account.js?v=20260823d');
+const acctMod = () => _acct ||= import('./account.js?v=20260823e');
 
 const favs = () => { try {
   const raw = localStorage.getItem('pyr-favs');
@@ -1754,35 +1847,35 @@ function ord(n) {
 let _mlshist = null;
 async function mlsHistory() {
   if (_mlshist) return _mlshist;
-  try { _mlshist = await (await fetch('data/mls_history.json?v=20260823d')).json(); }
+  try { _mlshist = await (await fetch('data/mls_history.json?v=20260823e')).json(); }
   catch { _mlshist = {}; }
   return _mlshist;
 }
 let _cuprec = null;
 async function cupDb() {
   if (_cuprec) return _cuprec;
-  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260823d')).json(); }
+  try { _cuprec = await (await fetch('data/cup_receipts.json?v=20260823e')).json(); }
   catch { _cuprec = {}; }
   return _cuprec;
 }
 let _legends = null;
 async function legendsDb() {
   if (_legends) return _legends;
-  try { _legends = await (await fetch('data/legends.json?v=20260823d')).json(); }
+  try { _legends = await (await fetch('data/legends.json?v=20260823e')).json(); }
   catch { _legends = {}; }
   return _legends;
 }
 let _profiles = null;
 async function profilesDb() {
   if (_profiles) return _profiles;
-  try { _profiles = await (await fetch('data/players.json?v=20260823d')).json(); }
+  try { _profiles = await (await fetch('data/players.json?v=20260823e')).json(); }
   catch { _profiles = {}; }
   return _profiles;
 }
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
-  try { _tryouts = await (await fetch('data/tryouts.json?v=20260823d')).json(); }
+  try { _tryouts = await (await fetch('data/tryouts.json?v=20260823e')).json(); }
   catch { _tryouts = []; }
   return _tryouts;
 }
@@ -1835,7 +1928,7 @@ function verifyBadge(c) {
    here has to think about the minors policy. */
 let _usl2apps = null;
 async function usl2Apps() {
-  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260823d')
+  _usl2apps ??= fetch('data/usl2_appearances.json?v=20260823e')
     .then(r => r.json()).catch(() => ({}));
   return _usl2apps;
 }
@@ -2218,7 +2311,7 @@ const TIERS = {
 let _lgInfo = null;
 async function leaguesInfoDb() {
   if (_lgInfo) return _lgInfo;
-  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260823d')).json(); }
+  try { _lgInfo = await (await fetch('data/leagues_info.json?v=20260823e')).json(); }
   catch { _lgInfo = { leagues: {} }; }
   return _lgInfo;
 }
@@ -2445,7 +2538,7 @@ function screenPricing() {
    app.js is already 3,000 lines. Loaded on demand, idle-prefetched after
    first paint so the tab feels instant for the people who live in it. */
 let _myxi = null;
-const myxiMod = () => _myxi ||= import('./myxi.js?v=20260823d')
+const myxiMod = () => _myxi ||= import('./myxi.js?v=20260823e')
   .catch(e => { _myxi = null; throw e; });
 
 function screenMyXi(payload) {
@@ -2510,7 +2603,7 @@ async function screenLegends(ci) {
 let _cups = null;
 async function cupsDb() {
   if (_cups) return _cups;
-  try { _cups = await (await fetch('data/cups.json?v=20260823d')).json(); }
+  try { _cups = await (await fetch('data/cups.json?v=20260823e')).json(); }
   catch { _cups = {}; }
   return _cups;
 }
@@ -2524,8 +2617,8 @@ async function screenUpsets() {
     + '<p class="note">Loading Open Cup results&hellip;</p>';
   try {
     const [data, mod] = await Promise.all([
-      _opencup || fetch('data/opencup_matches.json?v=20260823d').then(r => r.json()),
-      import('./opencup.js?v=20260823d'),
+      _opencup || fetch('data/opencup_matches.json?v=20260823e').then(r => r.json()),
+      import('./opencup.js?v=20260823e'),
     ]);
     _opencup = data;
     if (!location.hash.startsWith('#/upsets')) return;
@@ -2552,9 +2645,9 @@ async function screenCollege(team) {
   view.innerHTML = '<p class="note">Loading college results&hellip;</p>';
   try {
     const [data, map, mod] = await Promise.all([
-      _college || fetch('data/espn_college_2025.json?v=20260823d').then(r => r.json()),
-      _collegeMap || fetch('data/espn_club_map.json?v=20260823d').then(r => r.json()),
-      import('./college.js?v=20260823d'),
+      _college || fetch('data/espn_college_2025.json?v=20260823e').then(r => r.json()),
+      _collegeMap || fetch('data/espn_club_map.json?v=20260823e').then(r => r.json()),
+      import('./college.js?v=20260823e'),
     ]);
     _college = data; _collegeMap = map;
     if (!location.hash.startsWith('#/college')) return;
@@ -3065,14 +3158,21 @@ async function screenWire() {
   const activeSet = new Set(active);
   const rows = (await wireDb()).filter(w => activeSet.has(w.lg)).reverse();
   if (!box || !location.hash.startsWith('#/wire')) return;
-  const upcoming = activeSet.has('npsl') ? await fixturesDb() : [];
+  /* The fixtures file used to hold two NPSL playoff games, so this block was
+     hard-coded to NPSL and gated on that chip. It now carries six leagues, so
+     it filters on the league the row states and follows whichever chip the
+     reader is on. Capped: the wire is a results screen and the schedule lives
+     on #/matches. */
+  const nowW = Date.now();
+  const upcoming = (await fixturesDb())
+    .filter(f => activeSet.has(f.lg))
+    .filter(f => { const t = Date.parse(f.start); return t > nowW - 6 * 36e5 && t < nowW + 14 * 864e5; })
+    .sort((x, y) => x.start < y.start ? -1 : 1)
+    .slice(0, 6);
   box.innerHTML =
-    (upcoming.length ? `<div class="kicker" style="margin-top:12px">Coming up · NPSL playoffs</div>` +
-      upcoming.map(f => { const fs = (nm, cls) => { const i2 = clubIdxByName(nm); return i2 >= 0
-          ? `<a class="side ${cls}" href="#/club/${i2}">${mcrest(CLUBS[i2])}<span class="sn">${esc(nm)}</span></a>`
-          : `<span class="side ${cls}"><span class="sn">${esc(nm)}</span></span>`; };
-        return `<div class="match"><div class="mrow">${fs(f.t1, '')}<span class="vs">${esc(f.round)}</span>${fs(f.t2, 'away')}</div>
-      <div class="meta"><span>${fmtKick(f.start)}</span><span>${esc(f.venue || '')}</span></div></div>`; }).join('') : '') +
+    (upcoming.length ? `<div class="kicker" style="margin-top:12px">Coming up · next fixtures</div>` +
+      upcoming.map(fixtureRow).join('') +
+      `<p class="note"><a href="#/matches">All verified fixtures &rarr;</a></p>` : '') +
     (rows.length ? `<div class="kicker" style="margin-top:12px">The results wire · ${rows.length.toLocaleString()} rated matches</div>` +
       rows.slice(0, wireLimit).map(wireResultRow).join('') +
       (rows.length > wireLimit ? `<button class="chip solid" id="wiremore" style="margin-top:8px">Show more</button>` : '')

@@ -1,16 +1,36 @@
 {
- "_source": "cross-league join against official league club directories (TGS orgIDs 12/9/16/13/22/21, GA, GA Aspire); every city is league-stated, source recorded per club",
+ "_source": "cross-league join against official league club directories (TGS orgIDs 12/9/16/13/22/21, GA, GA Aspire) plus verified-location club records already on the Ranked XI map; every city is league-stated, source recorded per club",
  "resolved": {
   "ea": {
+   "ALBION SC Washington": {
+    "city": "Bellevue",
+    "st": "WA",
+    "source": "GA Aspire directory"
+   },
+   "Harbor Soccer Club": {
+    "city": "Gig Harbor",
+    "st": "WA",
+    "source": "GA Aspire directory"
+   },
    "Mt. Rainier": {
     "city": "Buckley",
     "st": "WA",
     "source": "GA Aspire directory"
    },
+   "United Sports FC": {
+    "city": "Bellevue",
+    "st": "WA",
+    "source": "Ranked XI club record (upsl)"
+   },
    "ALBION SC Central Valley": {
     "city": "Clovis",
     "st": "CA",
     "source": "ECNL RL Boys directory (TGS)"
+   },
+   "Sonoma Valley United": {
+    "city": "Sonoma",
+    "st": "CA",
+    "source": "Ranked XI club record (upsl)"
    },
    "California Football Academy": {
     "city": "Laguna Hills",
@@ -22,6 +42,16 @@
     "st": "CA",
     "source": "GA members directory"
    },
+   "FLYTE SC Inland Empire": {
+    "city": "Rancho Cucamonga",
+    "st": "CA",
+    "source": "GA Aspire directory"
+   },
+   "Laguna United": {
+    "city": "Laguna Niguel",
+    "st": "CA",
+    "source": "Ranked XI club record (upsl)"
+   },
    "Rangers FC": {
     "city": "Fullerton",
     "st": "CA",
@@ -31,6 +61,11 @@
     "city": "Irvine",
     "st": "CA",
     "source": "GA members directory"
+   },
+   "City SC NOCO": {
+    "city": "Windsor",
+    "st": "CO",
+    "source": "GA Aspire directory"
    },
    "Colorado Rush": {
     "city": "Denver, CO 80231",
@@ -57,6 +92,11 @@
     "st": "TX",
     "source": "ECNL RL Boys directory (TGS)"
    },
+   "Croatian Eagles SC": {
+    "city": "Franklin",
+    "st": "WI",
+    "source": "GA Aspire directory"
+   },
    "FC Stars": {
     "city": "Lancaster",
     "st": "MA",
@@ -66,6 +106,11 @@
     "city": "White Bear Lake",
     "st": "MN",
     "source": "ECNL RL Girls directory (TGS)"
+   },
+   "JB Marine Soccer Club": {
+    "city": "St. Louis",
+    "st": "MO",
+    "source": "GA Aspire directory"
    }
   },
   "mlsnext_academy": {
@@ -89,6 +134,11 @@
     "st": "NY",
     "source": "GA Aspire directory"
    },
+   "Ballistic United": {
+    "city": "Pleasanton",
+    "st": "CA",
+    "source": "Ranked XI club record (upsl)"
+   },
    "Bayside FC": {
     "city": "Providence",
     "st": "RI",
@@ -98,6 +148,11 @@
     "city": "Burlingame",
     "st": "CA",
     "source": "ECNL RL Boys directory (TGS)"
+   },
+   "Carolina Velocity FC": {
+    "city": "Raleigh",
+    "st": "NC",
+    "source": "GA Aspire directory"
    },
    "Diablo Valley Futbol Club": {
     "city": "Clayton",
@@ -129,9 +184,19 @@
     "st": "VA",
     "source": "GA Aspire directory"
    },
+   "Galacticos Soccer Academy": {
+    "city": "Naples",
+    "st": "FL",
+    "source": "Ranked XI club record (upsl)"
+   },
    "Ginga FC": {
     "city": "Woodbridge",
     "st": "CT",
+    "source": "GA Aspire directory"
+   },
+   "Grand Junction Soccer Club": {
+    "city": "Grand Junction",
+    "st": "CO",
     "source": "GA Aspire directory"
    },
    "Jacksonville FC": {
@@ -139,25 +204,15 @@
     "st": "FL",
     "source": "ECNL Girls directory (TGS)"
    },
-   "Kings Hammer Cincinnati": {
-    "city": "Covington",
-    "st": "KY",
-    "source": "Pre-ECNL Boys directory (TGS)"
-   },
-   "Lamorinda Soccer Club": {
-    "city": "Orinda",
-    "st": "CA",
-    "source": "GA members directory"
-   },
    "Lexington Sporting Club": {
     "city": "Lexington",
     "st": "KY",
-    "source": "ECNL RL Girls directory (TGS)"
+    "source": "ECNL RL Boys directory (TGS)"
    },
    "Long Island Slammers": {
     "city": "Central Islip",
     "st": "NY",
-    "source": "ECNL RL Girls directory (TGS)"
+    "source": "ECNL RL Boys directory (TGS)"
    },
    "Lowcountry United": {
     "city": "Charleston",
@@ -204,15 +259,15 @@
     "st": "WA",
     "source": "GA members directory"
    },
+   "Sound FC": {
+    "city": "Woodinville",
+    "st": "WA",
+    "source": "GA Aspire directory"
+   },
    "South Florida Football Academy": {
     "city": "Boca Raton",
     "st": "FL",
     "source": "ECNL RL Girls directory (TGS)"
-   },
-   "Southern Soccer Academy": {
-    "city": "Marietta",
-    "st": "GA",
-    "source": "GA members directory"
    },
    "Sporting Athletic Club": {
     "city": "Wilmington",
@@ -239,11 +294,6 @@
     "st": "VA",
     "source": "GA Aspire directory"
    },
-   "West Florida Flames": {
-    "city": "Apollo Beach",
-    "st": "FL",
-    "source": "GA members directory"
-   },
    "Westside Metros FC": {
     "city": "Beaverton",
     "st": "OR",
@@ -264,32 +314,26 @@
  "unresolved": {
   "ea": [
    "ALBION SC Hawaii",
-   "ALBION SC Washington",
    "Atletico",
    "BVBIA Washington",
    "Emerald City Football Club",
-   "Harbor Soccer Club",
    "Highline Premier FC",
    "Sozos",
    "Sting Soccer Club ID",
-   "United Sports FC",
    "Warriors Sports Academy",
    "Washington East Surf Columbia Basin",
    "Western WA Surf Academy",
    "ALBION SC Silicon Valley",
    "Football Club Alliance",
    "Nevada Futbol Club",
-   "Sonoma Valley United",
    "ALBION SC Antelope Valley",
    "Boca OC",
    "Central Cal Aztecs",
    "FC Golden State Force",
-   "FLYTE SC Inland Empire",
    "Fram CQ",
    "Inland Surf",
    "LA SURF FUTURES",
    "LA SURF LC",
-   "Laguna United",
    "LAIFC",
    "Oaks FC",
    "SoCal Elite FC",
@@ -299,7 +343,6 @@
    "ALBION SC Boulder County",
    "ALBION SC Utah",
    "BVBIA Arizona",
-   "City SC NOCO",
    "Colorado Elevation FC",
    "Colorado Rush COS",
    "Inter Utah SC",
@@ -307,13 +350,11 @@
    "Utah Athletic - North",
    "Manchester City North Texas",
    "Steel United TX",
-   "Croatian Eagles SC",
    "FC1 Academy",
    "JaBHat FC",
    "North Shore United Soccer Club",
    "Team Chicago",
    "Hoosier Futbol Club",
-   "JB Marine Soccer Club",
    "United Elite SC",
    "USA of Indiana",
    "Black River Athletics",
@@ -335,11 +376,9 @@
    "Aspire FC",
    "Athletum FC Academy",
    "Atletico FC",
-   "Ballistic United",
    "Baltimore Armour",
    "Bavarian United SC",
    "Capital City South",
-   "Carolina Velocity FC",
    "Cedar Stars Academy Newark",
    "Celtic Storm",
    "Charleston SC",
@@ -355,18 +394,18 @@
    "FC Hudson Valley",
    "FC Tucson Youth Soccer Club",
    "Fox Soccer Academy Carolinas",
-   "Galacticos Soccer Academy",
    "GFI Academy South",
-   "Grand Junction Soccer Club",
    "Hillsboro Rush",
    "Hoover-Vestavia Soccer",
    "Houston Futsal Club",
    "IdeaSport SA",
    "IFA West",
    "Intercontinental Football Academy of New England",
+   "Kings Hammer Cincinnati",
    "Kings Hammer Nashville",
    "KSA",
    "LA Youth",
+   "Lamorinda Soccer Club",
    "Lanier Soccer Association",
    "Lou Fusz Athletic 2",
    "Louisiana Elite SP",
@@ -400,7 +439,7 @@
    "SGA",
    "Skyline Soccer Association",
    "Sol Sports Club",
-   "Sound FC",
+   "Southern Soccer Academy",
    "Sozo FC",
    "Sparta United Soccer Club",
    "Sporting Oklahoma",
@@ -413,6 +452,7 @@
    "Triangle United Soccer Association",
    "Tulsa Greenwood SC",
    "Virginia Rush",
+   "West Florida Flames",
    "Westside Metros FC South"
   ]
  }
