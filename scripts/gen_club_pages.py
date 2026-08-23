@@ -60,6 +60,13 @@ today = datetime.date.today().isoformat()
 HAS_LANDING = {'upsl': '/upsl-rankings', 'npsl': '/npsl-rankings'}
 
 rated = [c for c in clubs if not c.get('h') and c.get('r') and c.get('id')]
+# Clubs we hold but cannot rate still get a page. They are real clubs with a
+# crest, a city and socials, and 279 of them are UPSL sides whose divisions
+# publish no usable standings. Dropping their pages would 404 indexed URLs
+# and delete the one page on the web that names some of these clubs — the
+# honest fix is a page that says "not yet rated", not no page.
+unrated = [c for c in clubs if not c.get('h') and not c.get('r') and c.get('id')]
+listed = rated + unrated
 by_sex = {}
 for c in rated:
     by_sex.setdefault(c.get('x', 'm'), []).append(c)
@@ -181,7 +188,7 @@ def fresh(name):
 
 # ---------------------------------------------------------------- club pages
 out_dir = fresh('club')
-for c in rated:
+for c in listed:
     g = c['g']
     label = lg_label(g)
     loc = f"{c.get('ct', '')}, {c['st']}" if c.get('ct') else c.get('st', '')
@@ -189,9 +196,15 @@ for c in rated:
     basis = BASIS.get(c.get('rr'), ILLUSTRATIVE)
     w = sexw(c)
     title = f"{c['n']} — {label} rating & national rank | Ranked XI"
-    desc = (f"{c['n']} ({loc}) rates {c['r']} {basis} — #{lg_rank[c['id']]} in {label}, "
-            f"#{nat_rank[c['id']]} of {len(by_sex[c.get('x', 'm')]):,} rated clubs in the "
-            f"{'women’s' if w else 'men’s'} US soccer pyramid.")
+    is_rated = c['id'] in nat_rank
+    if is_rated:
+        desc = (f"{c['n']} ({loc}) rates {c['r']} {basis} — #{lg_rank[c['id']]} in {label}, "
+                f"#{nat_rank[c['id']]} of {len(by_sex[c.get('x', 'm')]):,} rated clubs in the "
+                f"{'women’s' if w else 'men’s'} US soccer pyramid.")
+    else:
+        desc = (f"{c['n']} ({loc}) plays in {label}. Not yet rated — no usable "
+                f"results or standings published for this club's division. "
+                f"Location, crest and official links on Ranked XI.")
     # per-club share card when gen_og_cards.py produced one (it runs first in
     # deploy.sh); otherwise the site-wide banner
     has_card = os.path.exists(os.path.join(ROOT, 'og', f"{c['id']}.jpg"))
@@ -234,10 +247,11 @@ for c in rated:
 <h1>{name}</h1>
 <p>{html.escape(loc)} · {html.escape(label)} · {'women’s' if w else 'men’s'} game</p>
 <div class="stats">
-<div><b>{c['r']}</b><span>Rating, {html.escape(basis)}</span></div>
-<div><b>#{lg_rank[c['id']]}</b><span>{html.escape(label)}</span></div>
-<div><b>#{nat_rank[c['id']]}</b><span>National ({'women’s' if w else 'men’s'}, of {len(by_sex[c.get('x', 'm')]):,} rated)</span></div>
+{f'<div><b>{c["r"]}</b><span>Rating, {html.escape(basis)}</span></div>' if is_rated else '<div><b>—</b><span>Not yet rated</span></div>'}
+{f'<div><b>#{lg_rank[c["id"]]}</b><span>{html.escape(label)}</span></div>' if is_rated else ''}
+{f'<div><b>#{nat_rank[c["id"]]}</b><span>National ({"women’s" if w else "men’s"}, of {len(by_sex[c.get("x", "m")]):,} rated)</span></div>' if is_rated else f'<div><b>NR</b><span>National ({"women’s" if w else "men’s"})</span></div>'}
 </div>
+{'' if is_rated else '<p class="note">We hold this club, its location and its links, but no published standings or results we can verify — so it carries no rating and no rank. A rating appears here the moment its division publishes a usable table.</p>'}
 <a class="cta" href="/app#/club/{c['id']}">Full profile in the app — map, matchups, players →</a>
 {f'<h2>Nearest rated rivals</h2><ul>{riv_rows}</ul>' if riv_rows else ''}
 <h2>Where {name} sits</h2><ul class="chips">{''.join(up)}</ul>
@@ -329,7 +343,7 @@ urls = [f'{SITE}/', f'{SITE}/app', f'{SITE}/upsl-rankings',
         f'{SITE}/player-simulator', f'{SITE}/shots', f'{SITE}/radar'] + \
        [f'{SITE}/league/{g}' for g in lg_ids] + \
        [f'{SITE}/state/{s}' for s in st_ids] + \
-       [f'{SITE}/club/{c["id"]}' for c in rated]
+       [f'{SITE}/club/{c["id"]}' for c in listed]
 sm = ['<?xml version="1.0" encoding="UTF-8"?>',
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'] + \
      [f'  <url><loc>{html.escape(u)}</loc></url>' for u in urls] + ['</urlset>']
@@ -380,5 +394,5 @@ open(idx_path, 'w').write(idx[:start] + browse + idx[end:])
 print(f'index.html browse block: {len(leagues_in_browse)} leagues + '
       f'{len(states_in_browse)} states linked')
 
-print(f'club pages: {len(rated)} · league pages: {len(lg_ids)} · '
+print(f'club pages: {len(listed)} ({len(rated)} rated, {len(unrated)} unrated) · league pages: {len(lg_ids)} · '
       f'state pages: {len(st_ids)} · sitemap urls: {len(urls)}')

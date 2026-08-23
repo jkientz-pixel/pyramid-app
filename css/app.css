@@ -450,6 +450,12 @@ a.wirelink:hover .side{color:var(--accent)}
 /* same box as the illustrated map (svg.usmap viewBox 980x580) so toggling
    modes doesn't jump the page height, and so the contiguous states fill
    the frame in both instead of floating in a band of Canada and Mexico */
+/* Deliberately aspect-ratio and not a viewport-height floor. The lower 48 is a
+   2.3:1 wide shape, so fitBounds is always width-bound on a phone: making the
+   box taller does not enlarge the country, it just pads it with ocean (a 46svh
+   box framed 62 degrees of latitude for a 25-degree country). The map reads
+   small on a phone because ~200px of filter chips sit above it, which is a
+   layout problem, not a map-height one. */
 .leafmap{width:100%;aspect-ratio:980/580;height:auto;max-height:72vh}
 .leafmap[hidden]{display:none}
 .mapbox[data-mode="street"] svg.usmap,.mapbox[data-mode="street"] .mapctl,.mapbox[data-mode="street"] .maptip{display:none}
@@ -458,16 +464,25 @@ a.wirelink:hover .side{color:var(--accent)}
 .mapmode button+button{border-left:1px solid var(--line)}
 .mapmode button[aria-pressed="true"]{background:var(--accent,#2f6e4f);color:#fff}
 .leafmap .leaflet-tooltip{font:inherit;font-size:.8rem}
-.leafmap.leaflet-container{background:#0c1013}
+/* water/void takes the app's own ground, not a generic slate, so the map box
+   reads as part of the page instead of an embedded widget */
+.leafmap.leaflet-container{background:#0a1210}
 /* dark textured cartography: invert flips OSM's light ocean to deep navy and
    turns roads into light threads; desaturate + retune keeps it from looking
    like a photo negative. Grain overlay sits above tiles, below markers. */
 /* filter each tile IMG, not the layer container: WebKit blanks filtered
    ancestors of 3d-transformed tiles (the whole basemap vanished in Safari) */
-.leafmap .relieftiles .leaflet-tile{filter:brightness(.88) contrast(1.18)}
-.leafmap .basetiles .leaflet-tile{filter:invert(1) hue-rotate(200deg) saturate(.3) brightness(1.18) contrast(1.02)}
+/* Hillshade carries the terrain and the site's charcoal look. It was dark
+   enough that the coastline vanished under the pins at national zoom; lifting
+   brightness and pushing contrast keeps the embossed relief but gives the
+   landmass a readable edge against the water. */
+.leafmap .relieftiles .leaflet-tile{filter:brightness(.82) contrast(1.34) sepia(.42) hue-rotate(112deg) saturate(.62)}
+/* inverted OSM supplies borders, roads and town labels; tinted to the same
+   green-charcoal as the relief beneath it so the two layers read as one map
+   rather than a blue grid floating over grey terrain */
+.leafmap .basetiles .leaflet-tile{filter:invert(1) hue-rotate(150deg) saturate(.22) brightness(1.1) contrast(1.05)}
 .leafmap::after{content:'';position:absolute;inset:0;z-index:350;pointer-events:none;opacity:.16;mix-blend-mode:soft-light;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="180" height="180" filter="url(%23n)"/></svg>')}
-.leafmap::before{content:'';position:absolute;inset:0;z-index:351;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(5,8,10,.38) 100%)}
+.leafmap::before{content:'';position:absolute;inset:0;z-index:351;pointer-events:none;background:radial-gradient(ellipse at center,transparent 62%,rgba(5,8,10,.26) 100%)}
 .leafmap .leaflet-marker-icon{filter:drop-shadow(0 0 3px rgba(0,0,0,.85)) drop-shadow(0 1px 2px rgba(0,0,0,.6))}
 .leafmap.leaflet-container .leaflet-control-attribution{background:rgba(12,16,19,.7);color:#9aa7b0;font-size:.62rem;line-height:1.5;padding:0 5px}
 .leafmap.leaflet-container .leaflet-control-attribution a{color:#c7d2da}
@@ -486,6 +501,20 @@ a.wirelink:hover .side{color:var(--accent)}
   padding: 8px 16px; font: inherit; font-weight: 700; cursor: pointer }
 .fixform button:hover { filter: brightness(1.1) }
 .fixform button:disabled { opacity: .6; cursor: default }
+/* Register-interest forms reuse .fixform, but they are a call to action rather
+   than a buried "see an error?" link — so the summary reads as a button and the
+   13+ confirmation gets a real checkbox row instead of inheriting input styling. */
+.interestform > summary {
+  display: inline-block; background: var(--accent); color: #fff;
+  border-radius: 8px; padding: 9px 16px; font-weight: 700; font-size: .9rem }
+.interestform > summary:hover { filter: brightness(1.1) }
+.interestform > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+.interestform[open] > summary { background: var(--raise); color: var(--ink-dim); font-weight: 600 }
+.interestform .agecheck {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--ink-dim); font-size: .82rem }
+.interestform .agecheck input { width: auto; padding: 0; accent-color: var(--accent) }
+.interestform .interr { color: var(--sim-down, #e86a5e) }
 
 /* ---- Rank Simulator ---- */
 .simclubrow{display:flex;align-items:center;gap:10px;background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px}

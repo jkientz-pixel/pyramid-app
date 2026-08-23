@@ -37,11 +37,31 @@ test('an Alaska scope still frames Alaska', async ({ page }) => {
 
 test('switching map modes does not change the box height', async ({ page }) => {
   await gotoRoute(page, '#/map');
-  await page.waitForSelector('svg.usmap');
+  /* Detailed is the default now, so start from Illustrated to measure both */
+  await page.click('.mapmode [data-mode="art"]');
+  await page.waitForSelector('svg.usmap', { state: 'visible' });
   const art = await page.locator('.mapbox').boundingBox();
   await page.click('.mapmode [data-mode="street"]');
   await page.waitForSelector('.leafmap.leaflet-container');
   const street = await page.locator('.mapbox').boundingBox();
   expect(Math.abs(street.height - art.height)).toBeLessThan(2);
   expect(Math.abs(street.width - art.width)).toBeLessThan(2);
+});
+
+/* A scoped screen has its own home extent, so a constant pin-scale floor blows
+   crests up on tight scopes: the Alaska inset is 232 units wide against the
+   national 980, and at its zoom limit one crest rendered ~150px — a single
+   badge filling the box with no coastline behind it. The floor now scales with
+   the screen's own extent. Alaska is the tightest scope we ship, so it is the
+   one that guards this. */
+test('crests stay a sane size at max zoom on a tight scope (Alaska)', async ({ page }) => {
+  await gotoRoute(page, '#/state/AK');
+  await page.click('.mapmode [data-mode="art"]');
+  await page.waitForSelector('svg.usmap image.pin', { state: 'attached' });
+  const zoomIn = page.locator('.mapctl [data-z="in"]');
+  for (let i = 0; i < 12; i++) await zoomIn.click();
+  const px = await page.locator('svg.usmap image.pin').first().evaluate(
+    el => el.getBoundingClientRect().width);
+  expect(px).toBeGreaterThan(8);    // still visible
+  expect(px).toBeLessThan(70);      // not a badge swallowing the map
 });

@@ -27,4 +27,15 @@ async function gotoRoute(page, hash) {
   await viewRendered(page);
 }
 
-module.exports = { trackErrors, viewRendered, gotoRoute };
+/* Detailed (Leaflet) is the default map mode. Tests that exercise the
+   illustrated SVG — its viewBox framing, its pan clamp, its zoom controls —
+   have to ask for it explicitly, because .mapctl and svg.usmap are both hidden
+   while the tile map is showing. */
+async function gotoIllustrated(page, hash) {
+  await gotoRoute(page, hash);
+  const toggle = page.locator('.mapmode [data-mode="art"]');
+  if (await toggle.count()) await toggle.click();
+  await page.waitForSelector('svg.usmap', { state: 'visible' });
+}
+
+module.exports = { trackErrors, viewRendered, gotoRoute, gotoIllustrated };

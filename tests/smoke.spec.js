@@ -1,6 +1,6 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
-const { trackErrors, viewRendered, gotoRoute } = require('./helpers');
+const { trackErrors, viewRendered, gotoRoute, gotoIllustrated } = require('./helpers');
 
 /* Every top-level hash route the router dispatches (js/app.js route()).
    Each must render into #view without a single console/page error. */
@@ -79,7 +79,6 @@ test('unknown route renders an honest not-found, not the map', async ({ page }) 
 for (const [typed, lands] of [
   ['#/free-agents', 'freeagents'],
   ['#/claim', 'clubtools'],
-  ['#/sponsorships', 'advertise'],
   ['#/follow', 'myxi'],
   ['#/following', 'myxi'],
   ['#/standings', 'table'],
@@ -94,6 +93,27 @@ for (const [typed, lands] of [
     expect(errors).toEqual([]);
   });
 }
+
+/* Advertising was removed entirely: no ad slots, no rate card, no #/advertise.
+   An unsold slot rendering "your brand here" reads as a dead site, and a
+   published rate card prices against traffic we have not proved. These assert
+   the surface stays gone rather than quietly returning. */
+test('#/advertise is gone and does not render an ad surface', async ({ page }) => {
+  const errors = trackErrors(page);
+  await gotoRoute(page, '#/advertise');
+  await viewRendered(page);
+  await expect(page.locator('#view')).toContainText("That page isn't here");
+  expect(errors).toEqual([]);
+});
+
+test('no screen renders an unsold sponsor slot', async ({ page }) => {
+  for (const h of ['#/map', '#/tiers', '#/wire', '#/freeagents']) {
+    await gotoRoute(page, h);
+    await viewRendered(page);
+    await expect(page.locator('#view .adslot')).toHaveCount(0);
+    await expect(page.locator('#view')).not.toContainText('Sponsor slot');
+  }
+});
 
 test('legacy numeric club id redirects to the permanent slug', async ({ page }) => {
   const errors = trackErrors(page);
@@ -160,6 +180,7 @@ test('appbar wordmark is a home link and resets the map framing', async ({ page 
   const errors = trackErrors(page);
   await gotoRoute(page, '#/tiers');
   await page.click('.appbar .brand');
+  await page.locator('.mapmode [data-mode="art"]').click();
   await viewRendered(page);
   expect(page.url()).toContain('#/map');
   const svg = page.locator('svg.usmap');
@@ -191,7 +212,7 @@ for (const path of ['/index.html', '/npsl-rankings.html', '/upsl-rankings.html']
 
 test('map pan stays anchored — drag cannot push the map out of the box', async ({ page }) => {
   const errors = trackErrors(page);
-  await gotoRoute(page, '#/map');
+  await gotoIllustrated(page, '#/map');
   const svg = page.locator('svg.usmap');
   await expect(svg).toBeVisible();
   // zoom in twice so there is room to pan, then drag hard past the edge
@@ -215,4 +236,31 @@ test('map pan stays anchored — drag cannot push the map out of the box', async
   expect(x + w).toBeLessThanOrEqual(980.1);
   expect(y + h).toBeLessThanOrEqual(560.1);
   expect(errors).toEqual([]);
+});
+
+/* Interest capture replaced the mailto: CTAs. A mailto gives one bit and no way
+   to tell "no demand" from "no discovery" — these assert the forms are actually
+   present and that no CTA quietly reverts to a mail link. */
+for (const [route, count] of [['#/pricing', 2], ['#/freeagents', 1], ['#/clubtools/sample', 1]]) {
+  test(`${route} offers a register-interest form, not a mailto`, async ({ page }) => {
+    const errors = trackErrors(page);
+    await gotoRoute(page, route);
+    await viewRendered(page);
+    await expect(page.locator('#view .interestform')).toHaveCount(count);
+    /* No CTA may be a mail link. Notice/removal links stay mailto on purpose —
+       an abuse report should reach a human directly, not a moderation queue. */
+    await expect(page.locator('#view a.claim[href^="mailto"]')).toHaveCount(0);
+    expect(errors).toEqual([]);
+  });
+}
+
+test('the interest form gates on email and the 13+ confirmation', async ({ page }) => {
+  await gotoRoute(page, '#/freeagents');
+  await viewRendered(page);
+  const form = page.locator('#view .interestform form');
+  await expect(form.locator('input[name="email"][required]')).toHaveCount(1);
+  await expect(form.locator('input[name="age13"][required]')).toHaveCount(1);
+  /* honeypot must stay in the markup and stay off-screen */
+  await expect(form.locator('input[name="website"]')).toHaveCount(1);
+  await expect(form.locator('input[name="website"]')).not.toBeInViewport();
 });

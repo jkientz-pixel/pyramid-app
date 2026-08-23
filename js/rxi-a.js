@@ -73,6 +73,11 @@
     } catch (e) { return null; }
   })();
 
+  /* Kept for the session so a form submitted later in the visit can record the
+     channel that produced it. Read-only to the rest of the app; `src` itself is
+     nulled after the landing pageview so the tag is not stamped on every hit. */
+  try { window.__rxiSrc = src; } catch (e) {}
+
   var last = '';
   function send() {
     var path = location.pathname + (location.hash.indexOf('#/') === 0 ? location.hash : '');
