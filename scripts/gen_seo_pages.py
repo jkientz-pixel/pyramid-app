@@ -11,16 +11,9 @@ leagues = json.loads(re.search(r'export const LEAGUES=(\{.*?\});', src, re.S).gr
 
 # /js/* is served immutable for a year, so an untokened script URL here would
 # pin every returning visitor to the copy of rxi-a.js they first cached — on
-# the club/league/state pages, which are most of the site. Read the token
-# deploy.sh just stamped into app.html rather than restating it.
-def _asset_token():
-    m = re.search(r'2026\d{4}[a-z]', open(os.path.join(ROOT, 'app.html')).read())
-    if not m:
-        raise SystemExit('FATAL: no cache-bust token in app.html')
-    return m.group(0)
-
-
-VTOKEN = _asset_token()
+# the club/league/state pages, which are most of the site. Emit the placeholder;
+# deploy.sh stamps the real token into the staged tree (scripts/cachebust.py).
+from cachebust import PLACEHOLDER as VTOKEN
 
 FONT_FACE = ('@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:700;'
              'font-display:swap;src:url(/fonts/barlow-condensed-latin-700.woff2) format("woff2")}')

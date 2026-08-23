@@ -1,11 +1,15 @@
 #!/bin/bash
-# Rank XI dual deploy: GitHub (repo of record + legacy URL) + Cloudflare Pages (canonical)
+# Rank XI deploy to Cloudflare Pages (canonical). This script does not touch
+# git: the cache-bust token is minted here and stamped into the staged tree
+# only, so a deploy no longer produces a commit to push.
 set -e
 cd "$(dirname "$0")"
 
-# stamp one fresh cache-bust token across app.html/index.html/app.js/sw.js —
-# replaces the manual ?v= sed ritual; preflight still verifies consistency
-NEWV=$(python3 scripts/bump_version.py | tail -1 | awk '{print $NF}')
+# Mint the cache-bust token. It is stamped into the staged tree further down
+# and never written back to the repo (scripts/cachebust.py). A token that is
+# never committed cannot collide between branches, cannot be walked backwards
+# by a merge, and cannot leave a PR red just for being a few hours old.
+NEWV=$(python3 scripts/cachebust.py --mint)
 
 # regenerate the static SEO surface from current data: the two hand-tuned
 # league landing pages, per-club share cards (og/ — must run before club pages
@@ -16,13 +20,6 @@ python3 scripts/gen_og_cards.py
 python3 scripts/gen_club_pages.py
 
 python3 scripts/preflight.py
-
-# bump_version.py owns the list of files that carry the token; ask it rather
-# than keeping a second copy that can fall behind.
-VERSIONED="$(python3 scripts/bump_version.py --list)"
-git diff --quiet -- $VERSIONED || \
-  git commit -m "chore: cache-bust v${NEWV}" -- $VERSIONED
-git push
 
 # Ship a staged tree, not the repo root. `wrangler pages deploy .` uploaded the
 # scrapers and every raw scrape dump — including per-player names and birth years
@@ -45,6 +42,12 @@ cp -R app.html index.html 404.html npsl-rankings.html upsl-rankings.html \
 if [ -d og ]; then cp -R og "$STAGE/"; rm -f "$STAGE/og/.cards.json"; fi
 # local editor/backup droppings must not reach production
 find "$STAGE/js" "$STAGE/css" \( -name '*.bak' -o -name '*.tmp' \) -delete
+
+# The one place a real cache-bust token exists. Every page and js module ships
+# with the placeholder swapped for $NEWV; the repo keeps the placeholder. This
+# aborts if the placeholder is missing, which would ship a build that returning
+# browsers never refetch (/js/*, /css/* and /data/* are immutable for a year).
+python3 scripts/cachebust.py --stamp "$STAGE" "$NEWV"
 
 # only the data files app.js actually fetches
 mkdir -p "$STAGE/data"

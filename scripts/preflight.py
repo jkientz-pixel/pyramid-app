@@ -2,11 +2,12 @@
 """Pre-deploy gate. Run by deploy.sh; exits non-zero on anything that would
 ship a broken or stale build. Checks:
   1. js/data.js + js/rosters.js parse, and club slugs are present + unique;
-  2. the cache-bust token is identical across app.html, index.html, js/app.js
-     and sw.js VERSION (drift = users served stale code);
+  2. no shipped source file carries a literal cache-bust token, and every one
+     that needs it carries the placeholder deploy.sh stamps (see cachebust.py);
   3. every data/*.json the app fetches exists and parses.
 """
 import json, re, pathlib, subprocess, sys
+import cachebust
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 fail = []
@@ -42,15 +43,27 @@ for marker in ('ROSTERS', 'HONOURS'):
         fail.append(f'rosters.js: {marker} does not parse ({e})')
 print('  rosters.js OK')
 
-vers = set()
-for f in ('app.html', 'index.html'):
-    vers |= set(re.findall(r'v=(2026[0-9a-z]+)', (ROOT / f).read_text()))
-vers |= set(re.findall(r'v=(2026[0-9a-z]+)', (ROOT / 'js' / 'app.js').read_text()))
-vers |= set(re.findall(r"VERSION = 'rankxi-v(2026[0-9a-z]+)'", (ROOT / 'sw.js').read_text()))
-if len(vers) != 1:
-    fail.append(f'cache-bust drift across app.html/index.html/app.js/sw.js: {sorted(vers)}')
-else:
-    print(f'  cache version consistent: {vers.pop()}')
+# Source must never carry a real cache-bust token: deploy.sh stamps one into
+# the staged tree instead. A literal token committed here ships frozen — /js/*
+# and /css/* are served immutable for a year, so anyone who cached that URL
+# never sees another build. It is also what made every PR older than a few
+# hours go red, back when the token was committed and master's advanced twice
+# a day under the roster refresh.
+CB_FILES = ['app.html', 'index.html', 'js/app.js', 'sw.js', 'js/myxi.js',
+            'js/account.js', 'privacy.html', 'methodology.html', 'shots.html',
+            'radar.html', 'player-simulator.html', '404.html',
+            'npsl-rankings.html', 'upsl-rankings.html']
+_cb_literal = cachebust.check([ROOT / f for f in CB_FILES])
+for b in _cb_literal:
+    fail.append(f'literal cache-bust token in source (deploy.sh stamps it): {b}')
+_cb_missing = [f for f in CB_FILES
+               if cachebust.PLACEHOLDER not in (ROOT / f).read_text()]
+if _cb_missing:
+    fail.append(f'cache-bust placeholder missing from {_cb_missing} — those assets '
+                f'would ship untokened and cache for a year')
+if not _cb_literal and not _cb_missing:
+    print(f'  cache-bust: {len(CB_FILES)} files carry {cachebust.PLACEHOLDER}, '
+          f'no literal tokens')
 
 # This list is also what deploy.sh stages, so a path that matches the pattern
 # but does not exist kills the deploy at the cp. The pattern is blind to
@@ -221,13 +234,13 @@ try:
     # (/js/* is served immutable for a year).
     # gen_seo_pages.py rewrites some pages every deploy, so the token in a
     # committed copy is always stale — those are checked via the generator's
-    # template instead. Pages bump_version.py maintains are NOT exempt even
+    # template instead. Pages listed in CB_FILES are NOT exempt even
     # when the generator also touches them: it bakes counts into index.html
     # and app.html, and exempting those would have skipped the two pages that
     # carry the most traffic.
-    _versioned = set(subprocess.run(
-        [sys.executable, str(ROOT / 'scripts' / 'bump_version.py'), '--list'],
-        capture_output=True, text=True, check=True).stdout.split())
+    # files that carry the cache-bust placeholder in their own committed source,
+    # as opposed to receiving it from a generator at build time
+    _versioned = set(CB_FILES)
     generated = set(_re.findall(r"'([a-z0-9-]+\.html)'",
                                 (ROOT / 'scripts' / 'gen_seo_pages.py').read_text())) - _versioned
     # INFRA is excluded from the sitemap checks above because those pages are
@@ -241,7 +254,7 @@ try:
             continue
         if 'rxi-a.js' not in src:
             untagged.append(f)
-        elif f not in generated and not _re.search(r'rxi-a\.js\?v=2026\d{4}[a-z]', src):
+        elif f not in generated and f'rxi-a.js?v={cachebust.PLACEHOLDER}' not in src:
             untokened.append(f)
     for s in ('scripts/gen_seo_pages.py', 'scripts/gen_club_pages.py'):
         body = (ROOT / s).read_text()
@@ -252,7 +265,7 @@ try:
     if untagged:
         fail.append('shipped pages carry no analytics ping: ' + ', '.join(untagged)
                     + ' (add <script src="/js/rxi-a.js?v=TOKEN" defer> and list the'
-                    + ' page in scripts/bump_version.py FILES)')
+                    + ' page in CB_FILES above)')
     if untokened:
         fail.append('analytics ping is untokened on: ' + ', '.join(untokened)
                     + ' (/js/* is immutable for a year — returning visitors would'

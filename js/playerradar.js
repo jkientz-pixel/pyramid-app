@@ -10,7 +10,7 @@
    the minutes floor is a live control, so the comparison pool has to be able
    to change underfoot. Everything downstream reads from poolFor().
 
-   Self-contained by convention: bump_version.py only rewrites ?v= tokens in
+   Self-contained by convention: the deploy stamp only rewrites ?v= tokens in
    app.js, so a module that imported a sibling would serve that sibling stale
    forever. Keep this file importing nothing. */
 
