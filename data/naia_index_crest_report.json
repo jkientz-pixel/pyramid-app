@@ -1,0 +1,536 @@
+{
+ "ok": [
+  {
+   "club_id": "baker-university-wildcats",
+   "name": "Baker University Wildcats",
+   "slug": "naia-baker-university-wildcats",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/v360z60kv8w34fzj.png",
+   "team": "Baker",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "bethel-university-pilots",
+   "name": "Bethel University Pilots",
+   "slug": "naia-bethel-university-pilots",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/mo7804cptths2ynf.png",
+   "team": "Bethel (IN)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "bluefield-university-rams",
+   "name": "Bluefield University Rams",
+   "slug": "naia-bluefield-university-rams",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/zbvvcwr7ku33h00x.png",
+   "team": "Bluefield (VA)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "concordia-universitynebraska-bulldogs",
+   "name": "Concordia University\u2013Nebraska Bulldogs",
+   "slug": "naia-concordia-universitynebraska-bulldogs",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/ahgrubt8520o3h2j.png",
+   "team": "Concordia (Neb.)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "cumberland-university-phoenix",
+   "name": "Cumberland University Phoenix",
+   "slug": "naia-cumberland-university-phoenix",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/50az4btjh2z0yf4d.png",
+   "team": "Cumberland (Tenn.)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "university-of-the-cumberlands-patriots",
+   "name": "University of the Cumberlands Patriots",
+   "slug": "naia-university-of-the-cumberlands-patriots",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/1t7lxahh605o9s95.png",
+   "team": "Cumberlands (Ky.)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "dakota-wesleyan-university-tigers",
+   "name": "Dakota Wesleyan University Tigers",
+   "slug": "naia-dakota-wesleyan-university-tigers",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/wyf26kgq8grvuzdh.png",
+   "team": "Dakota Wesleyan (SD)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "freedhardeman-university-lions",
+   "name": "Freed\u2013Hardeman University Lions",
+   "slug": "naia-freedhardeman-university-lions",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/ouup8bmcnt537igi.png",
+   "team": "Freed-Hardeman (Tenn.)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "goshen-college-maple-leafs",
+   "name": "Goshen College Maple Leafs",
+   "slug": "naia-goshen-college-maple-leafs",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/yqojoswor920yn4x.png",
+   "team": "Goshen (IN)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "governors-state-university-jaguars",
+   "name": "Governors State University Jaguars",
+   "slug": "naia-governors-state-university-jaguars",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/5e0pjvsb02mg4m7g.png",
+   "team": "Governors State",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "harrisstowe-state-university-hornets",
+   "name": "Harris\u2013Stowe State University Hornets",
+   "slug": "naia-harrisstowe-state-university-hornets",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/xrvyct34jna6j14e.png",
+   "team": "Harris-Stowe (MO)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "holy-cross-college-saints",
+   "name": "Holy Cross College Saints",
+   "slug": "naia-holy-cross-college-saints",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/m1zimoz6x6weagxg.png",
+   "team": "Holy Cross (Ind.)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "hope-international-university-royals",
+   "name": "Hope International University Royals",
+   "slug": "naia-hope-international-university-royals",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/1xoftniajskjcqg5.png",
+   "team": "Hope International",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "hustontillotson-university-rams",
+   "name": "Huston\u2013Tillotson University Rams",
+   "slug": "naia-hustontillotson-university-rams",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/86i8u8xrj60e8ung.png",
+   "team": "Huston-Tillotson",
+   "src_size": [
+    1950,
+    1800
+   ]
+  },
+  {
+   "club_id": "la-sierra-university-golden-eagles",
+   "name": "La Sierra University Golden Eagles",
+   "slug": "naia-la-sierra-university-golden-eagles",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/9szjrw4t5wjp6e8q.png",
+   "team": "La Sierra",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "life-university-eagles",
+   "name": "Life University Eagles",
+   "slug": "naia-life-university-eagles",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/vlqo8tys13g6983p.png",
+   "team": "Life",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "life-pacific-university-warriors",
+   "name": "Life Pacific University Warriors",
+   "slug": "naia-life-pacific-university-warriors",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/vlqo8tys13g6983p.png",
+   "team": "Life",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "mount-marty-university-lancers",
+   "name": "Mount Marty University Lancers",
+   "slug": "naia-mount-marty-university-lancers",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/davy76ml7vchbg9k.png",
+   "team": "Mount Marty",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "mount-vernon-nazarene-university-cougars",
+   "name": "Mount Vernon Nazarene University Cougars",
+   "slug": "naia-mount-vernon-nazarene-university-cougars",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/58hc9thhvnl94gjq.png",
+   "team": "Mount Vernon Nazarene (OH)",
+   "src_size": [
+    256,
+    220
+   ]
+  },
+  {
+   "club_id": "nelson-university-lions",
+   "name": "Nelson University Lions",
+   "slug": "naia-nelson-university-lions",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/8efixnpkkeyw4f0l.png",
+   "team": "Nelson (Texas)",
+   "src_size": [
+    256,
+    182
+   ]
+  },
+  {
+   "club_id": "northwest-university-eagles",
+   "name": "Northwest University Eagles",
+   "slug": "naia-northwest-university-eagles",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/4xumnw65d1awlp5l.png",
+   "team": "Northwest",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "northwestern-college-red-raiders",
+   "name": "Northwestern College Red Raiders",
+   "slug": "naia-northwestern-college-red-raiders",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/lly4vjrf0kaczb83.png",
+   "team": "Northwestern (Iowa)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "university-of-science-and-arts-of-oklahoma-drovers",
+   "name": "University of Science and Arts of Oklahoma Drovers",
+   "slug": "naia-university-of-science-and-arts-of-oklahoma-drovers",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/0mblx433kpva5eja.png",
+   "team": "Science and Arts",
+   "src_size": [
+    199,
+    166
+   ]
+  },
+  {
+   "club_id": "olivet-nazarene-university-tigers",
+   "name": "Olivet Nazarene University Tigers",
+   "slug": "naia-olivet-nazarene-university-tigers",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/x47oirz97xt8nwdp.png",
+   "team": "Olivet Nazarene (IL)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "university-of-pikeville-bears",
+   "name": "University of Pikeville Bears",
+   "slug": "naia-university-of-pikeville-bears",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/gl703dw1yua6664i.png",
+   "team": "Pikeville (KY)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "university-of-providence-argonauts",
+   "name": "University of Providence Argonauts",
+   "slug": "naia-university-of-providence-argonauts",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/x25kjcruowe14i6n.png",
+   "team": "Providence (MT)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "university-of-rio-grande-redstorm",
+   "name": "University of Rio Grande RedStorm",
+   "slug": "naia-university-of-rio-grande-redstorm",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/tty2pgd5nj8yr9tr.png",
+   "team": "Rio Grande",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "st-ambrose-university-fighting-bees-queen-bees",
+   "name": "St. Ambrose University Fighting Bees & Queen Bees",
+   "slug": "naia-st-ambrose-university-fighting-bees-queen-bees",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/yyuu091mfca3lgne.png",
+   "team": "St. Ambrose (IA)",
+   "src_size": [
+    250,
+    250
+   ]
+  },
+  {
+   "club_id": "university-of-st-francis-fighting-saints",
+   "name": "University of St. Francis Fighting Saints",
+   "slug": "naia-university-of-st-francis-fighting-saints",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/ossjcr02v8lxf3sq.png",
+   "team": "St. Francis (IL)",
+   "src_size": [
+    250,
+    250
+   ]
+  },
+  {
+   "club_id": "university-of-saint-francis-cougars",
+   "name": "University of Saint Francis Cougars",
+   "slug": "naia-university-of-saint-francis-cougars",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/xfb2sur7w1gdynlp.png",
+   "team": "Saint Francis (Ind.)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "stanton-university-elks",
+   "name": "Stanton University Elks",
+   "slug": "naia-stanton-university-elks",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/3bp4ieg1h1ibw6lg.png",
+   "team": "Stanton (CA)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "the-master-s-university-mustangs",
+   "name": "The Master's University Mustangs",
+   "slug": "naia-the-master-s-university-mustangs",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/xjhplapeg20h4ba2.png",
+   "team": "The Master's (Calif.)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "truett-mcconnell-university-bears",
+   "name": "Truett McConnell University Bears",
+   "slug": "naia-truett-mcconnell-university-bears",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/nyovwnoky3m72vxa.png",
+   "team": "Truett McConnell",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "viterbo-university-v-hawks",
+   "name": "Viterbo University V-Hawks",
+   "slug": "naia-viterbo-university-v-hawks",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/l1m7scwksbnm79q2.png",
+   "team": "Viterbo",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "william-woods-university-owls",
+   "name": "William Woods University Owls",
+   "slug": "naia-william-woods-university-owls",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/6mqasgmpltjus9lk.png",
+   "team": "William Woods",
+   "src_size": [
+    256,
+    127
+   ]
+  },
+  {
+   "club_id": "wayland-baptist-university-pioneers-flying-queens",
+   "name": "Wayland Baptist University Pioneers & Flying Queens",
+   "slug": "naia-wayland-baptist-university-pioneers-flying-queens",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/ipbxf2bduadqi0uv.png",
+   "team": "Wayland Baptist (TX)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "westcliff-university-warriors",
+   "name": "Westcliff University Warriors",
+   "slug": "naia-westcliff-university-warriors",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/olazrh67avefwtl7.png",
+   "team": "Westcliff (Calif.)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "wiley-university-wildcats",
+   "name": "Wiley University Wildcats",
+   "slug": "naia-wiley-university-wildcats",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/1dlt89gdxae0vpdq.png",
+   "team": "Wiley (TX)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "xavier-university-of-louisiana-gold-rush-gold-nuggets",
+   "name": "Xavier University of Louisiana Gold Rush & Gold Nuggets",
+   "slug": "naia-xavier-university-of-louisiana-gold-rush-gold-nuggets",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/z0oipa2uwluib2bn.png",
+   "team": "Xavier (La.)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "york-university-panthers",
+   "name": "York University Panthers",
+   "slug": "naia-york-university-panthers",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/jz2gstpypkmr6fmz.png",
+   "team": "York (NE)",
+   "src_size": [
+    1480,
+    1377
+   ]
+  },
+  {
+   "club_id": "indiana-institute-of-technology-warriors",
+   "name": "Indiana Institute of Technology Warriors",
+   "slug": "naia-indiana-institute-of-technology-warriors",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/1rg2opod44xw0nsc.png",
+   "team": "Indiana Tech",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "louisiana-state-university-in-shreveport-pilots-lady-pilots",
+   "name": "Louisiana State University in Shreveport Pilots & Lady Pilots",
+   "slug": "naia-louisiana-state-university-in-shreveport-pilots-lady-pilots",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/m79g23lmc3op6vq5.png",
+   "team": "LSU Shreveport (La.)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "louisiana-state-university-at-alexandria-generals",
+   "name": "Louisiana State University at Alexandria Generals",
+   "slug": "naia-louisiana-state-university-at-alexandria-generals",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/aci6h5mwd2q8cr3i.png",
+   "team": "LSU Alexandria (La.)",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "lawrence-technological-university-br-blue-devils",
+   "name": "Lawrence Technological University Blue Devils",
+   "slug": "naia-lawrence-technological-university-blue-devils",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/fwzvxt1ninsu8wul.png",
+   "team": "Lawrence Tech",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "oregon-institute-of-technology-br-owls",
+   "name": "Oregon Institute of Technology Owls",
+   "slug": "naia-oregon-institute-of-technology-owls",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/a1ap50q2e9obr1ph.png",
+   "team": "Oregon Tech",
+   "src_size": [
+    256,
+    256
+   ]
+  },
+  {
+   "club_id": "west-virginia-university-institute-of-technology-golden-bears",
+   "name": "West Virginia University Institute of Technology Golden Bears",
+   "slug": "naia-west-virginia-university-institute-of-technology-golden-bears",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/kgpf8vtmjjyskrpd.png",
+   "team": "WVU Tech (WV)",
+   "src_size": [
+    256,
+    256
+   ]
+  }
+ ],
+ "bad": [
+  {
+   "club_id": "bethel-university-wildcats",
+   "name": "Bethel University Wildcats",
+   "slug": "naia-bethel-university-wildcats",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/nltwfy55qobzfkso.png",
+   "team": "Bethel (TN)",
+   "why": "flat colour"
+  },
+  {
+   "club_id": "corban-university-warriors",
+   "name": "Corban University Warriors",
+   "slug": "naia-corban-university-warriors",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/pwhxihf964ek3rnd.png",
+   "team": "Corban",
+   "why": "undecodable: cannot identify image file <_io.Bytes"
+  },
+  {
+   "club_id": "hanniballagrange-university-trojans",
+   "name": "Hannibal\u2013LaGrange University Trojans",
+   "slug": "naia-hanniballagrange-university-trojans",
+   "logo": "https://cdn.prestosports.com/action/cdn/logos/id/qqbr79at6pzyu372.png",
+   "team": "Hannibal-LaGrange (MO)",
+   "why": "flat colour"
+  }
+ ]
+}
