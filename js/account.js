@@ -21,7 +21,7 @@
    year. A token here that never gets rewritten would pin every visitor to the
    first build of picks.js forever. */
 
-import { localPayload, mergePayloads, applyPayload, isHome, setHome } from './picks.js?v=20260823c';
+import { localPayload, mergePayloads, applyPayload, isHome, setHome } from './picks.js?v=20260823d';
 
 const PUSH_DEBOUNCE = 1200;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
