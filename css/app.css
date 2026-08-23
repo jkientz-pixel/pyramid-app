@@ -459,10 +459,6 @@ a.wirelink:hover .side{color:var(--accent)}
 .leafmap{width:100%;aspect-ratio:980/580;height:auto;max-height:72vh}
 .leafmap[hidden]{display:none}
 .mapbox[data-mode="street"] svg.usmap,.mapbox[data-mode="street"] .mapctl,.mapbox[data-mode="street"] .maptip{display:none}
-.mapmode{position:absolute;top:10px;left:10px;z-index:800;display:flex;border:1px solid var(--line);border-radius:10px;overflow:clip;box-shadow:0 2px 8px rgba(30,40,32,.18)}
-.mapmode button{padding:7px 12px;border:0;background:var(--raise);color:var(--ink);font:inherit;font-size:.8rem;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.mapmode button+button{border-left:1px solid var(--line)}
-.mapmode button[aria-pressed="true"]{background:var(--accent,#2f6e4f);color:#fff}
 .leafmap .leaflet-tooltip{font:inherit;font-size:.8rem}
 /* water/void takes the app's own ground, not a generic slate, so the map box
    reads as part of the page instead of an embedded widget */

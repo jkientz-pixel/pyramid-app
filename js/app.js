@@ -264,7 +264,6 @@ function renderMapSvg(clubs, useCrests, crestNear) {
   }).join('');
   return `<div class="mapbox" data-mode="art"><svg class="usmap" viewBox="0 -20 980 580" role="img" aria-label="US and Canada soccer club map">${USMAP}${INSETS}<g id="pins">${pins}</g></svg>
     <div class="leafmap" hidden aria-label="Street map of clubs"></div>
-    <div class="mapmode" role="group" aria-label="Map style"><button data-mode="art" aria-pressed="false">Illustrated</button><button data-mode="street" aria-pressed="true">Detailed</button></div>
     <div class="mapctl"><button data-z="in" aria-label="Zoom in">+</button><button data-z="out" aria-label="Zoom out">&minus;</button><button data-z="reset" aria-label="Reset zoom">&#8634;</button></div>
     <div class="maptip" hidden></div></div>`;
 }
@@ -518,19 +517,36 @@ function wireMap(scopeStates, mapClubs, frameClubs) {
   });
 }
 
-/* "Detailed" basemap: real streets/towns/waterways via Leaflet + OSM tiles.
-   Leaflet is vendored and lazy-loaded only when the mode is first used, so
-   the illustrated map (default, offline-capable, brand look) costs nothing.
-   The chosen mode persists and survives the full re-render that league/sex
-   toggles trigger, because wireMap re-reads it on every screen build. */
-const MAPMODE_KEY = 'rxi-mapmode';
-/* states the illustrated map puts in inset boxes rather than in place */
+/* The map: real streets, towns and waterways via Leaflet + OSM tiles.
+   There used to be a second, illustrated SVG map behind an Illustrated/Detailed
+   toggle. It is gone as a choice (2026-08-23) — asking someone to pick a
+   cartography style before they can look up a club is a question the product
+   should answer for them, and the detailed map answers every question the
+   illustrated one did. The SVG still ships and is still drawn underneath,
+   because it is the only map that needs no network: if the vendored Leaflet or
+   the tile hosts can't be reached, setMode falls back to it and an offline PWA
+   shows a map instead of an empty box. Nothing surfaces it otherwise.
+
+   The viewport survives re-renders. Changing league, level or sex rebuilds the
+   whole screen, and so does routing to a club page and back; before this, every
+   one of those threw the reader back to the national frame, so zooming to your
+   town and then filtering to your division was impossible. _leafView remembers
+   where the map was, keyed by geographic scope — a genuinely new scope (a state
+   or region page) still gets framed to its own clubs. */
+/* states the illustrated fallback map puts in inset boxes rather than in place */
 const OFFSHORE_ST = new Set(['AK', 'HI', 'PR', 'VI', 'GU']);
+const MAPVIEW_KEY = 'rxi-mapview';
+let _leafView = null;
+try { _leafView = JSON.parse(sessionStorage.getItem(MAPVIEW_KEY) || 'null'); } catch {}
 function wireBasemap(scopeStates, mapClubs, frameClubs) {
   const box = view.querySelector('.mapbox');
-  const modeCtl = box && box.querySelector('.mapmode');
   const leafEl = box && box.querySelector('.leafmap');
-  if (!modeCtl || !leafEl) return;
+  if (!leafEl) return;
+  /* Scope, not filter: the saved view is reused when the reader is looking at
+     the same patch of country. #/state/TX and the national map are different
+     scopes; "all leagues" and "youth only" are the same scope. */
+  const scopeKey = scopeStates && scopeStates.length
+    ? [...scopeStates].sort().join(',') : 'national';
   let leafMap = null;
   const ensureLeaflet = () => window.L ? Promise.resolve() : new Promise((res, rej) => {
     if (!document.querySelector('link[data-leaf]')) {
@@ -585,7 +601,12 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
        Falling back to the full frame keeps a scope that IS Alaska working. */
     const core = frame.filter(c => !OFFSHORE_ST.has(c.st));
     const fitSet = core.length ? core : frame;
+    /* A saved view for THIS scope wins over the computed frame — that is the
+       whole point of remembering it. Anything else and a league filter would
+       still yank the reader back to the whole country. */
+    const restore = _leafView && _leafView.key === scopeKey ? _leafView : null;
     const fitFrame = () => {
+      if (restore) { leafMap.setView([restore.lat, restore.lng], restore.zoom); return; }
       if (fitSet.length) leafMap.fitBounds(L.latLngBounds(fitSet.map(c => [c.la, c.lo])).pad(0.08));
       else if (pts.length) leafMap.fitBounds(L.latLngBounds(pts.map(c => [c.la, c.lo])).pad(0.08));
       else leafMap.setView([39.5, -98.35], 4);
@@ -675,33 +696,29 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     };
     leafMap.on('zoomend moveend', refreshCrests);
     refreshCrests();
+    /* sessionStorage as well as the module variable: club routes are hash
+       navigations so the variable survives them, but a hard reload or an
+       external link back into the app would otherwise lose the reader's
+       place. Session-scoped on purpose — a visit tomorrow starts fresh. */
+    leafMap.on('moveend zoomend', () => {
+      const c = leafMap.getCenter();
+      _leafView = { key: scopeKey, lat: c.lat, lng: c.lng, zoom: leafMap.getZoom() };
+      try { sessionStorage.setItem(MAPVIEW_KEY, JSON.stringify(_leafView)); } catch {}
+    });
   }
-  async function setMode(mode, persist) {
-    if (mode === 'street') {
-      /* tiles need network — if the vendored lib can't load, stay illustrated */
-      try { await ensureLeaflet(); } catch { return; }
-      box.dataset.mode = 'street'; leafEl.hidden = false;
-      if (!leafMap) buildLeaf(); else leafMap.invalidateSize();
-    } else {
-      box.dataset.mode = 'art'; leafEl.hidden = true;
-    }
-    modeCtl.querySelectorAll('[data-mode]').forEach(b =>
-      b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
-    if (persist) try { localStorage.setItem(MAPMODE_KEY, mode); } catch {}
-  }
-  modeCtl.addEventListener('click', e => {
-    const b = e.target.closest('[data-mode]'); if (!b) return;
-    setMode(b.dataset.mode, true);
-  });
-  /* Detailed is the default. It is the map that answers the question people
-     actually arrive with — where is this club, what's near me, what town is
-     that — and now that pins scale with zoom and the streets fade in, it reads
-     at national zoom too. Illustrated stays one tap away and remains the
-     fallback when the tile layer can't load: it needs no network, so an
-     offline PWA still gets a map rather than an empty box. */
-  let saved = 'street';
-  try { saved = localStorage.getItem(MAPMODE_KEY) || 'street'; } catch {}
-  if (saved === 'street') setMode('street', false);
+  /* No mode argument any more: there is one map. If Leaflet or its stylesheet
+     can't load we leave data-mode="art" alone, which keeps the SVG visible —
+     the silent offline path, not a style the reader chose. */
+  (async function showMap() {
+    /* ?nobasemap=1 forces the offline path. The SVG fallback is not reachable
+       through the UI any more, so this is the only way to prove it still
+       renders — the tests that cover it use this, and nothing else does. */
+    if (/[?&]nobasemap=1/.test(location.search)) return;
+    try { await ensureLeaflet(); } catch { return; }
+    box.dataset.mode = 'street';
+    leafEl.hidden = false;
+    if (!leafMap) buildLeaf(); else leafMap.invalidateSize();
+  })();
 }
 
 function wireSearch() {

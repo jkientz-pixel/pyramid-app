@@ -27,14 +27,15 @@ async function gotoRoute(page, hash) {
   await viewRendered(page);
 }
 
-/* Detailed (Leaflet) is the default map mode. Tests that exercise the
-   illustrated SVG — its viewBox framing, its pan clamp, its zoom controls —
-   have to ask for it explicitly, because .mapctl and svg.usmap are both hidden
-   while the tile map is showing. */
+/* There is one map now: the detailed Leaflet one. The illustrated SVG survives
+   only as the no-network fallback, with no control that reaches it, so tests
+   that exercise it — its viewBox framing, its pan clamp, its zoom controls —
+   ask for the offline path with ?nobasemap=1. That is also the only coverage
+   the fallback itself gets, which is the point: it has to keep working for the
+   offline PWA even though nobody can choose it. */
 async function gotoIllustrated(page, hash) {
-  await gotoRoute(page, hash);
-  const toggle = page.locator('.mapmode [data-mode="art"]');
-  if (await toggle.count()) await toggle.click();
+  await page.goto(`/app.html?nobasemap=1${hash}`);
+  await viewRendered(page);
   await page.waitForSelector('svg.usmap', { state: 'visible' });
 }
 

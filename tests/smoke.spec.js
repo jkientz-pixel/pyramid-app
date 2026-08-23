@@ -178,9 +178,12 @@ test('tab bar navigates between sections', async ({ page }) => {
 
 test('appbar wordmark is a home link and resets the map framing', async ({ page }) => {
   const errors = trackErrors(page);
-  await gotoRoute(page, '#/tiers');
+  /* Starts on #/tiers, which has no map, so this cannot use gotoIllustrated
+     (that waits for the SVG). ?nobasemap=1 still puts the app on the offline
+     path, so the wordmark lands on the illustrated map this test measures. */
+  await page.goto('/app.html?nobasemap=1#/tiers');
+  await viewRendered(page);
   await page.click('.appbar .brand');
-  await page.locator('.mapmode [data-mode="art"]').click();
   await viewRendered(page);
   expect(page.url()).toContain('#/map');
   const svg = page.locator('svg.usmap');
