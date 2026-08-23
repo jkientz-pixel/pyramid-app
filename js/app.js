@@ -88,6 +88,95 @@ window.submitCorrection = (ev, f) => {
   }).catch(() => { btn.disabled = false; btn.textContent = 'Send it in'; });
   return false;
 };
+/* Register-interest forms. These replaced the mailto: links that used to sit on
+   every "claim this page" / "register interest" CTA.
+
+   A mailto yields one bit — an email arrived, or it didn't — and no way to tell
+   "nobody wants this" from "nobody found it". Every price came off the pricing
+   page because there was no demand signal to justify one, so the CTAs that
+   remain have to actually produce that signal. Rows land in D1 `interest` and
+   are read with wrangler; see migrations/0005_interest.sql.
+
+   Same shape as the corrections form deliberately: a <details> that stays shut
+   until someone means it, a honeypot, and an inline result that replaces the
+   form rather than bouncing anyone to a mail client that may not be set up. */
+const INTEREST = {
+  'player-claim': {
+    open: 'Claim this page',
+    intro: 'Add your photo, film and socials, and correct anything we got wrong. Free.',
+    detail: 'Anything we should know — links to your film, socials, or what needs correcting.',
+    button: 'Claim my page',
+    done: 'Got it — we\u2019ll be in touch to verify it\u2019s you before anything changes.',
+  },
+  'club-add': {
+    open: 'Run this club? Add to this page',
+    intro: 'Send us what we\u2019re missing — crest, correct city, league and division, socials, tryout dates, or results we don\u2019t have. Free, always: better data makes the whole table better.',
+    detail: 'What should we add or fix? Results and standings also feed the rating.',
+    button: 'Send it in',
+    done: 'Got it — thank you. Club updates usually land within a few days.',
+    requireDetail: true,
+  },
+  'free-agent': {
+    open: 'Join the waitlist',
+    intro: 'The board opens when there are real players on it. Free to join, free to be listed, and no commissions — your deal is yours. Players 18 and older.',
+    detail: 'Position, age, region, last club or level, and a link to your film.',
+    button: 'Join the waitlist',
+    done: 'You\u2019re on the list — we\u2019ll email you when the board opens.',
+  },
+  'club-tools': {
+    open: 'Register interest',
+    intro: 'Nothing to pay and nothing to commit to. Tell us what would actually help you fill a roster and it shapes what gets built.',
+    detail: 'What would help most — saved-search alerts, shortlists, promoted tryouts, something else?',
+    button: 'Register interest',
+    done: 'Got it — thank you. We\u2019ll come back to you before any of this is priced.',
+  },
+};
+function interestForm(kind, subject) {
+  const cfg = INTEREST[kind];
+  if (!cfg) return '';
+  return `<details class="fixform interestform">
+    <summary class="reportlink">${cfg.open}</summary>
+    <p class="note" style="margin:6px 0 8px">${cfg.intro}</p>
+    <form onsubmit="return submitInterest(event, this)" data-kind="${kind}" data-subject="${esc(subject || '')}">
+      <input name="email" type="email" maxlength="254" required autocomplete="email" placeholder="Your email">
+      <input name="name" maxlength="120" autocomplete="name" placeholder="Your name (optional)">
+      <textarea name="detail" rows="3" maxlength="1200"${cfg.requireDetail ? ' required minlength="10"' : ''}
+        placeholder="${esc(cfg.detail)}"></textarea>
+      <label class="agecheck"><input name="age13" type="checkbox" required> I\u2019m 13 or older</label>
+      <input name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+      <button type="submit">${cfg.button}</button>
+      <span class="note">We use this to reply. Nothing else, and no list you didn\u2019t ask for.</span>
+    </form></details>`;
+}
+window.submitInterest = (ev, f) => {
+  ev.preventDefault();
+  const kind = f.dataset.kind;
+  const cfg = INTEREST[kind] || {};
+  const btn = f.querySelector('button');
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Sending\u2026';
+  let src = null;
+  try { src = window.__rxiSrc || null; } catch (e) {}
+  fetch('/api/interest', {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      kind, subject: f.dataset.subject, page: location.hash,
+      email: f.email.value, name: f.name.value, detail: f.detail.value,
+      age13: f.age13.checked, src, website: f.website.value,
+    })
+  }).then(r => r.json()).then(d => {
+    if (d.ok) f.parentElement.outerHTML = `<p class="note">&#10003; ${cfg.done || 'Got it — thank you.'}</p>`;
+    else {
+      btn.disabled = false; btn.textContent = label;
+      let e = f.querySelector('.interr');
+      if (!e) { e = document.createElement('p'); e.className = 'note interr'; f.appendChild(e); }
+      e.textContent = d.error || 'Something went wrong — please try again.';
+    }
+  }).catch(() => {
+    btn.disabled = false; btn.textContent = label;
+  });
+  return false;
+};
 /* crest-content generation: bump when crest PIXELS change under the same
    filename (e.g. a strip_crest_bg.py run) — crest URLs are cached immutable
    and cache-first, so only a new ?cv= reaches returning browsers */
@@ -1780,7 +1869,7 @@ async function screenClub(ref) {
       <span class="apps-bar" aria-hidden="true"><i style="width:${Math.round(100 * pl.st / Math.max(1, apps.players[0].st + apps.players[0].sub))}%"></i></span>
       <span class="apps-n">${pl.st + pl.sub}<small>${pl.st} start${pl.st === 1 ? '' : 's'}${pl.sub ? ` &middot; ${pl.sub} sub` : ''}</small></span></li>`).join('')}</ul>
     <p class="note">Every player named in a matchday squad this season, most-used first, from banked USL League Two team sheets. Appearances count matchday squads, not minutes &mdash; the source lists the eleven and the reserves, not who came on. No ages: players under 18 keep their name and lose their birth year here, and an appearance count never needed one.</p>
-    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim club: ' + c.n)}" style="margin-top:6px">Run this club? Claim this page</a>`
+    ${interestForm('club-add', c.n)}`
     : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p><a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim club: ' + c.n)}" style="margin-top:6px">Run this club? Add your roster</a>`}
     ${worldLadder(c)}` : LEVELS.youth.includes(c.g) ? `<p class="note" style="font-size:.9rem">Youth directory listing — an active ${LEAGUES[c.g].label} member club. Youth organizations carry no ratings, fixtures, or player data here; the entry is name, league, and league-stated location only.</p>` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
     ${(() => {
@@ -1819,7 +1908,7 @@ async function screenClub(ref) {
       ${t.link ? `<div class="linkrow"><a href="${safeHref(t.link)}" target="_blank" rel="noopener">Tryout details</a></div>` : ''}</div>`).join('')}
     <p class="note"><a href="#/tryouts" style="color:var(--accent)">All open tryouts &rarr;</a></p>` : ''}
     <p class="note">${(c.si || c.sx || c.sf || c.url) ? 'Official site and social links above come from Wikidata, league sources, and the club\'s own website — they go exactly where they say.' : 'Club website and socials appear at the top once the club claims its page — links always go exactly where they say.'}</p>
-    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim club: ' + c.n)}">Run this club? Claim this page</a>
+    ${interestForm('club-add', c.n)}
     <p class="note">Claimed clubs manage their crest, links, roster and schedule.</p>
     ${reportLink('Fix', c.n)}`;
   wireFav();
@@ -2164,7 +2253,7 @@ function screenFreeAgents() {
           product with a price attached, which teaches them we market things we
           do not have. An empty board that says it is empty costs nothing. */ ''}
     <p class="note"><b>The board is not open yet.</b> No players are listed here — we would rather show you an empty board than invented ones. It opens when there are real players on it; the sample profile above shows exactly what a listing will contain. Listings are for players <b>18 and older</b>, arrive by email, and every one is human-reviewed before it publishes.</p>
-    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent waitlist')}&body=${encodeURIComponent('I confirm I am 18 or older: \nName:\nPosition:\nAge:\nRegion:\nLast club/level:\nLevel seeking:\nHighlight film link:\n')}">Join the waitlist &mdash; free</a>
+    ${interestForm('free-agent', 'Free Agents board')}
     <p class="note">Free to join, free while the board is finding its feet, and no commissions ever: your deal is yours. Clubs: browsing will be free, and posting open-tryout dates is free right now — <a href="#/tryouts" style="color:var(--accent)">post on the Tryouts board</a>.</p>
     <p class="note"><a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('Report a free agent listing')}&body=${encodeURIComponent('Listing (name shown):\nWhat is wrong (impersonation, inaccurate, inappropriate, other):\n')}" style="color:var(--accent)">Report a listing</a> — reports are reviewed within days; a listing that misrepresents someone comes down first, questions after.</p>`;
 }
@@ -2274,7 +2363,6 @@ function screenPricing() {
      what will always be free, what will eventually cost money, and lets them
      register interest — which is the only demand signal we can act on. Prices
      go back the day one of these has a customer and a checkout. */
-  const mail = s => `mailto:hello@rankedxi.com?subject=${encodeURIComponent(s)}`;
   view.innerHTML = `
     <div class="kicker">What's free, what will cost money later — and why</div>
     <h2 class="disp">Pricing</h2>
@@ -2299,11 +2387,11 @@ function screenPricing() {
 
     <div class="pricecard"><b>Claim your player page</b>
       <p>If you have a page here, you can claim it: add your photo, your film, your socials, and correct anything we got wrong. Free while we build it out — we would rather the pages be right than charge you to fix them.</p>
-      <a class="claim" href="${mail('Claim my player page')}">Claim your page</a></div>
+      ${interestForm('player-claim', 'Player page')}</div>
 
     <div class="pricecard"><b>Add to your club page</b>
       <p>Clubs can send us what we are missing — crest, correct city, league and division, socials, tryout dates, results we do not have. It goes on your page and, where it is results or standings, into your rating. Free, and it always will be: better data makes the whole table better.</p>
-      <a class="claim" href="${mail('Add to our club page')}">Send us your club's details</a></div>
+      ${interestForm('club-add', 'Club page')}</div>
 
 
     <p class="note">No commissions, ever: if a club signs a player they found here, that deal is yours and we take nothing from it. Registering interest costs nothing and commits you to nothing.</p>`;
@@ -2524,7 +2612,7 @@ function screenFASample() {
       <a href="#/freeagent/sample">Instagram</a>
       <a href="#/freeagent/sample">Hudl</a>
     </div>
-    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent listing request')}">Get your page — ${FA_PRICE_CTA}</a>
+    ${interestForm('free-agent', 'Free agent listing')}
     <p class="note">Every element above is included: film slot, physicals, verified season history, awards, coach references, direct contact. Clubs browse free. Listings are for players 18+, submitted by email and human-reviewed before publication.</p>
     <p class="note"><a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('Report a free agent listing')}" style="color:var(--accent)">Report this listing</a></p>`;
 }
@@ -2830,7 +2918,7 @@ function screenClubTools() {
     <div class="kicker">Your tryout listing</div>
     <div class="pricecard"><b>Open tryout · Aug 15 · 6 PM</b><p>Promoted to every free agent within 75 miles — 241 views, 19 RSVPs so far.</p>
       <a class="claim" href="#/tryouts">Post your real tryout — free</a></div>
-    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Club recruiting tools — interest')}">Register interest — free, no commitment</a>
+    ${interestForm('club-tools', 'Club recruiting tools')}
     <p class="note">Everything above is included: alerts, unlimited contact, shortlists, promoted tryouts. Browsing free agents stays free for every club, forever.</p>`;
 }
 

@@ -236,3 +236,30 @@ test('map pan stays anchored — drag cannot push the map out of the box', async
   expect(y + h).toBeLessThanOrEqual(560.1);
   expect(errors).toEqual([]);
 });
+
+/* Interest capture replaced the mailto: CTAs. A mailto gives one bit and no way
+   to tell "no demand" from "no discovery" — these assert the forms are actually
+   present and that no CTA quietly reverts to a mail link. */
+for (const [route, count] of [['#/pricing', 2], ['#/freeagents', 1], ['#/clubtools/sample', 1]]) {
+  test(`${route} offers a register-interest form, not a mailto`, async ({ page }) => {
+    const errors = trackErrors(page);
+    await gotoRoute(page, route);
+    await viewRendered(page);
+    await expect(page.locator('#view .interestform')).toHaveCount(count);
+    /* No CTA may be a mail link. Notice/removal links stay mailto on purpose —
+       an abuse report should reach a human directly, not a moderation queue. */
+    await expect(page.locator('#view a.claim[href^="mailto"]')).toHaveCount(0);
+    expect(errors).toEqual([]);
+  });
+}
+
+test('the interest form gates on email and the 13+ confirmation', async ({ page }) => {
+  await gotoRoute(page, '#/freeagents');
+  await viewRendered(page);
+  const form = page.locator('#view .interestform form');
+  await expect(form.locator('input[name="email"][required]')).toHaveCount(1);
+  await expect(form.locator('input[name="age13"][required]')).toHaveCount(1);
+  /* honeypot must stay in the markup and stay off-screen */
+  await expect(form.locator('input[name="website"]')).toHaveCount(1);
+  await expect(form.locator('input[name="website"]')).not.toBeInViewport();
+});
