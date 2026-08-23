@@ -642,35 +642,6 @@ function wireLevelChips() {
     route();
   });
 }
-/* Direct-sold sponsor slots — no ad networks, no tracking scripts, ever: a
-   filled slot is a static creative + link. Sold nationally or per region:
-   a slot resolves regional sponsor (for the region in view) -> national
-   sponsor -> placeholder, so local sponsors show only inside their region
-   and national coverage fills everywhere else.
-   Fill: SPONSORS.map.national = {name, url, img}
-         SPONSORS.region.regions.region4 = {name, url, img} */
-const SPONSORS = {
-  map: { national: null, regions: {} },        // national map — every session starts here
-  tiers: { national: null, regions: {} },      // the pyramid
-  wire: { national: null, regions: {} },       // the wire
-  freeagents: { national: null, regions: {} }, // recruiting audience
-  region: { national: null, regions: {} },     // region + state screens (local inventory)
-};
-function adRegion() {
-  const parts = (location.hash || '').slice(2).split('/');
-  if (parts[0] === 'region') return REGIONS[parts[1]] ? parts[1] : null;
-  if (parts[0] === 'state') return Object.keys(REGIONS).find(r => REGIONS[r].includes(parts[1])) || null;
-  return null;
-}
-function adSlot(key, label) {
-  const cfg = SPONSORS[key] || {};
-  const reg = adRegion();
-  const s = (reg && cfg.regions && cfg.regions[reg]) || cfg.national;
-  if (s) return `<a class="adslot filled" href="${s.url}" target="_blank" rel="noopener sponsored">${s.img ? `<img src="${s.img}" alt="${esc(s.name)}">` : ''}<span><i>${label} · presented by</i><b>${esc(s.name)}</b></span></a>`;
-  const scope = reg ? `${REGION_LABEL[reg]} regional` : 'national';
-  return `<a class="adslot" href="#/advertise"><span><i>Sponsor slot · ${label} · ${scope}</i><b>Your brand, in front of American soccer</b></span><span class="adcta">Ad space &rarr;</span></a>`;
-}
-
 function screenMap() {
   crumb.textContent = 'USA';
   const clubs = pool();
@@ -699,8 +670,7 @@ function screenMap() {
     <select id="statejump">
       <option value="">Jump to a state or province&hellip;</option>
       ${Object.entries({ ...STATE_NAME, ...PROV_NAME }).sort((a, b) => a[1].localeCompare(b[1])).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}
-    </select>
-    ${adSlot('map', 'National map')}`;
+    </select>`;
   wireSexToggle();
   wireLevelChips();
   wireMap(null, visible(clubs));
@@ -750,8 +720,7 @@ function screenRegion(key) {
     ${renderMapSvg(allVis, true, nearBy)}
     ${leagueChips()}
     <div class="kicker" style="margin-top:10px">Top clubs · ${clubs.length} in region</div>
-    <ul class="clublist">${ranked.slice(0, 15).map((c, i) => clubRow(c, rankNo(c, i))).join('')}</ul>
-    ${adSlot('region', REGION_LABEL[key])}`;
+    <ul class="clublist">${ranked.slice(0, 15).map((c, i) => clubRow(c, rankNo(c, i))).join('')}</ul>`;
   wireSexToggle();
   wireMap(states, allVis, visible(clubs));
 }
@@ -772,7 +741,6 @@ function screenState(st) {
     ${clubs.length ? leagueChips() : ''}
     <div class="kicker" style="margin-top:10px">${clubs.length ? `Clubs · ${clubs.length}` : 'No clubs mapped yet'}</div>
     <ul class="clublist" id="statelist">${ranked.map((c, i) => clubRow(c, rankNo(c, i))).join('')}${concepts.map(c => clubRow(c)).join('')}</ul>
-    ${adSlot('region', STATE_NAME[st])}
     ${clubs.length ? '' : '<p class="note">This is where league expansion starts — the dataset grows as leagues are added.</p>'}`;
   wireSexToggle();
   if (mappable) {
@@ -1785,7 +1753,12 @@ async function screenClub(ref) {
       return `<li><span class="cw-years">${e.y}</span><span class="cw-club">${e.ha === 'H' ? 'v' : 'at'} ${esc(e.opp)} &middot; ${e.gf}&ndash;${e.ga}${e.aet ? ' aet' : ''}${e.pens ? ` (${e.pens[0]}&ndash;${e.pens[1]}p)` : ''}</span><span class="cw-stat">${wl}${e.d ? ` &middot; ${e.d > 0 ? '+' : ''}${e.d}` : ''}</span></li>`;
     }).join('')}</ul></div>
     <p class="note">${c.g === 'mls' ? 'Shown for the record — MLS ranks by the official league table, so Cup results never move an MLS rating here.' : 'These matches move the rating. Cross-tier cup results are where the levels actually meet; extra-time and shootout wins count at reduced weight.'}${c.pv ? " Marked provisional: most of this club's cup movement came against opponents outside our database, valued at league average." : ''}</p>` : ''}
-    ${c.re ? `<p class="note" style="margin:2px 0 10px;font-size:.78rem">Results-only Elo: <b>${c.re}</b> · experimental — computed from every 2026 match and published for transparency; the headline rating and ranks above stay with the official league table.</p>` : ''}
+    ${/* One number per club. The experimental results-only Elo used to sit
+          right under the headline rating, so the page showed two different
+          ratings for the same team and told you one of them was experimental —
+          which reliably reads as "these numbers don't mean anything". It still
+          exists and is still published, but inside the methodology disclosure
+          below rather than competing with the rating. */ ''}
     ${c.r ? `<div class="kicker">Rivalry Radar · nearest rated rivals</div>
     <p class="note" style="margin:2px 0 8px">Who's nearby, and how the model thinks it would go — a discovery feature, not a schedule. Verified fixtures appear when this league's feed connects.</p>
     ${opps.slice(0, 2).map((o, i) => matchCard(i === 0 ? c : o, i === 0 ? o : c, `${milesApart(c, o)} MI APART`)).join('') || '<p class="note">No rated opponents in the dataset yet.</p>'}
@@ -1795,7 +1768,7 @@ async function screenClub(ref) {
       ? 'From real league standings: points and goal difference set the rating band.'
       : c.rr === 3
       ? 'From Massey Ratings — an independent results-based power rating for college soccer — rescaled onto our Elo bands. Preseason values until fall results land; refreshed as the season runs.' + (c.re ? ' The smaller results-only Elo is experimental — same match-by-match walk we use everywhere else, shown for transparency but not used for ranks.' : '')
-      : "Illustrative placeholder until this league's results feed is connected — the number demonstrates the product, not the club."}</p></details>` : `<div class="kicker">Matches</div><p class="note">Match history and fixtures appear when this league's results feed is connected — no invented games on real organizations.</p>`}
+      : "Illustrative placeholder until this league's results feed is connected — the number demonstrates the product, not the club."}${c.re && c.rr !== 3 ? ` Results-only Elo for this club is <b>${c.re}</b> — the same match-by-match walk, published for transparency but not used for the rating or the ranks.` : ''}</p></details>` : `<div class="kicker">Matches</div><p class="note">Match history and fixtures appear when this league's results feed is connected — no invented games on real organizations.</p>`}
     ${squadFor(c).length ? `<div class="kicker" style="margin-top:14px">Squad</div>${verifyBadge(c)}
     <ul class="squad staff">${staffFor(c).map(st2 =>
       `<li><span class="sq-num">${st2.tag}</span><span class="sq-name">${esc(st2.name)}</span><span class="sq-pos">${st2.role}</span><span class="sq-age">${st2.age}</span><span class="sq-form"></span></li>`).join('')}</ul>
@@ -2140,7 +2113,6 @@ async function screenLeague(key) {
       <div class="kicker" style="margin-top:14px">Where to watch</div>
       <div class="watchrow">${info.watch.map(watchChip).join('')}</div>
       ${info.watchNote ? `<p class="note" style="margin:6px 0 0">${esc(info.watchNote)}</p>` : ''}` : ''}
-    ${adSlot('league', m.label)}
     <div class="kicker" style="margin-top:16px">All clubs${ranked.length ? ' &middot; ranked by rating' : ''}</div>
     <ul class="clublist">${ranked.map((c, i) => clubRow(c, rankNo(c, i))).join('')}${rest.map(c => clubRow(c)).join('')}</ul>
     ${LEVELS.youth.includes(key) ? '<p class="note">Youth directory entries are name, league and league-stated location only — no ratings, fixtures or player data.</p>' : ''}`;
@@ -2169,7 +2141,6 @@ function screenPyramid() {
     <a class="fa-card" href="#/cups"><b>&#127942; The Trophy Room</b><span>16 national trophies, every tier — MLS Cup to the NPSL, the College Cups, and the Open Cup back to 1914.</span></a>
     <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>Above the pyramid — USA youth national teams in Concacaf and FIFA competition, with fixtures and how to watch.</span></a>
     <a class="gk-cta" href="#/college">College results, 2025 season &rarr;</a>
-    ${adSlot('tiers', 'The Pyramid')}
     <p class="note">Tiers are organizational, not sporting — US soccer has no promotion and relegation between most levels. The pathway runs through players, not clubs: youth to college to the amateur leagues to the pro game. Tap a league for its page &mdash; every club, where to watch, and the official site.</p>`;
   wireSexToggle();
 }
@@ -2188,25 +2159,23 @@ function screenFreeAgents() {
     <p class="note" style="font-size:.88rem">Players without a club list themselves here: position, region, level sought, film. Clubs browse free and reach out directly — Ranked XI never sits in the middle of a deal. Listings are self-reported; players with match history in our data carry a verified badge.</p>
     <a class="fa-card" href="#/freeagent/sample"><b>See a complete profile &rarr;</b><span>Film, physicals, verified history, awards, references — the full page a listing buys.</span></a>
     <a class="fa-card" href="#/tryouts"><b>&#128197; Open Tryouts board &rarr;</b><span>Every posted tryout date, one calendar — free for clubs to post, free for players to browse.</span></a>
-    <ul class="clublist">${FREE_AGENTS.map(f => `
-      <li><a href="#/freeagent/sample">
-        <img class="crest imgcrest" src="${AVATAR}" alt="">
-        <span class="cl-name"><b>${f.name}</b><span>${f.pos} · ${f.age} · ${f.region} · last: ${f.last}</span></span>
-        <span class="cl-rt" style="font-size:.7rem;color:var(--ink-dim)">${f.seeks}${f.video ? ' · film' : ''}</span></a></li>`).join('')}</ul>
-    <p class="note">Sample listings — the real board opens with player claims. Listings are for players <b>18 and older</b>, arrive by email, and every one is human-reviewed before it publishes — nothing posts to this board automatically.</p>
-    ${adSlot('freeagents', 'Free Agents board')}
-    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent listing request')}&body=${encodeURIComponent('I confirm I am 18 or older: \nName:\nPosition:\nAge:\nRegion:\nLast club/level:\nLevel seeking:\nHighlight film link:\n')}">List yourself — ${FA_PRICE_CTA}</a>
-    <p class="note">${FA_PRICE_NOTE} Clubs: browsing is free, and posting open-tryout dates is free too — <a href="#/tryouts" style="color:var(--accent)">post on the Tryouts board</a>. <a href="#/pricing" style="color:var(--accent)">See all pricing &rarr;</a></p>
+    ${/* The board used to render three invented players named "Sample: …".
+          A club owner arriving from the pricing page found fake people on a
+          product with a price attached, which teaches them we market things we
+          do not have. An empty board that says it is empty costs nothing. */ ''}
+    <p class="note"><b>The board is not open yet.</b> No players are listed here — we would rather show you an empty board than invented ones. It opens when there are real players on it; the sample profile above shows exactly what a listing will contain. Listings are for players <b>18 and older</b>, arrive by email, and every one is human-reviewed before it publishes.</p>
+    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Free agent waitlist')}&body=${encodeURIComponent('I confirm I am 18 or older: \nName:\nPosition:\nAge:\nRegion:\nLast club/level:\nLevel seeking:\nHighlight film link:\n')}">Join the waitlist &mdash; free</a>
+    <p class="note">Free to join, free while the board is finding its feet, and no commissions ever: your deal is yours. Clubs: browsing will be free, and posting open-tryout dates is free right now — <a href="#/tryouts" style="color:var(--accent)">post on the Tryouts board</a>.</p>
     <p class="note"><a href="mailto:${NOTICE_MAIL}?subject=${encodeURIComponent('Report a free agent listing')}&body=${encodeURIComponent('Listing (name shown):\nWhat is wrong (impersonation, inaccurate, inappropriate, other):\n')}" style="color:var(--accent)">Report a listing</a> — reports are reviewed within days; a listing that misrepresents someone comes down first, questions after.</p>`;
 }
 
-/* Founding free-agent listings are free until the market proves itself — the
-   pricing page said so while the board and the sample page both charged
-   "$25 per season", so the one page a stranger reads before trusting us with
-   money contradicted itself twice. All three read these. */
-const FA_PRICE_CTA = 'free while we\u2019re founding';
-const FA_PRICE_NOTE = 'Founding listings are free \u2014 the price turns on only once '
-  + 'players are getting contacted. No commissions, no placement cuts: your deal is yours.';
+/* Nothing on the free-agent path is priced while the board is closed. These
+   two strings are the single source for that wording so the board, the sample
+   listing and the pricing page can never contradict each other again — which
+   they did, when two of them charged "$25 per season" and the third said the
+   founding listings were free. */
+const FA_PRICE_CTA = 'free';
+const FA_PRICE_NOTE = 'Free to join and free to be listed. No commissions, no placement cuts: your deal is yours.';
 
 let tryoutSex = 'all', tryoutSort = 'date';
 async function screenTryouts() {
@@ -2297,59 +2266,47 @@ function wireTryoutForm() {
   });
 }
 
-function screenAdvertise() {
-  crumb.textContent = 'Advertise';
-  const mail = s => `mailto:hello@rankedxi.com?subject=${encodeURIComponent('Ad space inquiry — ' + s)}`;
-  const SLOTS = [
-    ['National map', '$299/mo', 'The home surface. Every session starts on the map — your creative sits directly beneath it, on every visit.', 'National map'],
-    ['Free Agents board', '$149/mo', 'The recruiting audience: players looking for clubs and the clubs scouting them. Boots, fitness, training — this is your buyer.', 'Free Agents board'],
-    ['The Pyramid', '$149/mo', 'The structure-of-American-soccer page — the screen leagues, media, and diehards share and screenshot.', 'The Pyramid'],
-    ['The Wire', '$99/mo', 'Live results, rating swings, golden-boot races. The screen that gets checked after every matchday.', 'The Wire'],
-  ];
-  view.innerHTML = `
-    <div class="kicker">Direct-sold · no ad networks · no tracking</div>
-    <h2 class="disp">Advertise on Ranked XI</h2>
-    <p class="note" style="font-size:.88rem">Four placements, sold directly. A sponsorship is a static creative and a link — we never add ad-network scripts or trackers, so your brand sits on a fast page next to real data, clearly labeled. Founding rates below are flat, month-to-month, and locked for 12 months once you're in.</p>
-    ${SLOTS.map(([t, price, blurb, subj]) => `
-    <div class="pricecard paid"><b>${t} · ${price}</b>
-      <p>${blurb}</p>
-      <a class="claim" href="${mail(subj)}">Ask about this placement</a></div>`).join('')}
-    <div class="kicker" style="margin-top:16px">Regional — your market only</div>
-    <div class="pricecard paid"><b>Regional sponsorship · $79/mo per region</b>
-      <p>Your creative on every region and state screen inside <b>one USASA region</b> — Region I (Northeast), Region II (Midwest), Region III (South), or Region IV (West). A San Diego shop sponsors Region IV; fans in Ohio never see it, and that space stays sellable to someone in Ohio. Local rates for local reach; the national slots above stay independent.</p>
-      <a class="claim" href="${mail('Regional sponsorship')}">Claim a region</a></div>
-    <div class="pricecard"><b>Tier sponsorship · custom</b>
-      <p>Exclusive "presented by" on a whole tier row of the Pyramid — one sponsor per tier, priced by tier. Leagues: sponsoring your own tier row comes with your data layer.</p>
-      <a class="claim" href="${mail('Tier sponsorship')}">Talk to us</a></div>
-    <p class="note">Honesty policy, same as everything here: we share real traffic numbers on request before you commit — no inflated reach claims. Sponsorships are labeled as such. If a placement underperforms, walk away month-to-month; founding rates exist because early sponsors take the early-traffic risk with us.</p>`;
-}
-
 function screenPricing() {
   crumb.textContent = 'Pricing';
+  /* Prices are deliberately absent. Seven priced tiers with no checkout read as
+     a business plan pinned to a wall, and several of them described products
+     that do not exist yet. The page still earns its place: it tells a stranger
+     what will always be free, what will eventually cost money, and lets them
+     register interest — which is the only demand signal we can act on. Prices
+     go back the day one of these has a customer and a checkout. */
+  const mail = s => `mailto:hello@rankedxi.com?subject=${encodeURIComponent(s)}`;
   view.innerHTML = `
-    <div class="kicker">What's free, what's paid — and why</div>
-    <h2 class="disp">Ranked XI Pricing</h2>
+    <div class="kicker">What's free, what will cost money later — and why</div>
+    <h2 class="disp">Pricing</h2>
+    <p class="note" style="font-size:.88rem">Nothing on Ranked XI costs anything today. The list below is what we intend to charge for eventually and what we never will — published early so nobody is surprised later. When something does get a price, it will be because it demonstrably works, not because we need the revenue.</p>
+
     <div class="pricecard"><b>The app · Free, always</b>
-      <p>Map, tables, every club and player page, predictions, history. Rankings stay free — that's the point.</p></div>
-    <div class="pricecard"><b>Founding Free Agent listing · ${FA_PRICE_CTA[0].toUpperCase() + FA_PRICE_CTA.slice(1)} · $25/season later</b>
-      <p>Not "exposure" — proof and delivery: a <b>verified badge</b> backed by league data we already hold, your film front and center, <b>alerts sent to clubs in your region and level</b>, and a receipt: how many clubs viewed you. Founding listings are free while the market proves itself; the price turns on only when players are getting contacted.</p>
+      <p>Map, tables, every club and player page, predictions, history, My XI. The rankings are the point of the site, not the product — nothing behind the map or the table will ever move behind a paywall.</p></div>
+
+    <div class="pricecard"><b>Open Tryouts board · Free, always</b>
+      <p>Posting an open tryout is free for every club and always will be. Browsing is free for players.</p>
+      <a class="claim" href="#/tryouts">Post a tryout</a></div>
+
+    <div class="kicker" style="margin-top:16px">Not built yet — register interest, pay nothing</div>
+
+    <div class="pricecard"><b>Free Agent listing</b>
+      <p>A verified badge backed by league data we already hold, your film front and centre, and alerts to clubs in your region and level. Free to join the waitlist; free when it opens; priced only if and when players are actually getting contacted through it.</p>
       <a class="claim" href="#/freeagent/sample">See a complete player listing</a></div>
-    <div class="pricecard paid"><b>Free Agent Pro · $50/season</b>
-      <p>Everything in the listing, plus <b>you make the first move</b>: send direct intro requests to clubs from inside Ranked XI — your verified profile and film attached — with <b>5 intros a month</b> and priority placement in club searches. Privacy holds both ways: no emails or numbers exposed until both sides accept the intro.</p>
-      <a class="claim" href="#/freeagent/sample">See how intros work</a></div>
-    <div class="pricecard paid"><b>Club Recruiting · Free browse for all clubs · Pro tools $99/season</b>
-      <p>Browsing free agents costs nothing, ever — and so is <a href="#/tryouts" style="color:var(--accent)">posting open tryouts</a>. The paid tier is speed: <b>saved-search alerts</b> ("verified GK within 50 miles"), <b>unlimited direct contact</b>, <b>shortlists</b>, and <b>promoted tryout listings</b>. Fill your roster in a week, not a month.</p>
+
+    <div class="pricecard"><b>Club recruiting tools</b>
+      <p>Saved-search alerts, shortlists, and direct contact. Browsing free agents will be free for clubs, permanently. The paid tier, if it exists, is speed — not access.</p>
       <a class="claim" href="#/clubtools/sample">See the club recruiting tools</a></div>
-    <div class="pricecard paid"><b>Claimed player profile · $30/year</b>
-      <p>Verify your page: photo, film, socials, corrected history — and recruiting visibility.</p>
-      <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim my player profile')}">Claim yours</a></div>
-    <div class="pricecard paid"><b>Sponsorships · from $99/mo</b>
-      <p>Four direct-sold placements — map, free-agent board, pyramid, wire. Static creative + link, no ad networks, no trackers.</p>
-      <a class="claim" href="#/advertise">See placements &amp; rates</a></div>
-    <div class="pricecard paid"><b>Youth club directory placement · $99/year</b>
-      <p>Your youth club on the national map with a pathway line to the pros above you.</p>
-      <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Youth club directory interest')}">Join the waitlist</a></div>
-    <p class="note">Honesty policy: paid tiers switch on only after the marketplace demonstrably works — players getting contacted, clubs filling spots. Reserving is free and locks founding rates. No commissions, ever: your deals are yours.</p>`;
+
+    <div class="pricecard"><b>Claim your player page</b>
+      <p>If you have a page here, you can claim it: add your photo, your film, your socials, and correct anything we got wrong. Free while we build it out — we would rather the pages be right than charge you to fix them.</p>
+      <a class="claim" href="${mail('Claim my player page')}">Claim your page</a></div>
+
+    <div class="pricecard"><b>Add to your club page</b>
+      <p>Clubs can send us what we are missing — crest, correct city, league and division, socials, tryout dates, results we do not have. It goes on your page and, where it is results or standings, into your rating. Free, and it always will be: better data makes the whole table better.</p>
+      <a class="claim" href="${mail('Add to our club page')}">Send us your club's details</a></div>
+
+
+    <p class="note">No commissions, ever: if a club signs a player they found here, that deal is yours and we take nothing from it. Registering interest costs nothing and commits you to nothing.</p>`;
 }
 /* My XI (#/myxi) — the personalized front page that replaced the Follow tab.
    The screen itself lives in js/myxi.js: it is the only view that needs the
@@ -2873,7 +2830,7 @@ function screenClubTools() {
     <div class="kicker">Your tryout listing</div>
     <div class="pricecard"><b>Open tryout · Aug 15 · 6 PM</b><p>Promoted to every free agent within 75 miles — 241 views, 19 RSVPs so far.</p>
       <a class="claim" href="#/tryouts">Post your real tryout — free</a></div>
-    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Club Recruiting Pro — founding interest')}">Reserve founding club pricing — $99/season</a>
+    <a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Club recruiting tools — interest')}">Register interest — free, no commitment</a>
     <p class="note">Everything above is included: alerts, unlimited contact, shortlists, promoted tryouts. Browsing free agents stays free for every club, forever.</p>`;
 }
 
@@ -2967,7 +2924,6 @@ async function screenWire() {
     ${leaders ? `<div class="kicker" style="margin-top:12px">The leaders · real stats</div>` + leaders
       : (sex === 'm' && (wireLg === 'all' || wireLg === 'npsl') ? '' : '<p class="note" style="margin-top:10px">No real-stat leagues in this filter yet.</p>')}
     <div id="wireresults"></div>
-    ${adSlot('wire', 'The Wire')}
     <p class="note">No aggregation, no editors: every item is computed from the results and stat lines already in Ranked XI, so the wire is exactly as fresh as the data. Rating swings are the actual Elo changes from the same walk that produces club ratings &mdash; except MLS, which ranks by the official league table (its results-Elo appears on club pages as an experimental number), and UPSL, which stays standings-derived.</p>`;
   wireSexToggle();
   view.querySelector('#wirechips').addEventListener('click', e => {
@@ -2996,7 +2952,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', advertise: 'Advertise', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player', notfound: 'Page not found' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player', notfound: 'Page not found' };
 /* Hash routes people actually type or get sent. Every one of these was a
    plausible guess at a real screen that silently rendered the map instead —
    a stranger following a link from a DM concluded the site was broken rather
@@ -3005,8 +2961,6 @@ const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matc
 const ROUTE_ALIAS = {
   'free-agents': 'freeagents', 'free-agent': 'freeagent', freeagency: 'freeagents',
   claim: 'clubtools', 'claim-club': 'clubtools', 'club-tools': 'clubtools',
-  sponsorships: 'advertise', sponsorship: 'advertise', sponsor: 'advertise',
-  ads: 'advertise', advertising: 'advertise',
   following: 'myxi', follow: 'myxi', favorites: 'myxi', favourites: 'myxi',
   'my-xi': 'myxi', myxi11: 'myxi', home: 'myxi',
   leagues: 'tiers', pyramid: 'tiers', 'national-table': 'table',
@@ -3062,7 +3016,6 @@ function route() {
   else if (parts[0] === 'freeagents') screenFreeAgents();
   else if (parts[0] === 'tryouts') screenTryouts();
   else if (parts[0] === 'pricing') screenPricing();
-  else if (parts[0] === 'advertise') screenAdvertise();
   /* #/myxi/i/<payload> is a shared XI arriving from another device */
   else if (parts[0] === 'myxi') screenMyXi(parts[1] === 'i' ? decodeURIComponent(parts.slice(2).join('/')) : null);
   else if (parts[0] === 'legends') screenLegends(parts[1]);

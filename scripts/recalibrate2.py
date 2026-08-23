@@ -49,6 +49,8 @@ CANON = {'MLS': 'mls', 'USLC': 'uslc', 'USL1': 'usl1', 'MLSNP': 'mnp',
 DECAY = 0.75
 PV_MIN_NUDGE, PV_PROXY_SHARE = 30, 0.5
 OUTLIER_BAND = 200
+SHRINK_K = 10          # games; evidence weight for the results-Elo spread
+MAX_ABOVE_MEAN = 300   # points a club may sit above its own league anchor
 MONTHS = {m: i + 1 for i, m in enumerate(
     ['January', 'February', 'March', 'April', 'May', 'June',
      'July', 'August', 'September', 'October', 'November', 'December'])}
@@ -105,6 +107,113 @@ def npsl_bases():
         elo[h] = rh + delta
         elo[a] = ra - delta
     return {npsl_norm(t): r + 100 for t, r in elo.items()}
+
+
+def games_played():
+    """{league: {normalised club name: games played}} for the results-Elo pools.
+
+    Short seasons are why Vermont Green FC rated 1859 — above six MLS clubs. An
+    uncapped K=64 Elo walk over a 19-game summer schedule can displace a club
+    hundreds of points, and anchoring only pins a league's MEAN, never its
+    spread: USL2's sd was 139 against MLS's 29 on a third of the fixtures.
+    Games played is the evidence weight shrink_pools() divides by.
+    """
+    gp = {'usl2': {}, 'npsl': {}}
+    try:
+        d = json.load(open(ROOT / 'data' / 'usl2_matches.json'))
+        teams, ms = d['teams'], d['matches']
+        for m in (ms.values() if isinstance(ms, dict) else ms):
+            for side in ('home', 'away'):
+                nm = teams.get(str(m.get(side)), '')
+                if nm:
+                    k = cup_norm(nm)
+                    gp['usl2'][k] = gp['usl2'].get(k, 0) + 1
+    except Exception as e:
+        print(f'note: USL2 games-played unavailable ({e})', file=sys.stderr)
+    try:
+        seen = set()
+        for m in json.load(open(ROOT / 'data' / 'npsl_matches_2026.json')):
+            if m.get('status') != 'ENDED':
+                continue
+            key = (m.get('start'), m.get('t1'), m.get('t2'), m.get('s1'), m.get('s2'))
+            if key in seen:
+                continue
+            seen.add(key)
+            for t in (m.get('t1'), m.get('t2')):
+                if t:
+                    k = npsl_norm(str(t))
+                    gp['npsl'][k] = gp['npsl'].get(k, 0) + 1
+    except Exception as e:
+        print(f'note: NPSL games-played unavailable ({e})', file=sys.stderr)
+    return gp
+
+
+def shrink_pools(by_lg, base, gp):
+    """Empirical-Bayes shrink of the results-Elo pools toward their own mean.
+
+        base' = pool_mean + (base - pool_mean) * n / (n + SHRINK_K)
+
+    Order inside a league is untouched; only the magnitude of the spread moves,
+    and it moves in proportion to how many games actually back it. A club we
+    cannot match to a fixture count gets the pool median, so a name-match miss
+    can never silently leave a club un-shrunk at the top of the table.
+    """
+    for g, gpmap in gp.items():
+        cs = by_lg.get(g) or []
+        if len(cs) < 3 or not gpmap:
+            continue
+        keyer = npsl_norm if g == 'npsl' else cup_norm
+        counts = sorted(gpmap.values())
+        median = counts[len(counts) // 2]
+        mean = sum(base[c['id']] for c in cs) / len(cs)
+        sd = lambda: (sum((base[c['id']] - mean) ** 2 for c in cs) / len(cs)) ** 0.5
+        before, unmatched = sd(), 0
+        for c in cs:
+            n = gpmap.get(keyer(c['n']))
+            if n is None:
+                n, unmatched = median, unmatched + 1
+            base[c['id']] = mean + (base[c['id']] - mean) * n / (n + SHRINK_K)
+        print(f'shrink {g}: sd {before:.0f} -> {sd():.0f} '
+              f'({len(cs)} clubs, {unmatched} fell back to median {median} gp)',
+              file=sys.stderr)
+
+
+def tier_check(by_lg, rating_of, mls_mean, O):
+    """Loud guard against the Vermont-Green-over-Atlanta-United class of bug.
+
+    Deliberately NOT "no league may overlap the one above it" — adjacent-tier
+    overlap is correct and expected in a pyramid: the best USL1 side really is
+    better than the worst USL Championship side, and flattening that would be
+    its own falsehood. Two things are indefensible instead:
+
+      1. a non-MLS club rating above the MLS floor — the top flight is the one
+         boundary the audience will not forgive us crossing;
+      2. a club sitting more than MAX_ABOVE_MEAN over its OWN league's measured
+         anchor, which means the within-league walk, not the league, is wrong.
+
+    The old code detected condition 2 and only printed a note nothing consumed,
+    which is exactly how Vermont Green shipped at 1859.
+    """
+    bad = []
+    if by_lg.get('mls'):
+        floor = min(rating_of(c) for c in by_lg['mls'])
+        for g, cs in by_lg.items():
+            if g == 'mls':
+                continue
+            for c in cs:
+                if rating_of(c) > floor:
+                    bad.append(f'{c["n"]} ({g}, {rating_of(c):.0f}) is above the '
+                               f'MLS floor ({floor:.0f})')
+    for g, cs in by_lg.items():
+        if g not in O:
+            continue
+        anchor = mls_mean + O[g]
+        for c in cs:
+            if rating_of(c) - anchor > MAX_ABOVE_MEAN:
+                bad.append(f'{c["n"]} ({g}, {rating_of(c):.0f}) is '
+                           f'{rating_of(c) - anchor:.0f} above its league anchor '
+                           f'({anchor:.0f}) — within-league spread looks wrong')
+    return bad
 
 
 def prior_nudges(state_path, receipts_path):
@@ -200,6 +309,8 @@ def main():
     ap.add_argument('--receipts', default=str(ROOT / 'data' / 'cup_receipts.json'))
     ap.add_argument('--dry', action='store_true',
                     help='report movement, write nothing')
+    ap.add_argument('--allow-tier-cross', action='store_true',
+                    help='write even if a league outrates the tier above it')
     args = ap.parse_args()
     state_path, receipts_path = pathlib.Path(args.state), pathlib.Path(args.receipts)
 
@@ -222,10 +333,13 @@ def main():
             n_rebuilt += 1
     print(f'NPSL bases rebuilt from deduped results: {n_rebuilt}', file=sys.stderr)
 
-    # --- 2. anchor league means to the measured offsets ---
+    # --- 1b. shrink results-Elo spreads to the evidence behind them ---
     by_lg = {}
     for c in men:
         by_lg.setdefault(c['g'], []).append(c)
+    shrink_pools(by_lg, base, games_played())
+
+    # --- 2. anchor league means to the measured offsets ---
     mls_mean = sum(base[c['id']] for c in by_lg['mls']) / len(by_lg['mls'])
     shifts = {}
     for g in ANCHORED:
@@ -266,6 +380,20 @@ def main():
         if nd > PV_MIN_NUDGE and pg / total_move > PV_PROXY_SHARE:
             c['pv'] = 1
     npv = sum(1 for c in men if c.get('pv'))
+
+    # --- 4. tier guard: refuse to ship a league above the tier over it ---
+    violations = tier_check(by_lg, lambda c: c['r'], mls_mean, O)
+    if violations:
+        print('TIER VIOLATION:', file=sys.stderr)
+        for v in violations:
+            print(f'  {v}', file=sys.stderr)
+        if not args.allow_tier_cross:
+            sys.exit('refusing to write — a lower tier outrates the floor of the '
+                     'tier above it. This is the Vermont-Green-over-Atlanta-United '
+                     'class of bug. Re-run with --allow-tier-cross only if the '
+                     'crossing is genuinely supported by cup results.')
+        print('  --allow-tier-cross set; writing anyway', file=sys.stderr)
+
     if args.dry:
         print(f'DRY RUN: {moved} of {len(men)} rated men would move, '
               f'{npv} provisional; nothing written')

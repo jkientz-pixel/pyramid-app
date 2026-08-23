@@ -79,7 +79,6 @@ test('unknown route renders an honest not-found, not the map', async ({ page }) 
 for (const [typed, lands] of [
   ['#/free-agents', 'freeagents'],
   ['#/claim', 'clubtools'],
-  ['#/sponsorships', 'advertise'],
   ['#/follow', 'myxi'],
   ['#/following', 'myxi'],
   ['#/standings', 'table'],
@@ -94,6 +93,27 @@ for (const [typed, lands] of [
     expect(errors).toEqual([]);
   });
 }
+
+/* Advertising was removed entirely: no ad slots, no rate card, no #/advertise.
+   An unsold slot rendering "your brand here" reads as a dead site, and a
+   published rate card prices against traffic we have not proved. These assert
+   the surface stays gone rather than quietly returning. */
+test('#/advertise is gone and does not render an ad surface', async ({ page }) => {
+  const errors = trackErrors(page);
+  await gotoRoute(page, '#/advertise');
+  await viewRendered(page);
+  await expect(page.locator('#view')).toContainText("That page isn't here");
+  expect(errors).toEqual([]);
+});
+
+test('no screen renders an unsold sponsor slot', async ({ page }) => {
+  for (const h of ['#/map', '#/tiers', '#/wire', '#/freeagents']) {
+    await gotoRoute(page, h);
+    await viewRendered(page);
+    await expect(page.locator('#view .adslot')).toHaveCount(0);
+    await expect(page.locator('#view')).not.toContainText('Sponsor slot');
+  }
+});
 
 test('legacy numeric club id redirects to the permanent slug', async ({ page }) => {
   const errors = trackErrors(page);

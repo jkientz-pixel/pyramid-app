@@ -55,20 +55,23 @@ def main():
              for t in elo if played.get(t, 0) >= 3 and t in team_name}
     print(f'clubs with >=3 real matches: {len(rated)}', file=sys.stderr)
 
-    upsl = json.load(open(os.path.join(root, 'data', 'upsl.json')))
-    upsl_names = {norm(r['team']) for t in upsl for r in t['rows']}
-
     dpath = os.path.join(root, 'js', 'data.js')
     cur = open(dpath).read()
     clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', cur, re.S).group(1))
-    n_elo = n_st = 0
+    n_elo = 0
     for c in clubs:
         k = norm(c['n'])
         if c['g'] == 'npsl' and k in rated:
             c['r'] = max(1400, min(1900, rated[k])); c['rr'] = 1; n_elo += 1
-        elif c['g'] == 'upsl' and k in upsl_names and 'img' not in c:
-            c['rr'] = 2; n_st += 1
-    print(f'applied: {n_elo} real-Elo NPSL clubs, {n_st} standings-flagged UPSL clubs')
+    # UPSL is deliberately NOT flagged here any more. This used to set rr=2
+    # ("rating from real league standings") on any UPSL club whose name appeared
+    # in upsl.json, WITHOUT ever writing r — so 285 clubs kept
+    # add_census_gap_clubs.py's 1350 default while asserting a standings
+    # provenance the number never had. UPSL ratings are now computed from those
+    # same standings by scripts/rate_upsl_standings.py, which runs next in the
+    # pipeline and is the only writer of UPSL r/rr.
+    print(f'applied: {n_elo} real-Elo NPSL clubs '
+          f'(UPSL now handled by rate_upsl_standings.py)')
     cur = cur[:cur.index('export const CLUBS=')] + 'export const CLUBS=' + \
         json.dumps(clubs, ensure_ascii=False, separators=(',', ':')) + ';\n' + \
         cur[cur.index('export const REGIONS='):]
