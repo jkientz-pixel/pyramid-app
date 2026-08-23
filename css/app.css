@@ -844,3 +844,11 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 .mx-social b{display:block;font-family:var(--font-disp);text-transform:uppercase;letter-spacing:.04em;font-size:1rem}
 .mx-social span{display:block;color:var(--ink-dim);font-size:.72rem;margin-top:1px;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* verified fixtures list (#/matches) — compact rows, day headers, and the
+   model's home win probability in place of the "v" when both clubs are rated */
+.fxday{margin:14px 0 6px;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);font-weight:600}
+.match.fxrow{padding:9px 12px}
+.match.fxrow .mrow{margin:0}
+.match.fxrow .meta{margin-top:5px;font-size:.72rem}
+.fxodds{display:inline-block;min-width:2.6em;padding:2px 6px;border-radius:8px;background:var(--raise);border:1px solid var(--line);font-size:.74rem;font-weight:700;color:var(--ink)}
