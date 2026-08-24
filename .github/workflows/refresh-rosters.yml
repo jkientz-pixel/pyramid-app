@@ -55,7 +55,7 @@ jobs:
         run: |
           git config user.name "roster-bot"
           git config user.email "actions@github.com"
-          git add js/rosters.js js/data.js data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/rank_snapshot.json
+          git add js/rosters.js js/data.js data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/rank_snapshot.json data/rank_history.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else

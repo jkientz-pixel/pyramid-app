@@ -1070,6 +1070,18 @@ window.dlIcs = btn => {
   setTimeout(() => URL.revokeObjectURL(url), 4000);
 };
 const calBtn = (title, iso, venue, desc, tbd) => `<button type="button" class="calbtn" onclick="dlIcs(this)" data-t="${esc(title)}" data-s="${esc(iso)}" data-v="${esc(venue || '')}" data-d="${esc(desc || '')}"${tbd ? ' data-tbd="1"' : ''}>&#128197; Add to calendar</button>`;
+/* Top-5 scorelines with probability bars. Reads the Poisson cells oddsFor()
+   already builds; each bar is scaled to the best line so the shape of the
+   distribution reads at a glance (a 25% favourite line v five lines at 12%
+   is a different match from one at 40%). Percentages are of the full
+   truncated grid, so they agree with the three-way odds above. */
+function scorelinesHtml(o, h, a) {
+  if (!o.cells) return '';
+  const top = o.cells.slice().sort((x, y) => y[0] - x[0]).slice(0, 5);
+  const max = top[0][0];
+  return `<details class="slines"><summary>Most likely scorelines</summary><ul>${top.map(([p, i, j]) =>
+    `<li><span class="sl">${i}–${j}</span><i class="slbar"><b style="width:${(p / max * 100).toFixed(0)}%;background:${i > j ? LEAGUES[h.g].color : i < j ? LEAGUES[a.g].color : 'var(--ink-dim)'}"></b></i><span class="slp">${(p * 100).toFixed(0)}%</span></li>`).join('')}</ul></details>`;
+}
 /* Confidence buckets over the strongest single outcome — the meter under the
    odds row. Thresholds line up with how bettors read a three-way market. */
 function confidenceFor(o, h, a) {
@@ -1095,12 +1107,13 @@ function matchCard(h, a, when, real) {
   if (!h.r || !a.r) return `<div class="match">${head}
     <p class="note" style="margin:8px 0 0">Odds unavailable — ${esc(!h.r ? h.n : a.n)} has no rating yet. Ratings arrive once results land in the dataset.</p>
   </div>`;
-  const o = oddsFor(h, a);
+  const o = oddsFor(h, a, null, true);
   const cf = confidenceFor(o, h, a);
   return `<div class="match">
     ${head}
     <div class="scoreline">${o.score[0]}–${o.score[1]}</div>
     <div class="meta" style="justify-content:center;margin-top:0"><span>most likely score</span></div>
+    ${scorelinesHtml(o, h, a)}
     <div class="oddsrow">
       <div class="odds"><b>${(o.pH * 100).toFixed(1)}%</b><span>${esc(initials(h.n))} win</span></div>
       <div class="odds"><b>${(o.pD * 100).toFixed(1)}%</b><span>Draw</span></div>
@@ -1188,13 +1201,15 @@ function matchupMachineHtml(rated, preH) {
       <span class="vs">V</span>
       ${pickBox('pickA', rated[1])}
     </div>
-    <div id="pickout">${matchCard(home, rated[1], 'HYPOTHETICAL')}</div>`;
+    <div id="pickout">${matchCard(home, rated[1], 'HYPOTHETICAL')}</div>
+    <p class="note"><a id="cmplink" href="#/compare/${home.id}/${rated[1].id}">Compare these two clubs side by side &rarr;</a></p>`;
 }
 function wireMatchupMachine(rated) {
   const redo = () => {
     const h = CLUBS[+view.querySelector('#pickH').dataset.idx];
     const a = CLUBS[+view.querySelector('#pickA').dataset.idx];
     if (h && a) view.querySelector('#pickout').innerHTML = matchCard(h, a, 'HYPOTHETICAL');
+    const cl = view.querySelector('#cmplink'); if (cl && h && a) cl.href = `#/compare/${h.id}/${a.id}`;
   };
   /* both pickers open the same sheet the Rank Simulator and club-page
      Predict Result use — level chips, league browse, search and random —
@@ -1219,6 +1234,9 @@ const TOOLS = [
   { href: '#/predict', title: 'Matchup Machine', tag: 'Every rated club',
     blurb: 'Pick two clubs and get win odds, a likely scoreline, and the Elo gap behind them.',
     icon: '<path d="M4.5 4.5l15 15M19.5 4.5l-15 15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M14.5 4.5h5v5M4.5 14.5v5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>' },
+  { href: '#/compare', title: 'Compare Clubs', tag: 'Every rated club',
+    blurb: 'Two clubs side by side: rating, ranks, honours, home ground — and the odds if they met.',
+    icon: '<rect x="3" y="5" width="7.5" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="13.5" y="5" width="7.5" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 9h2.5M5.5 12h2.5M16 9h2.5M16 12h2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>' },
   { href: '#/race', title: 'Season Race', tag: 'Four pro leagues',
     blurb: 'Where every club is on course to finish, and how often each one actually wins the league.',
     icon: '<path d="M6 20.5V9.5M12 20.5V4.5M18 20.5v-7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M3.5 20.5h17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>' },
@@ -1342,6 +1360,70 @@ async function screenShots() {
     view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
       + '<p class="note">Shot Maps could not load. Check your connection and try again.</p>';
   }
+}
+/* ---- Compare two clubs ------------------------------------------------
+   #/compare/<idA>/<idB>. Every row is a number the club page already shows,
+   set side by side; the match card underneath is the Matchup Machine's.
+   No radar, no invented "DNA" axes — only fields every rated club carries,
+   so nothing here is padded for leagues that rank by standings alone. */
+function screenCompare(idA, idB) {
+  crumb.textContent = 'Compare';
+  const rated = pool().filter(c => c.r && !c.h).sort((a, b) => b.r - a.r);
+  if (rated.length < 2) return screenMap();
+  const pick = id => { const i = clubIdx(id); const c = CLUBS[i]; return c && c.r && !c.h ? c : null; };
+  const A = pick(idA) || rated[0];
+  const B = pick(idB) && pick(idB) !== A ? pick(idB) : rated.find(c => c !== A);
+  if (!location.hash.startsWith('#/compare/' + A.id + '/' + B.id)) {
+    location.replace('#/compare/' + A.id + '/' + B.id); return;
+  }
+  const natl = CLUBS.filter(o => o.x === A.x && o.r && !o.h).sort(eloRank);
+  const lgRank = c => { const peers = CLUBS.filter(o => o.g === c.g && o.r && !o.h).sort(eloRank); return c.rr ? peers.indexOf(c) + 1 : null; };
+  const basis = c => c.rr === 1 ? 'real results' : c.rr === 2 ? 'standings' : c.rr === 3 ? 'results model' : 'illustrative';
+  const honours = c => (HONOURS[rosterKey(c)] || []).reduce((n, h) => n + h.y.length, 0);
+  const num = v => v == null ? '&mdash;' : v;
+  const better = (x, y, hi = true) => x == null || y == null || x === y ? [0, 0] : (hi ? x > y : x < y) ? [1, 0] : [0, 1];
+  const rows = [];
+  const row = (label, va, vb, win, fmt = num) => {
+    const [wa, wb] = win || [0, 0];
+    rows.push(`<div class="cmp-row"><span class="cmp-a${wa ? ' win' : ''}">${fmt(va)}</span><span class="cmp-l">${label}</span><span class="cmp-b${wb ? ' win' : ''}">${fmt(vb)}</span></div>`);
+  };
+  row('Rating', A.r, B.r, better(A.r, B.r));
+  row('Rating basis', basis(A), basis(B));
+  row(`${A.g === B.g ? LEAGUES[A.g].label : 'League'} rank`, lgRank(A), lgRank(B), better(lgRank(A), lgRank(B), false), v => v ? '#' + v : 'NR');
+  row(`National (${A.x === 'w' ? "women's" : "men's"})`, natl.indexOf(A) + 1, natl.indexOf(B) + 1, better(natl.indexOf(A), natl.indexOf(B), false), v => '#' + v);
+  row('Honours', honours(A), honours(B), better(honours(A), honours(B)));
+  row('Home', A.ct || A.st, B.ct || B.st, null, esc);
+  if (A.cap || B.cap) row('Capacity', A.cap, B.cap, better(A.cap, B.cap), v => v ? Number(v).toLocaleString() : '&mdash;');
+  const head = c => `<a class="cmp-club" href="#/club/${c.id}">${crestHtml(c)}<b>${esc(c.n)}</b><span class="lgchip" style="background:${LEAGUES[c.g].color}">${LEAGUES[c.g].label}</span></a>`;
+  view.innerHTML = `
+    <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/tools'">&larr; Back</button>
+    <div class="kicker">Compare · any two rated clubs</div>
+    <h2 class="disp">Compare Clubs</h2>
+    <p class="note" style="margin:2px 0 6px">Tap either club to swap it. Green marks the better number on each line.</p>
+    <div class="pickrow">
+      <span class="pickwrap"><button type="button" class="pickq pickbtn" id="cmpA" data-id="${A.id}" aria-haspopup="dialog" aria-label="First club — tap to change">${esc(A.n)}</button></span>
+      <span class="vs">V</span>
+      <span class="pickwrap"><button type="button" class="pickq pickbtn" id="cmpB" data-id="${B.id}" aria-haspopup="dialog" aria-label="Second club — tap to change">${esc(B.n)}</button></span>
+    </div>
+    <div class="cmp"><div class="cmp-head">${head(A)}${head(B)}</div>${rows.join('')}</div>
+    <div class="btnrow" style="margin:10px 0"><button type="button" class="hdrlink" id="cmpSwap">&#8646; Swap home / away</button><button type="button" class="hdrlink sharebtn" id="cmpShare">Share</button></div>
+    <div class="kicker" style="margin-top:8px">If they met · ${esc(A.n)} at home</div>
+    ${matchCard(A, B, 'HYPOTHETICAL')}
+    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier. Predictions, not betting advice.</p>`;
+  const go = (a, b) => { location.hash = '#/compare/' + a.id + '/' + b.id; };
+  const wire = (btnId, other, slot) => view.querySelector('#' + btnId).addEventListener('click', () => {
+    const ok = new Set(rated.map(c => c.id));
+    simPickerSheet(slot, c => ok.has(c.id) && c !== other, c => btnId === 'cmpA' ? go(c, other) : go(other, c));
+  });
+  wire('cmpA', B, 'First club'); wire('cmpB', A, 'Second club');
+  view.querySelector('#cmpSwap').addEventListener('click', () => go(B, A));
+  const sb = view.querySelector('#cmpShare');
+  sb.addEventListener('click', async () => {
+    const url = `https://www.rankedxi.com/app#/compare/${A.id}/${B.id}`;
+    if (navigator.share) { try { await navigator.share({ title: `${A.n} v ${B.n} — Ranked XI`, url }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+    try { await navigator.clipboard.writeText(url); sb.textContent = 'Link copied ✓'; } catch { sb.textContent = url; }
+    setTimeout(() => { sb.textContent = 'Share'; }, 1800);
+  });
 }
 function screenPredict(preH) {
   crumb.textContent = 'Predict';
@@ -2059,13 +2141,14 @@ async function screenClub(ref) {
       <a class="lgchip" href="#/league/${c.g}" style="background:${m.color}">${m.img ? `<img class="lgimg" src="${m.img}" alt="">` : ''}${m.label}</a>
       <span class="sub" style="margin-left:8px">${c.ct ? `${esc(c.ct)}, ${c.st}` : (STATE_NAME[c.st] || PROV_NAME[c.st] || c.st)}</span>${venueHtml(c)}${c.ia ? `<span class="sub" style="margin-left:8px;color:#C77F1E;border:1px solid #C77F1E;border-radius:6px;padding:1px 7px;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">Inactive &middot; not in current league listings</span>` : ''}</div>
     </div>
-    <div class="btnrow">${favBtn('clubs', c.id)}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.r ? `<button class="predictbtn2" data-sim="${c.id}">&#128200; Rank Simulator</button>` : ''}<button class="hdrlink sharebtn" type="button">Share</button>${c.url ? `<a class="hdrlink" href="${safeHref(c.url)}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${safeHref(c.si)}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${safeHref(c.sx)}" target="_blank" rel="noopener">X</a>` : ''}${c.sf ? `<a class="hdrlink" href="${safeHref(c.sf)}" target="_blank" rel="noopener">Facebook</a>` : ''}</div>
+    <div class="btnrow">${favBtn('clubs', c.id)}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.r ? `<button class="predictbtn2" data-sim="${c.id}">&#128200; Rank Simulator</button>` : ''}${c.r ? `<a class="hdrlink" href="#/compare/${c.id}">Compare</a>` : ''}<button class="hdrlink sharebtn" type="button">Share</button>${c.url ? `<a class="hdrlink" href="${safeHref(c.url)}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${safeHref(c.si)}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${safeHref(c.sx)}" target="_blank" rel="noopener">X</a>` : ''}${c.sf ? `<a class="hdrlink" href="${safeHref(c.sf)}" target="_blank" rel="noopener">Facebook</a>` : ''}</div>
     ${(HONOURS[rosterKey(c)] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[rosterKey(c)] || []).map(h2 => `<li><b>${esc(h2.t)}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
       <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : DTAG + 'Rating'}${c.pv ? ' · provisional' : ''}</span></div>
       <div class="stat"><b>${rank ? '#' + rank : 'NR'}</b><span>${m.label}</span></div>
       <div class="stat"><b>${c.rr ? '#' + (natl.indexOf(c) + 1) : 'NR'}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
     </div>
+    <div id="rhist" class="rhist" hidden></div>
     ${cupRec.length ? `<div class="kicker" style="margin-top:10px">U.S. Open Cup &middot; real results, ${Math.min(...cupRec.map(e => e.y))}&ndash;${Math.max(...cupRec.map(e => e.y))}</div>
     <div class="histwrap" tabindex="0" role="region" aria-label="U.S. Open Cup match history"><ul class="careerway">${cupRec.slice().reverse().map(e => {
       const wl = e.gf > e.ga ? 'W' : e.gf < e.ga ? 'L' : (e.pens ? (e.pens[0] > e.pens[1] ? 'W' : 'L') + ' pens' : 'D');
@@ -2146,6 +2229,7 @@ async function screenClub(ref) {
   if (pb) pb.addEventListener('click', () => openPredict(pb.dataset.predict));
   const simb = view.querySelector('[data-sim]');
   if (simb) simb.addEventListener('click', () => { location.hash = '#/sim/' + simb.dataset.sim; });
+  if (c.r) renderRatingHistory(c);
   const sb = view.querySelector('.sharebtn');
   if (sb) sb.addEventListener('click', async () => {
     /* rated clubs have a static /club/<id> page with a per-club share card —
@@ -2162,6 +2246,35 @@ async function screenClub(ref) {
   });
 }
 
+/* ---- rating history sparkline ------------------------------------------
+   data/rank_history.json is appended by scripts/snapshot_ranks.py on each
+   weekly rotation (see that file) — one column per rotation date, one row per
+   rated club. Fetched lazily on the club page only. The chart draws once a
+   club has three points; before that the block says when history began so a
+   reader knows the line is coming rather than missing. */
+let _rhist = null;
+const loadRatingHistory = () => _rhist || (_rhist = fetch('data/rank_history.json?v=__RXIV__')
+  .then(r => r.ok ? r.json() : null).catch(() => null));
+async function renderRatingHistory(c) {
+  const box = view.querySelector('#rhist'); if (!box) return;
+  const hist = await loadRatingHistory();
+  if (!hist || !hist.clubs[c.id] || !view.contains(box)) return;
+  const pts = hist.dates.map((d, i) => [d, hist.clubs[c.id][i]]).filter(p => p[1] != null);
+  box.hidden = false;
+  const first = new Date(hist.dates[0] + 'T12:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  if (pts.length < 3) {
+    box.innerHTML = `<span class="kicker">Rating over time</span><p class="note" style="margin:4px 0 0">History began ${first}; the chart draws after three weekly points (${pts.length} so far).</p>`;
+    return;
+  }
+  const W = 320, H = 72, P = 6;
+  const vs = pts.map(p => p[1]), lo = Math.min(...vs), hi = Math.max(...vs), span = Math.max(hi - lo, 20);
+  const x = i => P + i * (W - 2 * P) / (pts.length - 1), y = v => H - P - (v - lo) / span * (H - 2 * P);
+  const d = pts.map((p, i) => (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(p[1]).toFixed(1)).join(' ');
+  const delta = vs[vs.length - 1] - vs[0];
+  box.innerHTML = `<span class="kicker">Rating over time · ${pts.length} weeks</span>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Rating from ${vs[0]} on ${first} to ${vs[vs.length - 1]} now"><path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${x(pts.length - 1).toFixed(1)}" cy="${y(vs[vs.length - 1]).toFixed(1)}" r="3" fill="var(--accent)"/></svg>
+    <div class="meta"><span>${first}: ${vs[0]}</span><span>${delta > 0 ? '+' : ''}${delta} since</span></div>`;
+}
 function screenAbout() {
   crumb.textContent = 'About';
   view.innerHTML = `<div class="about">
@@ -3284,7 +3397,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', race: 'Season Race', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player', notfound: 'Page not found' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', compare: 'Compare Clubs', tools: 'Tools', race: 'Season Race', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player', notfound: 'Page not found' };
 /* Hash routes people actually type or get sent. Every one of these was a
    plausible guess at a real screen that silently rendered the map instead —
    a stranger following a link from a DM concluded the site was broken rather
@@ -3333,13 +3446,13 @@ function route() {
   /* the Tools tab is a hub: its own screens (predict, sim) keep it lit, and
      club/player detail routes stay under Map the way they always have */
   const TAB_OF = { state: 'map', region: 'map', club: 'map', player: 'map',
-    predict: 'tools', sim: 'tools', race: 'tools', 'player-sim': 'tools', shots: 'tools', radar: 'tools' };
+    predict: 'tools', sim: 'tools', race: 'tools', 'player-sim': 'tools', shots: 'tools', radar: 'tools', compare: 'tools' };
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active',
     a.dataset.tab === (TAB_OF[parts[0]] || parts[0])));
   view.scrollTop = 0;
   /* these views read ROSTERS synchronously; any view shows followed-player
      chips, so a user with player favorites also waits for the module */
-  const needsRosters = ['club', 'player', 'myxi', 'table'].includes(parts[0])
+  const needsRosters = ['club', 'player', 'myxi', 'table', 'compare'].includes(parts[0])
     || favs().players.length > 0;
   /* rosters arrive async, so the reader can route away before they land —
      the same overtaking routedAway() guards inside a screen, one level up. */
@@ -3379,6 +3492,7 @@ function route() {
   else if (parts[0] === 'shots') screenShots();
   else if (parts[0] === 'radar') screenRadar();
   else if (parts[0] === 'predict') screenPredict(parts[1]);
+  else if (parts[0] === 'compare') screenCompare(parts[1], parts[2]);
   else if (parts[0] === 'wire') screenWire();
   else if (parts[0] === 'sim') screenSimulator(parts[1]);
   else if (parts[0] === 'about') screenAbout();
