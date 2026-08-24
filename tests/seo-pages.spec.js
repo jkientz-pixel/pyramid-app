@@ -5,10 +5,24 @@
    the whole distribution model, and nothing else in the suite touches them. */
 const { test, expect } = require('@playwright/test');
 
-/** Every <loc> in the deployed sitemap, path-only. */
+const locs = xml =>
+  [...xml.matchAll(/<loc>https:\/\/www\.rankedxi\.com([^<]*)<\/loc>/g)].map(m => m[1]);
+
+/** Every page <loc> in the deployed sitemap, path-only.
+    sitemap.xml is a sitemap *index*: its own <loc>s name child sitemaps, and
+    the pages live one level down. Reading only the index found zero pages and
+    passed the "no .html in the sitemap" checks vacuously, so this follows it. */
 async function sitemapPaths(request) {
-  const xml = await (await request.get('/sitemap.xml')).text();
-  return [...xml.matchAll(/<loc>https:\/\/www\.rankedxi\.com([^<]*)<\/loc>/g)].map(m => m[1]);
+  const index = await (await request.get('/sitemap.xml')).text();
+  const children = locs(index);
+  expect(children.length, 'sitemap.xml should be an index of child sitemaps').toBeGreaterThan(2);
+  const paths = [];
+  for (const child of children) {
+    const r = await request.get(child);
+    expect(r.ok(), `${child} listed in the index but not served`).toBe(true);
+    paths.push(...locs(await r.text()));
+  }
+  return paths;
 }
 
 test('sitemap lists league and state pages, not just clubs', async ({ request }) => {
@@ -45,9 +59,12 @@ for (const [path, mustSay] of [['/league/usl2.html', 'USL League Two'],
     await expect(page).toHaveTitle(new RegExp(mustSay));
     expect(await page.locator('meta[name=description]').getAttribute('content'))
       .toContain(mustSay);
+    // one script tag holding an @graph, so @id references resolve in-document;
+    // the ItemList is a node inside it rather than the root object
     const ld = JSON.parse(await page.locator('script[type="application/ld+json"]').innerText());
-    expect(ld['@type']).toBe('ItemList');
-    expect(ld.itemListElement.length).toBeGreaterThan(5);
+    const list = ld['@graph'].find(n => n['@type'] === 'ItemList');
+    expect(list, 'the hub must publish an ItemList node').toBeTruthy();
+    expect(list.itemListElement.length).toBeGreaterThan(5);
     // the table has to actually link out to club pages, or the hub passes
     // no authority to the leaves and the whole point is lost
     expect(await page.locator('table a[href^="/club/"]').count()).toBeGreaterThan(5);
@@ -57,7 +74,8 @@ for (const [path, mustSay] of [['/league/usl2.html', 'USL League Two'],
 test('a club page links back up to its league and its state', async ({ page }) => {
   await page.goto('/club/vermont-green-fc.html');
   await expect(page.locator('a[href="/league/usl2"]').first()).toBeVisible();
-  await expect(page.locator('a[href="/state/vt"]')).toBeVisible();
+  // the hub is linked from the header crumb, the table caption and the footer
+  await expect(page.locator('a[href="/state/vt"]').first()).toBeVisible();
 });
 
 test('UPSL and NPSL hubs point at their hand-built landing pages, not duplicates', async ({ request }) => {

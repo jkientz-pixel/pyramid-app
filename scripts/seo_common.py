@@ -132,7 +132,13 @@ def crumbs_html(trail):
 # Every page shares one favicon set. The emoji data-URI that used to sit here
 # renders as a throwaway domain in a SERP and disagreed with the PWA icons the
 # same page installs with.
-ICONS = ('<link rel="icon" href="/icon-192.png" sizes="192x192" type="image/png">'
+# /favicon.ico is listed first and deliberately: when the only icon links carry
+# a `sizes` attribute and none of them is tab-sized, Chrome ignores the lot and
+# requests /favicon.ico anyway. Shipping the .ico turned a 404 on every single
+# page load into a served file (it also covers crawlers and feed readers that
+# ask for the well-known path regardless of what the <head> says).
+ICONS = ('<link rel="icon" href="/favicon.ico" sizes="32x32">'
+         '<link rel="icon" href="/icon-192.png" sizes="192x192" type="image/png">'
          '<link rel="icon" href="/icon-512.png" sizes="512x512" type="image/png">'
          '<link rel="apple-touch-icon" href="/apple-touch-icon.png">')
 

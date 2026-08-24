@@ -65,7 +65,7 @@ cp -R app.html index.html 404.html npsl-rankings.html upsl-rankings.html \
       club league state .well-known \
       manifest.webmanifest sw.js robots.txt llms.txt _headers _redirects \
       js css crests fonts \
-      icon-192.png icon-512.png apple-touch-icon.png og.png google-play-badge.png "$STAGE/"
+      favicon.ico icon-192.png icon-512.png apple-touch-icon.png og.png google-play-badge.png "$STAGE/"
 # sitemap.xml is now an index; its children are generated alongside it and are
 # useless without each other. Globbed so a new club chunk (every 2,000 rated
 # clubs) ships without anyone remembering to edit this line.
