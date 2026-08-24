@@ -3452,7 +3452,7 @@ function route() {
   view.scrollTop = 0;
   /* these views read ROSTERS synchronously; any view shows followed-player
      chips, so a user with player favorites also waits for the module */
-  const needsRosters = ['club', 'player', 'myxi', 'table'].includes(parts[0])
+  const needsRosters = ['club', 'player', 'myxi', 'table', 'compare'].includes(parts[0])
     || favs().players.length > 0;
   /* rosters arrive async, so the reader can route away before they land —
      the same overtaking routedAway() guards inside a screen, one level up. */
