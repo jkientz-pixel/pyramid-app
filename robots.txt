@@ -1,3 +1,59 @@
+# Ranked XI — https://www.rankedxi.com
+# The national table of American soccer. Everything is open to crawlers.
+
 User-agent: *
 Allow: /
+
+# --- AI search crawlers: DELIBERATELY ALLOWED ---------------------------
+# These fetch pages to answer questions and cite sources. Blocking them would
+# remove Ranked XI from ChatGPT, Perplexity, Claude, Gemini and Copilot answers
+# — the opposite of the goal. If you are about to paste in a "block GPTBot"
+# snippet from a blog post: don't. The whole point of the static club, league
+# and state pages is that an engine with no JavaScript can read and quote them.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+# CCBot feeds Common Crawl, which is used for MODEL TRAINING rather than for
+# answering a user's question with a citation. That is a separate business
+# decision from the search crawlers above; it is currently allowed. Changing
+# this line does not affect whether AI search engines can cite the site.
+User-agent: CCBot
+Allow: /
+
 Sitemap: https://www.rankedxi.com/sitemap.xml

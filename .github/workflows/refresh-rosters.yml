@@ -36,12 +36,19 @@ jobs:
       # the gate diffs the fresh files against HEAD and fails on collapse
       - name: Gate — refuse empty or shrunken data
         run: python scripts/verify_refresh.py
+      # Rotate the weekly rank snapshot BEFORE the commit, because the commit
+      # is the only step in this pipeline that persists a file. deploy.sh runs
+      # the generators against a throwaway tree, so a snapshot written there
+      # would vanish and every club page would show "no movement" forever.
+      # The script is time-gated: it no-ops until the snapshot is 6 days old.
+      - name: Rotate weekly rank snapshot
+        run: python scripts/snapshot_ranks.py
       - name: Commit if changed
         id: commit
         run: |
           git config user.name "roster-bot"
           git config user.email "actions@github.com"
-          git add js/rosters.js js/data.js data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json
+          git add js/rosters.js js/data.js data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/rank_snapshot.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else

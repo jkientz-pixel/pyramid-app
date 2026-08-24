@@ -1,0 +1,43 @@
+# Ranked XI
+
+> Ranked XI is the national table of American soccer: every club from MLS to the grassroots, men's and women's, ranked on one scale.
+
+Independent project. Not affiliated with any league, club or federation. Not betting advice.
+Ratings are recomputed twice daily; every page carries the date its figures were computed.
+
+## Key pages
+
+- [Home](https://www.rankedxi.com/): the map and the national table
+- [The US soccer pyramid, ranked](https://www.rankedxi.com/us-soccer-pyramid): every tier with the median rating of each league
+- [Methodology](https://www.rankedxi.com/methodology): how the ratings are built and what each basis label means
+- [FAQ](https://www.rankedxi.com/faq): twelve most-asked questions, answered
+- [About](https://www.rankedxi.com/about): who builds this
+- [UPSL national rankings](https://www.rankedxi.com/upsl-rankings): the national table UPSL does not publish
+- [NPSL national rankings](https://www.rankedxi.com/npsl-rankings): the national table NPSL does not publish
+- [Terms, privacy & notices](https://www.rankedxi.com/terms): corrections and removal process
+
+## Structure
+
+- `/club/{slug}` — one page per club: rating, basis, league rank, national rank, movement, nearest rivals
+- `/league/{slug}` — one page per league: full rated table
+- `/state/{code}` — one page per US state or Canadian province
+
+## Facts
+
+- Men's and women's clubs are rated on the same scale but ranked in separate tables; they do not play each other.
+- Every rating is labelled: real results, real standings, an independent results model, or illustrative.
+- Cross-league placement is calibrated on roughly 600 U.S. Open Cup results across five editions — the only competition where clubs from different tiers meet.
+- A strong amateur club can rate above a weak professional one. That is a finding, not a bug.
+- College ratings are placed, not measured: college teams never play in the Open Cup, so divisions are ordered by independent Massey ratings and mapped into calibrated bands.
+- Clubs whose divisions publish no usable table are listed without a rating rather than being given an invented one.
+- Youth clubs are organization listings only. No youth ratings, no youth player data, no personal information about minors.
+
+## Attribution
+
+Rosters, honours and many crests adapted from Wikipedia and Wikidata under CC BY-SA 4.0.
+Match model inputs from American Soccer Analysis. Geocoding by OpenStreetMap contributors (ODbL).
+Independent ratings for college layers from Massey Ratings.
+
+## Contact
+
+hello@rankedxi.com
