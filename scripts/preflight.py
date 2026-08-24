@@ -393,6 +393,26 @@ try:
     else:
         print(f'  favicon: seo_common.ICONS intact on {len(top_pages) + 1} static pages')
 
+    # Stray markup from a half-removed tag. The 2026-08-23 favicon swap replaced
+    # a two-line emoji data-URI link but its regex only matched the opening line,
+    # so the closing half — `<text ...>SOCCER</text></svg>">` — was stranded in the
+    # head of 7 pages. The check above was satisfied (the correct ICONS block was
+    # there too) while the orphan rendered as a soccer ball and a literal `">` in
+    # the top-left corner of the live homepage. An unbalanced `</svg>` is the
+    # generic signature of that mistake, so assert the tags pair up.
+    svg_orphans = []
+    for f in top_pages + ['404.html']:
+        if not (ROOT / f).exists():
+            continue
+        html = (ROOT / f).read_text()
+        if html.count('</svg>') > html.count('<svg'):
+            svg_orphans.append(f)
+    if svg_orphans:
+        fail.append('pages with an unbalanced </svg> — a stray tag fragment is '
+                    f'rendering as visible text: {_cap(svg_orphans)}')
+    else:
+        print(f'  markup: no orphaned </svg> fragments on {len(top_pages) + 1} static pages')
+
     # the sitemap is an index now: every child it names must exist and be
     # staged, or a crawler follows the index into a 404
     smap_txt = (ROOT / 'sitemap.xml').read_text()
