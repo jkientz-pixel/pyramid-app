@@ -1659,7 +1659,7 @@ function resultRow(m, open) {
   if (m.att) bits.push(`${Number(m.att).toLocaleString()} att.`);
   return `<details class="match resrow"${open ? ' open' : ''}>
     <summary><div class="mrow">${resSide(m.h, '')}<span class="score">${m.h.g}&ndash;${m.a.g}</span>${resSide(m.a, 'away')}</div>
-      <div class="meta"><span>${bits.join(' · ')}</span><span>${lgIcon(m.lg)}${LEAGUES[m.lg] ? LEAGUES[m.lg].label : ''}${hasStats ? ' · <b class="tapstats">stats</b>' : ''}</span></div></summary>
+      <div class="meta"><span>${bits.join(' · ')}</span><span>${lgIcon(m.lg)}${LEAGUES[m.lg] ? LEAGUES[m.lg].label : ''} · <b class="tapstats">${open ? 'post-match' : 'post-match &#9662;'}</b></span></div></summary>
     ${goals}${stats ? `<div class="statcmp">${stats}</div>` : '<p class="note" style="margin:6px 0 0">No box score published for this match.</p>'}
     <div class="pmslot" data-pm="${pmRegister({ kind: 'res', m })}"></div>
   </details>`;
@@ -1694,7 +1694,7 @@ async function pmContext(reg) {
 function pmAttach(box) {
   box.querySelectorAll('details.resrow').forEach(det => {
     const slot = det.querySelector('.pmslot'); if (!slot || slot.dataset.mounted) return;
-    const mount = async (deferShots = false) => {
+    const mount = async () => {
       if (!det.open || slot.dataset.mounted) return;
       slot.dataset.mounted = '1';
       const reg = PM_ROWS.get(slot.dataset.pm); if (!reg) return;
@@ -1703,14 +1703,14 @@ function pmAttach(box) {
       try {
         const [mod, { ctx, showBox }] = await Promise.all([_pm ||= import('./postmatch.js?v=__RXIV__'), pmContext(reg)]);
         if (!slot.isConnected) return;
-        await mod.mountPostMatch(slot, ctx, { showBox, color: LEAGUES[ctx.lg]?.color, deferShots, stillHere: () => location.hash === here && slot.isConnected });
+        await mod.mountPostMatch(slot, ctx, { showBox, color: LEAGUES[ctx.lg]?.color, stillHere: () => location.hash === here && slot.isConnected });
       } catch (e) {
         _pm = null;
         if (slot.isConnected) slot.innerHTML = '<p class="note">Post-match analytics could not load.</p>';
       }
     };
-    det.addEventListener('toggle', () => mount(false));
-    if (det.open) mount(true);
+    det.addEventListener('toggle', mount);
+    if (det.open) mount();
   });
 }
 let resLg = 'all', resLimit = 20;
@@ -1725,7 +1725,7 @@ function renderResults(box, all, forSex, clubId) {
     ${clubId ? '' : `<h2 class="disp">Final Score</h2>
     <div class="chips" id="reschips">${['all', ...lgs].map(g =>
       `<button class="chip solid" data-reslg="${g}" aria-pressed="${resLg === g}">${g === 'all' ? `All (${mine.length})` : `${LEAGUES[g].label} (${mine.filter(m => m.lg === g).length})`}</button>`).join('')}</div>`}
-    ${page.map((m, i) => resultRow(m, clubId && i === 0)).join('')}
+    ${page.map((m, i) => resultRow(m, i === 0)).join('')}
     ${shown.length > page.length && !clubId ? `<button class="chip solid" id="resmore" style="margin-top:8px">Show more (${shown.length - page.length} left)</button>` : ''}
     ${clubId ? '' : '<p class="note">Tap a result for the two-team comparison — possession, shots, corners, passing, discipline. Box scores come from ESPN’s public match summary for the four pro leagues it carries; the bars are each side’s share of the total.</p>'}`;
   pmAttach(box);
@@ -3529,15 +3529,15 @@ function screenLegal() {
 /* ---- The Wire: feed generated from our own results + stats, never stale ---- */
 const fmtWireDay = d => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 let wireLg = 'all', wireLimit = 20;
-function wireResultRow(w) {
+function wireResultRow(w, open) {
   const hi = clubIdxByName(w.t1), ai = clubIdxByName(w.t2);
   const upset = isUpset(w);
   const side = (i2, n2, cls) => i2 >= 0
     ? `<a class="side ${cls}" href="#/club/${i2}">${mcrest(CLUBS[i2])}<span class="sn">${esc(n2)}</span></a>`
     : `<span class="side ${cls}"><span class="sn">${esc(n2)}</span></span>`;
-  return `<details class="match resrow wirerow">
+  return `<details class="match resrow wirerow"${open ? ' open' : ''}>
     <summary><div class="mrow">${side(hi, w.t1, '')}<span class="vs">${w.s1}&ndash;${w.s2}</span>${side(ai, w.t2, 'away')}</div>
-    <div class="meta"><span>${LEAGUES[w.lg] ? lgIcon(w.lg) : ''}${fmtWireDay(w.d)} · ${LEAGUES[w.lg] ? LEAGUES[w.lg].label : 'NPSL'}</span><span>${upset ? '<b class="wup">UPSET</b> · ' : ''}Elo swing &plusmn;${Math.abs(w.dr)} · home ${Math.round(w.ph * 100)}% pre-match · <b class="tapstats">${w.gid ? 'shot map' : 'post-match'}</b></span></div></summary>
+    <div class="meta"><span>${LEAGUES[w.lg] ? lgIcon(w.lg) : ''}${fmtWireDay(w.d)} · ${LEAGUES[w.lg] ? LEAGUES[w.lg].label : 'NPSL'}</span><span>${upset ? '<b class="wup">UPSET</b> · ' : ''}Elo swing &plusmn;${Math.abs(w.dr)} · home ${Math.round(w.ph * 100)}% pre-match · <b class="tapstats">${w.gid ? 'shot map' : 'post-match'}${open ? '' : ' &#9662;'}</b></span></div></summary>
     <div class="pmslot" data-pm="${pmRegister({ kind: 'wire', w })}"></div>
   </details>`;
 }
@@ -3607,7 +3607,7 @@ async function screenWire() {
       upcoming.map(fixtureRow).join('') +
       `<p class="note"><a href="#/matches">All verified fixtures &rarr;</a></p>` : '') +
     (rows.length ? `<div class="kicker" style="margin-top:12px">The results wire · ${rows.length.toLocaleString()} rated matches</div>` +
-      rows.slice(0, wireLimit).map(wireResultRow).join('') +
+      rows.slice(0, wireLimit).map((w, i) => wireResultRow(w, i === 0)).join('') +
       (rows.length > wireLimit ? `<button class="chip solid" id="wiremore" style="margin-top:8px">Show more</button>` : '')
     : '<p class="note" style="margin-top:10px">No match results in this filter yet.</p>');
   pmAttach(box);

@@ -50,6 +50,8 @@ async function stub(page) {
   await page.route('**/data/match_stats.json**', r => j(r, STATS));
   await page.route('**/api/shots**', r => j(r, r.request().url().includes('game_id=') ? SHOTS : GAMES));
 }
+/* the newest row opens on arrival; clicking its summary again would close it */
+const openRow = async row => { if (!(await row.getAttribute('open')) && await row.getAttribute('open') !== '') await row.locator('summary').click(); };
 const errorsOf = page => {
   const errors = [];
   page.on('pageerror', e => errors.push(String(e)));
@@ -62,7 +64,7 @@ test('a wire row opens into the shots tier with map, xG race and Elo swing', asy
   await stub(page);
   await gotoRoute(page, '#/wire');
   const row = page.locator('details.wirerow', { hasText: 'Home City FC' }).first();
-  await row.locator('summary').click();
+  await openRow(row);
   const pm = row.locator('.pm');
   await expect(pm).toHaveAttribute('data-tier', 'shots');
   await expect(pm.locator('.sh-pitch .sh-mark')).toHaveCount(SHOTS.shots.length);
@@ -78,7 +80,7 @@ test('toggles switch sets of shots off and the totals follow', async ({ page }) 
   await stub(page);
   await gotoRoute(page, '#/wire');
   const row = page.locator('details.wirerow', { hasText: 'Home City FC' }).first();
-  await row.locator('summary').click();
+  await openRow(row);
   const pm = row.locator('.pm');
   await expect(pm.locator('.sh-mark')).toHaveCount(7);
   await pm.locator('.pm-chip[data-key="away"]').click();      // home only -> 3
@@ -99,7 +101,7 @@ test('a league with no shot data lands on the result tier, never empty', async (
   await stub(page);
   await gotoRoute(page, '#/wire');
   const row = page.locator('details.wirerow', { hasText: 'Amateur United' }).first();
-  await row.locator('summary').click();
+  await openRow(row);
   const pm = row.locator('.pm');
   await expect(pm).toHaveAttribute('data-tier', 'result');
   await expect(pm.locator('.pm-elo')).toContainText('6 Elo');
@@ -111,7 +113,7 @@ test('a box-score result row borrows the wire game id and shows the shot map', a
   await stub(page);
   await gotoRoute(page, '#/matches');
   const row = page.locator('details.resrow', { hasText: 'Home City FC' }).first();
-  await row.locator('summary').click();
+  await openRow(row);
   const pm = row.locator('.pm');
   await expect(pm).toHaveAttribute('data-tier', 'shots');
   await expect(pm.locator('.sh-mark')).toHaveCount(7);
@@ -131,21 +133,26 @@ test('#/shots deep link opens one match with its filters applied', async ({ page
   await expect.poll(() => page.evaluate(() => location.hash)).toBe('#/shots/mls/GAME1?size=psxg');
 });
 
-test('a row the screen opened itself waits for a tap before fetching shots', async ({ page }) => {
+test('the newest result is already open on arrival, panel loaded, no tap needed', async ({ page }) => {
   const errors = errorsOf(page);
-  let shotCalls = 0;
   await stub(page);
-  await page.route('**/api/shots**', r => { shotCalls++; r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(SHOTS) }); });
+  await gotoRoute(page, '#/wire');
+  const first = page.locator('details.wirerow').first();
+  await expect(first).toHaveAttribute('open', '');
+  await expect(first.locator('.pm')).toHaveAttribute('data-tier', 'shots');
+  await expect(first.locator('.sh-mark')).toHaveCount(SHOTS.shots.length);
+  /* the rows below say how to open them */
+  await expect(page.locator('details.wirerow').nth(1).locator('.tapstats')).toContainText('▾');
+  expect(errors).toEqual([]);
+});
+
+test('a club page leads with its latest result open and the shot map drawn', async ({ page }) => {
+  const errors = errorsOf(page);
+  await stub(page);
   await gotoRoute(page, '#/club/atlanta-united');
   const row = page.locator('details.resrow', { hasText: 'Away Town FC' }).first();
   await expect(row).toHaveAttribute('open', '');
-  const pm = row.locator('.pm');
-  await expect(pm).toHaveAttribute('data-tier', 'shots');
-  await expect(pm.locator('.pm-elo')).toContainText('55%');
-  await expect(pm.locator('.pm-load')).toBeVisible();
-  expect(shotCalls).toBe(0);
-  await pm.locator('.pm-load').click();
-  await expect(pm.locator('.sh-mark')).toHaveCount(SHOTS.shots.length);
-  expect(shotCalls).toBe(1);
+  await expect(row.locator('.pm-elo')).toContainText('55%');
+  await expect(row.locator('.sh-mark')).toHaveCount(SHOTS.shots.length);
   expect(errors).toEqual([]);
 });

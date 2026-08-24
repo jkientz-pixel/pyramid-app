@@ -21,14 +21,17 @@ import sys
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 SESSION_ROUTE = '/api/auth/session'
+# The shot-map proxy is a Pages Function too; an empty answer keeps a result
+# row that opens on arrival from producing a 404 in local runs.
+SHOTS_ROUTE = '/api/shots'
 
 
 class PagesHandler(SimpleHTTPRequestHandler):
     def _clean(self):
         return self.path.split('?', 1)[0].split('#', 1)[0]
 
-    def _stub_logged_out(self):
-        payload = json.dumps({'ok': True, 'signedIn': False}).encode()
+    def _stub_logged_out(self, payload=None):
+        payload = json.dumps(payload if payload is not None else {'ok': True, 'signedIn': False}).encode()
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
         self.send_header('Content-Length', str(len(payload)))
@@ -40,10 +43,12 @@ class PagesHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         if self._clean() == SESSION_ROUTE:
             return self._stub_logged_out()
+        if self._clean() == SHOTS_ROUTE:
+            return self._stub_logged_out({'games': [], 'shots': []})
         return super().do_GET()
 
     def do_HEAD(self):
-        if self._clean() == SESSION_ROUTE:
+        if self._clean() in (SESSION_ROUTE, SHOTS_ROUTE):
             return self._stub_logged_out()
         return super().do_HEAD()
 

@@ -396,7 +396,7 @@ export function boxHtml(m, color) {
 }
 
 let _seq = 0;
-export async function mountPostMatch(el, ctx, { showBox = true, color, stillHere, deferShots = false } = {}) {
+export async function mountPostMatch(el, ctx, { showBox = true, color, stillHere } = {}) {
   const tier = tierOf(ctx);
   const ids = 'pm' + (++_seq);
   const fullLink = ctx.gid ? `#/shots/${ASA_SLUG[ctx.lg] || ctx.lg}/${ctx.gid}` : '';
@@ -411,15 +411,6 @@ export async function mountPostMatch(el, ctx, { showBox = true, color, stillHere
   </div>`;
   if (tier !== 'shots') return;
   const wrap = el.querySelector('#' + ids + '-wrap');
-  /* A row the screen opened by itself (a club page leads with its latest
-     result) must not fire a network call the reader never asked for; the
-     map is one tap away instead. Rows the reader opened load straight away. */
-  if (deferShots) {
-    wrap.innerHTML = `<button type="button" class="chip solid pm-load" aria-pressed="false">Load the shot map &amp; xG race</button>`;
-    await new Promise(res => wrap.querySelector('.pm-load').addEventListener('click', res, { once: true }));
-    if (stillHere && !stillHere()) return;
-    wrap.innerHTML = '<p class="note">Loading shots&hellip;</p>';
-  }
   try {
     const shots = await fetchShots(ctx.lg, ctx.gid);
     if (stillHere && !stillHere()) return;
