@@ -522,6 +522,12 @@ a.wirelink:hover .side{color:var(--accent)}
 
 /* inline data-correction form (community fixes) */
 .fixform { margin: 14px 0 4px }
+.resform .resrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.resform .reslab{font-size:.85rem;display:inline-flex;gap:6px;align-items:center}
+.resform .resscore label{display:flex;flex-direction:column;gap:4px;flex:1;font-size:.72rem;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.06em}
+.resform .resscore input{width:100%;box-sizing:border-box;font-size:1.3rem;font-family:var(--font-disp);text-align:center}
+.resform .resrow input[type=date],.resform .resrow select{flex:1;min-width:0;background:var(--raise);border:1px solid var(--line);border-radius:8px;color:inherit;font:inherit;padding:8px 10px}
+.resform .pickq.err{outline:2px solid #C7431E}
 .fixform summary { cursor: pointer; list-style: none }
 .fixform summary::-webkit-details-marker { display: none }
 .fixform form { display: grid; gap: 8px; max-width: 26em; margin-top: 10px }
