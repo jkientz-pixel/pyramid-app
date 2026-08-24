@@ -22,6 +22,10 @@ jobs:
       # Stdlib only, so no pip install step is needed.
       - name: Generate the pages preflight asserts on
         run: python3 scripts/gen_seo_pages.py
+      # lib/club_domains.json is also gitignored (regenerated on every deploy)
+      # and preflight runs gen_club_domains.py --check against it.
+      - name: Generate the club domain map preflight checks
+        run: python3 scripts/gen_club_domains.py
       - name: Run preflight gate
         run: python3 scripts/preflight.py
 
