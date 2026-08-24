@@ -1,0 +1,155 @@
+{
+  "_readme": "Manual crest verification queue. Keyed by club id (data.js `id`). Fields: img (optional: path under crests/ that must win over any scraper output), verified (1 = a human compared the badge with the club's official source), src (where it was checked), date (YYYY-MM-DD). scripts/apply_crest_overrides.py stamps `ck:1` (and img) into js/data.js; the club page shows a green check on ck. Remove an entry (or set verified 0) to pull the check. Never set verified on a crest nobody has eyeballed.",
+  "clubs": {
+    "atlanta-united": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "austin-fc": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "cf-montreal": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "chicago-fire": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "fc-cincinnati": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "columbus-crew": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "charlotte-fc": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "colorado-rapids": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "fc-dallas": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "dc-united": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "houston-dynamo": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "la-galaxy": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "lafc": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "inter-miami": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "minnesota-united": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "new-england-revolution": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "nashville-sc": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "nycfc": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "orlando-city": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "philadelphia-union": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "portland-timbers": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "new-york-red-bulls": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "real-salt-lake": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "seattle-sounders": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "san-jose-earthquakes": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "sporting-kansas-city": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "st-louis-city-sc": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "toronto-fc": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "vancouver-whitecaps": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    },
+    "san-diego-fc": {
+      "verified": 1,
+      "src": "visual check vs official MLS club mark",
+      "date": "2026-08-24"
+    }
+  }
+}

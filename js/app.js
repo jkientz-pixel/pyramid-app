@@ -64,6 +64,14 @@ function reportLink(kind, what) {
   const body = encodeURIComponent(`Page: ${location.hash}\nWhat's wrong / your suggestion:\n\n`);
   return `<details class="fixform"><summary class="reportlink">&#9873; See an error? Suggest a fix</summary>
     <form onsubmit="return submitCorrection(event, this)" data-club="${esc(what)}">
+      <select name="kind" aria-label="What kind of fix">
+        <option value="">What needs fixing?</option>
+        <option value="crest">Wrong or missing crest</option>
+        <option value="location">Wrong location / venue</option>
+        <option value="league">Wrong league or division</option>
+        <option value="result">Missing or wrong result</option>
+        <option value="other">Something else</option>
+      </select>
       <textarea name="message" rows="3" maxlength="1000" required minlength="10"
         placeholder="What's wrong — wrong city, coach, league, crest? A sentence is plenty."></textarea>
       <input name="contact" maxlength="120" placeholder="Email or @handle (optional, for follow-up)">
@@ -80,7 +88,7 @@ window.submitCorrection = (ev, f) => {
   fetch('/api/correction', {
     method: 'POST', headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ club: f.dataset.club, page: location.hash,
-      message: f.message.value, contact: f.contact.value, website: f.website.value })
+      message: (f.kind && f.kind.value ? `[${f.kind.value}] ` : '') + f.message.value, contact: f.contact.value, website: f.website.value })
   }).then(r => r.json()).then(d => {
     f.outerHTML = d.ok
       ? '<p class="note">&#10003; Got it — thank you. Fixes usually land within a few days.</p>'
@@ -181,6 +189,22 @@ window.submitInterest = (ev, f) => {
    filename (e.g. a strip_crest_bg.py run) — crest URLs are cached immutable
    and cache-first, so only a new ?cv= reaches returning browsers */
 const CRESTV = '11';
+/* Venue line for the club header. `acc` is the location grade set by the data
+   pipeline: 'v' = coordinates are the ground itself (Wikidata home-venue or a
+   league portal venue), 'a' = approximate, unset = league-stated city only.
+   Navigation links appear ONLY for 'v' — a directions link to a city centroid
+   is worse than none. `cap` = stadium capacity where a source had it. */
+function venueHtml(c) {
+  if (c.acc === 'a') return '<span class="sub vnote">~approx location</span>';
+  if (c.acc !== 'v' || c.la == null) return '';
+  const ll = `${c.la},${c.lo}`, q = encodeURIComponent(c.n);
+  /* Both links open the ground as a PLACE (pin + surroundings), not a
+     directions route — the user picks directions from there if they want. */
+  return `<span class="vdot" title="Venue verified — pin is on the ground itself" aria-label="Venue verified">&#10003; venue</span>` +
+    (c.cap ? `<span class="sub vnote">Capacity ${Number(c.cap).toLocaleString()}</span>` : '') +
+    `<span class="navlinks"><a href="https://maps.apple.com/?ll=${ll}&q=${q}&z=16" target="_blank" rel="noopener">Apple Maps &nearr;</a>` +
+    `<a href="https://www.google.com/maps/search/?api=1&query=${ll}" target="_blank" rel="noopener">Google Maps &nearr;</a></span>`;
+}
 function crestHtml(c) {
   /* a failed crest load must degrade to the initials chip, never the
      browser's broken-image glyph with overflowing alt text */
@@ -349,7 +373,7 @@ function wireMap(scopeStates, mapClubs, frameClubs) {
   svg.addEventListener('pointerover', e => {
     const pin = e.target.closest('.pin'); if (!pin || !tip) return;
     const c2 = CLUBS[pin.dataset.idx]; if (!c2) return;
-    tip.innerHTML = `<b>${esc(c2.n)}</b><span>${LEAGUES[c2.g].label}${c2.r ? ' · ' + c2.r : ''}${c2.acc === 'a' ? ' · ~approx location' : ''}</span>`;
+    tip.innerHTML = `<b>${esc(c2.n)}</b><span>${LEAGUES[c2.g].label}${c2.r ? ' · ' + c2.r : ''}${c2.acc === 'a' ? ' · ~approx location' : c2.acc === 'v' ? ' · <i class="vdot-s">&#10003;</i> venue' : ''}</span>`;
     tip.hidden = false;
   });
   svg.addEventListener('pointermove', e => {
@@ -2030,10 +2054,10 @@ async function screenClub(ref) {
     .sort((a2, b2) => dist2(a2, c) - dist2(b2, c)).slice(0, 7);
   view.innerHTML = `
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/map'">&larr; Back</button>
-    <div class="clubhead">${crestHtml(c)}
+    <div class="clubhead">${crestHtml(c)}${c.ck ? '<span class="ckmark" title="Crest verified against the club\'s official source" aria-label="Crest verified">&#10003;</span>' : ''}
       <div><h2 class="disp" style="margin:0">${esc(c.n)}</h2>
       <a class="lgchip" href="#/league/${c.g}" style="background:${m.color}">${m.img ? `<img class="lgimg" src="${m.img}" alt="">` : ''}${m.label}</a>
-      <span class="sub" style="margin-left:8px">${c.ct ? `${esc(c.ct)}, ${c.st}` : (STATE_NAME[c.st] || PROV_NAME[c.st] || c.st)}</span>${c.ia ? `<span class="sub" style="margin-left:8px;color:#C77F1E;border:1px solid #C77F1E;border-radius:6px;padding:1px 7px;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">Inactive &middot; not in current league listings</span>` : ''}</div>
+      <span class="sub" style="margin-left:8px">${c.ct ? `${esc(c.ct)}, ${c.st}` : (STATE_NAME[c.st] || PROV_NAME[c.st] || c.st)}</span>${venueHtml(c)}${c.ia ? `<span class="sub" style="margin-left:8px;color:#C77F1E;border:1px solid #C77F1E;border-radius:6px;padding:1px 7px;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">Inactive &middot; not in current league listings</span>` : ''}</div>
     </div>
     <div class="btnrow">${favBtn('clubs', c.id)}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.r ? `<button class="predictbtn2" data-sim="${c.id}">&#128200; Rank Simulator</button>` : ''}<button class="hdrlink sharebtn" type="button">Share</button>${c.url ? `<a class="hdrlink" href="${safeHref(c.url)}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${safeHref(c.si)}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${safeHref(c.sx)}" target="_blank" rel="noopener">X</a>` : ''}${c.sf ? `<a class="hdrlink" href="${safeHref(c.sf)}" target="_blank" rel="noopener">Facebook</a>` : ''}</div>
     ${(HONOURS[rosterKey(c)] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[rosterKey(c)] || []).map(h2 => `<li><b>${esc(h2.t)}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
