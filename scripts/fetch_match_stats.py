@@ -13,6 +13,12 @@ A team's stats block is kept only when it actually carries numbers; a match
 with no box score still ships with the score alone, and the app shows it
 as a plain result row rather than an empty comparison.
 
+Every match is also upserted (by ESPN event id) into
+data/match_stats_archive.json — an append-only season bank that survives the
+14-day window rolling forward and any later scrape failure. It is committed,
+never served: deploy.sh only ships files the app fetches. Fetch failures
+never delete from it.
+
 Output rows:
   {lg, date, venue, att, h:{n,id,g,s:{...}}, a:{...}, goals:[{side,who,min}]}
 """
@@ -129,6 +135,20 @@ def main():
         time.sleep(0.4)
     if failed and len(failed) == len(PRO):
         sys.exit('FAIL: every feed errored — refusing to publish an empty match_stats file')
+    # season bank: upsert by event id, keep everything ever seen
+    arc_path = os.path.join(ROOT, 'data', 'match_stats_archive.json')
+    try:
+        archive = {r['eid']: r for r in json.load(open(arc_path))}
+    except (OSError, ValueError):
+        archive = {}
+    before = len(archive)
+    for r in out:
+        if r.get('eid'):
+            archive[r['eid']] = r
+    arc = sorted(archive.values(), key=lambda r: (r['date'], r['lg']))
+    json.dump(arc, open(arc_path, 'w'), separators=(',', ':'))
+    print(f'archive: {len(arc)} matches ({len(arc) - before} new) -> data/match_stats_archive.json')
+
     out.sort(key=lambda r: (r['date'], r['lg']), reverse=True)
     with_stats = sum(1 for r in out if r['h'].get('s') and r['a'].get('s'))
     json.dump(out, open(os.path.join(ROOT, 'data', 'match_stats.json'), 'w'), separators=(',', ':'))
