@@ -87,7 +87,9 @@ def main():
             sh = 1.0 if hg > ag else 0.0 if hg < ag else 0.5
             margin = math.log(abs(hg - ag) + 1) or 1
             delta = K * margin * (sh - eh)
-            wire.append({'d': (x.get('date_time_utc') or '')[:10], 'lg': g,
+            # gid: ASA game id — the join the post-match panel uses to pull
+            # the shot map for this exact match (see js/postmatch.js)
+            wire.append({'d': (x.get('date_time_utc') or '')[:10], 'lg': g, 'gid': x.get('game_id'),
                          't1': resolve(g, tname[h]), 't2': resolve(g, tname[a]),
                          's1': hg, 's2': ag, 'dr': round(delta), 'ph': round(eh, 2),
                          'gp': min(played.get(h, 0), played.get(a, 0))})

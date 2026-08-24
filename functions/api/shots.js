@@ -85,6 +85,9 @@ export async function onRequestGet({ request }) {
         // ASA sends the string "0" (not null) when a shot had no assist.
         assist: s.assist_player_name && s.assist_player_name !== '0' ? s.assist_player_name : null,
         minute: s.game_minute,
+        period: s.period_id,
+        cross: !!s.assist_cross,
+        through: !!s.assist_through_ball,
         x: s.shot_location_x,
         y: s.shot_location_y,
         endY: s.shot_end_location_y,
