@@ -59,6 +59,90 @@ const milesApart = (a, b) => {
 const pool = () => CLUBS.filter(c => c.x === sex && !c.h);
 const visible = clubs => clubs.filter(c => leagueFilter.has(c.g));
 
+/* ---- community results ---------------------------------------------------
+   Reader-reported finals for matches we have no feed for. Submissions go to
+   /api/result as 'pending'; only rows a human approved in
+   scripts/review_results.py reach data/community_results.json, and only
+   those are listed here. The form lives on the club page so home_id is
+   never guessed — it is the page's club — and the opponent comes from the
+   same picker sheet the Predict button uses. */
+let _cres = null;
+const communityResults = () => _cres || (_cres = fetch('data/community_results.json?v=__RXIV__')
+  .then(r => r.ok ? r.json() : { results: [] }).catch(() => ({ results: [] })));
+function communityResultsHtml(c, rows) {
+  const mine = rows.filter(r => r.home_id === c.id || r.away_id === c.id).sort((a, b) => b.date.localeCompare(a.date));
+  if (!mine.length) return '';
+  const byId = id => CLUBS.find(o => o.id === id);
+  return `<div class="kicker" style="margin-top:10px">Community results &middot; reader-reported, reviewed by Ranked XI</div>
+    <div class="histwrap" tabindex="0" role="region" aria-label="Community-reported results"><ul class="careerway">${mine.map(r => {
+      const home = r.home_id === c.id, opp = byId(home ? r.away_id : r.home_id);
+      const gf = home ? r.hg : r.ag, ga = home ? r.ag : r.hg;
+      const wl = gf > ga ? 'W' : gf < ga ? 'L' : 'D';
+      const oppHtml = opp ? `<a href="#/club/${opp.id}">${esc(opp.n)}</a>` : esc(home ? r.away : r.home);
+      return `<li><span class="cw-years">${r.date.slice(0, 10)}</span><span class="cw-club">${home ? 'v' : 'at'} ${oppHtml} &middot; ${gf}&ndash;${ga}${r.comp && r.comp !== 'league' ? ` &middot; ${r.comp}` : ''}${r.src ? ` <a href="${safeHref(r.src)}" target="_blank" rel="noopener" title="Source">&#8599;</a>` : ''}</span><span class="cw-stat">${wl}</span></li>`;
+    }).join('')}</ul></div>
+    <p class="note">Reported by readers and checked by hand before listing. Community results are shown for the record and do not move ratings yet.</p>`;
+}
+function resultFormHtml(c) {
+  const today = new Date().toISOString().slice(0, 10);
+  return `<details class="fixform resform"><summary class="reportlink">&#9917; Report a result we're missing</summary>
+    <form onsubmit="return submitResult(event, this)" data-club="${esc(c.id)}" data-name="${esc(c.n)}">
+      <div class="resrow"><button type="button" class="pickq pickbtn" id="resOpp" aria-haspopup="dialog" data-id="">Choose opponent&hellip;</button></div>
+      <div class="resrow">
+        <label class="reslab"><input type="radio" name="ha" value="h" checked> ${esc(c.n)} at home</label>
+        <label class="reslab"><input type="radio" name="ha" value="a"> away</label>
+      </div>
+      <div class="resrow resscore">
+        <label><span id="resHome">${esc(c.n)}</span><input name="gf" type="number" inputmode="numeric" min="0" max="30" required placeholder="0"></label>
+        <span class="vs">&ndash;</span>
+        <label><span id="resAway">Opponent</span><input name="ga" type="number" inputmode="numeric" min="0" max="30" required placeholder="0"></label>
+      </div>
+      <div class="resrow">
+        <input name="date" type="date" max="${today}" value="${today}" required aria-label="Match date">
+        <select name="comp" aria-label="Competition"><option value="league">League</option><option value="cup">Cup</option><option value="playoff">Playoff</option><option value="friendly">Friendly</option></select>
+      </div>
+      <input name="src" type="url" maxlength="300" placeholder="Link to proof — league page, post, or scoreboard photo (optional)">
+      <input name="note" maxlength="300" placeholder="Anything we should know (optional)">
+      <input name="contact" maxlength="120" placeholder="Email or @handle (optional, for follow-up)">
+      <input name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+      <button type="submit">Send it in</button>
+      <span class="note">Checked by hand before it appears. Nothing moves a rating until we verify it.</span>
+    </form></details>`;
+}
+function wireResultForm(c) {
+  const f = view.querySelector('.resform form'); if (!f) return;
+  const opp = f.querySelector('#resOpp');
+  opp.addEventListener('click', () => simPickerSheet('Opponent', o => o !== c && o.x === c.x, o => {
+    opp.dataset.id = o.id; opp.dataset.name = o.n; opp.textContent = o.n;
+    f.querySelector(f.ha.value === 'h' ? '#resAway' : '#resHome').textContent = o.n;
+  }));
+  f.querySelectorAll('input[name=ha]').forEach(r => r.addEventListener('change', () => {
+    const home = f.ha.value === 'h', oppName = opp.dataset.name || 'Opponent';
+    f.querySelector('#resHome').textContent = home ? c.n : oppName;
+    f.querySelector('#resAway').textContent = home ? oppName : c.n;
+  }));
+}
+window.submitResult = (ev, f) => {
+  ev.preventDefault();
+  const opp = f.querySelector('#resOpp');
+  if (!opp.dataset.id) { opp.focus(); opp.classList.add('err'); return false; }
+  const home = f.ha.value === 'h';
+  const btn = f.querySelector('button[type=submit]');
+  btn.disabled = true; btn.textContent = 'Sending\u2026';
+  fetch('/api/result', {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      home_id: home ? f.dataset.club : opp.dataset.id, away_id: home ? opp.dataset.id : f.dataset.club,
+      home: home ? f.dataset.name : opp.dataset.name, away: home ? opp.dataset.name : f.dataset.name,
+      hg: +f.gf.value, ag: +f.ga.value, date: f.date.value, comp: f.comp.value,
+      src: f.src.value, note: f.note.value, contact: f.contact.value, page: location.hash, website: f.website.value })
+  }).then(r => r.json()).then(d => {
+    f.outerHTML = d.ok
+      ? '<p class="note">&#10003; Got it — thank you. Results are checked by hand and usually listed within a few days.</p>'
+      : `<p class="note">${d.error || 'Something went wrong — try again later.'}</p>`;
+  }).catch(() => { btn.disabled = false; btn.textContent = 'Send it in'; });
+  return false;
+};
 function reportLink(kind, what) {
   const subj = encodeURIComponent(`RankedXI ${kind}: ${what}`);
   const body = encodeURIComponent(`Page: ${location.hash}\nWhat's wrong / your suggestion:\n\n`);
@@ -2116,6 +2200,7 @@ async function screenClub(ref) {
   const hist = c.g === 'mls' ? (await mlsHistory()) : null;
   const hasLegends = c.g === 'mls' && !!((await legendsDb())[c.n] || []).length;
   const cupRec = (await cupDb())[c.id] || [];
+  const cres = (await communityResults()).results || [];
   const apps = c.g === 'usl2' ? (await usl2Apps())[c.id] : null;
   /* board listings that belong to this club — moderation sets clubId; the
      name match catches listings posted before the id was attached */
@@ -2155,6 +2240,7 @@ async function screenClub(ref) {
       return `<li><span class="cw-years">${e.y}</span><span class="cw-club">${e.ha === 'H' ? 'v' : 'at'} ${esc(e.opp)} &middot; ${e.gf}&ndash;${e.ga}${e.aet ? ' aet' : ''}${e.pens ? ` (${e.pens[0]}&ndash;${e.pens[1]}p)` : ''}</span><span class="cw-stat">${wl}${e.d ? ` &middot; ${e.d > 0 ? '+' : ''}${e.d}` : ''}</span></li>`;
     }).join('')}</ul></div>
     <p class="note">${c.g === 'mls' ? 'Shown for the record — MLS ranks by the official league table, so Cup results never move an MLS rating here.' : 'These matches move the rating. Cross-tier cup results are where the levels actually meet; extra-time and shootout wins count at reduced weight.'}${c.pv ? " Marked provisional: most of this club's cup movement came against opponents outside our database, valued at league average." : ''}</p>` : ''}
+    ${communityResultsHtml(c, cres)}
     ${/* One number per club. The experimental results-only Elo used to sit
           right under the headline rating, so the page showed two different
           ratings for the same team and told you one of them was experimental —
@@ -2223,6 +2309,7 @@ async function screenClub(ref) {
     <p class="note">${(c.si || c.sx || c.sf || c.url) ? 'Official site and social links above come from Wikidata, league sources, and the club\'s own website — they go exactly where they say.' : 'Club website and socials appear at the top once the club claims its page — links always go exactly where they say.'}</p>
     ${interestForm('club-add', c.n)}
     <p class="note">Claimed clubs manage their crest, links, roster and schedule.</p>
+    ${c.r ? resultFormHtml(c) : ''}
     ${reportLink('Fix', c.n)}`;
   wireFav();
   const pb = view.querySelector('.predictbtn2');
@@ -2230,6 +2317,7 @@ async function screenClub(ref) {
   const simb = view.querySelector('[data-sim]');
   if (simb) simb.addEventListener('click', () => { location.hash = '#/sim/' + simb.dataset.sim; });
   if (c.r) renderRatingHistory(c);
+  wireResultForm(c);
   const sb = view.querySelector('.sharebtn');
   if (sb) sb.addEventListener('click', async () => {
     /* rated clubs have a static /club/<id> page with a per-club share card —
