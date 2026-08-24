@@ -14,6 +14,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      # about/faq/terms/us-soccer-pyramid and the two rankings pages are
+      # generated, not committed (see .gitignore), and preflight asserts on
+      # them. deploy.sh generates before it runs preflight for the same reason.
+      # Doing it here too means the gate checks what actually ships rather than
+      # a committed copy that goes stale the moment js/data.js moves.
+      # Stdlib only, so no pip install step is needed.
+      - name: Generate the pages preflight asserts on
+        run: python3 scripts/gen_seo_pages.py
       - name: Run preflight gate
         run: python3 scripts/preflight.py
 
