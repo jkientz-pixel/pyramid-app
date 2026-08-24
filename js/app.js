@@ -979,7 +979,7 @@ const FACT = [1, 1, 2, 6, 24, 120, 720, 5040];
    + 1,067 pro): amateur football wants a bigger K and smaller home edge than
    pro parity leagues, so params split by tier instead of one-size-fits-all. */
 const AMATEUR_TIER = new Set(['npsl', 'upsl', 'usl2', 'apsl', 'gcpl', 'loc', 'csl', 'sfsfl', 'eplwa', 'lisfl', 'uslwl', 'wpsl', 'uws', 'nisa', 'ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w']);
-function oddsFor(h, a, homeAdv) {
+function oddsFor(h, a, homeAdv, wantCells) {
   const amateur = AMATEUR_TIER.has(h.g) && AMATEUR_TIER.has(a.g);
   const ha = homeAdv != null ? homeAdv : (amateur ? 30 : 65);
   const lam0 = amateur ? 1.45 : 1.35;
@@ -988,15 +988,21 @@ function oddsFor(h, a, homeAdv) {
   const lamA = lam0 * Math.pow(10, -d / 1000);
   const pois = (l, k) => Math.exp(-l) * Math.pow(l, k) / FACT[k];
   let pH = 0, pD = 0, pA = 0, best = [1, 1], bestP = 0;
+  /* Season Race needs the individual scoreline cells so it can draw a real
+     score (and so a goal difference) from one random number. Every other
+     caller wants three numbers, so the array is built only on request —
+     matchCard() runs this per fixture row and must not pay for it. */
+  const cells = wantCells ? [] : null;
   for (let i = 0; i <= 7; i++) for (let j = 0; j <= 7; j++) {
     const p = pois(lamH, i) * pois(lamA, j);
+    if (cells) cells.push([p, i, j]);
     if (i > j) pH += p; else if (i === j) pD += p; else pA += p;
     if (p > bestP) { bestP = p; best = [i, j]; }
   }
   // truncating scorelines at 7 goals drops probability mass (3%+ on lopsided
   // matchups), so the three outcomes must renormalize to sum to exactly 1
   const tot = pH + pD + pA;
-  return { pH: pH / tot, pD: pD / tot, pA: pA / tot, score: best, ha };
+  return { pH: pH / tot, pD: pD / tot, pA: pA / tot, score: best, ha, cells };
 }
 
 /* ico = crests/platform-<ico>.svg; 'inv' logos are dark-on-transparent
@@ -1189,6 +1195,9 @@ const TOOLS = [
   { href: '#/predict', title: 'Matchup Machine', tag: 'Every rated club',
     blurb: 'Pick two clubs and get win odds, a likely scoreline, and the Elo gap behind them.',
     icon: '<path d="M4.5 4.5l15 15M19.5 4.5l-15 15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M14.5 4.5h5v5M4.5 14.5v5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>' },
+  { href: '#/race', title: 'Season Race', tag: 'Four pro leagues',
+    blurb: 'Where every club is on course to finish, and how often each one actually wins the league.',
+    icon: '<path d="M6 20.5V9.5M12 20.5V4.5M18 20.5v-7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M3.5 20.5h17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>' },
   { href: '#/sim', title: 'Rank Simulator', tag: 'Every rated club',
     blurb: 'Book results for your club one at a time and watch the rating and the national rank move.',
     icon: '<path d="M4 20.5h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4.5 16l5-5 3.5 3 6.5-7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.5 7h5v5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>' },
@@ -1242,6 +1251,39 @@ async function screenPlayerSim() {
     if (!location.hash.startsWith('#/player-sim')) return;
     view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
       + '<p class="note">Player Simulator could not load. Check your connection and try again.</p>';
+  }
+}
+/* Season Race. Three small JSONs, all written by scripts/fetch_race.py, and a
+   module that is only worth downloading if you asked for this screen. The
+   fetch calls below must stay literal and on one line each: deploy.sh decides
+   which data/*.json to stage by grepping this file for them. */
+let _raceData = null;
+async function screenSeasonRace() {
+  crumb.textContent = 'Season Race';
+  view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
+    + '<p class="note">Loading standings and fixtures&hellip;</p>';
+  try {
+    const grab = u => fetch(u).then(r => r.json());
+    const [data, mod] = await Promise.all([
+      _raceData || Promise.all([
+        grab('data/seasons.json?v=__RXIV__'),
+        grab('data/standings.json?v=__RXIV__'),
+        grab('data/schedule_rest.json?v=__RXIV__'),
+      ]).then(([seasons, standings, schedule]) => ({ seasons, standings, schedule })),
+      import('./seasonrace.js?v=__RXIV__'),
+    ]);
+    _raceData = data;
+    if (!location.hash.startsWith('#/race')) return;   // routed away mid-load
+    mod.render(view, data, {
+      oddsFor: (h, a, ha) => oddsFor(h, a, ha, true),
+      club: id => CLUBS.find(c => c.id === id && !c.h),
+      crest: (c, big) => big ? crestHtml(c) : mcrest(c),
+      LEAGUES,
+    });
+  } catch (e) {
+    if (!location.hash.startsWith('#/race')) return;
+    view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
+      + '<p class="note">Season Race could not load. Check your connection and try again.</p>';
   }
 }
 let _radarData = null;
@@ -3218,7 +3260,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player', notfound: 'Page not found' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', tools: 'Tools', race: 'Season Race', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player', notfound: 'Page not found' };
 /* Hash routes people actually type or get sent. Every one of these was a
    plausible guess at a real screen that silently rendered the map instead —
    a stranger following a link from a DM concluded the site was broken rather
@@ -3267,7 +3309,7 @@ function route() {
   /* the Tools tab is a hub: its own screens (predict, sim) keep it lit, and
      club/player detail routes stay under Map the way they always have */
   const TAB_OF = { state: 'map', region: 'map', club: 'map', player: 'map',
-    predict: 'tools', sim: 'tools', 'player-sim': 'tools', shots: 'tools', radar: 'tools' };
+    predict: 'tools', sim: 'tools', race: 'tools', 'player-sim': 'tools', shots: 'tools', radar: 'tools' };
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active',
     a.dataset.tab === (TAB_OF[parts[0]] || parts[0])));
   view.scrollTop = 0;
@@ -3303,6 +3345,7 @@ function route() {
   }
   else if (parts[0] === 'matches') screenMatches(parts[1]);
   else if (parts[0] === 'tools') screenTools();
+  else if (parts[0] === 'race') screenSeasonRace();
   else if (parts[0] === 'player-sim') screenPlayerSim();
   /* #/coach was the route while the tool was called Player Coach and it
      shipped to production under that name; keep the old hash working */

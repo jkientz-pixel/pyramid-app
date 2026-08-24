@@ -62,6 +62,27 @@ try:
 except Exception as e:
     fail.append(f'wire_asa.json: {e}')
 
+# Season Race inputs. preflight checks these are internally consistent; this
+# checks they did not COLLAPSE, which a partial ESPN outage would do silently
+# and consistently — half a schedule is still a self-consistent schedule.
+# The remaining-fixture count legitimately falls as a season is played, so it
+# is only guarded against emptying, not against shrinking.
+try:
+    for f, key in (('standings.json', 'leagues'), ('seasons.json', 'leagues')):
+        new_n = len(json.loads((ROOT / 'data' / f).read_text()).get(key, {}))
+        old_n = len(json.loads(head(f'data/{f}')).get(key, {}))
+        print(f'{f}: {old_n} -> {new_n} leagues')
+        if new_n < old_n * SHRINK:
+            fail.append(f'{f} leagues collapsed: {old_n} -> {new_n}')
+    n_fx = len(json.loads((ROOT / 'data' / 'schedule_rest.json').read_text()).get('fixtures', []))
+    print(f'schedule_rest.json: {n_fx} fixtures still to play')
+    if n_fx == 0:
+        fail.append('schedule_rest.json is empty — every league cannot be finished at once')
+except subprocess.CalledProcessError:
+    print('season race files: no committed baseline yet, skipping shrink check')
+except Exception as e:
+    fail.append(f'season race data: {e}')
+
 if fail:
     print('REFRESH GATE FAILED:\n  ' + '\n  '.join(fail), file=sys.stderr)
     sys.exit(1)
