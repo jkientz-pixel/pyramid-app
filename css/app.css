@@ -1063,3 +1063,58 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 .claimscr .logoprev img{max-width:100px;max-height:100px;object-fit:contain}
 .claimscr .logodrop p{margin:0 0 8px;font-size:.9rem;line-height:1.45}
 .claimscr input[type=file]{padding:6px 0;border:0;background:none}
+
+/* ---- post-match panel (js/postmatch.js) ----------------------------------
+   Lives under every final score. The tier badge says what data exists; the
+   toggle groups switch sets of shots off rather than on, so the untouched
+   state is the whole match. Colour on the two sides is the shot-map pair. */
+.pm{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+.pm-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.pm-tier{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink-dim)}
+.pm-tier.pm-shots{border-color:var(--accent);color:var(--accent)}
+.pm-why{margin:0;font-size:.74rem}
+.pm-elo{margin:6px 0 10px}
+.pm-elorow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:8px;font-size:.85rem}
+.pm-eloside{font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pm-eloside.away{text-align:right}
+.pm-elodelta{font-variant-numeric:tabular-nums;font-size:1.05rem}
+.pm-elodelta.up{color:var(--sim-up)}
+.pm-elodelta.down{color:var(--sim-down)}
+.pm-elobar{position:relative;height:8px;border-radius:4px;background:var(--line);overflow:hidden;min-width:60px}
+.pm-elobar i{position:absolute;top:0;bottom:0;background:var(--shot-home)}
+.pm-elobar i.h{left:50%}
+.pm-elobar i.a{right:50%;background:var(--shot-away)}
+.pm-elonote{margin:4px 0 0;font-size:.74rem}
+.pm-toggles{display:flex;flex-direction:column;gap:5px;margin:6px 0 12px}
+/* one line per group; on a phone the line scrolls sideways instead of wrapping
+   into a wall of chips above the map */
+.pm-tg{display:flex;flex-wrap:nowrap;align-items:center;gap:5px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
+.pm-tg::-webkit-scrollbar{display:none}
+.pm-tg .pm-chip{flex:none;white-space:nowrap}
+.pm-tglabel{flex:none;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);min-width:4.4em}
+.pm-chip{padding:4px 10px;font-size:.68rem}
+.pm-chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--ground)}
+.pm-chip[aria-pressed="false"]{text-decoration:line-through;opacity:.7}
+.pm-reset{align-self:flex-start;border-color:var(--accent);color:var(--accent)}
+.pm-count{font-weight:400;color:var(--ink-dim);letter-spacing:0;text-transform:none}
+.pm-racewrap{background:var(--raise);border:1px solid var(--line);border-radius:14px;padding:8px}
+.pm-race{width:100%;height:auto;display:block}
+.pm-grid{stroke:var(--line);stroke-width:1}
+.pm-axis{fill:var(--ink-dim);font-size:11px}
+.pm-line{stroke-width:2.5;stroke-linejoin:round}
+.pm-line.sh-home{stroke:var(--shot-home)}
+.pm-line.sh-away{stroke:var(--shot-away)}
+.pm-goal.sh-home{fill:var(--shot-home)}
+.pm-goal.sh-away{fill:var(--shot-away)}
+.pm-lbl{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+.pm-lbl.sh-home{fill:var(--shot-home)}
+.pm-lbl.sh-away{fill:var(--shot-away)}
+.pm-shots{margin-top:8px}
+.pmslot:empty{display:none}
+.match.resrow .pmtoggle{margin-top:8px}
+@media (max-width:640px){.pm-elorow{font-size:.78rem}}
+.pm-full{color:var(--accent);font-weight:600}
+.pm-reset[hidden]{display:none}
+/* inside the panel the pitch shrinks to the column instead of scrolling
+   sideways — a phone shows the whole match, smaller, rather than one box */
+.pm .sh-pitch{min-width:0}

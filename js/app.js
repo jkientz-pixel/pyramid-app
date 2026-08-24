@@ -1443,14 +1443,14 @@ async function screenRadar() {
       + '<p class="note">Player Radar could not load. Check your connection and try again.</p>';
   }
 }
-async function screenShots() {
+async function screenShots(parts) {
   crumb.textContent = 'Shot Maps';
   view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
     + '<p class="note">Loading&hellip;</p>';
   try {
     const mod = await import('./shotmap.js?v=__RXIV__');
     if (!location.hash.startsWith('#/shots')) return;
-    mod.render(view);
+    mod.render(view, parts);
   } catch (e) {
     if (!location.hash.startsWith('#/shots')) return;
     view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/tools\'">&larr; Tools</button>'
@@ -1659,9 +1659,59 @@ function resultRow(m, open) {
   if (m.att) bits.push(`${Number(m.att).toLocaleString()} att.`);
   return `<details class="match resrow"${open ? ' open' : ''}>
     <summary><div class="mrow">${resSide(m.h, '')}<span class="score">${m.h.g}&ndash;${m.a.g}</span>${resSide(m.a, 'away')}</div>
-      <div class="meta"><span>${bits.join(' · ')}</span><span>${lgIcon(m.lg)}${LEAGUES[m.lg] ? LEAGUES[m.lg].label : ''}${hasStats ? ' · <b class="tapstats">stats</b>' : ''}</span></div></summary>
+      <div class="meta"><span>${bits.join(' · ')}</span><span>${lgIcon(m.lg)}${LEAGUES[m.lg] ? LEAGUES[m.lg].label : ''} · <b class="tapstats">${open ? 'post-match' : 'post-match &#9662;'}</b></span></div></summary>
     ${goals}${stats ? `<div class="statcmp">${stats}</div>` : '<p class="note" style="margin:6px 0 0">No box score published for this match.</p>'}
+    <div class="pmslot" data-pm="${pmRegister({ kind: 'res', m })}"></div>
   </details>`;
+}
+/* ---- post-match panel --------------------------------------------------
+   js/postmatch.js draws the tiered analytics (shot map + xG race with
+   toggles, box score, Elo swing) under a result. It loads on first open, and
+   each row mounts once. A result row (ESPN box score) borrows gid/dr/ph from
+   the matching wire row; a wire row borrows the box score from match_stats.
+   Both joins are league + date (±1 day) + the two club names. */
+const PM_ROWS = new Map();
+let _pmSeq = 0, _pm = null;
+const pmRegister = ctx => { const k = String(++_pmSeq); PM_ROWS.set(k, ctx); return k; };
+const pmNorm = n => String(n || '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+  .replace(/\b(fc|sc|cf|afc|cd|club|the)\b/g, '').replace(/[^a-z0-9]/g, '');
+const pmSameClub = (a, b) => { const x = pmNorm(a), y = pmNorm(b); return !!x && (x === y || (x.length >= 6 && (x.includes(y) || y.includes(x)))); };
+const pmNearDay = (a, b) => Math.abs(Date.parse(a + 'T12:00:00Z') - Date.parse(b + 'T12:00:00Z')) <= 864e5;
+async function pmContext(reg) {
+  if (reg.kind === 'res') {
+    const m = reg.m;
+    const w = (await wireDb()).find(x => x.lg === m.lg && pmNearDay(x.d, m.date) && x.s1 === m.h.g && x.s2 === m.a.g
+      && pmSameClub(x.t1, m.h.n) && pmSameClub(x.t2, m.a.n));
+    return { ctx: { lg: m.lg, date: m.date, t1: m.h.n, t2: m.a.n, s1: m.h.g, s2: m.a.g,
+      gid: w?.gid, dr: w?.dr, ph: w?.ph, gp: w?.gp, box: m }, showBox: false };
+  }
+  const w = reg.w;
+  const m = (await matchStatsDb()).find(x => x.lg === w.lg && pmNearDay(x.date, w.d) && x.h.g === w.s1 && x.a.g === w.s2
+    && pmSameClub(x.h.n, w.t1) && pmSameClub(x.a.n, w.t2));
+  return { ctx: { lg: w.lg, date: w.d, t1: w.t1, t2: w.t2, s1: w.s1, s2: w.s2,
+    gid: w.gid, dr: w.dr, ph: w.ph, gp: w.gp, box: m || null }, showBox: true };
+}
+function pmAttach(box) {
+  box.querySelectorAll('details.resrow').forEach(det => {
+    const slot = det.querySelector('.pmslot'); if (!slot || slot.dataset.mounted) return;
+    const mount = async () => {
+      if (!det.open || slot.dataset.mounted) return;
+      slot.dataset.mounted = '1';
+      const reg = PM_ROWS.get(slot.dataset.pm); if (!reg) return;
+      const here = location.hash;
+      slot.innerHTML = '<p class="note">Loading post-match&hellip;</p>';
+      try {
+        const [mod, { ctx, showBox }] = await Promise.all([_pm ||= import('./postmatch.js?v=__RXIV__'), pmContext(reg)]);
+        if (!slot.isConnected) return;
+        await mod.mountPostMatch(slot, ctx, { showBox, color: LEAGUES[ctx.lg]?.color, stillHere: () => location.hash === here && slot.isConnected });
+      } catch (e) {
+        _pm = null;
+        if (slot.isConnected) slot.innerHTML = '<p class="note">Post-match analytics could not load.</p>';
+      }
+    };
+    det.addEventListener('toggle', mount);
+    if (det.open) mount();
+  });
 }
 let resLg = 'all', resLimit = 20;
 function renderResults(box, all, forSex, clubId) {
@@ -1675,9 +1725,10 @@ function renderResults(box, all, forSex, clubId) {
     ${clubId ? '' : `<h2 class="disp">Final Score</h2>
     <div class="chips" id="reschips">${['all', ...lgs].map(g =>
       `<button class="chip solid" data-reslg="${g}" aria-pressed="${resLg === g}">${g === 'all' ? `All (${mine.length})` : `${LEAGUES[g].label} (${mine.filter(m => m.lg === g).length})`}</button>`).join('')}</div>`}
-    ${page.map((m, i) => resultRow(m, clubId && i === 0)).join('')}
+    ${page.map((m, i) => resultRow(m, i === 0)).join('')}
     ${shown.length > page.length && !clubId ? `<button class="chip solid" id="resmore" style="margin-top:8px">Show more (${shown.length - page.length} left)</button>` : ''}
     ${clubId ? '' : '<p class="note">Tap a result for the two-team comparison — possession, shots, corners, passing, discipline. Box scores come from ESPN’s public match summary for the four pro leagues it carries; the bars are each side’s share of the total.</p>'}`;
+  pmAttach(box);
   box.querySelector('#reschips')?.addEventListener('click', e => {
     const b = e.target.closest('[data-reslg]'); if (!b) return;
     resLg = b.dataset.reslg; resLimit = 20; renderResults(box, all, forSex, clubId);
@@ -3478,16 +3529,17 @@ function screenLegal() {
 /* ---- The Wire: feed generated from our own results + stats, never stale ---- */
 const fmtWireDay = d => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 let wireLg = 'all', wireLimit = 20;
-function wireResultRow(w) {
+function wireResultRow(w, open) {
   const hi = clubIdxByName(w.t1), ai = clubIdxByName(w.t2);
   const upset = isUpset(w);
   const side = (i2, n2, cls) => i2 >= 0
     ? `<a class="side ${cls}" href="#/club/${i2}">${mcrest(CLUBS[i2])}<span class="sn">${esc(n2)}</span></a>`
     : `<span class="side ${cls}"><span class="sn">${esc(n2)}</span></span>`;
-  return `<div class="match">
-    <div class="mrow">${side(hi, w.t1, '')}<span class="vs">${w.s1}&ndash;${w.s2}</span>${side(ai, w.t2, 'away')}</div>
-    <div class="meta"><span>${LEAGUES[w.lg] ? lgIcon(w.lg) : ''}${fmtWireDay(w.d)} · ${LEAGUES[w.lg] ? LEAGUES[w.lg].label : 'NPSL'}</span><span>${upset ? '<b class="wup">UPSET</b> · ' : ''}Elo swing &plusmn;${Math.abs(w.dr)} · home ${Math.round(w.ph * 100)}% pre-match</span></div>
-  </div>`;
+  return `<details class="match resrow wirerow"${open ? ' open' : ''}>
+    <summary><div class="mrow">${side(hi, w.t1, '')}<span class="vs">${w.s1}&ndash;${w.s2}</span>${side(ai, w.t2, 'away')}</div>
+    <div class="meta"><span>${LEAGUES[w.lg] ? lgIcon(w.lg) : ''}${fmtWireDay(w.d)} · ${LEAGUES[w.lg] ? LEAGUES[w.lg].label : 'NPSL'}</span><span>${upset ? '<b class="wup">UPSET</b> · ' : ''}Elo swing &plusmn;${Math.abs(w.dr)} · home ${Math.round(w.ph * 100)}% pre-match · <b class="tapstats">${w.gid ? 'shot map' : 'post-match'}${open ? '' : ' &#9662;'}</b></span></div></summary>
+    <div class="pmslot" data-pm="${pmRegister({ kind: 'wire', w })}"></div>
+  </details>`;
 }
 function wireLeaders(lgs) {
   const players = allPlayers(sex).filter(p => p.rs);
@@ -3555,9 +3607,10 @@ async function screenWire() {
       upcoming.map(fixtureRow).join('') +
       `<p class="note"><a href="#/matches">All verified fixtures &rarr;</a></p>` : '') +
     (rows.length ? `<div class="kicker" style="margin-top:12px">The results wire · ${rows.length.toLocaleString()} rated matches</div>` +
-      rows.slice(0, wireLimit).map(wireResultRow).join('') +
+      rows.slice(0, wireLimit).map((w, i) => wireResultRow(w, i === 0)).join('') +
       (rows.length > wireLimit ? `<button class="chip solid" id="wiremore" style="margin-top:8px">Show more</button>` : '')
     : '<p class="note" style="margin-top:10px">No match results in this filter yet.</p>');
+  pmAttach(box);
   box.querySelector('#wiremore')?.addEventListener('click', () => { wireLimit += 30; screenWire(); });
 }
 
@@ -3670,7 +3723,7 @@ function route() {
   else if (parts[0] === 'coach') { location.replace('#/player-sim'); return; }
   else if (parts[0] === 'upsets') screenUpsets();
   else if (parts[0] === 'college') screenCollege(parts[1] && decodeURIComponent(parts[1]));
-  else if (parts[0] === 'shots') screenShots();
+  else if (parts[0] === 'shots') screenShots(parts.slice(1));
   else if (parts[0] === 'radar') screenRadar();
   else if (parts[0] === 'predict') screenPredict(parts[1]);
   else if (parts[0] === 'compare') screenCompare(parts[1], parts[2]);
