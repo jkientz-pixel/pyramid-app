@@ -39,7 +39,13 @@ test('every browse link points at a page that was actually generated', () => {
 });
 
 test('every browse link is also in the sitemap', () => {
-  const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+  // sitemap.xml is an index; the page URLs live in the children it names, so
+  // the whole set has to be concatenated before anything can be looked up
+  const index = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+  const children = [...index.matchAll(/<loc>https:\/\/www\.rankedxi\.com\/(sitemap-[^<]*)<\/loc>/g)]
+    .map(m => m[1]);
+  expect(children.length, 'sitemap.xml should be an index of child sitemaps').toBeGreaterThan(2);
+  const sitemap = children.map(c => fs.readFileSync(path.join(ROOT, c), 'utf8')).join('');
   for (const href of hubLinks()) {
     expect(sitemap, `${href} missing from sitemap`).toContain(`<loc>https://www.rankedxi.com${href}</loc>`);
   }
