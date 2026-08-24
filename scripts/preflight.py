@@ -30,6 +30,39 @@ else:
         if broken:
             fail.append(f'data.js: {len(broken)} img paths point at missing crest files: {broken[:10]}')
         print(f'  data.js OK — {len(clubs)} clubs, slugs unique, crest paths resolve')
+
+        # A club whose coordinate lands outside its own state is a bad geocode, and a
+        # single one can wreck the map: the opening frame is fitBounds over every
+        # club in scope, so one point in the wrong hemisphere zooms the whole
+        # country down to a smudge. Two tombstoned records carried lon +104.05 —
+        # a geocoder read the city field "MN" as the ISO country code for Mongolia
+        # — and "Sporting Arkansas" was filed under AK, which is Alaska, so the
+        # map treated an Arkansas club as offshore and dropped it from the frame.
+        CONUS_BOX = (24.4, 49.4, -125.0, -66.9)
+        STATE_BOX = {
+            'AK': (51.0, 71.6, -179.9, -129.0), 'HI': (18.8, 22.4, -160.4, -154.7),
+            'PR': (17.8, 18.6, -67.4, -65.1),   'VI': (17.6, 18.5, -65.2, -64.5),
+            'GU': (13.2, 13.8, 144.5, 145.1),
+            # Canadian clubs are in the pyramid (MLS, USL2, NPSL) and are framed
+            # with everyone else, so they get real boxes rather than a pass.
+            'BC': (48.0, 60.1, -139.1, -114.0), 'ON': (41.6, 56.9, -95.2, -74.3),
+            'QC': (44.9, 62.6, -79.8, -57.1),
+        }
+        off_box = []
+        for _c in clubs:
+            _la, _lo = _c.get('la'), _c.get('lo')
+            if not isinstance(_la, (int, float)) or not isinstance(_lo, (int, float)):
+                continue
+            _s, _n, _w, _e = STATE_BOX.get(_c.get('st'), CONUS_BOX)
+            if not (_s <= _la <= _n and _w <= _lo <= _e):
+                off_box.append('%s [%s] %.3f,%.3f' % (_c.get('n'), _c.get('st'), _la, _lo))
+        if off_box:
+            fail.append('clubs whose coordinates fall outside their own state — a bad '
+                        'geocode that can blow open the map frame: '
+                        + ', '.join(off_box[:6])
+                        + ('' if len(off_box) <= 6 else ' (+%d more)' % (len(off_box) - 6)))
+        else:
+            print('  coords OK — every club plots inside its own state')
     except Exception as e:
         fail.append(f'data.js: CLUBS does not parse ({e})')
 

@@ -535,6 +535,14 @@ function wireMap(scopeStates, mapClubs, frameClubs) {
    or region page) still gets framed to its own clubs. */
 /* states the illustrated fallback map puts in inset boxes rather than in place */
 const OFFSHORE_ST = new Set(['AK', 'HI', 'PR', 'VI', 'GU']);
+/* Breathing room around the outermost club in the opening frame. It was 0.08,
+   which together with zoomSnap 0.25 framed the lower 48 with 2-5 degrees of
+   Canada above and Mexico below — "the whole of North America" rather than the
+   country the table is about. The padding was only half of it: the snap floored
+   an exact 4.596 fit down to 4.50, and how much it threw away depended on the
+   window size (0.02 of a zoom level at 1600px wide, 0.22 at 1024px). That is
+   why the frame appeared to change on its own between sittings. */
+const FRAME_PAD = 0.03;
 const MAPVIEW_KEY = 'rxi-mapview';
 let _leafView = null;
 try { _leafView = JSON.parse(sessionStorage.getItem(MAPVIEW_KEY) || 'null'); } catch {}
@@ -560,7 +568,7 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
   });
   function buildLeaf() {
     const pts = mapClubs.filter(c => isFinite(c.la) && isFinite(c.lo));
-    leafMap = L.map(leafEl, { zoomSnap: 0.25, wheelPxPerZoomLevel: 90, preferCanvas: true, zoomControl: false });
+    leafMap = L.map(leafEl, { zoomSnap: 0.05, wheelPxPerZoomLevel: 90, preferCanvas: true, zoomControl: false });
     L.control.zoom({ position: 'topright' }).addTo(leafMap);
     /* drop Leaflet's own courtesy prefix (BSD, not required in-UI) so the
        tile credits that ARE required fit on one line in the map box */
@@ -607,8 +615,8 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     const restore = _leafView && _leafView.key === scopeKey ? _leafView : null;
     const fitFrame = () => {
       if (restore) { leafMap.setView([restore.lat, restore.lng], restore.zoom); return; }
-      if (fitSet.length) leafMap.fitBounds(L.latLngBounds(fitSet.map(c => [c.la, c.lo])).pad(0.08));
-      else if (pts.length) leafMap.fitBounds(L.latLngBounds(pts.map(c => [c.la, c.lo])).pad(0.08));
+      if (fitSet.length) leafMap.fitBounds(L.latLngBounds(fitSet.map(c => [c.la, c.lo])).pad(FRAME_PAD));
+      else if (pts.length) leafMap.fitBounds(L.latLngBounds(pts.map(c => [c.la, c.lo])).pad(FRAME_PAD));
       else leafMap.setView([39.5, -98.35], 4);
     };
     fitFrame();
