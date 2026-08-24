@@ -12,8 +12,8 @@ from _datajs import load_clubs, ROOT
 LIST_API = 'https://api.athleteone.com/api/Event/get-org-club-list-by-orgID/%d'
 INFO_API = 'https://api.athleteone.com/api/Event/get-club-info/%d'
 UA = {'User-Agent': 'RankXI/1.0 (jkientz@gmail.com; youth sites harvest)'}
-ORGS = {'ecnlb': 12, 'ecnlg': 9, 'ecrlb': 16, 'ecrlg': 13}
-YOUTH_POOL = ('ecnlb', 'ecnlg', 'ecrlb', 'ecrlg')
+ORGS = {'ecnlb': 12, 'ecnlg': 9, 'ecrlb': 16, 'ecrlg': 13, 'pecnlb': 22, 'pecnlg': 21}
+YOUTH_POOL = ('ecnlb', 'ecnlg', 'ecrlb', 'ecrlg', 'pecnlb', 'pecnlg')
 OUT = os.path.join(ROOT, 'data', 'sites_tgs.json')
 
 

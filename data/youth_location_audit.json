@@ -111,6 +111,206 @@
     "city": "St. Louis",
     "st": "MO",
     "source": "GA Aspire directory"
+   },
+   "ALBION SC Hawaii": {
+    "city": "Wailuku",
+    "st": "HI",
+    "source": "club website contact page https://www.albionschawaii.org/contact-us-albion-hawaii"
+   },
+   "BVBIA Washington": {
+    "city": "Bellevue",
+    "st": "WA",
+    "source": "club website https://www.bvbia-washington.com/"
+   },
+   "Emerald City Football Club": {
+    "city": "Seattle",
+    "st": "WA",
+    "source": "club website https://emeraldcityfc.org/"
+   },
+   "Highline Premier FC": {
+    "city": "Burien",
+    "st": "WA",
+    "source": "club website footer https://www.highlinepremier.com/"
+   },
+   "Sozos": {
+    "city": "Yakima",
+    "st": "WA",
+    "source": "club website (Sozo FC) https://www.sozofc.com/why-sozo-fc"
+   },
+   "Sting Soccer Club ID": {
+    "city": "Coeur d'Alene",
+    "st": "ID",
+    "source": "club website https://stingsc.com/about/"
+   },
+   "Warriors Sports Academy": {
+    "city": "Bellevue",
+    "st": "WA",
+    "source": "club website https://www.littlewarriorssports.org/"
+   },
+   "Western WA Surf Academy": {
+    "city": "Bellevue",
+    "st": "WA",
+    "source": "club website https://westernwasurf.com/bellevue/"
+   },
+   "ALBION SC Silicon Valley": {
+    "city": "Redwood City",
+    "st": "CA",
+    "source": "club website https://albionscsiliconvalley.org/contact-us"
+   },
+   "Football Club Alliance": {
+    "city": "El Sobrante",
+    "st": "CA",
+    "source": "club website https://www.wccysl.com/fca-competitive-program"
+   },
+   "Nevada Futbol Club": {
+    "city": "Reno",
+    "st": "NV",
+    "source": "club website https://www.nevadafc.com/teams"
+   },
+   "ALBION SC Antelope Valley": {
+    "city": "Lancaster",
+    "st": "CA",
+    "source": "club website (field/office listing) https://albionscantelopevalley.org/contact-us/field-directions/lancaster-national-soccer-center"
+   },
+   "Boca OC": {
+    "city": "Anaheim Hills",
+    "st": "CA",
+    "source": "club website https://www.bocaocsoccer.com/teams"
+   },
+   "Central Cal Aztecs": {
+    "city": "Bakersfield",
+    "st": "CA",
+    "source": "club website footer https://www.centralcalaztecs.org/"
+   },
+   "FC Golden State Force": {
+    "city": "Pomona",
+    "st": "CA",
+    "source": "club website footer https://www.fcgsforce.com/programs"
+   },
+   "Fram CQ": {
+    "city": "Torrance",
+    "st": "CA",
+    "source": "club website (FRAM Soccer Club) https://www.framsoccer.com/about"
+   },
+   "LA SURF FUTURES": {
+    "city": "Pasadena",
+    "st": "CA",
+    "source": "club website (LA SURF SC main office) wearelasurf.com"
+   },
+   "LA SURF LC": {
+    "city": "Pasadena",
+    "st": "CA",
+    "source": "club website (LA SURF SC main office) wearelasurf.com"
+   },
+   "LAIFC": {
+    "city": "Glendale",
+    "st": "CA",
+    "source": "club website footer https://lainternationalfc.com/en/"
+   },
+   "Oaks FC": {
+    "city": "Thousand Oaks",
+    "st": "CA",
+    "source": "club website (oaksfc.org About Us)"
+   },
+   "SoCal Elite FC": {
+    "city": "Chino",
+    "st": "CA",
+    "source": "club website sponsorship letter https://socalelitefc.com/wp-content/uploads/2024/07/SPONSORSHIP_LETTER_2024-1.pdf"
+   },
+   "ALBION SC Boulder County": {
+    "city": "Boulder",
+    "st": "CO",
+    "source": "club website https://www.albionscbouldercounty.org/"
+   },
+   "BVBIA Arizona": {
+    "city": "Tucson",
+    "st": "AZ",
+    "source": "club website https://www.bvbia-arizona.com/"
+   },
+   "Colorado Rush COS": {
+    "city": "Colorado Springs",
+    "st": "CO",
+    "source": "club website https://www.coloradorush.com/youth-soccer-colorado-springs (3870 Mark Dabling Blvd)"
+   },
+   "Manchester City North Texas": {
+    "city": "Dallas",
+    "st": "TX",
+    "source": "club website https://www.mancity.com/northtexas/about-us"
+   },
+   "Steel United TX": {
+    "city": "McKinney",
+    "st": "TX",
+    "source": "club's own page on McKinney Soccer Association's site https://www.mckinneysoccer.org/page/show/8471903-steel-united-tx"
+   },
+   "FC1 Academy": {
+    "city": "Glenview",
+    "st": "IL",
+    "source": "club website https://www.fc1academy.com/fields"
+   },
+   "JaBHat FC": {
+    "city": "Evanston",
+    "st": "IL",
+    "source": "club website (Jahbat F.C. Premier) https://www.jahbatfc.org/"
+   },
+   "North Shore United Soccer Club": {
+    "city": "Cedarburg",
+    "st": "WI",
+    "source": "club website https://www.northshoreunited.org/"
+   },
+   "Team Chicago": {
+    "city": "Aurora",
+    "st": "IL",
+    "source": "club website footer https://www.teamchicagosoccer.org/"
+   },
+   "Hoosier Futbol Club": {
+    "city": "Noblesville",
+    "st": "IN",
+    "source": "club website https://www.hoosierfc.com/clubinfo"
+   },
+   "USA of Indiana": {
+    "city": "Indianapolis",
+    "st": "IN",
+    "source": "club website footer https://www.usaofindiana.org/about/about-us"
+   },
+   "Black River Athletics": {
+    "city": "Wayne",
+    "st": "NJ",
+    "source": "club website footer https://www.blackriverathletics.com/"
+   },
+   "FC Dutchmen": {
+    "city": "Albany",
+    "st": "NY",
+    "source": "club website (FC Dutchmen Surf) https://www.fcdutchmensurf.com/ (Capital Region branding, 518 area code contact)"
+   },
+   "FC Dynamo ROC": {
+    "city": "Rochester",
+    "st": "NY",
+    "source": "club website https://fcdynamoroc.com/ (self-described as part of the 'dynamo soccer Rochester NY community')"
+   },
+   "JP Soccer": {
+    "city": "Putnam Valley",
+    "st": "NY",
+    "source": "club website footer https://jp-soccer.com/our-club/"
+   },
+   "Saratoga-Wilton Soccer Club": {
+    "city": "Wilton",
+    "st": "NY",
+    "source": "club website (Gavin Park home facility) https://www.saratogawiltonsoccerclub.com/27-general-club-info/about-the-club"
+   },
+   "ALBION SC Atlanta Metro": {
+    "city": "Brookhaven",
+    "st": "GA",
+    "source": "club website https://albionscatlantametro.org/contact-us/field-directions"
+   },
+   "All-In FC": {
+    "city": "Sugar Hill",
+    "st": "GA",
+    "source": "club website (flagship location) https://allinfc.com/sugar-hill/"
+   },
+   "BVBIA Georgia": {
+    "city": "Peachtree City",
+    "st": "GA",
+    "source": "club website https://www.bvbia-georgia.com/"
    }
   },
   "mlsnext_academy": {
@@ -198,6 +398,11 @@
     "city": "Grand Junction",
     "st": "CO",
     "source": "GA Aspire directory"
+   },
+   "Hoover-Vestavia Soccer": {
+    "city": "Birmingham",
+    "st": "AL",
+    "source": "Ranked XI club record (mlsnext)"
    },
    "Jacksonville FC": {
     "city": "Jacksonville",
@@ -308,151 +513,342 @@
     "city": "Appleton",
     "st": "WI",
     "source": "GA Aspire directory"
+   },
+   "956 United": {
+    "city": "McAllen",
+    "st": "TX",
+    "source": "club website https://956united.com/ (footer address)"
+   },
+   "ALBION SC Boulder County": {
+    "city": "Longmont",
+    "st": "CO",
+    "source": "club website https://www.albionscbouldercounty.org/contact-us"
+   },
+   "Aspire FC": {
+    "city": "Houston",
+    "st": "TX",
+    "source": "club website https://aspirefutbol.com/ (header: 'Elite Youth Soccer \u00b7 Houston, TX')"
+   },
+   "Athletum FC Academy": {
+    "city": "Miami",
+    "st": "FL",
+    "source": "club website https://athletumfc.com/"
+   },
+   "Baltimore Armour": {
+    "city": "Ellicott City",
+    "st": "MD",
+    "source": "official domain baltimorearmour.com redirects to https://www.sackick.com/baltimore-armour (footer address)"
+   },
+   "Bavarian United SC": {
+    "city": "Glendale",
+    "st": "WI",
+    "source": "club website https://www.bavarianunited.com/ (footer: 700 W Lexington Blvd, Glendale, WI 53217)"
+   },
+   "Capital City South": {
+    "city": "Austin",
+    "st": "TX",
+    "source": "club website https://capcitysc.com/club/mlsnext (Capital City SC, Austin, TX; South is a divisional program of Capital City SC)"
+   },
+   "Cedar Stars Academy Newark": {
+    "city": "Newark",
+    "st": "NJ",
+    "source": "club website https://www.cedarstars.com/newark (program operates via St. Benedict's Prep, Newark, NJ; note: cedarstars.com sitewide admin address is South Hackensack, NJ)"
+   },
+   "Celtic Storm": {
+    "city": "Orem",
+    "st": "UT",
+    "source": "club website utahceltic.com (multiple pages list 799 E 1610 N, Orem, UT 84097); club was founded as Celtic Storm in 1996, now operates as Utah Celtic FC"
+   },
+   "Charleston SC": {
+    "city": "Charleston",
+    "st": "SC",
+    "source": "club website https://chssoccerclub.com/club/contact-us (295 Seven Farms Drive, Suite C-168, Charleston, SC 29492)"
+   },
+   "Chicago FC United": {
+    "city": "Glenview",
+    "st": "IL",
+    "source": "club website https://www.chicagofcunited.com/ (footer: 3090 North Lake Terrace, Glenview, IL 60026)"
+   },
+   "Chicago Fire Youth SC": {
+    "city": "Chicago",
+    "st": "IL",
+    "source": "club website chicagofireyouthsc.com (contact page: 3626 N Talman Ave, Chicago, IL 60618)"
+   },
+   "City SC - San Diego": {
+    "city": "Carlsbad",
+    "st": "CA",
+    "source": "club website https://ourcitysc.com/ (contact address: 2075 Corte Del Nogal, Ste. M, Carlsbad, CA 92011); site presents a single unified club serving Carlsbad & North County San Diego, no separate San Diego HQ stated"
+   },
+   "Classic FC": {
+    "city": "Albuquerque",
+    "st": "NM",
+    "source": "club website https://www.classicfcnm.com/ ('serving youth soccer players for nearly 50 years in Albuquerque')"
+   },
+   "Downtown Las Vegas Soccer Club": {
+    "city": "Las Vegas",
+    "st": "NV",
+    "source": "club website https://downtownlvsc.com/about/ (900 South Valley View Blvd. #175, Las Vegas, NV 89107)"
+   },
+   "FC Greater Boston Bolts": {
+    "city": "Framingham",
+    "st": "MA",
+    "source": "club website https://bostonbolts.com/about/partnerships/ (footer mailing address: PO Box 1078, Framingham, MA 01701)"
+   },
+   "FC Harlem": {
+    "city": "New York",
+    "st": "NY",
+    "source": "club website https://fcharlem.com/about-us ('underserved youth in Harlem, the Bronx...'; training facility 'in West Harlem at 145th and Riverside Drive')"
+   },
+   "FC Hudson Valley": {
+    "city": "Salt Point",
+    "st": "NY",
+    "source": "operating organization's site https://fcwestchester.com/boys_hudson_valley-tryouts/ (Camp Nooteeming, 22 Camp Nooteeming Road, Salt Point, NY 12578); FC Hudson Valley is an FC Westchester expansion program; fchudsonvalley.com itself is a 'launching soon' placeholder with no location text"
+   },
+   "FC Tucson Youth Soccer Club": {
+    "city": "Tucson",
+    "st": "AZ",
+    "source": "club website https://fctucsonyouth.com/ (footer: PO Box 2190, Tucson, AZ 85702)"
+   },
+   "Fox Soccer Academy Carolinas": {
+    "city": "Mooresville",
+    "st": "NC",
+    "source": "club website https://www.foxsoccer.academy/contact-nc (247 Cornelius Rd, Mooresville, NC 28115)"
+   },
+   "Hillsboro Rush": {
+    "city": "Hillsboro",
+    "st": "OR",
+    "source": "club website https://www.hillsbororush.org/about-us/ ('located within the Hillsboro area since 1975')"
+   },
+   "Houston Futsal Club": {
+    "city": "Houston",
+    "st": "TX",
+    "source": "club website https://houstonfutsalclub.com/home (header 'Houston \u00b7 Est. 2017')"
+   },
+   "IFA West": {
+    "city": "Westfield",
+    "st": "MA",
+    "source": "club website https://www.ifawest.com/ (event listing: 'Location: Roots Athletic Facility, Westfield, MA'); IFA West is the Western MA region of IFA New England and also runs sessions in Agawam, but Westfield is the named home facility on its own site"
+   },
+   "Kings Hammer Nashville": {
+    "city": "Murfreesboro",
+    "st": "TN",
+    "source": "club website https://kingshammer.com/tennessee/murfreesboro ('Murfreesboro Club Page')"
+   },
+   "LA Youth": {
+    "city": "Los Angeles",
+    "st": "CA",
+    "source": "club website https://layouth.org/ ('An MLS Next boys academy serving Los Angeles, the Westside, and the greater LA area'; header 'MLS NEXT \u00b7 Los Angeles')"
+   },
+   "Lamorinda Soccer Club": {
+    "city": "Moraga",
+    "st": "CA",
+    "source": "club website https://www.lamorindasc.com/about (footer: 452 Center Street A, Moraga, CA 94556)"
+   },
+   "Lanier Soccer Association": {
+    "city": "Gainesville",
+    "st": "GA",
+    "source": "club website http://www.lsasharks.com/ (2500 Allen Creek Rd, Gainesville, GA 30507); laniersoccer.org redirects to this site"
+   },
+   "Lou Fusz Athletic 2": {
+    "city": "St. Louis",
+    "st": "MO",
+    "source": "club website https://www.loufuszathletic.com/ (header: 'Lou Fusz Athletic | St. Louis Youth Soccer, Lacrosse & Football'); '2' appears to be a program/team tier of the main St. Louis club, not a separate location -- the site's only other location found (Lou Fusz Athletic West, Cottleville, MO) is explicitly a distinct 'West' expansion, not '2'"
+   },
+   "Louisiana Elite SP": {
+    "city": "Baton Rouge",
+    "st": "LA",
+    "source": "club website https://louisianaelite.com/hello-world (Burbank Soccer Complex, 12400 Burbank Dr, Baton Rouge, LA 70810; Elite Training Academy, 5414 Burbank Drive, Baton Rouge, LA 70820)"
+   },
+   "McLean Youth Soccer": {
+    "city": "McLean",
+    "st": "VA",
+    "source": "club website https://www.mcleansoccer.org/contact (PO Box 724, McLean, Virginia 22101)"
+   },
+   "Miami Futbol Academy Rush": {
+    "city": "Miami",
+    "st": "FL",
+    "source": "club website https://miamifutbolacademyrush.com/facilities-directions/ (home facility Millers Pond Park, 13350 SW 47th St, Miami, FL 33175)"
+   },
+   "Michigan Jaguars United FC": {
+    "city": "Novi",
+    "st": "MI",
+    "source": "club website michiganjaguarsfc.com/club/novi (page titled 'Michigan Jaguars FC Novi | Premier Youth Soccer in Novi, MI') plus corroborating official HQ address 24404 Catherine Industrial Dr, Novi, MI"
+   },
+   "Monarchs AZ": {
+    "city": "Tucson",
+    "st": "AZ",
+    "source": "club website rslazsoccer.com ('RSL-AZ Southern Arizona - The Future of Tucson Youth Soccer is Here'; fields Monarchs AZ teams per Tucson/Sahuarita/Marana program locations)"
+   },
+   "Mt. Rainier Futbol Club": {
+    "city": "Buckley",
+    "st": "WA",
+    "source": "club website (mtrainierfc.org redirects to playmrac.com/soccer), clubhouse address 777 Main Street, Buckley, WA 98321"
+   },
+   "New York SC": {
+    "city": "Purchase",
+    "st": "NY",
+    "source": "club website newyorksoccerclub.org, address 2900 Purchase Street, Purchase, NY 10577 in footer/contact"
+   },
+   "One FC": {
+    "city": "Miami",
+    "st": "FL",
+    "source": "club website onefcmiami.com states 'We are a youth soccer academy in Miami, Florida'"
+   },
+   "Orlando City Youth SC": {
+    "city": "Orlando",
+    "st": "FL",
+    "source": "orlandocitysc.com/club/contact (Orlando City SC, parent org of Orlando Youth Soccer Network/Orlando City Youth SC) address 655 W Church Street, Orlando, FL 32805"
+   },
+   "Ozark United FC Academy": {
+    "city": "Bentonville",
+    "st": "AR",
+    "source": "sportingarkansas.com/about (operating partner for the academy) states 'Founded in 1998 and based in Bentonville, Arkansas'"
+   },
+   "PA Classics Harrisburg": {
+    "city": "Hummelstown",
+    "st": "PA",
+    "source": "club website paclassicsharrisburg.com/about, mailing address PO Box 22, Hummelstown, PA 17036"
+   },
+   "PDA Hibernian": {
+    "city": "Zarephath",
+    "st": "NJ",
+    "source": "club's own facility (PDA Soccer Complex, pdahibernians.com) is physically at Zarephath NJ 08873 (Franklin Township, Somerset County); site's own text could not be scraped (JS-rendered, repeated empty fetches) but address is corroborated consistently across independent directory/map sources tied to the club's own complex"
+   },
+   "Plantation FC Rush": {
+    "city": "Plantation",
+    "st": "FL",
+    "source": "club website plantationfcrush.com/about-the-club, address 320 S Pine Island Rd, Plantation, FL 33324"
+   },
+   "Players SC": {
+    "city": "Las Vegas",
+    "st": "NV",
+    "source": "club website playerssc.com, address 7040 Laredo St. Unit A, Las Vegas, NV 89117"
+   },
+   "Roswell Soccer Club": {
+    "city": "Roswell",
+    "st": "GA",
+    "source": "club website roswellsoccerclub.com/about, address 150 Frank Lewis Dr., Roswell, GA 30075"
+   },
+   "SA United SC": {
+    "city": "San Antonio",
+    "st": "TX",
+    "source": "club website saunitedsoccer.com/contact, training locations at 29064 Bulverde Road and 7299 Luskey Blvd, both San Antonio, TX"
+   },
+   "Saint Paul Blackhawks": {
+    "city": "Saint Paul",
+    "st": "MN",
+    "source": "club website blackhawksoccer.org, headquarters address 875 W. Orchard Ave, Saint Paul, MN 55103"
+   },
+   "Saints Academy": {
+    "city": "Portland",
+    "st": "OR",
+    "source": "club website saintssocceracademy.org/contact/, mailing address P.O. Box 31073, Portland, OR 97231"
+   },
+   "San Francisco Glens SC": {
+    "city": "San Francisco",
+    "st": "CA",
+    "source": "club website sfglensacademy.com states 'SAN FRANCISCO GLENS ACADEMY - YOUR COMMUNITY SOCCER CLUB SINCE 1961'"
+   },
+   "SC Wave": {
+    "city": "Waukesha",
+    "st": "WI",
+    "source": "club website scwave.org/field-info lists Waukesha West High School, 3301 Saylesville Road, Waukesha, WI as primary/first-listed home facility"
+   },
+   "Skyline Soccer Association": {
+    "city": "Englewood",
+    "st": "CO",
+    "source": "club website skylinesoccer.org/mlsnextacademy, address 3799 S. Jason St, Englewood, CO 80110"
+   },
+   "Southern Soccer Academy": {
+    "city": "Atlanta",
+    "st": "GA",
+    "source": "club website ssaswarm.com self-published press release datelined '[Atlanta, GA]' and describes itself as 'The Atlanta-based organization'; matches known_state GA"
+   },
+   "Sozo FC": {
+    "city": "Yakima",
+    "st": "WA",
+    "source": "club website sozofc.com (operated by Sozo Sports Complex, sozosports.net), address 2200 S. 36th Ave, Yakima, WA 98903"
+   },
+   "Sparta United Soccer Club": {
+    "city": "Salt Lake City",
+    "st": "UT",
+    "source": "club website spartaunitedsc.org, address 7109 South Highland Drive Suite #102, Salt Lake City, Utah 84121 (this is the MLS NEXT-affiliated Sparta United, distinct from the non-MLS-NEXT 'Sparta Soccer Club' in Sparta, NJ)"
+   },
+   "Sporting Oklahoma": {
+    "city": "Oklahoma City",
+    "st": "OK",
+    "source": "club website sportingok.com/contact-us, address PO Box 893107, Oklahoma City, OK 73189"
+   },
+   "The St. James": {
+    "city": "Springfield",
+    "st": "VA",
+    "source": "club website sports.thestjames.com/soccer/, address 6805 Industrial Rd, Springfield, VA 22151, described as their 'homebase'"
+   },
+   "Triangle United Soccer Association": {
+    "city": "Chapel Hill",
+    "st": "NC",
+    "source": "club website triangleunited.org, address 121 South Estes Drive, Suite 105, Chapel Hill, NC 27515"
+   },
+   "Tulsa Greenwood SC": {
+    "city": "Tulsa",
+    "st": "OK",
+    "source": "club website tulsagreenwoodsc.com self-identifies throughout (title, copyright footer 'Tulsa Greenwood Soccer Club') as Tulsa-based; no separate street address found on site"
+   },
+   "Virginia Rush": {
+    "city": "Virginia Beach",
+    "st": "VA",
+    "source": "club website varush.com, address 2044 Landstown Centre Way, Virginia Beach, Virginia, 23456"
+   },
+   "West Florida Flames": {
+    "city": "Tampa",
+    "st": "FL",
+    "source": "club website fcflames.com states it is 'one of the largest and most respected youth soccer organizations in Tampa' with operations across the Tampa Bay area; matches known_state FL"
    }
   }
  },
  "unresolved": {
   "ea": [
-   "ALBION SC Hawaii",
    "Atletico",
-   "BVBIA Washington",
-   "Emerald City Football Club",
-   "Highline Premier FC",
-   "Sozos",
-   "Sting Soccer Club ID",
-   "Warriors Sports Academy",
    "Washington East Surf Columbia Basin",
-   "Western WA Surf Academy",
-   "ALBION SC Silicon Valley",
-   "Football Club Alliance",
-   "Nevada Futbol Club",
-   "ALBION SC Antelope Valley",
-   "Boca OC",
-   "Central Cal Aztecs",
-   "FC Golden State Force",
-   "Fram CQ",
    "Inland Surf",
-   "LA SURF FUTURES",
-   "LA SURF LC",
-   "LAIFC",
-   "Oaks FC",
-   "SoCal Elite FC",
    "Strikers FC North",
    "Total Futbol Academy",
    "Total Futbol Academy OC",
-   "ALBION SC Boulder County",
    "ALBION SC Utah",
-   "BVBIA Arizona",
    "Colorado Elevation FC",
-   "Colorado Rush COS",
    "Inter Utah SC",
    "Spartans FC",
    "Utah Athletic - North",
-   "Manchester City North Texas",
-   "Steel United TX",
-   "FC1 Academy",
-   "JaBHat FC",
-   "North Shore United Soccer Club",
-   "Team Chicago",
-   "Hoosier Futbol Club",
    "United Elite SC",
-   "USA of Indiana",
-   "Black River Athletics",
-   "FC Dutchmen",
-   "FC Dynamo ROC",
    "Global Foutbol Stras 11 Academy",
-   "JP Soccer",
    "North East Reds Long Island",
    "NY Rush East",
-   "Saratoga-Wilton Soccer Club",
-   "ALBION SC Atlanta Metro",
-   "All-In FC",
-   "BVBIA Georgia",
    "Covered Bridge Soccer Club"
   ],
   "mlsnext_academy": [
-   "956 United",
-   "ALBION SC Boulder County",
-   "Aspire FC",
-   "Athletum FC Academy",
    "Atletico FC",
-   "Baltimore Armour",
-   "Bavarian United SC",
-   "Capital City South",
-   "Cedar Stars Academy Newark",
-   "Celtic Storm",
-   "Charleston SC",
-   "Chicago FC United",
-   "Chicago Fire Youth SC",
-   "City SC - San Diego",
-   "Classic FC",
    "Dallas Hornets",
    "Dallas Hornets North",
-   "Downtown Las Vegas Soccer Club",
-   "FC Greater Boston Bolts",
-   "FC Harlem",
-   "FC Hudson Valley",
-   "FC Tucson Youth Soccer Club",
-   "Fox Soccer Academy Carolinas",
    "GFI Academy South",
-   "Hillsboro Rush",
-   "Hoover-Vestavia Soccer",
-   "Houston Futsal Club",
    "IdeaSport SA",
-   "IFA West",
    "Intercontinental Football Academy of New England",
    "Kings Hammer Cincinnati",
-   "Kings Hammer Nashville",
    "KSA",
-   "LA Youth",
-   "Lamorinda Soccer Club",
-   "Lanier Soccer Association",
-   "Lou Fusz Athletic 2",
-   "Louisiana Elite SP",
-   "McLean Youth Soccer",
-   "Miami Futbol Academy Rush",
    "Michigan Bucks Academy",
    "Michigan Futbol Academy",
-   "Michigan Jaguars United FC",
-   "Monarchs AZ",
-   "Mt. Rainier Futbol Club",
    "NEFC South",
    "New York Elite Alleycats FC",
    "New York Rush",
-   "New York SC",
    "Oaks FC",
-   "One FC",
-   "Orlando City Youth SC",
-   "Ozark United FC Academy",
-   "PA Classics Harrisburg",
-   "PDA Hibernian",
-   "Plantation FC Rush",
-   "Players SC",
    "Rochester NY FC",
-   "Roswell Soccer Club",
-   "SA United SC",
-   "Saint Paul Blackhawks",
-   "Saints Academy",
-   "San Francisco Glens SC",
-   "SC Wave",
    "Seacoast United Mass",
    "SGA",
-   "Skyline Soccer Association",
    "Sol Sports Club",
-   "Southern Soccer Academy",
-   "Sozo FC",
-   "Sparta United Soccer Club",
-   "Sporting Oklahoma",
    "Sporting San Diego",
    "St. Louis Scott Gallagher IL",
    "St. Louis Scott Gallagher St. Charles",
    "Syracuse Development Academy",
-   "The St. James",
    "Trenton City Soccer Club",
-   "Triangle United Soccer Association",
-   "Tulsa Greenwood SC",
-   "Virginia Rush",
-   "West Florida Flames",
    "Westside Metros FC South"
   ]
  }

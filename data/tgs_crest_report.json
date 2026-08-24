@@ -1,579 +1,87 @@
 {
  "crests": [
-  "1974 Newark FC",
-  "AC Florida West",
-  "Alabama FC",
-  "Albion Hurricanes FC",
-  "Arkansas Comets FC",
-  "Arlington Soccer Association",
-  "Association Football Club",
-  "athlete one",
-  "Baltimore Celtic Soccer Club",
-  "Bay Area Surf",
-  "Beach FC",
-  "Boise Timbers | Thorns",
-  "BVB International Academy Texas",
-  "Capital FC",
-  "Carolina Elite Soccer Academy",
-  "CCV STARS",
-  "CDA Slammers FC",
-  "Chicago Magic Soccer Club",
-  "Colorado EDGE",
-  "Colorado Rush",
-  "Columbia Premier Soccer Club",
-  "Concorde Fire",
-  "Crossfire Premier",
-  "Dallas Texans",
-  "Delaware Football Club",
-  "DKSC",
-  "Doral SC",
-  "East Coast Surf",
-  "Eastside FC (WA)",
-  "Eclipse Select Soccer Club",
-  "El Camino FC Salinas",
-  "El Paso Locomotive FC",
-  "Eugene Metro FC",
-  "Fairfax Virginia Union",
-  "FC Alliance TN",
-  "FC Portland Academy",
-  "FC Prime",
-  "FC Stars",
-  "FC Wisconsin Boys",
-  "FC Wisconsin Girls",
-  "Florida Kraze Krush",
-  "Folsom Lake Surf",
-  "FSA FC",
-  "Germantown Legends",
-  "Gretna Elite Academy",
-  "Highland FC",
-  "HTX",
-  "Idaho Rush Soccer Club",
-  "Indiana Elite F.C.",
-  "KC Athletics",
-  "LA Breakers FC",
-  "LAFC So Cal",
-  "Legends FC (CA)",
-  "Legends FC - Del Mar",
-  "Lobos Rush",
-  "Lonestar ATX",
-  "Los Gatos United Soccer Club",
+  "Athletic Club Florida",
+  "Coastal Rush",
+  "Athletic Club Florida",
   "LouCity / Racing Youth Academy",
-  "LV Heat Surf SC",
-  "Marin FC",
-  "Maryland United Football Club",
-  "Mississippi Rush",
-  "Mustang Soccer",
-  "MVLA",
-  "Nationals",
-  "NC Fusion",
-  "NCFC Youth",
-  "NM Rapids SC",
-  "Ohio Elite Soccer Academy",
-  "Ohio Premier",
-  "Oklahoma Energy FC",
-  "Oregon Premier FC",
-  "PacNW",
-  "Palm Beach United FC",
-  "Pateadores Soccer Club",
-  "Penn Fusion Soccer Academy",
-  "Pipeline SC",
-  "Potomac Soccer Association",
-  "Pride SC",
-  "Princeton SA",
-  "RISE Soccer Club",
-  "River Islands Surf",
-  "San Antonio City SC",
-  "San Diego Surf Soccer Club",
-  "San Francisco Elite Academy",
-  "Santa Rosa United Soccer",
-  "Scorpions SC",
-  "SDSC Surf",
-  "Seattle United",
-  "Select",
-  "SJEB FC",
-  "Skyline Elite",
-  "Slammers FC",
-  "South Carolina United FC",
-  "Space Coast United",
-  "Sporting California USA",
-  "Sporting Iowa Central",
-  "Sporting Nebraska FC",
-  "Sporting SA",
-  "St. Croix",
-  "Sting Soccer Club",
-  "Tennessee SC",
-  "Three Rivers Soccer Club",
-  "Union KC Soccer Club",
-  "United Futbol Academy",
-  "United PDX",
-  "Utah Avalanche",
-  "VSA Rush",
-  "West Coast F.C.",
-  "West Coast Soccer",
-  "West Side Alliance SC",
-  "Wilmington Hammerheads",
-  "WNY Flash Academy",
-  "World Class FC",
-  "Alabama FC",
-  "Albion Hurricanes FC",
-  "Arlington Soccer Association",
-  "Bay Area Surf",
-  "Beach FC",
-  "Boise Timbers | Thorns",
-  "California Odyssey Soccer Club",
-  "Carolina Elite Soccer Academy",
-  "Challenge SC",
-  "Colorado Rush",
-  "Concorde Fire",
-  "Crossfire Premier",
-  "Dallas Texans",
-  "DKSC",
-  "Eagles SC",
-  "East Meadow Soccer Club",
-  "Eastside FC (WA)",
-  "Eclipse Select Soccer Club",
-  "Fairfax Virginia Union",
-  "FC Alliance TN",
-  "FC Dallas Youth",
-  "FC DELCO",
-  "FC Prime",
-  "FC Stars",
-  "FC Westlake",
-  "FC Wisconsin Girls",
-  "Florida Kraze Krush",
-  "Force",
-  "FSA FC",
-  "Gretna Elite Academy",
-  "GTFC Impact",
-  "HEX FC",
-  "Jacksonville FC",
-  "KC Athletics",
-  "LA Breakers FC",
-  "LAFC So Cal",
-  "Legends FC (CA)",
-  "Legends FC - Del Mar",
-  "Liverpool FC-IA Michigan",
-  "Lonestar ATX",
-  "LV Heat Surf SC",
-  "Marin FC",
-  "Maryland United Football Club",
-  "Michigan Hawks",
-  "Mustang Soccer",
-  "MVLA",
-  "Nationals",
-  "NC Fusion",
-  "NCFC Youth",
-  "Ohio Elite Soccer Academy",
-  "Ohio Premier",
-  "Oklahoma Energy FC",
-  "Oregon Surf SC",
-  "PacNW",
-  "Pateadores Soccer Club",
-  "PDA Blue (North)",
-  "PDA South",
-  "PDA White (Shore)",
-  "Penn Fusion Soccer Academy",
-  "Pipeline SC",
-  "SABR - Team Boca",
-  "San Diego Surf Soccer Club",
-  "Santa Rosa United Soccer",
-  "Scorpions SC",
-  "Seattle United",
-  "Select",
-  "Seminole United",
-  "Slammers FC",
-  "So Cal Blues",
-  "Solar SC",
-  "South Carolina United FC",
-  "Sporting Blue Valley",
-  "Sporting California USA",
-  "Sporting Iowa Central",
-  "Sporting SA",
-  "Stanislaus Surf Soccer Club",
-  "Sting Austin",
-  "Sting Soccer Club",
-  "Tampa Bay United",
-  "Tennessee SC",
-  "United Futbol Academy",
-  "Utah Avalanche",
-  "Utah Royals FC - AZ",
-  "West Side Alliance SC",
-  "Wilmington Hammerheads",
-  "WNY Flash Academy",
-  "World Class FC",
-  "Alameda Soccer Club",
-  "Albany Berkeley Soccer Club",
-  "Arkansas Rising Soccer Club",
-  "Arsenal Colorado",
-  "Atletico Dallas Youth",
-  "Attack FC",
-  "Barca Academy Austin",
-  "Blast FC Soccer Academy",
-  "BLFC",
-  "Boerne SC",
-  "Boreal FC",
-  "Braddock Road Youth Club",
-  "Brentwood SC",
-  "Broken Arrow Soccer Club",
-  "Burlingame Soccer Club",
-  "BWP Football Academy",
-  "Canton Akron United Force",
-  "Cap City Athletic 1847",
-  "Cape Coral Soccer",
-  "Catawba Valley Youth Soccer Association",
-  "Cavalry FC",
-  "CC United Soccer Club",
-  "Cedar Stars Rush Houston",
-  "Central California Soccer Alliance",
-  "Central Valley Premier FC",
-  "Central Washington Sounders",
-  "Ceres Rush",
-  "Challenge SC",
-  "Chicago Soccer Academy (CSA)",
-  "Cincinnati Elite FC",
-  "Clovis Crossfire",
-  "Club America",
-  "Club America - Nido Aguila | Valley",
-  "Coastal Premier Alliance FC",
-  "Columbus Force SC",
-  "Croatia Jrs",
-  "Cuyahoga Valley Soccer Academy",
-  "CV Futbol Academy",
-  "Dallas Legends",
-  "DASC",
-  "Diablo Valley Futbol Club",
-  "Dnamo FC",
-  "Dutch FC",
-  "Eagles SC",
-  "East Bay United",
-  "East Dallas FC",
-  "East Meadow Soccer Club",
-  "Eastern FC",
-  "Eastside Timbers",
-  "Edina Soccer Club",
-  "Elite FC",
-  "Elk Grove Soccer",
-  "Elk Grove Surf",
-  "Elk Grove United SC",
-  "Elkhart County United",
-  "Empire Surf",
-  "EPSC",
-  "FC Copa Academy",
-  "FC Dallas Youth",
-  "FC Fresno Academy",
-  "FC Long Beach Blues",
-  "FC North",
-  "FC United (Iowa)",
-  "FC Westlake",
-  "Fever United",
-  "Florida Hawks Futbol Club",
-  "Force",
-  "Force Football Club",
-  "Fox Soccer Academy of the Carolinas",
-  "Fox Soccer Academy Premier",
-  "FRESNO HEAT FC",
-  "Fruitridge Soccer Club",
-  "Fusion Soccer Club",
-  "Great Falls Reston Soccer Club",
-  "Greater Libertyville Soccer Association",
-  "GTFC Impact",
-  "Herndon Youth Soccer",
-  "Houstonians FC",
-  "Imperial Soccer Club",
-  "JSA FC",
-  "JSC Soccer Club",
-  "Kansas City Surf",
-  "Kansas Rush",
-  "Kaptiva Sports Academy",
-  "Kernow Storm FC",
-  "Keystone Athletic",
-  "Kickers FC",
-  "LA Elite SP",
-  "Lee-Mt. Vernon Sports Club",
-  "Legends FC",
-  "Legends FC (SJ)",
-  "Lions FC",
-  "Livermore Fusion SC",
-  "Liverpool FC-IA Michigan",
-  "MAFC",
-  "Mandeville Soccer Club",
-  "MapleBrook SC",
-  "Michigan Burn",
-  "Minneapolis United",
-  "Minnesota Rush",
-  "Mississippi Surf",
-  "Mortega Soccer Club Laredo Youth Soccer Academy",
-  "NASA Tophat",
-  "NB Ajax Soccer Club",
-  "North Georgia Soccer Academy",
-  "North Star FC",
-  "North Surf",
-  "Northwest United FC",
-  "NTX Celtic FC",
-  "NTX United FC",
-  "Ohio Galaxies FC",
-  "Oklahoma Celtic",
-  "One World Soccer",
-  "PA Rush",
-  "Palo Alto SC",
-  "Park Valley United FC",
-  "Pearland Soccer Club",
-  "Pines Futsal Association",
-  "Playmaker Futbol Academy",
-  "Plymouth Soccer Club",
-  "Portage Soccer Club",
-  "Portland City United SC",
-  "Prince William Courage",
-  "Prior Lake SC",
-  "Quickstrike FC",
-  "Revolution FC",
-  "RNY FC Youth",
-  "Roadrunners SC",
-  "Sacramento Alliance SC",
-  "San Carlos United Soccer Club",
-  "San Jose Rush",
-  "Sanger FC",
-  "Santa Cruz Mid-County Youth Soccer Club",
-  "SF United FC",
-  "SG1 Soccer",
-  "Shakopee SA",
-  "Sheriffs FC",
-  "Sierra Nevada FC",
-  "Sierra Surf SC",
-  "SOCA",
-  "Solano Surf",
-  "South Lakes SC",
-  "South Orlando SC",
-  "South Valley Chivas",
-  "South Valley United Soccer Club",
-  "Southwest MO Rush",
-  "Sporting Iowa East",
-  "Sporting Iowa Strikers",
-  "St. Paul Blackhawks",
-  "STA Mount Olive Soccer Club",
-  "Stafford Soccer",
-  "Stanford Strikers FC",
-  "Stanislaus Surf Soccer Club",
-  "Sting Austin",
-  "Sting Corpus Christi",
-  "Stockton TLJ FC",
-  "Strikers Miami FC",
-  "Sunnyvale Alliance SC",
-  "T3 Futbol Club",
-  "Tahuichi F.C. Youth Soccer",
-  "Texas Warriors FC",
-  "TKO Premier SC",
-  "Toca Fusion Athletic Club",
-  "Town & Country Optimist Club",
-  "Tri-City United",
-  "Tropical Soccer",
-  "Turlock Academica Jrs",
-  "Union Sacramento FC",
-  "Upper 90 FC",
-  "Utah Surf",
-  "VA United",
-  "Vacaville United Soccer Club",
-  "Valencia Academy Houston",
-  "Valley Surf | America",
-  "Valor Soccer",
-  "Vienna Youth Soccer",
-  "Villarreal Force Academy",
-  "Villarreal Virginia Academy",
-  "Virginia Reign",
-  "Virginia Soccer Association",
-  "Virginia Valor FC",
-  "Walnut Creek Surf Soccer Club",
-  "Wellington SC",
-  "Wenatchee FA",
-  "West-Mont United S.A",
-  "Western United Pioneers FC",
-  "Western Wisconsin Soccer",
-  "Whatcom FC Rangers",
-  "Yardley Makefield Soccer",
-  "AC Florida West",
-  "AFA Fillies",
-  "Alameda Soccer Club",
-  "Arkansas Comets FC",
-  "Arkansas Rising Soccer Club",
-  "Arsenal Colorado",
-  "Association Football Club",
-  "athlete one",
-  "Barca Academy Austin",
-  "Belmont United",
-  "Boerne SC",
-  "Boreal FC",
-  "Braddock Road Youth Club",
-  "Broken Arrow Soccer Club",
-  "Burlingame Soccer Club",
-  "BVB International Academy Texas",
-  "BVBIA DFW",
-  "California Magic Soccer Club",
-  "Canton Akron United Force",
-  "Cap City Athletic 1847",
-  "Cape Coral Soccer",
-  "Catawba Valley Youth Soccer Association",
-  "CC United Soccer Club",
-  "Central Washington Sounders",
-  "Cincinnati Elite FC",
+  "Centennial Soccer Club",
+  "FC Dutchmen Surf",
+  "Manta United Soccer Club",
+  "ACF Miami",
+  "ACF Sunrise",
+  "Capital FC",
+  "CCV STARS",
   "City SC Kings County",
-  "Club America",
-  "Coastal Premier Alliance FC",
-  "Colorado EDGE",
-  "Columbus Force SC",
-  "CV Futbol Academy",
-  "Dallas Cosmos Soccer Club",
-  "DASC",
-  "Delaware Football Club",
-  "Diablo Valley Futbol Club",
-  "Dutch FC",
-  "Dynamos Soccer Club",
-  "East Coast Surf",
-  "Eastern FC",
-  "Eastside Timbers",
-  "Edina Soccer Club",
-  "El Camino FC Salinas",
-  "El Dorado Hills Soccer Club",
-  "Elite FC",
-  "Elk Grove Soccer",
-  "Elk Grove Surf",
-  "Empire State Youth Soccer Club",
-  "Empire Surf",
-  "Evolution SC",
-  "Falls Town FC",
-  "FC Copa Academy",
-  "FC Europa",
-  "FC North",
-  "FC United (Iowa)",
-  "FC Wisconsin Boys",
-  "Fever United",
-  "FIERCE United",
-  "Florida Hawks Futbol Club",
-  "Folsom Lake Surf",
-  "Forms Academy",
-  "Frisco Fusion",
-  "Fusion Soccer Club",
-  "Georgetown Soccer Association",
-  "Germantown Legends",
-  "Granite Bay FC",
-  "Great Falls Reston Soccer Club",
-  "Greater Libertyville Soccer Association",
-  "Hattiesburg Futbol Club",
-  "Herndon Youth Soccer",
-  "Highland FC",
-  "Houstonians FC",
-  "Idaho Rush Soccer Club",
-  "Imperial Soccer Club",
-  "Indiana Elite F.C.",
-  "Indy Eleven Spirit",
-  "JSC Soccer Club",
-  "Kansas City Surf",
-  "Kansas Rush",
-  "Keystone Athletic",
-  "LA Elite SP",
-  "Lee-Mt. Vernon Sports Club",
-  "Legends FC",
-  "Legends FC (SJ)",
-  "Lexington Sporting",
-  "Lions FC",
-  "Livermore Fusion SC",
-  "Lobos Rush",
+  "Coastal Rush",
+  "East Bay United",
+  "Eastshore Alliance FC",
+  "EPSC",
+  "Eugene Metro FC",
   "Lonestar SAT",
   "Long Island Slammers",
-  "Los Gatos United Soccer Club",
-  "Madera United Futbol Club",
-  "Mandeville Soccer Club",
-  "Manitou FC",
-  "MapleBrook SC",
-  "Merced United FC",
-  "Mercury",
-  "Michigan Burn",
-  "Minneapolis United",
-  "Minnesota Rush",
-  "Mississippi Rush",
-  "Mississippi Surf",
-  "Monterey Surf Soccer Club",
-  "Mt Diablo Mustang Soccer",
-  "NB Ajax Soccer Club",
-  "New England Surf",
-  "NJ Crush FC",
-  "NLSA Surf",
-  "North Coast Futbol Club",
-  "North Surf",
-  "Northern Steel",
-  "Northwest United FC",
-  "NTX Celtic FC",
-  "NWI Lions United",
-  "Ohio Galaxies FC",
-  "Omaha United SC",
-  "One World Soccer",
-  "PA Rush",
-  "Pacesetter Soccer Club",
-  "Pajaro Valley Youth Soccer Club",
-  "Palo Alto SC",
-  "Park Valley United FC",
-  "Pearland Soccer Club",
-  "Plymouth Soccer Club",
-  "Portage Soccer Club",
-  "Pride SC",
-  "Prince William Courage",
-  "Princeton SA",
-  "Prior Lake SC",
-  "Quickstrike FC",
-  "Reading Rage Surf",
+  "Manta United Soccer Club",
+  "Napa United",
   "Reno APEX Soccer Club",
-  "Revolution FC",
-  "Rocklin FC",
-  "Roseville Youth Soccer Club",
-  "San Francisco Elite Academy",
-  "San Juan South Soccer Club",
-  "Santa Cruz United Football Club",
-  "SF Aftershocks FC",
-  "SF United FC",
-  "SG1 Soccer",
-  "Shakopee SA",
-  "SOCA",
-  "Solano Surf",
-  "South Florida Football Academy",
-  "South Lakes SC",
-  "South Tahoe FC",
-  "South Valley Chivas",
-  "South Valley United Soccer Club",
-  "Southwest MO Rush",
-  "Sporting Club Premier (NJ)",
   "Sporting Springfield",
-  "St. Croix",
-  "St. Petersburg Football Club",
-  "Stafford Soccer",
-  "Stanford Strikers FC",
-  "Sting Corpus Christi",
   "Sting Nebraska",
-  "Sunrise Soccer Club",
-  "T3 Futbol Club",
-  "Three Rivers Soccer Club",
-  "TKO Premier SC",
-  "Toca Fusion Athletic Club",
   "Tonka United SA",
-  "Town & Country Optimist Club",
-  "Twin Cities Fire Soccer Club",
+  "Union Sacramento FC",
+  "Kings Hammer Columbus",
+  "Barcelona United",
+  "BTX SC INC",
+  "Cincinnati United Soccer Club",
+  "Coyotes FC Academy",
+  "Dallas Cosmos Soccer Club",
+  "Doral West Soccer Academy",
+  "FC Storm",
+  "Fishhawk Premier FC",
+  "Forms Academy",
+  "Galaxy Soccer Club",
+  "Grasshoppers FC",
+  "Hill Country United",
+  "Kitsap Alliance FC",
+  "Lakeland Premier",
+  "Lakota Futbol Club",
+  "Lee County Premier FC",
+  "Mako Soccer Club",
+  "Michigan Hawks",
+  "MISO PDP Hawaii",
+  "Naples Elite Soccer Club",
+  "North Shore FC",
+  "One FC Houston",
+  "Ormond Beach Soccer Club",
+  "Pflugerville FC",
+  "Premier Futbol Academy of San Antonio",
+  "Real Greens Soccer Academy",
+  "Royal Oak FC",
+  "Seminole United",
+  "South Miami United FC",
+  "Sporting Gainesville Soccer Academy",
+  "StrikerZ DFW",
+  "Tampa Bay United",
+  "Team Challenger FC South",
   "Tyler FC",
-  "United PDX",
-  "Utah Surf",
-  "VA United",
-  "Vale Rush United",
-  "Valley Surf | America",
-  "Valley United Soccer Club Association",
-  "Valor Soccer",
-  "Vienna Youth Soccer",
-  "Villarreal Virginia Academy",
-  "Virginia Reign",
-  "Virginia Soccer Association",
-  "Virginia Valor FC",
-  "Walnut Creek Surf Soccer Club",
-  "Western Wisconsin Soccer",
-  "Whatcom FC Rangers",
-  "Yardley Makefield Soccer"
+  "Union FC Indy",
+  "Kings Hammer Columbus",
+  "Barcelona United",
+  "Cherry Hill FC",
+  "Cincinnati West",
+  "Cuyahoga Valley Soccer Academy",
+  "FC Storm",
+  "Florida Tropics Academy",
+  "Kitsap Alliance FC",
+  "Lakota Futbol Club",
+  "MISO PDP Hawaii",
+  "Oregon Premier FC",
+  "Royal Oak FC",
+  "Sporting Columbus",
+  "StrikerZ DFW",
+  "Team Challenger FC South",
+  "Total Futbol Academy (OH)",
+  "Union FC Indy",
+  "Upper 90 FC"
  ],
- "verified": 583,
+ "verified": 84,
  "loc_mismatch": [],
  "unmatched": [
   {
@@ -587,6 +95,10 @@
   {
    "org": "ecnlb",
    "club": "Atlanta Fire United"
+  },
+  {
+   "org": "ecnlb",
+   "club": "Bay Area Surf"
   },
   {
    "org": "ecnlb",
@@ -611,10 +123,6 @@
   {
    "org": "ecnlb",
    "club": "Cleveland Force SC"
-  },
-  {
-   "org": "ecnlb",
-   "club": "Coastal Rush"
   },
   {
    "org": "ecnlb",
@@ -671,10 +179,6 @@
   {
    "org": "ecnlb",
    "club": "Missouri Rush"
-  },
-  {
-   "org": "ecnlb",
-   "club": "N1 Miyami"
   },
   {
    "org": "ecnlb",
@@ -846,10 +350,6 @@
   },
   {
    "org": "ecnlg",
-   "club": "N1 Miyami"
-  },
-  {
-   "org": "ecnlg",
    "club": "Philadelphia Ukrainian Nationals"
   },
   {
@@ -910,6 +410,10 @@
   },
   {
    "org": "ecnlg",
+   "club": "Team Boca"
+  },
+  {
+   "org": "ecnlg",
    "club": "Tulsa Soccer Club"
   },
   {
@@ -950,7 +454,15 @@
   },
   {
    "org": "ecrlb",
+   "club": "Bay Area Surf"
+  },
+  {
+   "org": "ecrlb",
    "club": "Beach Futbol Club"
+  },
+  {
+   "org": "ecrlb",
+   "club": "Burlingame Soccer Club"
   },
   {
    "org": "ecrlb",
@@ -959,10 +471,6 @@
   {
    "org": "ecrlb",
    "club": "California Odyssey Soccer Club"
-  },
-  {
-   "org": "ecrlb",
-   "club": "Centennial SC"
   },
   {
    "org": "ecrlb",
@@ -982,15 +490,7 @@
   },
   {
    "org": "ecrlb",
-   "club": "City SC Kings County"
-  },
-  {
-   "org": "ecrlb",
    "club": "Cleveland Force SC"
-  },
-  {
-   "org": "ecrlb",
-   "club": "Coastal Rush"
   },
   {
    "org": "ecrlb",
@@ -1018,7 +518,15 @@
   },
   {
    "org": "ecrlb",
+   "club": "Diablo Valley Futbol Club"
+  },
+  {
+   "org": "ecrlb",
    "club": "Eagle FC"
+  },
+  {
+   "org": "ecrlb",
+   "club": "Elk Grove Soccer"
   },
   {
    "org": "ecrlb",
@@ -1106,10 +614,6 @@
   },
   {
    "org": "ecrlb",
-   "club": "Manta United Soccer Club"
-  },
-  {
-   "org": "ecrlb",
    "club": "Match Fit Surf"
   },
   {
@@ -1118,15 +622,15 @@
   },
   {
    "org": "ecrlb",
+   "club": "Minneapolis United"
+  },
+  {
+   "org": "ecrlb",
    "club": "Minnesota Thunder Academy"
   },
   {
    "org": "ecrlb",
    "club": "Missouri Rush"
-  },
-  {
-   "org": "ecrlb",
-   "club": "N1 Miyami"
   },
   {
    "org": "ecrlb",
@@ -1163,10 +667,6 @@
   {
    "org": "ecrlb",
    "club": "Rebels Soccer Club"
-  },
-  {
-   "org": "ecrlb",
-   "club": "Reno APEX Soccer Club"
   },
   {
    "org": "ecrlb",
@@ -1265,6 +765,10 @@
    "club": "Westchester SC"
   },
   {
+   "org": "ecrlb",
+   "club": "Whatcom FC Rangers"
+  },
+  {
    "org": "ecrlg",
    "club": "AC Connecticut"
   },
@@ -1298,14 +802,6 @@
   },
   {
    "org": "ecrlg",
-   "club": "Capital FC"
-  },
-  {
-   "org": "ecrlg",
-   "club": "CCV STARS"
-  },
-  {
-   "org": "ecrlg",
    "club": "Charlotte Soccer Academy"
   },
   {
@@ -1323,10 +819,6 @@
   {
    "org": "ecrlg",
    "club": "Cleveland Force SC"
-  },
-  {
-   "org": "ecrlg",
-   "club": "Coastal Rush"
   },
   {
    "org": "ecrlg",
@@ -1351,14 +843,6 @@
   {
    "org": "ecrlg",
    "club": "Detroit City FC"
-  },
-  {
-   "org": "ecrlg",
-   "club": "East Bay United"
-  },
-  {
-   "org": "ecrlg",
-   "club": "Eastshore Alliance FC"
   },
   {
    "org": "ecrlg",
@@ -1434,10 +918,6 @@
   },
   {
    "org": "ecrlg",
-   "club": "Manta United Soccer Club"
-  },
-  {
-   "org": "ecrlg",
    "club": "Match Fit Surf"
   },
   {
@@ -1454,7 +934,7 @@
   },
   {
    "org": "ecrlg",
-   "club": "N1 Miyami"
+   "club": "North Star FC"
   },
   {
    "org": "ecrlg",
@@ -1546,6 +1026,10 @@
   },
   {
    "org": "ecrlg",
+   "club": "Team Boca"
+  },
+  {
+   "org": "ecrlg",
    "club": "Tennessee United SC"
   },
   {
@@ -1566,10 +1050,6 @@
   },
   {
    "org": "ecrlg",
-   "club": "Union Sacramento FC"
-  },
-  {
-   "org": "ecrlg",
    "club": "Washington Premier FC"
   },
   {
@@ -1579,43 +1059,487 @@
   {
    "org": "ecrlg",
    "club": "West Coast Soccer"
+  },
+  {
+   "org": "pecnlb",
+   "club": "AC Connecticut"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Albion SC Dallas"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Arizona Arsenal Soccer Club"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Arizona Soccer Club"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Beach Futbol Club"
+  },
+  {
+   "org": "pecnlb",
+   "club": "BVBIA DFW"
+  },
+  {
+   "org": "pecnlb",
+   "club": "California Odyssey Soccer Club"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Chicago City Soccer Club"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Chicago Inter"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Cleveland Force SC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Colorado Storm"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Connecticut FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Davie United SC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Davis Legacy Soccer Club"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Detroit City FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Eagle FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "FC America"
+  },
+  {
+   "org": "pecnlb",
+   "club": "FC Arizona"
+  },
+  {
+   "org": "pecnlb",
+   "club": "FC Dayton"
+  },
+  {
+   "org": "pecnlb",
+   "club": "FC Pride"
+  },
+  {
+   "org": "pecnlb",
+   "club": "FC Tulsa Academy"
+  },
+  {
+   "org": "pecnlb",
+   "club": "FC Wichita"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Florida Celtic"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Florida Premier FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Fort Lauderdale United FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Fort Worth Vaqueros FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Jacksonville FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "La Roca FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Lancaster FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Lexington Sporting"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Long Island Slammers"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Louisiana Fire SC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "LTFC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Manhattan SC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Match Fit Surf"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Mercury"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Miami FC Academy"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Michigan Rangers FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Missouri Rush"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Parkland Soccer Club"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Philadelphia Ukrainian Nationals"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Pittsburgh Riverhounds"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Placer United Soccer Club"
+  },
+  {
+   "org": "pecnlb",
+   "club": "PSL Hurricanes"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Real Colorado"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Rebels Soccer Club"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Rockford Raptors FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "San Antonio FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "San Juan Soccer Club"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Santa Clara Sporting"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Solar SC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "St. Louis Scott Gallagher"
+  },
+  {
+   "org": "pecnlb",
+   "club": "St. Louis Stars SC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "STA"
+  },
+  {
+   "org": "pecnlb",
+   "club": "SUSA FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Team Boca"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Tulsa Soccer Club"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Union 10 FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Utah Athletic Academy"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Washington Premier FC"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Westchester SC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "AC Connecticut"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Arizona Arsenal Soccer Club"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Arizona Soccer Club"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Atlanta Fire United"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Atletico Dallas Youth"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Beach Futbol Club"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Bethesda SC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Charlotte Soccer Academy"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Chattanooga Red Wolves SC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Chicago City Soccer Club"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Chicago Inter"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Cincinnati United Soccer Club"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Cleveland Force SC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Colorado Storm"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Connecticut FC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Davie United SC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Davis Legacy Soccer Club"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Detroit City FC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "FC Dayton"
+  },
+  {
+   "org": "pecnlg",
+   "club": "FC Pride"
+  },
+  {
+   "org": "pecnlg",
+   "club": "FC Tulsa Academy"
+  },
+  {
+   "org": "pecnlg",
+   "club": "FC Wichita"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Florida Premier FC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Force Football Club"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Fort Lauderdale United FC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Galaxy Soccer Club"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Gwinnett Soccer Academy"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Indy Eleven Academy"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Internationals SC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "La Roca FC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Louisiana Fire SC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Manhattan SC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Match Fit Surf"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Michigan Rangers FC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Minnesota Thunder Academy"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Missouri Rush"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Oklahoma Celtic"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Parkland Soccer Club"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Philadelphia Ukrainian Nationals"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Phoenix Rising FC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Pittsburgh Riverhounds"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Placer United Soccer Club"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Players Development Academy"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Pleasanton Rage"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Portland Thorns FC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Real Colorado"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Richmond United"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Rockford Raptors FC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "San Juan Soccer Club"
+  },
+  {
+   "org": "pecnlg",
+   "club": "St. Louis Scott Gallagher"
+  },
+  {
+   "org": "pecnlg",
+   "club": "SUSA FC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Team Boca"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Tulsa Soccer Club"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Union 10 FC"
+  },
+  {
+   "org": "pecnlg",
+   "club": "Washington Premier FC"
   }
  ],
  "no_logo": [
   {
    "org": "ecnlb",
-   "club": "East Meadow Soccer Club",
-   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/PlayerForm/Kory_Patterson_546497e203014be5a834a127c0ae9ba0_New_EM_Cir.png"
+   "club": "GOTSport Club",
+   "logo": "/assets/img/club-account.svg"
   },
   {
    "org": "ecnlb",
-   "club": "FC Dallas Youth",
-   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/ClubImages/Logos/Light_Vert_01-06-2026T22:46:08.014.png"
-  },
-  {
-   "org": "ecnlb",
-   "club": "FC Westlake ",
-   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/PlayerForm/pj_bunce_233ecffb2d5a4e5b8e080c0e0836efee_FC_WESTLAK.png"
-  },
-  {
-   "org": "ecnlb",
-   "club": "Kansas Rush",
-   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/ClubImages/Logos/KansasRush_04-10-2026T17:28:09.548.png"
-  },
-  {
-   "org": "ecnlb",
-   "club": "NASA Tophat",
-   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/ClubImages/Logos/_4_star_log_06162025_045641.PNG"
-  },
-  {
-   "org": "ecnlb",
-   "club": "RNY FC Youth",
-   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/ClubImages/Logos/196ea26896f444378cb580b3ddde6a1e_Screenshot.png"
+   "club": "N1 Miyami",
+   "logo": "/assets/img/club-account.svg"
   },
   {
    "org": "ecnlg",
-   "club": "FC Wisconsin Boys",
-   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/ClubImage/FCW Full Color - Black background no words40DD2017084030.pn"
+   "club": "N1 Miyami",
+   "logo": "/assets/img/club-account.svg"
   },
   {
    "org": "ecrlb",
@@ -1629,28 +1553,8 @@
   },
   {
    "org": "ecrlb",
-   "club": "Dynamos Soccer Club",
-   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/ClubImages/Logos/Dynamos_Lo_07-17-2025T02:29:25.627.jpg"
-  },
-  {
-   "org": "ecrlb",
-   "club": "FC Dutchmen Surf",
-   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/ClubImages/Logos/FCDSURF_06-14-2026T23:43:17.746.png"
-  },
-  {
-   "org": "ecrlb",
-   "club": "FC Europa",
-   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/ClubImages/Logos/New_FCE_lo_08-06-2024T17:33:07.376.png"
-  },
-  {
-   "org": "ecrlb",
-   "club": "Hattiesburg Futbol Club",
-   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/PlayerImage/Kory_Patterson_b0338eaff85f43979f56b66202c1458d.png"
-  },
-  {
-   "org": "ecrlb",
-   "club": "Pacesetter Soccer Club",
-   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/PlayerForm/Alexis_Rampolla_9b59adc1cbc2413c983b145d8e1cce01_PSCLogo202.png"
+   "club": "N1 Miyami",
+   "logo": "/assets/img/club-account.svg"
   },
   {
    "org": "ecrlg",
@@ -1664,13 +1568,18 @@
   },
   {
    "org": "ecrlg",
-   "club": "Kernow Storm FC",
-   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/ClubImages/Logos/98d1e769cfe14ece99dcc630caf5e7f5_Kernow_TGS.png"
+   "club": "N1 Miyami",
+   "logo": "/assets/img/club-account.svg"
   },
   {
-   "org": "ecrlg",
-   "club": "West-Mont United S.A",
-   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/ClubImages/Logos/dd0f51001dd64fb4a07db30b7f8cb5e3_WestMont_U.png"
+   "org": "pecnlb",
+   "club": "Brevard SA",
+   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/ClubImages/Logos/e9c2ddc9a5834048b9b116721efdf449_Screenshot.png"
+  },
+  {
+   "org": "pecnlb",
+   "club": "Total Futbol Academy (OH)",
+   "logo": "https://s3.amazonaws.com/images.totalglobalsports.com/PlayerForm/Benjamin_Tilford_d3518107ed4f4dab85e9933f376654de_11825688_1.jpg"
   }
  ]
 }

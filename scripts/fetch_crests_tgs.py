@@ -18,9 +18,11 @@ import json, os, re, subprocess, sys, time, unicodedata, urllib.parse, urllib.re
 
 API = 'https://api.athleteone.com/api/Event/get-org-club-list-by-orgID/%d'
 UA = {'User-Agent': 'RankXI/1.0 (jkientz@gmail.com; youth crest sweep)'}
-ORGS = {'ecnlb': 12, 'ecnlg': 9, 'ecrlb': 16, 'ecrlg': 13}
-SIBLINGS = {'ecnlb': ('ecnlb', 'ecrlb'), 'ecrlb': ('ecrlb', 'ecnlb'),
-            'ecnlg': ('ecnlg', 'ecrlg'), 'ecrlg': ('ecrlg', 'ecnlg')}
+ORGS = {'ecnlb': 12, 'ecnlg': 9, 'ecrlb': 16, 'ecrlg': 13, 'pecnlb': 22, 'pecnlg': 21}
+SIBLINGS = {'ecnlb': ('ecnlb', 'ecrlb', 'pecnlb'), 'ecrlb': ('ecrlb', 'ecnlb', 'pecnlb'),
+            'pecnlb': ('pecnlb', 'ecrlb', 'ecnlb'),
+            'ecnlg': ('ecnlg', 'ecrlg', 'pecnlg'), 'ecrlg': ('ecrlg', 'ecnlg', 'pecnlg'),
+            'pecnlg': ('pecnlg', 'ecrlg', 'ecnlg')}
 
 
 def deacc(x): return unicodedata.normalize('NFKD', x).encode('ascii', 'ignore').decode()

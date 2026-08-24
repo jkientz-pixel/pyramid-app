@@ -65,6 +65,8 @@ ALLOW = {
     '14d7d681',  # Cedar Stars organisation
     '9fe1cd00',  # SinCity FC == Sin City FC, a known duplicate club record
     '6c764c34',  # "Miami FL UPSL Test" placeholder record
+    '418b652a',  # Tampa Bay United across MLS Next / ECNL G / Pre-ECNL B
+    '2f0bb3dc',  # Virginia Revolution across GA / MLS Next / GA Aspire
 }
 def allowed(h):
     return h in ALLOW or h[:8] in ALLOW

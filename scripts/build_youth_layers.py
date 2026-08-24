@@ -49,7 +49,8 @@ GA_URL = 'https://girlsacademyleague.com/members/'
 # GA Aspire (tier-two GA, launched 2026-27) publishes its directory on the
 # membership page in the same Divi 'Name (City, ST)' format as GA members
 GAA_URL = 'https://girlsacademyleague.com/aspire-membership/'
-YOUTH = ('mlsnext', 'ecnlb', 'ga', 'ecnlg', 'ea', 'ecrlb', 'ecrlg', 'gaa')
+YOUTH = ('mlsnext', 'ecnlb', 'ga', 'ecnlg', 'ea', 'ecrlb', 'ecrlg', 'gaa',
+         'pecnlb', 'pecnlg')
 
 # strip only organizational suffixes — location/identity words (united, city,
 # academy, SA) are what distinguish real youth orgs from same-token adult clubs
@@ -58,7 +59,12 @@ NAME_NOISE = re.compile(r"\b(fc|sc|cf|afc|ac|club|soccer)\b", re.I)
 # Lou Fusz Athletic, not a separate club
 TEAM_QUALIFIER = {'white', 'black', 'blue', 'red', 'gold', 'silver', 'ii'}
 # source typos that break geocoding ('Middle Villages, NY' in the wiki table)
-CITY_FIX = {'Middle Villages': 'Middle Village', 'Cinncinati': 'Cincinnati'}
+CITY_FIX = {'Middle Villages': 'Middle Village', 'Cinncinati': 'Cincinnati',
+            # Pre-ECNL TGS feed typos
+            'Penscola': 'Pensacola', 'North Rovalton': 'North Royalton'}
+# source state typos: (club, wrong st) -> right st. GA Aspire lists Sporting
+# Arkansas as 'Bentonville, AK'; preflight's state-box check caught the pin.
+STATE_FIX = {('Sporting Arkansas Soccer Club', 'AK'): 'AR'}
 # league-side placeholder rows that are not clubs (TGS shipped 'Test Club';
 # UPSL standings carry 'TBD' slots) — never let them into the dataset
 PLACEHOLDER_NAMES = {'test club', 'tbd', 'tbd fc', 'test',
@@ -228,7 +234,11 @@ SOURCES = [('mlsnext', 'm', parse_mlsnext),
            ('ea', 'm', parse_ea),
            ('ecrlb', 'm', lambda: parse_tgs(16)),
            ('ecrlg', 'w', lambda: parse_tgs(13)),
-           ('gaa', 'w', lambda: parse_ga(GAA_URL))]
+           ('gaa', 'w', lambda: parse_ga(GAA_URL)),
+           # Pre-ECNL orgIDs 22 (boys) / 21 (girls) — third ECNL tier; parses
+           # last so a club also in ECNL/ECRL keeps its higher-league pin
+           ('pecnlb', 'm', lambda: parse_tgs(22)),
+           ('pecnlg', 'w', lambda: parse_tgs(21))]
 
 
 def main():
@@ -261,6 +271,7 @@ def main():
             if r.get('city') and r['city'].strip().upper() == (r.get('st') or '').strip().upper():
                 log['no_geocode'].append(f"{r['name']} (city == state code)")
                 continue
+            r['st'] = STATE_FIX.get((r['name'].strip(), r.get('st')), r.get('st'))
             if r['st'] in adult_states.get(key, ()):
                 log['folded'].append(r['name'])
                 continue
