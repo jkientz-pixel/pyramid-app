@@ -115,6 +115,10 @@ export function shotPanel(root, { shots, home, away, ids = 'sh', filters, onFilt
   const pressed = k => !f.off.has(k);
 
   root.innerHTML = `
+    <div class="sh-pitchwrap"><svg class="sh-pitch" id="${ids}-pitch" viewBox="0 0 ${L} ${W}" role="img"
+      aria-label="Shot map: every shot placed on the pitch, sized by expected goals"></svg></div>
+    <div class="sh-legend" id="${ids}-legend"></div>
+    <div class="kicker" style="margin-top:12px">Filter the shots <span class="pm-count" id="${ids}-count"></span></div>
     <div class="pm-toggles" id="${ids}-toggles" role="group" aria-label="Filter the shots">
       ${GROUPS.map(g => `<div class="pm-tg"><span class="pm-tglabel">${g.label}</span>${g.keys.map(([k, label]) =>
         `<button type="button" class="chip pm-chip" data-key="${k}" aria-pressed="${pressed(k)}">${label}</button>`).join('')}</div>`).join('')}
@@ -122,13 +126,10 @@ export function shotPanel(root, { shots, home, away, ids = 'sh', filters, onFilt
         `<button type="button" class="chip pm-chip pm-size" data-size="${k}" aria-pressed="${f.size === k}">${label}</button>`).join('')}</div>
       <button type="button" class="chip pm-reset" id="${ids}-reset" hidden>Show all shots</button>
     </div>
-    <div class="sh-pitchwrap"><svg class="sh-pitch" id="${ids}-pitch" viewBox="0 0 ${L} ${W}" role="img"
-      aria-label="Shot map: every shot placed on the pitch, sized by expected goals"></svg></div>
-    <div class="sh-legend" id="${ids}-legend"></div>
     <div class="kicker" style="margin-top:14px">xG race</div>
     <div class="pm-racewrap"><svg class="pm-race" id="${ids}-race" viewBox="0 0 600 170" role="img"
       aria-label="Cumulative expected goals for each team through the match"></svg></div>
-    <div class="kicker" style="margin-top:14px">Totals <span class="pm-count" id="${ids}-count"></span></div>
+    <div class="kicker" style="margin-top:14px">Totals</div>
     <div class="sh-tablewrap" id="${ids}-totals"></div>
     <details class="sh-details"><summary>Every shot as a table</summary>
       <div class="sh-tablewrap" id="${ids}-table"></div></details>

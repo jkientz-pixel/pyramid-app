@@ -1085,9 +1085,13 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 .pm-elobar i.h{left:50%}
 .pm-elobar i.a{right:50%;background:var(--shot-away)}
 .pm-elonote{margin:4px 0 0;font-size:.74rem}
-.pm-toggles{display:flex;flex-direction:column;gap:6px;margin:8px 0 12px}
-.pm-tg{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
-.pm-tglabel{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);min-width:4.6em}
+.pm-toggles{display:flex;flex-direction:column;gap:5px;margin:6px 0 12px}
+/* one line per group; on a phone the line scrolls sideways instead of wrapping
+   into a wall of chips above the map */
+.pm-tg{display:flex;flex-wrap:nowrap;align-items:center;gap:5px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
+.pm-tg::-webkit-scrollbar{display:none}
+.pm-tg .pm-chip{flex:none;white-space:nowrap}
+.pm-tglabel{flex:none;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);min-width:4.4em}
 .pm-chip{padding:4px 10px;font-size:.68rem}
 .pm-chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--ground)}
 .pm-chip[aria-pressed="false"]{text-decoration:line-through;opacity:.7}
@@ -1108,4 +1112,4 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 .pm-shots{margin-top:8px}
 .pmslot:empty{display:none}
 .match.resrow .pmtoggle{margin-top:8px}
-@media (max-width:640px){.pm-elorow{font-size:.78rem}.pm-tglabel{min-width:100%}}
+@media (max-width:640px){.pm-elorow{font-size:.78rem}}
