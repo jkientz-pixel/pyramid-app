@@ -42,6 +42,9 @@ python3 scripts/gen_seo_pages.py
 python3 scripts/gen_og_cards.py
 python3 scripts/gen_club_pages.py
 
+# server-side club -> website-domain map for /api/claim (gitignored, regenerated here)
+python3 scripts/gen_club_domains.py
+
 python3 scripts/preflight.py
 
 # Ship a staged tree, not the repo root. `wrangler pages deploy .` uploaded the

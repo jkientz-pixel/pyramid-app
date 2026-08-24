@@ -1019,3 +1019,43 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
   [data-layout="wide"] .rc-fx{max-width:660px}
   [data-layout="wide"] .rc-draw{max-width:430px}
 }
+
+/* ---- #/claim: claim a club, then the intake form ------------------------- */
+.claimscr p{max-width:40em}
+.claimscr .claim-ok,.claimscr .claim-warn{border-radius:10px;padding:10px 12px;font-size:.92rem;line-height:1.45;margin:10px 0}
+.claimscr .claim-ok{background:color-mix(in oklab,#1f9d55 14%,var(--raise));border:1px solid color-mix(in oklab,#1f9d55 45%,var(--line))}
+.claimscr .claim-warn{background:color-mix(in oklab,#d98e04 14%,var(--raise));border:1px solid color-mix(in oklab,#d98e04 45%,var(--line))}
+.claimscr .linkbtn{background:none;border:0;padding:0;color:var(--accent);font:inherit;font-size:.85rem;cursor:pointer;text-decoration:underline dotted}
+.claimscr .opt{font-weight:400;color:var(--ink-dim);font-size:.8rem}
+.claimscr .req{color:var(--accent)}
+.claimscr form.claimauth,.claimscr form.claimform{display:grid;gap:10px;max-width:28em;margin-top:12px}
+.claimscr .chk{display:flex;gap:8px;align-items:center;font-size:.9rem;color:var(--ink-dim)}
+.claimscr label{display:grid;gap:4px;font-size:.85rem;color:var(--ink-dim)}
+.claimscr label>span{font-weight:600;color:var(--ink)}
+.claimscr label small{font-size:.75rem;color:var(--ink-dim)}
+.claimscr input:not([type=checkbox]):not([type=color]),.claimscr select,.claimscr textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--raise);color:var(--ink);font:inherit;font-size:.95rem}
+.claimscr input:focus,.claimscr select:focus,.claimscr textarea:focus{outline:2px solid var(--accent);border-color:transparent}
+.claimscr .joinbtn{background:var(--accent);color:#fff;font-weight:700;border:0;border-radius:10px;padding:12px 16px;font:inherit;cursor:pointer;justify-self:start}
+.claimscr .joinbtn[disabled]{opacity:.55;cursor:default}
+.claimscr form.intake{display:grid;gap:14px;margin-top:14px;max-width:44em}
+.claimscr fieldset{border:1px solid var(--line);border-radius:12px;padding:12px 14px 14px;margin:0;min-width:0}
+.claimscr legend{font-weight:700;padding:0 6px}
+.claimscr details.fgroup{border:1px dashed var(--line);border-radius:12px;padding:10px 14px}
+.claimscr details.fgroup[open]{border-style:solid}
+.claimscr details.fgroup summary{cursor:pointer;font-weight:700;list-style:none}
+.claimscr details.fgroup summary::-webkit-details-marker{display:none}
+.claimscr details.fgroup summary::before{content:'+';display:inline-block;width:1.2em;color:var(--accent)}
+.claimscr details.fgroup[open] summary::before{content:'\2212'}
+.claimscr details.fgroup .fgrid{margin-top:10px}
+.claimscr .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+.claimscr .fgrid label{grid-column:1 / -1}
+.claimscr .fgrid label.half{grid-column:auto}
+@media (max-width:480px){.claimscr .fgrid{grid-template-columns:1fr}.claimscr .fgrid label.half{grid-column:1 / -1}}
+.claimscr .colorwrap{display:flex;gap:10px;align-items:center}
+.claimscr .colorwrap input[type=color]{width:44px;height:32px;padding:0;border:1px solid var(--line);border-radius:6px;background:none}
+.claimscr .logodrop{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start}
+@media (max-width:480px){.claimscr .logodrop{grid-template-columns:1fr}}
+.claimscr .logoprev{width:120px;height:120px;border-radius:12px;border:1px solid var(--line);background:repeating-conic-gradient(color-mix(in oklab,var(--ink) 8%,transparent) 0 25%,transparent 0 50%) 0 0/16px 16px;display:grid;place-items:center;overflow:hidden}
+.claimscr .logoprev img{max-width:100px;max-height:100px;object-fit:contain}
+.claimscr .logodrop p{margin:0 0 8px;font-size:.9rem;line-height:1.45}
+.claimscr input[type=file]{padding:6px 0;border:0;background:none}

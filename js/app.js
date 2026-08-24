@@ -143,6 +143,10 @@ window.submitResult = (ev, f) => {
   }).catch(() => { btn.disabled = false; btn.textContent = 'Send it in'; });
   return false;
 };
+/* One CTA for "I run this club": the verified-claim flow at #/claim. It
+   replaced the club-add interest form on club pages — a claim that proves
+   who is asking beats a free-text row a human has to chase. */
+const claimCta = c => `<a class="claim" href="#/claim/${esc(c.id)}">Run this club? Claim it and add your data &rarr;</a>`;
 function reportLink(kind, what) {
   const subj = encodeURIComponent(`RankedXI ${kind}: ${what}`);
   const body = encodeURIComponent(`Page: ${location.hash}\nWhat's wrong / your suggestion:\n\n`);
@@ -2332,8 +2336,8 @@ async function screenClub(ref) {
       <span class="apps-bar" aria-hidden="true"><i style="width:${Math.round(100 * pl.st / Math.max(1, apps.players[0].st + apps.players[0].sub))}%"></i></span>
       <span class="apps-n">${pl.st + pl.sub}<small>${pl.st} start${pl.st === 1 ? '' : 's'}${pl.sub ? ` &middot; ${pl.sub} sub` : ''}</small></span></li>`).join('')}</ul>
     <p class="note">Every player named in a matchday squad this season, most-used first, from banked USL League Two team sheets. Appearances count matchday squads, not minutes &mdash; the source lists the eleven and the reserves, not who came on. No ages: players under 18 keep their name and lose their birth year here, and an appearance count never needed one.</p>
-    ${interestForm('club-add', c.n)}`
-    : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p><a class="claim" href="mailto:hello@rankedxi.com?subject=${encodeURIComponent('Claim club: ' + c.n)}" style="margin-top:6px">Run this club? Add your roster</a>`}
+    ${claimCta(c)}`
+    : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p>${claimCta(c)}`}
     ${worldLadder(c)}` : LEVELS.youth.includes(c.g) ? `<p class="note" style="font-size:.9rem">Youth directory listing — an active ${LEAGUES[c.g].label} member club. Youth organizations carry no ratings, fixtures, or player data here; the entry is name, league, and league-stated location only.</p>` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
     ${(() => {
       if (!hist) return '';
@@ -2371,8 +2375,8 @@ async function screenClub(ref) {
       ${t.link ? `<div class="linkrow"><a href="${safeHref(t.link)}" target="_blank" rel="noopener">Tryout details</a></div>` : ''}</div>`).join('')}
     <p class="note"><a href="#/tryouts" style="color:var(--accent)">All open tryouts &rarr;</a></p>` : ''}
     <p class="note">${(c.si || c.sx || c.sf || c.url) ? 'Official site and social links above come from Wikidata, league sources, and the club\'s own website — they go exactly where they say.' : 'Club website and socials appear at the top once the club claims its page — links always go exactly where they say.'}</p>
-    ${interestForm('club-add', c.n)}
-    <p class="note">Claimed clubs manage their crest, links, roster and schedule.</p>
+    ${claimCta(c)}
+    <p class="note">Claimed clubs manage their crest, links, ground, roster and schedule.</p>
     ${c.r ? resultFormHtml(c) : ''}
     ${reportLink('Fix', c.n)}`;
   wireFav();
@@ -3552,7 +3556,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', compare: 'Compare Clubs', tools: 'Tools', race: 'Season Race', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', player: 'Player', notfound: 'Page not found' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', compare: 'Compare Clubs', tools: 'Tools', race: 'Season Race', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', claim: 'Claim your club', player: 'Player', notfound: 'Page not found' };
 /* Hash routes people actually type or get sent. Every one of these was a
    plausible guess at a real screen that silently rendered the map instead —
    a stranger following a link from a DM concluded the site was broken rather
@@ -3560,7 +3564,7 @@ const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matc
    left over gets an honest not-found. */
 const ROUTE_ALIAS = {
   'free-agents': 'freeagents', 'free-agent': 'freeagent', freeagency: 'freeagents',
-  claim: 'clubtools', 'claim-club': 'clubtools', 'club-tools': 'clubtools',
+  'claim-club': 'claim', 'club-tools': 'clubtools',
   following: 'myxi', follow: 'myxi', favorites: 'myxi', favourites: 'myxi',
   'my-xi': 'myxi', myxi11: 'myxi', home: 'myxi',
   leagues: 'tiers', pyramid: 'tiers', 'national-table': 'table',
@@ -3569,6 +3573,20 @@ const ROUTE_ALIAS = {
   'national-teams': 'nt', usmnt: 'nt', uswnt: 'nt',
 };
 
+/* #/claim/<club>: the verified-rep intake flow lives in js/claim.js and loads
+   on demand — most visitors never claim a club and the form is long. */
+let _claim;
+function screenClaim(ref) {
+  /* bare #/claim (an old alias for Club Tools) still lands somewhere useful */
+  if (!ref) { location.replace('#/clubtools'); return; }
+  const c = CLUBS.find(o => o.id === String(ref)) || CLUBS[+ref];
+  if (!c || c.h) { screenNotFound(location.hash); return; }
+  crumb.textContent = 'Claim ' + c.n;
+  view.innerHTML = '<div class="about"><p class="note">Loading\u2026</p></div>';
+  (_claim ||= import('./claim.js?v=__RXIV__'))
+    .then(m => { if (!routedAway('#/claim/' + ref)) m.screenClaim({ club: c, view, crumb }); })
+    .catch(() => { if (!routedAway('#/claim/' + ref)) view.innerHTML = '<div class="about"><p class="note">Could not load the claim form \u2014 check your connection and try again.</p></div>'; });
+}
 function screenNotFound(hash) {
   crumb.textContent = 'Not found';
   view.innerHTML = `<div class="about">
@@ -3600,7 +3618,7 @@ function route() {
   }
   /* the Tools tab is a hub: its own screens (predict, sim) keep it lit, and
      club/player detail routes stay under Map the way they always have */
-  const TAB_OF = { state: 'map', region: 'map', club: 'map', player: 'map',
+  const TAB_OF = { state: 'map', region: 'map', club: 'map', claim: 'map', player: 'map',
     predict: 'tools', sim: 'tools', race: 'tools', 'player-sim': 'tools', shots: 'tools', radar: 'tools', compare: 'tools' };
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active',
     a.dataset.tab === (TAB_OF[parts[0]] || parts[0])));
@@ -3654,6 +3672,7 @@ function route() {
   else if (parts[0] === 'state') screenState(parts[1]);
   else if (parts[0] === 'region') screenRegion(parts[1]);
   else if (parts[0] === 'club') screenClub(parts[1]);
+  else if (parts[0] === 'claim') screenClaim(parts[1]);
   else if (parts[0] === 'player') screenPlayer(parts[1], parts[2]);
   else if (parts[0] === 'map' || parts[0] === '') screenMap();
   else { screenNotFound(h); parts[0] = 'notfound'; }
