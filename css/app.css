@@ -239,6 +239,15 @@ a.lgchip{text-decoration:none}
 .squad li a{padding:7px 12px}
 .sq-ga{color:var(--ink-dim);font-size:.75rem;font-variant-numeric:tabular-nums;width:4.2em;text-align:right}
 .badge{display:inline-block;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:4px 10px;border-radius:999px;margin:6px 0}
+.vdot{display:inline-flex;align-items:center;gap:4px;margin-left:8px;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#2F7C3B;background:#E4F1E2;border:1px solid #BCD9B8;border-radius:999px;padding:1px 8px;white-space:nowrap}
+.vdot-s{font-style:normal;color:#2F7C3B;font-weight:700}
+.vnote{margin-left:8px}
+.navlinks{display:inline-flex;gap:10px;margin-left:10px;font-size:.8rem;white-space:nowrap}
+.navlinks a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+.navlinks a:hover,.navlinks a:focus-visible{border-bottom-color:currentColor}
+.clubhead{position:relative}
+.ckmark{position:absolute;left:44px;top:calc(50% - 30px);width:18px;height:18px;border-radius:50%;background:#2F7C3B;color:#fff;font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg,#fff)}
+.fixform select{display:block;width:100%;margin:0 0 6px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--raise);color:var(--ink);font:inherit;font-size:.9rem}
 .badge.v{background:#E4F1E2;color:#2F7C3B;border:1px solid #BCD9B8}
 .badge.c{background:#FBF3E3;color:#8A6215;border:1px solid #E7D5AC}
 /* demo-data quarantine: dashed amber marks anything NOT from real results —

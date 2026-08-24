@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Set exact stadium coordinates for pro clubs from Wikidata:
-club item -> P115 (home venue) -> venue P625 (coordinates)."""
+"""Set exact stadium coordinates (and capacity) for pro clubs from Wikidata:
+club item -> P115 (home venue) -> venue P625 (coordinates) + P1083 (capacity).
+Writes c['la'], c['lo'], c['acc']='v' (venue-grade) and c['cap'] where known."""
 import json, re, urllib.request, urllib.parse, time, os
 
 UA = {'User-Agent': 'RankXI/0.1 (jkientz@gmail.com; venue coordinates)'}
@@ -49,7 +50,7 @@ def main():
             except (KeyError, TypeError, IndexError):
                 pass
         time.sleep(0.8)
-    coords = {}
+    coords = {}; caps = {}
     vl = list(set(venues.values()))
     for i in range(0, len(vl), 50):
         r = api('www.wikidata.org', {'action': 'wbgetentities', 'ids': '|'.join(vl[i:i+50]),
@@ -61,6 +62,13 @@ def main():
                 coords[q] = (v['latitude'], v['longitude'])
             except (KeyError, TypeError, IndexError):
                 pass
+            try:
+                # prefer the preferred-rank capacity claim, else the first
+                cl = ent['claims']['P1083']
+                pick = next((x for x in cl if x.get('rank') == 'preferred'), cl[0])
+                caps[q] = int(float(pick['mainsnak']['datavalue']['value']['amount']))
+            except (KeyError, TypeError, IndexError, ValueError, StopIteration):
+                pass
         time.sleep(0.8)
     fixed = 0
     for c in targets:
@@ -69,7 +77,9 @@ def main():
         if ll and 20 < ll[0] < 55 and -130 < ll[1] < -60:
             c['la'] = round(ll[0], 4); c['lo'] = round(ll[1], 4); c['acc'] = 'v'
             fixed += 1
-    print(f'stadium-exact coordinates set: {fixed} of {len(targets)}')
+            if caps.get(vq): c['cap'] = caps[vq]
+            elif 'cap' in c: del c['cap']
+    print(f'stadium-exact coordinates set: {fixed} of {len(targets)}; capacity known: {sum(1 for c in targets if c.get("cap"))}')
     cur = cur[:cur.index('export const CLUBS=')] + 'export const CLUBS=' + \
         json.dumps(clubs, ensure_ascii=False, separators=(',', ':')) + ';\n' + \
         cur[cur.index('export const REGIONS='):]
