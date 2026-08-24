@@ -62,6 +62,9 @@ TEAM_QUALIFIER = {'white', 'black', 'blue', 'red', 'gold', 'silver', 'ii'}
 CITY_FIX = {'Middle Villages': 'Middle Village', 'Cinncinati': 'Cincinnati',
             # Pre-ECNL TGS feed typos
             'Penscola': 'Pensacola', 'North Rovalton': 'North Royalton'}
+# source state typos: (club, wrong st) -> right st. GA Aspire lists Sporting
+# Arkansas as 'Bentonville, AK'; preflight's state-box check caught the pin.
+STATE_FIX = {('Sporting Arkansas Soccer Club', 'AK'): 'AR'}
 # league-side placeholder rows that are not clubs (TGS shipped 'Test Club';
 # UPSL standings carry 'TBD' slots) — never let them into the dataset
 PLACEHOLDER_NAMES = {'test club', 'tbd', 'tbd fc', 'test',
@@ -268,6 +271,7 @@ def main():
             if r.get('city') and r['city'].strip().upper() == (r.get('st') or '').strip().upper():
                 log['no_geocode'].append(f"{r['name']} (city == state code)")
                 continue
+            r['st'] = STATE_FIX.get((r['name'].strip(), r.get('st')), r.get('st'))
             if r['st'] in adult_states.get(key, ()):
                 log['folded'].append(r['name'])
                 continue

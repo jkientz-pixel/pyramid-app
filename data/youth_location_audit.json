@@ -399,6 +399,11 @@
     "st": "CO",
     "source": "GA Aspire directory"
    },
+   "Hoover-Vestavia Soccer": {
+    "city": "Birmingham",
+    "st": "AL",
+    "source": "Ranked XI club record (mlsnext)"
+   },
    "Jacksonville FC": {
     "city": "Jacksonville",
     "st": "FL",
@@ -613,11 +618,6 @@
     "city": "Hillsboro",
     "st": "OR",
     "source": "club website https://www.hillsbororush.org/about-us/ ('located within the Hillsboro area since 1975')"
-   },
-   "Hoover-Vestavia Soccer": {
-    "city": "Birmingham",
-    "st": "AL",
-    "source": "club website https://www.hoovervestaviasoccer.com/about (office: 1973 Merryvale Road, Birmingham, AL 35216; mailing: 1090 Montgomery Highway, Birmingham, AL 35216)"
    },
    "Houston Futsal Club": {
     "city": "Houston",
