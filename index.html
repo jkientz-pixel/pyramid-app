@@ -93,7 +93,6 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
       <a class="ghost" href="/app#/table">See the national table</a>
       <a class="ghost" href="/us-soccer-pyramid">The pyramid, ranked</a>
       <a class="ghost" href="#join">Get launch updates</a>
-      <a class="ghost" href="#" id="installbtn" hidden>Install the app</a>
       <a class="playbadge" href="https://play.google.com/store/apps/details?id=com.rankedxi.app"><img src="/google-play-badge.png?v=__RXIV__" alt="Get it on Google Play" width="134" height="52" loading="eager"></a>
       <a class="iosbadge" href="#get-ios" id="get-ios" aria-expanded="false" aria-controls="ioshowto"><svg viewBox="0 0 22 34" aria-hidden="true"><rect x="1.2" y="1.2" width="19.6" height="31.6" rx="4.2" fill="none" stroke="#fff" stroke-width="1.7"/><line x1="8" y1="28.4" x2="14" y2="28.4" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg><span><i>Get it on</i><b>iPhone &amp; iPad</b></span></a>
     </div>
@@ -262,41 +261,30 @@ joinForm.addEventListener('submit', async e => {
   } catch { joinMsg.textContent = 'Could not save right now — please try again.'; }
 });
 
-/* Install affordance: Chrome/Android fires beforeinstallprompt for a one-tap
-   install; iOS never does, so Safari-on-iOS gets Share→Add-to-Home-Screen
-   instructions instead. Hidden entirely when already running installed. */
+/* Install affordances. The two store-style badges are the whole story:
+   Google Play for Android, the iPhone badge toggling Share→Add-to-Home-Screen
+   steps for iOS. A third "Install the app" ghost (Chrome's
+   beforeinstallprompt one-tap) used to join them and read as redundant —
+   removed 2026-08-24; desktop Chrome PWA installs still work from the
+   browser's own omnibox install icon. */
 (() => {
-  const btn = document.getElementById('installbtn');
   const howto = document.getElementById('ioshowto');
-  if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) return;
-  let deferred = null;
-  addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; btn.hidden = false; });
-  /* The ghost button now exists only for Chrome's native one-tap install
-     (beforeinstallprompt). iOS visitors get the always-visible iPhone badge
-     below instead — two install buttons saying the same thing is one too many. */
-  btn.addEventListener('click', e => {
-    e.preventDefault();
-    if (deferred) { deferred.prompt(); deferred = null; btn.hidden = true; }
-    else howto.hidden = !howto.hidden;
-  });
-  /* The iPhone badge and the banner link are always visible — Android/desktop
-     visitors get the instructions too, because the phone they install on is
-     rarely the machine they are reading on. */
   const ios = document.getElementById('get-ios');
   const barlink = document.getElementById('iosbarlink');
-  const showHowto = e => {
-    e.preventDefault();
-    howto.hidden = false;
-    ios.setAttribute('aria-expanded', 'true');
-    howto.scrollIntoView({ block: 'center', behavior: 'smooth' });
-  };
+  if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) return;
   ios.addEventListener('click', e => {
     e.preventDefault();
     howto.hidden = !howto.hidden;
     ios.setAttribute('aria-expanded', String(!howto.hidden));
   });
-  if (barlink) barlink.addEventListener('click', showHowto);
-  addEventListener('appinstalled', () => { btn.hidden = true; });
+  /* Banner link: always reveal + scroll, never toggle — from the top of the
+     page the sheet is off-screen, and a toggle would hide it half the time. */
+  if (barlink) barlink.addEventListener('click', e => {
+    e.preventDefault();
+    howto.hidden = false;
+    ios.setAttribute('aria-expanded', 'true');
+    howto.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  });
 })();
 </script>
 <script>
