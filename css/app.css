@@ -1113,3 +1113,8 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 .pmslot:empty{display:none}
 .match.resrow .pmtoggle{margin-top:8px}
 @media (max-width:640px){.pm-elorow{font-size:.78rem}}
+.pm-full{color:var(--accent);font-weight:600}
+.pm-reset[hidden]{display:none}
+/* inside the panel the pitch shrinks to the column instead of scrolling
+   sideways — a phone shows the whole match, smaller, rather than one box */
+.pm .sh-pitch{min-width:0}

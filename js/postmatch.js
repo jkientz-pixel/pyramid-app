@@ -214,7 +214,12 @@ export function shotPanel(root, { shots, home, away, ids = 'sh', filters, onFilt
     const svg = $('race');
     if (!shots.length) { svg.innerHTML = ''; return; }
     const maxMin = Math.max(90, ...shots.map(s => s.minute || 0)) + 1;
-    const padL = 34, padR = 12, padT = 10, padB = 24, w = 600, h = 170;
+    /* narrow columns get a narrower viewBox so the labels stay legible
+       instead of scaling down with the chart */
+    const narrow = (root.clientWidth || 600) < 520;
+    const w = narrow ? 360 : 600, h = narrow ? 150 : 170;
+    const padL = 34, padR = 12, padT = 10, padB = 24;
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
     const series = [home, away].map((t, i) => {
       const mine = shown.filter(s => (s.team === home.id) === (i === 0)).sort((a, b) => a.minute - b.minute);
       let acc = 0;
