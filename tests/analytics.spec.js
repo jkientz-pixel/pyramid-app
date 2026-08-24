@@ -58,7 +58,7 @@ test('the pageview ping carries no identifying data', async ({ page }) => {
   // Tests run against localhost, where the tag deliberately stays silent.
   // What must hold is that anything it *does* send has no PII-shaped fields.
   for (const b of bodies) {
-    expect(Object.keys(b).sort()).toEqual(['n', 'p', 'r', 's', 'v']);
+    expect(Object.keys(b).sort()).toEqual(['c', 'n', 'p', 'r', 's', 'v', 'w']);
     expect(String(b.v)).toMatch(/^[a-z0-9]{8,32}$/);
     expect(String(b.s)).toMatch(/^[a-z0-9]{8,32}$/);
     expect(JSON.stringify(b)).not.toMatch(/@|email|name|ip\b/i);

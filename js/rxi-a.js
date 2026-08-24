@@ -78,6 +78,18 @@
      nulled after the landing pageview so the tag is not stamped on every hit. */
   try { window.__rxiSrc = src; } catch (e) {}
 
+  /* Installed-app pageview or browser-tab pageview. display-mode:standalone is
+     true inside the Android TWA and an iOS/desktop PWA launched from the home
+     screen; navigator.standalone is the legacy iOS Safari spelling. This one
+     bit is what separates "has the app" from "visited the site" — the metric
+     the store download count only pretends to be. */
+  var pwa = (function () {
+    try {
+      return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) ||
+             navigator.standalone === true;
+    } catch (e) { return false; }
+  })();
+
   var last = '';
   function send() {
     var path = location.pathname + (location.hash.indexOf('#/') === 0 ? location.hash : '');
@@ -90,7 +102,8 @@
       v: vid,
       s: sid,
       n: fresh,
-      c: src
+      c: src,
+      w: pwa
     });
     fresh = false; /* only the very first pageview of a new visitor counts as new */
     /* Only the landing pageview carries the source. Later hits in the same

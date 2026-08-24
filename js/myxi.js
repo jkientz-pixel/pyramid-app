@@ -42,6 +42,10 @@ const SOCIALS = [
    format that has to round-trip against itself is how a share link and a
    synced account quietly stop agreeing. */
 const SEEN_KEY = 'rxi-myxi-seen';
+/* push code loads lazily like account.js: a visitor who never touches match
+   alerts never downloads the code that runs them */
+let _push;
+const pushMod = () => _push ||= import('./push.js?v=__RXIV__');
 const XI = 11;
 /* Deltas are "since your last visit", not "since the last render". Re-opening
    the tab inside this window keeps showing the same baseline instead of
@@ -193,6 +197,7 @@ export async function render(view, ctx) {
     + extrasBlock()
     + `<div id="mx-wire"></div>`
     + homeBlock()
+    + `<div id="mx-alerts"></div>`
     + accountBlock()
     + shareBlock()
     + socialBlock()
@@ -215,6 +220,7 @@ export async function render(view, ctx) {
 
   renderNext();
   renderWire();
+  renderAlerts();
   wire();
 
   /* ---- blocks ----------------------------------------------------------- */
@@ -389,6 +395,68 @@ export async function render(view, ctx) {
       <p class="note" style="margin:2px 0 10px">No verified fixture for your clubs in the next two weeks. Here's the one
          the model would most like to see &mdash; ${esc(h.n)} against their nearest rival. Not a scheduled game.</p>`
       + matchCard(h, a, `${milesApart(h, a)} MI APART`);
+  }
+
+  /* Match alerts: the one reason an installed app gets reopened. All states
+     are real states of the visitor's browser, not marketing:
+       install — iOS Safari tab, push only exists once the PWA is on the home
+                 screen, so the card points at the install affordance above
+       denied  — notifications blocked at the OS level; a button would lie
+       on/ok   — the toggle. Enabling asks permission inside the tap handler
+                 because iOS refuses a request that isn't a user gesture. */
+  async function renderAlerts() {
+    const box = view.querySelector('#mx-alerts'); if (!box) return;
+    if (!clubs.length) { box.innerHTML = ''; return; }
+    let push;
+    try { push = await pushMod(); } catch { box.innerHTML = ''; return; }
+    const st = await push.support();
+    if (!view.querySelector('#mx-alerts')) return;   /* routed away mid-load */
+    if (st === 'no') { box.innerHTML = ''; return; }
+
+    const kicker = `<div class="kicker" style="margin-top:20px">Match alerts</div>`;
+    if (st === 'install') {
+      box.innerHTML = kicker + `<p class="note" style="margin:2px 0 0">On iPhone, alerts need
+        the installed app &mdash; use <b>Get the app</b> above (Share &rarr; Add to Home Screen),
+        then turn alerts on from there.</p>`;
+      return;
+    }
+    if (st === 'denied') {
+      box.innerHTML = kicker + `<p class="note" style="margin:2px 0 0">Notifications are turned
+        off for Ranked XI in your device settings &mdash; allow them there and this switch comes back.</p>`;
+      return;
+    }
+
+    const on = st === 'on';
+    /* subscribed visitors sync their club list on every My XI visit, so a
+       club followed last week gets alerts without any extra plumbing */
+    if (on) push.sync(favs().clubs);
+
+    box.innerHTML = kicker + `
+      <p class="note" style="margin:2px 0 8px">One notification on match day when a club you
+        follow plays &mdash; straight from the league fixture feeds. No email, no account;
+        turning it off deletes the subscription entirely.</p>
+      <div class="btnrow">
+        <button type="button" id="mxalerts" class="${on ? 'chip solid' : 'joinbtn'}">${
+          on ? 'Alerts on \u00b7 turn off' : '\ud83d\udd14 Turn on match alerts'}</button>
+      </div>
+      <p class="note" id="mxalertmsg" style="margin:6px 0 0"></p>`;
+
+    box.querySelector('#mxalerts').addEventListener('click', async () => {
+      const btn = box.querySelector('#mxalerts'), msg = box.querySelector('#mxalertmsg');
+      btn.disabled = true;
+      try {
+        if (on) { await push.disable(); }
+        else { await push.enable(favs().clubs); }
+        renderAlerts();
+      } catch {
+        /* keep the card, surface the failure — re-rendering here would wipe
+           the message before anyone could read it. Denied-permission lands
+           here too (enable throws on a non-granted prompt) and the wording
+           has to cover both. */
+        btn.disabled = false;
+        msg.textContent = 'That didn\u2019t take \u2014 notifications may be blocked, or try again in a moment.';
+      }
+    });
   }
 
   async function renderWire() {

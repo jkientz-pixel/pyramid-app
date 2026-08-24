@@ -1,0 +1,21 @@
+-- Installed-app pageviews (2026-08-23).
+--
+-- Why this exists: the Play Store reported 49 installs while the hits table
+-- showed roughly one active TWA user, and the Sep 2026 iOS decision now rides
+-- on *retained installed users*, not store download counts. Downloads are a
+-- vanity metric; this column records the real one.
+--
+-- `pwa` is 1 when the pageview happened inside an installed app surface —
+-- the browser reports display-mode: standalone, which is true for the Android
+-- TWA and for an iOS/desktop PWA launched from the home screen or dock — and
+-- 0 for an ordinary browser tab. One flag covers every install route, so
+-- "installed sessions by platform" is a single GROUP BY.
+--
+-- The flag comes from the client (display-mode is invisible server-side).
+-- A liar can set it; a liar could already invent whole pageviews, and nothing
+-- here identifies a person, so the honesty model is unchanged.
+--
+-- NOTE: SQLite has no ADD COLUMN IF NOT EXISTS. Re-running this fails with
+-- "duplicate column name: pwa" and changes nothing, which is the safe outcome.
+
+ALTER TABLE hits ADD COLUMN pwa INTEGER NOT NULL DEFAULT 0;
