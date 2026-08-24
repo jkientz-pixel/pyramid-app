@@ -30,6 +30,21 @@ club/
 league/
 state/
 og/
+
+# gen_seo_pages.py rewrites these six in full on every deploy (deploy.sh runs it
+# before it stages), and stamps today's date into each one. Tracking them meant
+# every branch picked up a spurious diff the moment the data moved or the day
+# rolled over — PR #92 changed js/data.js and left four of them stale in git,
+# while production stayed correct because the deploy regenerates regardless.
+# Same reasoning as club/ league/ state/ above: generated, so not committed.
+# index.html, app.html and methodology.html are NOT here — those are
+# hand-written pages the generator patches counts into, not files it owns.
+about.html
+faq.html
+npsl-rankings.html
+terms.html
+upsl-rankings.html
+us-soccer-pyramid.html
 .venv/
 crests/_svg_tmp/
 
