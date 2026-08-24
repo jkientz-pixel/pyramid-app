@@ -7,6 +7,7 @@ ship a broken or stale build. Checks:
   3. every data/*.json the app fetches exists and parses.
 """
 import json, re, pathlib, subprocess, sys
+import html as html_mod
 import cachebust
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -275,6 +276,125 @@ try:
               f'{len(generated)} via generator)')
 except Exception as e:
     fail.append(f'deploy staging check: {e}')
+
+# ---------------------------------------------------------------- SEO gates
+# The 2026-08-23 SEO/AEO audit found four classes of defect that ship silently
+# across thousands of pages at once, because nothing reads the generated HTML
+# back: a title too long for a SERP line, an empty description, a JSON-LD URL
+# that 404s (GA Aspire's memberOf pointed at /league/gaa, which has never
+# existed), and the brand spelled four different ways. All four are cheap to
+# check here and impossible to notice by eye on 4,400 files.
+#
+# CI runs preflight on a clean checkout where club/ league/ state/ are absent
+# (they are gitignored build output), so the scan reports and skips rather
+# than failing when there is nothing generated to read.
+try:
+    import seo_common as _S
+
+    gen_dirs_present = [d for d in ('club', 'league', 'state') if (ROOT / d).is_dir()]
+    top_pages = [f for f in ('index.html', 'app.html', 'methodology.html', 'privacy.html',
+                             'about.html', 'faq.html', 'terms.html', 'us-soccer-pyramid.html',
+                             'upsl-rankings.html', 'npsl-rankings.html', 'shots.html',
+                             'radar.html', 'player-simulator.html') if (ROOT / f).exists()]
+
+    def _pages():
+        for f in top_pages:
+            yield ROOT / f
+        for d in gen_dirs_present:
+            yield from sorted((ROOT / d).glob('*.html'))
+
+    # every local page path this build actually produced, for resolving the
+    # URLs that appear inside JSON-LD
+    produced = {'/', '/app'}
+    produced |= {'/' + f[:-5] for f in top_pages if f not in ('index.html', 'app.html')}
+    for d in gen_dirs_present:
+        produced |= {f'/{d}/{x.stem}' for x in (ROOT / d).glob('*.html')}
+
+    long_titles, no_desc, no_canon, no_og, bad_ld, brand = [], [], [], [], [], []
+    _TITLE = re.compile(r'<title>(.*?)</title>', re.S)
+    _DESC = re.compile(r'<meta name="description" content="(.*?)">', re.S)
+    _LD = re.compile(r'<script type="application/ld\+json">(.*?)</script>', re.S)
+    _URL = re.compile(r'"url":\s*"https://www\.rankedxi\.com([^"]*)"')
+    checked = 0
+    for path in _pages():
+        body = path.read_text()
+        checked += 1
+        rel = path.relative_to(ROOT).as_posix()
+        m = _TITLE.search(body)
+        title = html_mod.unescape(m.group(1)) if m else ''
+        if not title:
+            long_titles.append(f'{rel}: no <title>')
+        elif len(title) > _S.TITLE_MAX:
+            long_titles.append(f'{rel}: {len(title)} chars')
+        d = _DESC.search(body)
+        if not d or not d.group(1).strip():
+            no_desc.append(rel)
+        if '<link rel="canonical"' not in body:
+            no_canon.append(rel)
+        if 'property="og:url"' not in body:
+            no_og.append(rel)
+        # "Rank XI" was the Dataset creator name while every visible surface
+        # said "Ranked XI". An entity that answers to two names gets no
+        # Knowledge Graph entry and no citation (audit section 5).
+        if re.search(r'\bRank XI\b', body):
+            brand.append(rel)
+        # a URL inside JSON-LD that this build did not produce is a 404 handed
+        # to every crawler that reads the page
+        for blob in _LD.findall(body):
+            for u in _URL.findall(blob):
+                probe = u.split('#')[0].split('?')[0]
+                if not probe:
+                    continue
+                if probe != '/':
+                    probe = probe.rstrip('/')
+                if '.' in probe.rsplit('/', 1)[-1]:
+                    # an asset (logo, crest, share card), not a page: the test
+                    # is whether the file ships, not whether it is a route
+                    if not (ROOT / probe.lstrip('/')).exists():
+                        bad_ld.append(f'{rel} -> {probe} (file missing)')
+                elif probe not in produced:
+                    bad_ld.append(f'{rel} -> {probe}')
+
+    def _cap(items, n=6):
+        return ', '.join(items[:n]) + (f' (+{len(items) - n} more)' if len(items) > n else '')
+
+    if long_titles:
+        fail.append(f'titles over {_S.TITLE_MAX} chars (Google truncates): {_cap(long_titles)}')
+    if no_desc:
+        fail.append(f'pages with an empty meta description: {_cap(no_desc)}')
+    if no_canon:
+        fail.append(f'pages with no canonical: {_cap(no_canon)}')
+    if no_og:
+        fail.append(f'pages missing og:url (share unfurls the wrong document): {_cap(no_og)}')
+    if brand:
+        fail.append(f'"Rank XI" (the old, wrong entity name) appears in: {_cap(brand)}')
+    if bad_ld:
+        fail.append(f'JSON-LD points at URLs this build did not produce: {_cap(sorted(set(bad_ld)))}')
+    if checked and not (long_titles or no_desc or no_canon or no_og or brand or bad_ld):
+        print(f'  SEO: {checked} pages — titles fit, descriptions set, canonical + og:url '
+              f'present, one brand name, no 404s in JSON-LD')
+    if not gen_dirs_present:
+        print('  SEO: club/league/state not generated in this checkout — leaf pages not scanned')
+
+    # the sitemap is an index now: every child it names must exist and be
+    # staged, or a crawler follows the index into a 404
+    smap_txt = (ROOT / 'sitemap.xml').read_text()
+    kids = re.findall(r'<loc>https://www\.rankedxi\.com/(sitemap-[a-z0-9-]+\.xml)</loc>', smap_txt)
+    if '<sitemapindex' in smap_txt:
+        missing_kids = [k for k in kids if not (ROOT / k).exists()]
+        if missing_kids:
+            fail.append(f'sitemap index names children that do not exist: {missing_kids}')
+        dep_txt = (ROOT / 'deploy.sh').read_text()
+        if 'sitemap-*.xml' not in dep_txt and any(k not in dep_txt for k in kids):
+            fail.append('deploy.sh does not stage the sitemap index children — '
+                        'the index would point at 404s in production')
+        if not missing_kids:
+            locs = sum(len(re.findall(r'<loc>', (ROOT / k).read_text())) for k in kids)
+            print(f'  sitemap index OK — {len(kids)} children, {locs} urls, all present + staged')
+    else:
+        fail.append('sitemap.xml is not a sitemap index (gen_club_pages.py should emit one)')
+except Exception as e:
+    fail.append(f'SEO gate: {e}')
 
 if fail:
     print('\nPREFLIGHT FAILED:', file=sys.stderr)

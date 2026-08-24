@@ -11,8 +11,9 @@
   # without it the CSP blocked every Wikipedia-sourced image on player pages
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://tile.openstreetmap.org https://server.arcgisonline.com https://upload.wikimedia.org; connect-src 'self'; font-src 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'
 
-# HTML and the service worker must revalidate on every load — a long-cached
-# document would pin users to old asset URLs after a deploy.
+# The app shell must revalidate on every load: a long-cached index.html or
+# app.html would pin a returning user to the previous deploy's asset URLs and,
+# for the PWA, to the previous service worker.
 /
   Cache-Control: no-cache
 /app
@@ -21,32 +22,56 @@
   Cache-Control: no-cache
 /index.html
   Cache-Control: no-cache
-/npsl-rankings
-  Cache-Control: no-cache
-/npsl-rankings.html
-  Cache-Control: no-cache
-/upsl-rankings
-  Cache-Control: no-cache
-/upsl-rankings.html
-  Cache-Control: no-cache
-/privacy
-  Cache-Control: no-cache
-/privacy.html
-  Cache-Control: no-cache
 /sw.js
   Cache-Control: no-cache
 
-# generated per deploy, no version tokens — must revalidate
+# The generated tree is a different case. These 4,400 documents change once per
+# data run, carry no app state, and were served no-cache — so every crawler hit
+# and every visit paid a full origin round trip on the pages that ARE the
+# search surface (2026-08-23 audit, T6). Five minutes fresh with a day of
+# stale-while-revalidate keeps them fast at the edge while still turning over
+# within one deploy cycle. Asset URLs inside them stay valid regardless: /js
+# and /css are immutable and every past token remains fetchable.
 /club/*
-  Cache-Control: no-cache
-/og/*
-  Cache-Control: no-cache
-/sitemap.xml
-  Cache-Control: no-cache
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+/league/*
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+/state/*
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+/npsl-rankings
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+/npsl-rankings.html
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+/upsl-rankings
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+/upsl-rankings.html
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+/us-soccer-pyramid
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+/us-soccer-pyramid.html
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+
+# Prose pages: they change when someone edits them, not when data moves.
 /methodology
-  Cache-Control: no-cache
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
 /methodology.html
-  Cache-Control: no-cache
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
+/privacy
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
+/privacy.html
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
+/about
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
+/about.html
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
+/faq
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
+/faq.html
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
+/terms
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
+/terms.html
+  Cache-Control: public, max-age=600, stale-while-revalidate=86400
 /coach
   Cache-Control: no-cache
 /coach.html
@@ -55,6 +80,18 @@
   Cache-Control: no-cache
 /shots.html
   Cache-Control: no-cache
+
+# Share cards and the sitemap tree are regenerated every deploy.
+/og/*
+  Cache-Control: no-cache
+/sitemap.xml
+  Cache-Control: no-cache
+/sitemap-*.xml
+  Cache-Control: no-cache
+/robots.txt
+  Cache-Control: public, max-age=3600
+/llms.txt
+  Cache-Control: public, max-age=3600
 
 # Everything below is referenced with a ?v= token that deploy.sh re-stamps on
 # every deploy (scripts/cachebust.py), so the URL changes whenever content

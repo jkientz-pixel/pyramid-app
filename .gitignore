@@ -35,3 +35,4 @@ crests/_svg_tmp/
 
 # wrangler local secrets for the accounts endpoints (never commit)
 .dev.vars
+indexnow.json

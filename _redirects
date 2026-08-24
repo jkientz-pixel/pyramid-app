@@ -1,3 +1,13 @@
 # The tool shipped as "Player Coach" at /coach on 2026-08-17 and was renamed
 # to Player Simulator, which pairs with Rank Simulator. Old URL keeps working.
 /coach /player-simulator 301
+
+# The two leagues with hand-tuned national tables live at their query-matching
+# slugs, not under /league/. Schema, older links and humans guessing the URL
+# pattern all end up at /league/npsl — 301 rather than 404 (audit, section 6).
+/league/npsl /npsl-rankings 301
+/league/upsl /upsl-rankings 301
+# The legal screen was only reachable as a hash route, which is not an
+# indexable document. /terms is now the crawlable copy.
+/legal /terms 301
+/app/legal /terms 301
