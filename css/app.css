@@ -496,6 +496,10 @@ a.wirelink:hover .side{color:var(--accent)}
 .leafmap{width:100%;aspect-ratio:980/580;height:auto}
 .leafmap[hidden]{display:none}
 .mapbox[data-mode="street"] svg.usmap,.mapbox[data-mode="street"] .mapctl,.mapbox[data-mode="street"] .maptip{display:none}
+/* loading = Leaflet on its way: same box, nothing painted in it yet. The
+   SVG stays hidden so the old illustrated map never flashes on a refresh. */
+.mapbox[data-mode="loading"] svg.usmap,.mapbox[data-mode="loading"] .mapctl,.mapbox[data-mode="loading"] .maptip{display:none}
+.mapbox[data-mode="loading"] .leafmap[hidden]{display:block}
 .leafmap .leaflet-tooltip{font:inherit;font-size:.8rem}
 /* water/void takes the app's own ground, not a generic slate, so the map box
    reads as part of the page instead of an embedded widget */

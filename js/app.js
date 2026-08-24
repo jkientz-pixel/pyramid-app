@@ -374,7 +374,14 @@ function renderMapSvg(clubs, useCrests, crestNear) {
       ? `<circle ${base} fill="none" stroke="${m.color}" stroke-width="1.6"></circle>`
       : `<circle ${base} fill="${m.color}" fill-opacity=".9"></circle>`;
   }).join('');
-  return `<div class="mapbox" data-mode="art"><svg class="usmap" viewBox="0 -20 980 580" role="img" aria-label="US and Canada soccer club map">${USMAP}${INSETS}<g id="pins">${pins}</g></svg>
+  /* The illustrated SVG is the offline fallback, not the first frame. It
+     used to be the initial mode, so every hard refresh painted the old map
+     until leaflet.js arrived and the box flipped to street — a visible
+     ghost of the previous cartography on slow connections. Start in
+     `loading` (an empty box at the map's aspect) or straight in `street`
+     when Leaflet is already resident; wireBasemap reveals the SVG only when
+     Leaflet cannot load. */
+  return `<div class="mapbox" data-mode="${window.L ? 'street' : 'loading'}"><svg class="usmap" viewBox="0 -20 980 580" role="img" aria-label="US and Canada soccer club map">${USMAP}${INSETS}<g id="pins">${pins}</g></svg>
     <div class="leafmap" hidden aria-label="Street map of clubs"></div>
     <div class="mapctl"><button data-z="in" aria-label="Zoom in">+</button><button data-z="out" aria-label="Zoom out">&minus;</button><button data-z="reset" aria-label="Reset zoom">&#8634;</button></div>
     <div class="maptip" hidden></div></div>`;
@@ -833,8 +840,9 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     /* ?nobasemap=1 forces the offline path. The SVG fallback is not reachable
        through the UI any more, so this is the only way to prove it still
        renders — the tests that cover it use this, and nothing else does. */
-    if (/[?&]nobasemap=1/.test(location.search)) return;
-    try { await ensureLeaflet(); } catch { return; }
+    if (/[?&]nobasemap=1/.test(location.search)) { box.dataset.mode = 'art'; return; }
+    try { await ensureLeaflet(); } catch { box.dataset.mode = 'art'; return; }
+    if (!box.isConnected) return;   /* the reader routed away while leaflet.js was loading */
     box.dataset.mode = 'street';
     leafEl.hidden = false;
     if (!leafMap) buildLeaf(); else leafMap.invalidateSize();
