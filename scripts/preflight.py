@@ -376,6 +376,23 @@ try:
     if not gen_dirs_present:
         print('  SEO: club/league/state not generated in this checkout — leaf pages not scanned')
 
+    # Favicon drift. The favicon set is hand-written into every static page
+    # rather than injected, so a page added or edited without copying the
+    # current block silently keeps an older one. That is not cosmetic: when the
+    # only icon links carry a `sizes` attribute and none is tab-sized, Chrome
+    # ignores all of them and requests /favicon.ico, so a drifted page shows the
+    # generic globe. It shipped that way on 6 pages — the 2026-08-23 fix updated
+    # index/app and missed methodology, privacy, shots, radar, player-simulator
+    # and 404 (which still served a soccer-ball emoji). 404.html is checked here
+    # even though the SEO scan above skips it: a 404 is a real rendered tab.
+    icon_drift = [f for f in top_pages + ['404.html']
+                  if (ROOT / f).exists() and _S.ICONS not in (ROOT / f).read_text()]
+    if icon_drift:
+        fail.append('pages whose favicon block has drifted from seo_common.ICONS '
+                    f'(Chrome falls back to /favicon.ico and shows a generic tab): {_cap(icon_drift)}')
+    else:
+        print(f'  favicon: seo_common.ICONS intact on {len(top_pages) + 1} static pages')
+
     # the sitemap is an index now: every child it names must exist and be
     # staged, or a crawler follows the index into a 404
     smap_txt = (ROOT / 'sitemap.xml').read_text()
