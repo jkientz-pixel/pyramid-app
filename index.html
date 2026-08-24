@@ -43,16 +43,24 @@ h1{font-size:clamp(2.6rem,6vw,5rem);line-height:.95;margin:.2em 0}
 .playbar b{color:#F2C078}
 .playbar a{color:#F2C078;font-weight:700;text-decoration:underline;white-space:nowrap}
 .playbadge{display:inline-flex;align-items:center}
-.playbadge img{display:block;border-radius:8px}
+/* The Play PNG bakes a transparent clear-space frame into the file: at any
+   rendered size the visible black badge is 87% x 67% of the box. Scale it so
+   the visible badge is 52px tall — the iPhone badge's exact height — and
+   cancel the frame with negative margins so the flex gap measures from the
+   ink, not the padding. */
+.playbadge img{display:block;width:200px;height:auto;margin:-13px;border-radius:8px}
 /* iPhone badge: hand-built twin of the Play badge (Apple's official badge is
-   App Store-only, which this deliberately is not). Same 52px footprint so the
-   pair reads as one row of equals. */
-.iosbadge{display:inline-flex;align-items:center;gap:9px;height:52px;padding:0 16px 0 13px;
+   App Store-only, which this deliberately is not). Same 134x52 box as the
+   Play badge image so the pair reads as one row of equals — and the padding
+   is qualified with .cta-row because the generic `.cta-row a` padding rule
+   otherwise outranks a bare class and inflates the box. */
+.cta-row a.iosbadge,.iosbadge{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  width:134px;height:52px;padding:0;box-sizing:border-box;
   background:#000;border:1px solid #A6A6A6;border-radius:8px;text-decoration:none;color:#fff}
-.iosbadge svg{width:22px;height:34px;flex:none}
+.iosbadge svg{width:17px;height:27px;flex:none}
 .iosbadge span{display:flex;flex-direction:column;line-height:1.15;text-align:left}
-.iosbadge i{font-style:normal;font-size:.56rem;letter-spacing:.04em;text-transform:uppercase;opacity:.85}
-.iosbadge b{font-size:1.05rem;font-weight:600;letter-spacing:.01em;white-space:nowrap}
+.iosbadge i{font-style:normal;font-size:.5rem;letter-spacing:.04em;text-transform:uppercase;opacity:.85}
+.iosbadge b{font-size:.95rem;font-weight:600;letter-spacing:.01em;white-space:nowrap}
 .stats{display:flex;gap:28px;flex-wrap:wrap;color:var(--dim);font-size:.9rem}
 .stats b{display:block;color:var(--ink);font-size:1.5rem;font-variant-numeric:tabular-nums}
 .phone-wrap{display:flex;justify-content:center}
@@ -93,8 +101,8 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
       <a class="ghost" href="/app#/table">See the national table</a>
       <a class="ghost" href="/us-soccer-pyramid">The pyramid, ranked</a>
       <a class="ghost" href="#join">Get launch updates</a>
-      <a class="playbadge" href="https://play.google.com/store/apps/details?id=com.rankedxi.app"><img src="/google-play-badge.png?v=__RXIV__" alt="Get it on Google Play" width="134" height="52" loading="eager"></a>
-      <a class="iosbadge" href="#get-ios" id="get-ios" aria-expanded="false" aria-controls="ioshowto"><svg viewBox="0 0 22 34" aria-hidden="true"><rect x="1.2" y="1.2" width="19.6" height="31.6" rx="4.2" fill="none" stroke="#fff" stroke-width="1.7"/><line x1="8" y1="28.4" x2="14" y2="28.4" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg><span><i>Get it on</i><b>iPhone &amp; iPad</b></span></a>
+      <a class="playbadge" href="https://play.google.com/store/apps/details?id=com.rankedxi.app"><img src="/google-play-badge.png?v=__RXIV__" alt="Get it on Google Play" width="200" height="77" loading="eager"></a>
+      <a class="iosbadge" href="#get-ios" id="get-ios" aria-expanded="false" aria-controls="ioshowto"><svg viewBox="0 0 22 34" aria-hidden="true"><rect x="1.2" y="1.2" width="19.6" height="31.6" rx="4.2" fill="none" stroke="#fff" stroke-width="1.7"/><line x1="8" y1="28.4" x2="14" y2="28.4" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg><span><i>Get it on</i><b>iPhone</b></span></a>
     </div>
     <p id="ioshowto" hidden style="margin:-14px 0 26px;font-size:.85rem;color:var(--dim);border:1px solid var(--line);border-radius:12px;padding:10px 14px;max-width:520px">On iPhone or iPad: open this page in <b>Safari</b>, tap the <b>Share</b> button, then <b>"Add to Home Screen."</b> Ranked XI installs with its own icon, opens full-screen, and works offline — no app store needed.</p>
     <div class="stats">
