@@ -3,18 +3,19 @@ const { test, expect } = require('@playwright/test');
 const { trackErrors, viewRendered, gotoRoute } = require('./helpers');
 
 /* The Tools tab is a hub: it replaced the separate Predict and Sim tabs and is
-   the only in-app door to the other two tools. All four are app routes now —
+   the only in-app door to the other tools. All of them are app routes now —
    Player Coach and Shot Maps used to be standalone pages with their own
    palette. These tests guard the two things that silently break: a card losing
    its link, and the tab going dark on a screen that lives under it. */
 
-test('the Tools hub lists all five tools', async ({ page }) => {
+test('the Tools hub lists all six tools', async ({ page }) => {
   const errors = trackErrors(page);
   await gotoRoute(page, '#/tools');
   const cards = page.locator('.toolcard');
-  await expect(cards).toHaveCount(5);
+  await expect(cards).toHaveCount(6);
   for (const [name, href] of [
     ['Matchup Machine', '#/predict'],
+    ['Season Race', '#/race'],
     ['Rank Simulator', '#/sim'],
     ['Player Simulator', '#/player-sim'],
     ['Shot Maps', '#/shots'],
@@ -26,7 +27,7 @@ test('the Tools hub lists all five tools', async ({ page }) => {
 });
 
 test('every tool screen keeps the Tools tab lit', async ({ page }) => {
-  for (const hash of ['#/predict', '#/sim', '#/player-sim', '#/shots', '#/radar']) {
+  for (const hash of ['#/predict', '#/race', '#/sim', '#/player-sim', '#/shots', '#/radar']) {
     await gotoRoute(page, hash);
     await expect(page.locator('.tabbar a[data-tab="tools"]')).toHaveClass(/active/);
   }

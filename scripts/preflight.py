@@ -6,6 +6,7 @@ ship a broken or stale build. Checks:
      that needs it carries the placeholder deploy.sh stamps (see cachebust.py);
   3. every data/*.json the app fetches exists and parses.
 """
+import datetime as _dt
 import json, re, pathlib, subprocess, sys
 import html as html_mod
 import cachebust
@@ -85,6 +86,57 @@ for jf in re.findall(r"fetch\('(data/[^?']+)", (ROOT / 'js' / 'app.js').read_tex
         _data_ok = False
 if _data_ok:
     print('  fetched data/*.json OK')
+
+# 3b. Season Race inputs. The three files are only useful together: a league
+# in standings.json with no seasons.json entry renders nothing, and a season
+# length that disagrees with played + scheduled produces a projected
+# points-per-game above the 3.0 maximum (which is how the NWSL/USLC hardcoded
+# season lengths were caught).
+try:
+    _race_before = len(fail)
+    _sea = json.loads((ROOT / 'data' / 'seasons.json').read_text()).get('leagues', {})
+    _std = json.loads((ROOT / 'data' / 'standings.json').read_text()).get('leagues', {})
+    _sch = json.loads((ROOT / 'data' / 'schedule_rest.json').read_text()).get('fixtures', [])
+    _clubs = {c['id'] for c in json.loads(
+        re.search(r'export const CLUBS=(\[.*?\]);', (ROOT / 'js' / 'data.js').read_text(), re.S).group(1))}
+    orphan_lg = sorted(set(_std) - set(_sea))
+    if orphan_lg:
+        fail.append(f'standings.json has leagues with no seasons.json entry: {orphan_lg}')
+    bad_ids = {f[k] for f in _sch for k in ('h', 'a') if f[k] not in _clubs}
+    if bad_ids:
+        fail.append(f'schedule_rest.json points at {len(bad_ids)} unknown club ids: {sorted(bad_ids)[:4]}')
+    std_ids = {r['id'] for g in _std.values() for grp in g['groups'] for r in grp['rows']}
+    miss = sorted(std_ids - _clubs)
+    if miss:
+        fail.append(f'standings.json has {len(miss)} club ids not in data.js: {miss[:4]}')
+    today = _dt.date.today().isoformat()
+    stale = [f for f in _sch if f['d'] < today]
+    if stale:
+        fail.append(f'schedule_rest.json holds {len(stale)} fixtures before today — '
+                    'it must contain only games still to be played')
+    for lg, meta in _sea.items():
+        if lg not in _std:
+            continue
+        left = {}
+        for f in _sch:
+            if f.get('lg') != lg:
+                continue
+            for k in ('h', 'a'):
+                left[f[k]] = left.get(f[k], 0) + 1
+        for grp in _std[lg]['groups']:
+            for r in grp['rows']:
+                tot = r['gp'] + left.get(r['id'], 0)
+                if tot > meta['games']:
+                    fail.append(f'{lg}/{r["id"]}: {r["gp"]} played + {left.get(r["id"], 0)} '
+                                f'scheduled = {tot}, more than the {meta["games"]}-game season')
+                    break
+    if len(fail) == _race_before:
+        print(f'  season race OK - {len(_sea)} leagues, {len(std_ids)} clubs, '
+              f'{len(_sch)} fixtures still to play')
+except FileNotFoundError as e:
+    fail.append(f'season race data missing: {e}')
+except Exception as e:
+    fail.append(f'season race gate: {e}')
 
 # 4. cups.json structural sanity — the Wikipedia parser once shipped an MVP
 #    (a person) as an MLS Cup champion and future host cities as winners;

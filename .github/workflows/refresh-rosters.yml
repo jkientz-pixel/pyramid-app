@@ -32,6 +32,13 @@ jobs:
       # play". It exits non-zero if every feed errors, so an ESPN block fails
       # the run instead of quietly publishing an empty schedule.
       - run: python scripts/fetch_fixtures.py
+      # Season Race inputs: current standings, the schedule still to come, and
+      # each league's real season window. Same ESPN host and the same plain-UA
+      # rule as fixtures; it exits non-zero only if EVERY feed fails, so one
+      # league going quiet does not fail the run. Runs after fixtures so a
+      # rate-limited ESPN shows up on the fixtures step first, where the
+      # failure is more obvious.
+      - run: python scripts/fetch_race.py
       # a broken scrape must never silently publish stale or empty data:
       # the gate diffs the fresh files against HEAD and fails on collapse
       - name: Gate — refuse empty or shrunken data
