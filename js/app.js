@@ -276,7 +276,7 @@ window.submitInterest = (ev, f) => {
 /* crest-content generation: bump when crest PIXELS change under the same
    filename (e.g. a strip_crest_bg.py run) — crest URLs are cached immutable
    and cache-first, so only a new ?cv= reaches returning browsers */
-const CRESTV = '11';
+const CRESTV = '12';
 /* Venue line for the club header. `acc` is the location grade set by the data
    pipeline: 'v' = coordinates are the ground itself (Wikidata home-venue or a
    league portal venue), 'a' = approximate, unset = league-stated city only.
@@ -899,7 +899,7 @@ const LEVELS = {
   pro: ['mls', 'uslc', 'usl1', 'mnp', 'nisa', 'nwsl', 'uslw'],
   amateur: ['npsl', 'upsl', 'usl2', 'apsl', 'swpl', 'mpl', 'mwpl', 'cpl', 'cplw', 'gcpl', 'loc', 'csl', 'sfsfl', 'eplwa', 'lisfl', 'uslwl', 'wpsl', 'uws', 'uws2'],
   college: ['ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w'],
-  youth: ['mlsnext', 'ecnlb', 'ga', 'ecnlg', 'ea', 'ecrlb', 'ecrlg', 'gaa']
+  youth: ['mlsnext', 'ecnlb', 'ga', 'ecnlg', 'ea', 'ecrlb', 'ecrlg', 'gaa', 'pecnlb', 'pecnlg']
 };
 let level = 'all';
 /* illustrative-data quarantine chip — pair with .badge.d so nothing
@@ -2668,7 +2668,7 @@ const TIERS = {
          so no verifiable 2026 Premier roster exists — see usasa-elite-batch/bdsl.md. */
       'Buffalo & District SL', 'More regional leagues', 'State, city & rec leagues'] },
     { t: 'College', leagues: ['ncaa1', 'ncaa2', 'ncaa3', 'naia'] },
-    { t: 'Youth', leagues: ['mlsnext', 'ecnlb', 'ecrlb', 'ea'] }
+    { t: 'Youth', leagues: ['mlsnext', 'ecnlb', 'ecrlb', 'ea', 'pecnlb'] }
   ],
   w: [
     { t: 'Division I', pro: true, leagues: ['nwsl', 'uslw'] },
@@ -2676,7 +2676,7 @@ const TIERS = {
     { t: 'National amateur', leagues: ['uslwl', 'wpsl', 'uws'] },
     { t: 'Regional & emerging', leagues: ['uws2', 'cplw'], coming: ['More regional leagues'] },
     { t: 'College', leagues: ['ncaa1w', 'ncaa2w'], coming: ['D3 / NAIA women · next'] },
-    { t: 'Youth', leagues: ['ga', 'ecnlg', 'ecrlg', 'gaa'] }
+    { t: 'Youth', leagues: ['ga', 'ecnlg', 'ecrlg', 'gaa', 'pecnlg'] }
   ]
 };
 /* league page (#/league/:key): what the league is, where to watch it, and
