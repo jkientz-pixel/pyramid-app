@@ -17,6 +17,12 @@ than against this morning (which would show every club as unmoved).
   python3 scripts/snapshot_ranks.py           # rotate if due
   python3 scripts/snapshot_ranks.py --force   # rotate now (bootstrap)
   python3 scripts/snapshot_ranks.py --check   # report age, write nothing
+
+Every rotation also appends a column to data/rank_history.json — the per-club
+rating series the club page draws as a sparkline:
+  {"dates": [...], "clubs": {id: [r or null per date]}}
+A club is added the first time it is rated; a date it was unrated is null.
+Ratings only (no ranks) to keep the file small enough to fetch lazily.
 """
 import datetime
 import json
@@ -26,6 +32,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SNAP = os.path.join(ROOT, 'data', 'rank_snapshot.json')
+HIST = os.path.join(ROOT, 'data', 'rank_history.json')
 ROTATE_DAYS = 6      # a week's cadence with a day of slack for cron drift
 
 
@@ -45,6 +52,28 @@ def current():
         for i, c in enumerate(pool):
             nat[c['id']] = i + 1
     return {c['id']: [c['r'], nat[c['id']]] for c in rated}
+
+
+def append_history(today, cur):
+    """Add today's ratings as a new column; idempotent for a repeated date."""
+    try:
+        with open(HIST) as fh:
+            hist = json.load(fh)
+    except (OSError, ValueError):
+        hist = {'dates': [], 'clubs': {}}
+    if hist['dates'] and hist['dates'][-1] == today:
+        return hist
+    n = len(hist['dates'])
+    hist['dates'].append(today)
+    for cid, (r, _rank) in cur.items():
+        hist['clubs'].setdefault(cid, [None] * n).append(r)
+    for cid, ser in hist['clubs'].items():
+        if len(ser) < n + 1:
+            ser.append(None)
+    with open(HIST, 'w') as fh:
+        json.dump(hist, fh, separators=(',', ':'), sort_keys=True)
+    print(f'history: {len(hist["dates"])} dates, {len(hist["clubs"])} clubs')
+    return hist
 
 
 def load():
@@ -75,6 +104,7 @@ def main():
         return 0
 
     snap = {'date': today.isoformat(), 'clubs': current()}
+    append_history(snap['date'], snap['clubs'])
     os.makedirs(os.path.dirname(SNAP), exist_ok=True)
     with open(SNAP, 'w') as fh:
         json.dump(snap, fh, separators=(',', ':'), sort_keys=True)
