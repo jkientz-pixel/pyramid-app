@@ -104,6 +104,11 @@ test('the map viewport survives a club round-trip', async ({ page }) => {
   await gotoRoute(page, '#/map');
   const before = await zoomToPortland(page);
   await gotoRoute(page, '#/club/portland-timbers');
+  /* #view still holds the map's children the instant the hash changes, so
+     "has children" is already true and says nothing about the club. Wait for
+     the club screen itself, or Back races a render that has not happened yet
+     and this measures a round trip that never went anywhere. */
+  await page.waitForSelector('#view .clubhead');
   await page.goBack();
   await viewRendered(page);
   const after = await mapView(page);

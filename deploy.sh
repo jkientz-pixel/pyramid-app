@@ -140,11 +140,39 @@ verify_status "$LIVE/api/shots" 400 || vfail=1
 for f in "$STAGE"/data/*.json; do
   verify_url "$LIVE/data/$(basename "$f")?v=$NEWV" || vfail=1
 done
+# Everything above asks the pages.dev project domain. Nobody reads the site
+# there — the reader's URL is www.rankedxi.com, and it was never checked, so a
+# deploy could print "verified" while www still served the previous build
+# (observed 2026-08-23: / and /npsl-rankings sat on the old token for about a
+# minute after a green deploy).
+#
+# HTML ONLY, and deliberately so. /js, /css and /data are served
+# `immutable, max-age=31536000`, so asking www for js/app.js?v=$NEWV before the
+# build reaches the edge pins the OLD body under the NEW url for a year. Only
+# routes marked `no-cache` in _headers are safe to ask, and only those can give
+# an honest answer: /npsl-rankings and the rest of the generated tree are
+# max-age=300 + stale-while-revalidate, so they are *supposed* to serve the
+# previous copy for a few minutes and would fail this check on a clock rather
+# than on a defect. Never add an asset URL or a cached page to this list.
+verify_www() {
+  for i in $(seq 1 18); do          # ~90s, well past normal propagation
+    curl -sfL "https://www.rankedxi.com$1" | grep -q "$NEWV" && return 0
+    sleep 5
+  done
+  echo "DEPLOY VERIFY FAILED: www.rankedxi.com$1 still not serving v$NEWV" >&2
+  return 1
+}
+if [ "$DEPLOY_BRANCH" = "master" ]; then
+  for p in / /app; do            # the only two routes www serves DYNAMIC
+    verify_www "$p" || vfail=1
+  done
+fi
+
 if [ "$vfail" -ne 0 ]; then
   echo "DEPLOY VERIFY FAILED — live site disagrees with what was staged" >&2
   exit 1
 fi
-echo "verified: v$NEWV live, $(ls "$STAGE"/data/*.json | wc -l | tr -d ' ') data files serving 200"
+echo "verified: v$NEWV live on $LIVE$([ "$DEPLOY_BRANCH" = master ] && echo " and www.rankedxi.com"), $(ls "$STAGE"/data/*.json | wc -l | tr -d ' ') data files serving 200"
 
 # Tell Bing/Yandex/Seznam what changed instead of waiting to be crawled. Google
 # ignores IndexNow, so this is a cheap extra rather than a strategy, and a

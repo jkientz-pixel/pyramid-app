@@ -20,7 +20,7 @@ still YYYYMMDD-prefixed so index.html's footer can slice a date out of them.
   --placeholder      print the placeholder that source files carry
   --mint             print a fresh token
   --stamp DIR TOKEN  replace the placeholder with TOKEN across DIR
-  --check [PATHS]    fail if any path carries a literal token
+  --check [PATHS]    fail if any path carries a token that is not the placeholder
 """
 import sys, os, re, datetime, pathlib
 
@@ -30,7 +30,14 @@ PLACEHOLDER = '__RXIV__'
 # ship carrying one of these again — a literal token in source is exactly the
 # frozen-asset bug the placeholder exists to prevent, because /js/* and /css/*
 # are served immutable for a year.
-LEGACY_TOKEN = re.compile(r'2026\d{4}[a-z]')
+LEGACY_TOKEN = re.compile(r'20\d{6}[a-z]')
+
+# Every ?v= in source must be the placeholder. LEGACY_TOKEN only knows the one
+# shape deploy.sh used to commit, so it had nothing to say about
+# /google-play-badge.png?v=day0 — which shipped a hand-written token for months
+# without preflight ever objecting. This rule catches whatever the next hand
+# edit invents, in the only place a token can actually freeze an asset.
+TOKEN_PARAM = re.compile(r'[?&]v=([A-Za-z0-9_.\-]+)')
 
 # text that actually carries the token: page markup and the js modules that
 # import other modules with a ?v=. Data JSON and binary assets never do.
@@ -72,10 +79,13 @@ def check(paths):
     for path in paths:
         p = pathlib.Path(path)
         for f in ([p] if p.is_file() else _walk(p)):
-            found = set(LEGACY_TOKEN.findall(
-                f.read_text(encoding='utf-8', errors='surrogateescape')))
+            t = f.read_text(encoding='utf-8', errors='surrogateescape')
+            found = set(LEGACY_TOKEN.findall(t))
             if found:
                 bad.append(f'{f}: literal token {sorted(found)}')
+            hand = sorted({v for v in TOKEN_PARAM.findall(t) if v != PLACEHOLDER})
+            if hand:
+                bad.append(f'{f}: hand-written ?v= {hand} — must be {PLACEHOLDER}')
     return bad
 
 
