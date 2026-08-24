@@ -141,6 +141,26 @@ def main():
         (resolved['mlsnext_academy'].__setitem__(name, hit) if hit
          else unresolved['mlsnext_academy'].append(name))
 
+    # Club-website resolutions (scripts write data/youth_location_sites.json:
+    # {league: {name: {city, st, source: 'club website <url>', url}}}). A city
+    # the club states about itself on its own site is club-stated, not
+    # guessed — the source URL is recorded per club. Applied last so an
+    # official league directory always wins when both exist.
+    sp = os.path.join(ROOT, 'data', 'youth_location_sites.json')
+    if os.path.exists(sp):
+        sites = json.load(open(sp))
+        for lg in resolved:
+            hits = sites.get(lg, {})
+            still = []
+            for name in unresolved[lg]:
+                hit = hits.get(name)
+                if hit and hit.get('city') and hit.get('st'):
+                    resolved[lg][name] = {'city': hit['city'], 'st': hit['st'],
+                                          'source': hit['source']}
+                else:
+                    still.append(name)
+            unresolved[lg] = still
+
     json.dump({'_source': 'cross-league join against official league club '
                           'directories (TGS orgIDs 12/9/16/13/22/21, GA, GA '
                           'Aspire) plus verified-location club records already '
