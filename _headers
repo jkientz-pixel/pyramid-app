@@ -22,6 +22,14 @@
   Cache-Control: no-cache
 /index.html
   Cache-Control: no-cache
+# Pages honours this and rank-xi.pages.dev does serve sw.js no-cache, but the
+# Cloudflare zone in front of www.rankedxi.com overrides Cache-Control for
+# static-extension responses and www returns max-age=14400 (so does robots.txt,
+# 3600 -> 14400). Harmless today: app.html registers the worker with no
+# updateViaCache, so the default 'imports' applies and the main script bypasses
+# the HTTP cache on every update check. It stops being harmless the moment
+# anyone sets updateViaCache:'all'. The fix is Browser Cache TTL =
+# "Respect Existing Headers" in the zone's Caching settings, not this file.
 /sw.js
   Cache-Control: no-cache
 
