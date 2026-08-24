@@ -85,7 +85,7 @@ print('  rosters.js OK')
 # hours go red, back when the token was committed and master's advanced twice
 # a day under the roster refresh.
 CB_FILES = ['app.html', 'index.html', 'js/app.js', 'sw.js', 'js/myxi.js',
-            'js/account.js', 'privacy.html', 'methodology.html', 'shots.html',
+            'js/account.js', 'js/claim.js', 'privacy.html', 'methodology.html', 'shots.html',
             'radar.html', 'player-simulator.html', '404.html',
             'npsl-rankings.html', 'upsl-rankings.html']
 _cb_literal = cachebust.check([ROOT / f for f in CB_FILES])
@@ -99,6 +99,18 @@ if _cb_missing:
 if not _cb_literal and not _cb_missing:
     print(f'  cache-bust: {len(CB_FILES)} files carry {cachebust.PLACEHOLDER}, '
           f'no literal tokens')
+
+# lib/club_domains.json is the server-side truth /api/claim compares a
+# claimant's email domain against. It is generated from CLUBS (deploy.sh runs
+# scripts/gen_club_domains.py right before this) and must match the data that
+# ships, or a club whose website changed could verify the wrong people.
+import subprocess as _sp
+_cd = _sp.run([sys.executable, str(ROOT / 'scripts' / 'gen_club_domains.py'), '--check'],
+              capture_output=True, text=True)
+if _cd.returncode:
+    fail.append((_cd.stdout + _cd.stderr).strip() or 'lib/club_domains.json check failed')
+else:
+    print(_cd.stdout.rstrip())
 
 # This list is also what deploy.sh stages, so a path that matches the pattern
 # but does not exist kills the deploy at the cp. The pattern is blind to
