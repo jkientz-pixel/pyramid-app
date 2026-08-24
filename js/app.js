@@ -198,10 +198,12 @@ function venueHtml(c) {
   if (c.acc === 'a') return '<span class="sub vnote">~approx location</span>';
   if (c.acc !== 'v' || c.la == null) return '';
   const ll = `${c.la},${c.lo}`, q = encodeURIComponent(c.n);
+  /* Both links open the ground as a PLACE (pin + surroundings), not a
+     directions route — the user picks directions from there if they want. */
   return `<span class="vdot" title="Venue verified — pin is on the ground itself" aria-label="Venue verified">&#10003; venue</span>` +
     (c.cap ? `<span class="sub vnote">Capacity ${Number(c.cap).toLocaleString()}</span>` : '') +
-    `<span class="navlinks"><a href="https://maps.apple.com/?daddr=${ll}&q=${q}" target="_blank" rel="noopener">Apple Maps &nearr;</a>` +
-    `<a href="https://www.google.com/maps/dir/?api=1&destination=${ll}" target="_blank" rel="noopener">Google Maps &nearr;</a></span>`;
+    `<span class="navlinks"><a href="https://maps.apple.com/?ll=${ll}&q=${q}&z=16" target="_blank" rel="noopener">Apple Maps &nearr;</a>` +
+    `<a href="https://www.google.com/maps/search/?api=1&query=${ll}" target="_blank" rel="noopener">Google Maps &nearr;</a></span>`;
 }
 function crestHtml(c) {
   /* a failed crest load must degrade to the initials chip, never the
