@@ -121,8 +121,8 @@ export async function onRequestPost({ request, env }) {
 
   try {
     await env.DB.prepare(
-      `INSERT INTO hits (ts, d, path, ref, vid, sid, plat, ctry, fresh, src)
-       VALUES (?,?,?,?,?,?,?,?,?,?)`
+      `INSERT INTO hits (ts, d, path, ref, vid, sid, plat, ctry, fresh, src, pwa)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?)`
     ).bind(
       now.toISOString(),
       now.toISOString().slice(0, 10),
@@ -133,7 +133,10 @@ export async function onRequestPost({ request, env }) {
       plat,
       clip(request.headers.get('cf-ipcountry'), 2),
       body.n === true ? 1 : 0,
-      srcOf(body.c)
+      srcOf(body.c),
+      /* Installed-app flag (display-mode: standalone), client-reported — see
+         migrations/0006_hit_pwa.sql for why that is acceptable here. */
+      body.w === true ? 1 : 0
     ).run();
   } catch {
     /* A dropped pageview is not worth surfacing to the visitor, and retrying

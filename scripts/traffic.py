@@ -89,10 +89,27 @@ table('Countries', q(
     f"FROM hits WHERE d >= {SINCE} GROUP BY ctry ORDER BY visitors DESC LIMIT 10"),
     ['ctry', 'visitors'])
 
+# Installed app: pageviews where the browser reported display-mode standalone,
+# i.e. the Android TWA or a PWA launched from a home screen / dock. This is
+# the number the store download count pretends to be -- installs that actually
+# get opened -- and it is the metric the Sep 2026 iOS go/no-go rides on.
+table('Installed app (TWA / home-screen PWA)', q(
+    f"SELECT plat, COUNT(DISTINCT vid) visitors, COUNT(DISTINCT sid) sessions, "
+    f"       COUNT(*) hits "
+    f"FROM hits WHERE d >= {SINCE} AND pwa = 1 "
+    f"GROUP BY plat ORDER BY visitors DESC"),
+    ['plat', 'visitors', 'sessions', 'hits'])
+
 # Retention: the whole "is this a look-once product" question in one number.
-ret = q(f"SELECT COUNT(*) returning FROM (SELECT vid FROM hits WHERE d >= {SINCE} "
-        f"GROUP BY vid HAVING COUNT(DISTINCT d) > 1)")[0]['returning'] or 0
-vis = tot['visitors'] or 0
-pct = f'{100*ret/vis:.1f}%' if vis else 'n/a'
-print(f'\nReturn visitors (seen on 2+ distinct days): {ret} of {vis}  ({pct})')
+# ("returning" is a reserved word in SQLite 3.35+; the alias must not use it.)
+def _return_rate(where, label):
+    ret = q(f"SELECT COUNT(*) ret FROM (SELECT vid FROM hits WHERE d >= {SINCE}{where} "
+            f"GROUP BY vid HAVING COUNT(DISTINCT d) > 1)")[0]['ret'] or 0
+    vis = q(f"SELECT COUNT(DISTINCT vid) v FROM hits WHERE d >= {SINCE}{where}")[0]['v'] or 0
+    pct = f'{100*ret/vis:.1f}%' if vis else 'n/a'
+    print(f'{label}: {ret} of {vis}  ({pct})')
+
+print()
+_return_rate('', 'Return visitors (seen on 2+ distinct days)')
+_return_rate(' AND pwa = 1', 'Installed-app return visitors')
 print()

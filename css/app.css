@@ -77,7 +77,7 @@ h2{margin:4px 0 2px;font-size:1.35rem}
 
 /* map: light ground, ink boundaries */
 .mapbox{background:var(--raise);border:1px solid var(--line);border-radius:14px;overflow:clip}
-svg.usmap{width:100%;height:auto;max-height:72vh;display:block;touch-action:manipulation}
+svg.usmap{width:100%;height:auto;display:block;touch-action:manipulation}
 .canada{opacity:.4;pointer-events:none}
 .canada.dim{opacity:.14}
 .canada path{fill:var(--map-fill);stroke:var(--map-stroke);stroke-width:1}
@@ -433,8 +433,8 @@ a.wirelink:hover .side{color:var(--accent)}
   [data-layout="wide"] .tabbar a.active{box-shadow:inset 0 -2px 0 var(--accent)}
   [data-layout="wide"] .searchwrap.global{width:min(720px,60%);margin:14px auto 0}
   [data-layout="wide"] main{padding:18px max(36px,calc((100% - 1120px)/2)) 48px}
-  [data-layout="wide"] svg.usmap{max-height:calc(100dvh - 270px)}
-  [data-layout="wide"] .leafmap{max-height:calc(100dvh - 270px)}
+  /* no height cap here either: the offline fallback must stay the same
+     shape as the tile map (map-frame.spec guards it) */
   /* no bottom tab bar to clear in wide mode */
   [data-layout="wide"] .mapctl{bottom:20px}
   /* the audit could see 9 clubs on a 1440px screen; two columns shows ~30.
@@ -456,7 +456,13 @@ a.wirelink:hover .side{color:var(--accent)}
    box framed 62 degrees of latitude for a 25-degree country). The map reads
    small on a phone because ~200px of filter chips sit above it, which is a
    layout problem, not a map-height one. */
-.leafmap{width:100%;aspect-ratio:980/580;height:auto;max-height:72vh}
+/* The box keeps the lower 48's shape no matter the window: aspect-ratio
+   governs, with no max-height override. The old caps (72vh here, 100dvh-270px
+   in wide layout) squashed the box into a 3:1 strip on wide-but-short
+   windows, and fitBounds — height-constrained — zoomed out until half the
+   Atlantic was in frame. A short window now scrolls to the map's bottom edge
+   instead of getting a map of the hemisphere. */
+.leafmap{width:100%;aspect-ratio:980/580;height:auto}
 .leafmap[hidden]{display:none}
 .mapbox[data-mode="street"] svg.usmap,.mapbox[data-mode="street"] .mapctl,.mapbox[data-mode="street"] .maptip{display:none}
 .leafmap .leaflet-tooltip{font:inherit;font-size:.8rem}

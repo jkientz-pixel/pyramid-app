@@ -19,7 +19,7 @@ const SHELL = [
   '/', '/app', '/app.html', '/index.html', '/manifest.webmanifest',
   '/favicon.ico', '/icon-192.png', '/icon-512.png',
   '/js/app.js', '/js/data.js', '/js/rosters.js', '/js/usmap.js', '/js/rxi-a.js',
-  '/js/myxi.js',
+  '/js/myxi.js', '/js/a2hs.js', '/js/push.js',
   '/css/app.css', '/fonts/barlow-condensed-latin-700.woff2',
 ];
 
@@ -76,5 +76,35 @@ self.addEventListener('fetch', e => {
       }
       return res;
     }).catch(() => caches.match(e.request, { ignoreSearch: true }))
+  );
+});
+
+/* ---- match-alert push -----------------------------------------------------
+   Payloads are built by scripts/push_alerts.py and are always JSON:
+   { title, body, url, tag }. A payload that fails to parse still shows a
+   generic notification — iOS treats a push event that shows nothing as a
+   reason to revoke the subscription. */
+self.addEventListener('push', e => {
+  let d = {};
+  try { d = e.data.json(); } catch (err) { /* generic fallback below */ }
+  e.waitUntil(self.registration.showNotification(d.title || 'Ranked XI', {
+    body: d.body || 'Match day for one of your clubs.',
+    icon: '/icon-192.png',
+    badge: '/icon-192.png',
+    tag: d.tag || 'rxi',           // same-day repeats replace, never stack
+    data: { url: d.url || '/app#/myxi' },
+  }));
+});
+
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  const url = (e.notification.data && e.notification.data.url) || '/app#/myxi';
+  e.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(ws => {
+      for (const w of ws) {
+        if ('focus' in w) { w.navigate(url); return w.focus(); }
+      }
+      return clients.openWindow(url);
+    })
   );
 });
