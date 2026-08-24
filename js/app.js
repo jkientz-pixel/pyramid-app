@@ -1490,12 +1490,24 @@ async function ntHistoryDb() {
   catch { _ntHist = { teams: {}, players: {} }; }
   return _ntHist;
 }
+/* A screen that awaits before it paints can be overtaken. The reader routes
+   away — taps Back out of a club — while its data is still in flight, and the
+   late paint then lands on top of whatever they navigated to, leaving the URL
+   and the screen disagreeing: the address bar says #/map, the club page is
+   what you are looking at. Every screen that awaits before painting captures
+   the hash it was routed for and drops its paint if the reader has moved on.
+   screenPlayer, screenLeague and screenTryouts each grew a private copy of
+   this check; this is that check, once, for all of them. */
+function routedAway(at) { return (location.hash || '#/map') !== at; }
+
 async function screenNationalTeams(sub, sub2) {
+  const at = location.hash || '#/map';
   if (sub === 'p') return screenNTPlayer(sub2);
   if (sub) return screenNationalTeam(sub);
   crumb.textContent = 'National Teams';
   const db = await natTeamsDb();
   const teams = db.teams || [];
+  if (routedAway(at)) return;
   const section = (title, list) => list.length ? `
     <div class="kicker" style="margin-top:30px;font-size:1rem;letter-spacing:.08em">${title}</div>
     <hr style="border:none;border-top:1px solid var(--line,#24352C);margin:4px 0 0">
@@ -1519,7 +1531,11 @@ const ntAgeAt = (dob, y) => Math.floor((Date.UTC(y, 5, 15) - new Date(dob + 'T00
    player who could still be under 18 shows name, position and club only —
    no birth date, no bio. */
 async function screenNationalTeam(id) {
+  const at = location.hash || '#/map';
   const [db, hist] = await Promise.all([natTeamsDb(), ntHistoryDb()]);
+  /* ahead of the bounce below: a reader who left while this loaded must not be
+     dragged to #/nt by a screen they are no longer on */
+  if (routedAway(at)) return;
   const t = (db.teams || []).find(x => x.id === id);
   const h = (hist.teams || {})[id];
   if (!t && !h) { location.hash = '#/nt'; return; }
@@ -1565,7 +1581,9 @@ async function screenNationalTeam(id) {
 /* nt player profile: bio plus every world-tournament appearance across all
    national teams (a U-17 alum often reappears on the U-20s and seniors) */
 async function screenNTPlayer(pid) {
+  const at = location.hash || '#/map';
   const hist = await ntHistoryDb();
+  if (routedAway(at)) return;          // before the #/nt bounce below
   const rows = [];
   for (const [tid, team] of Object.entries(hist.teams || {})) {
     for (const ed of team.editions || []) {
@@ -1933,6 +1951,7 @@ async function usl2Apps() {
   return _usl2apps;
 }
 async function screenClub(ref) {
+  const at = location.hash || '#/map';
   const idx = clubIdx(String(ref));
   if (idx < 0) return screenMap();
   const c = CLUBS[idx];
@@ -1947,6 +1966,7 @@ async function screenClub(ref) {
   const tToday = new Date().toISOString().slice(0, 10);
   const clubTry = (await tryoutsDb()).filter(t => !t.sample && t.date >= tToday &&
     ((t.clubId && t.clubId === c.id) || (t.club || '').toLowerCase() === c.n.toLowerCase()));
+  if (routedAway(at)) return;
   crumb.textContent = c.st;
   const m = LEAGUES[c.g];
   const peers = CLUBS.filter(o => o.g === c.g && o.r && !o.h).sort(eloRank);
@@ -2158,13 +2178,14 @@ function playerLadder(pl, c) {
     <p class="note">Domestic anchors are real 2026 value ratings. European tiers are transparent projections (multiples of the US pool's best) &mdash; a conversation, not a measurement.</p>`;
 }
 async function screenPlayer(ci, pi) {
+  const at = location.hash || '#/map';
   const cidx = clubIdx(String(ci));
   if (cidx < 0) return screenMap();
   if (String(ci) !== CLUBS[cidx].id) { location.replace('#/player/' + CLUBS[cidx].id + '/' + pi); return; }
   const c = CLUBS[cidx]; if (!c.r) return screenMap();
   const sq = squadFor(c); const pl = sq[+pi]; if (!pl) return screenClub(ci);
   const prof = pl.real ? ((await profilesDb())[pl.name] || {}) : {};
-  if (crumb.textContent !== c.st && location.hash !== `#/player/${ci}/${pi}`) return;
+  if (routedAway(at)) return;
   crumb.textContent = c.st;
   const peers = allPlayers(c.x).filter(p => p.pos === pl.pos && (!pl.rs || p.rs)).sort((a, b) => b.pvr - a.pvr);
   const rank = peers.findIndex(p => p.c === c && p.i === +pi) + 1;
@@ -2316,11 +2337,12 @@ async function leaguesInfoDb() {
   return _lgInfo;
 }
 async function screenLeague(key) {
+  const at = location.hash || '#/map';
   const m = LEAGUES[key];
   if (!m) return screenPyramid();
   crumb.textContent = m.label;
   const info = ((await leaguesInfoDb()).leagues || {})[key] || {};
-  if (location.hash !== '#/league/' + key) return;
+  if (routedAway(at)) return;
   const clubs = CLUBS.filter(c => c.g === key && !c.h);
   const ranked = clubs.filter(c => c.r).sort(eloRank);
   const rest = clubs.filter(c => !c.r).sort((a, b) => a.n.localeCompare(b.n));
@@ -2404,9 +2426,10 @@ const FA_PRICE_NOTE = 'Free to join and free to be listed. No commissions, no pl
 
 let tryoutSex = 'all', tryoutSort = 'date';
 async function screenTryouts() {
+  const at = location.hash || '#/map';
   crumb.textContent = 'Tryouts';
   const all = await tryoutsDb();
-  if (location.hash !== '#/tryouts') return;
+  if (routedAway(at)) return;
   const today = new Date().toISOString().slice(0, 10);
   const upcoming = all.filter(t => t.date >= today).sort((a, b) => a.date < b.date ? -1 : 1);
   let list = tryoutSex === 'all' ? upcoming : upcoming.filter(t => t.x === tryoutSex);
@@ -2563,10 +2586,12 @@ function screenMyXi(payload) {
 
 let legendSort = 'apps';
 async function screenLegends(ci) {
+  const at = location.hash || '#/map';
   const cidx = clubIdx(String(ci)); if (cidx < 0) return screenMap();
   const c = CLUBS[cidx]; ci = c.id;
   crumb.textContent = c.st;
   const all = (await legendsDb())[c.n];
+  if (routedAway(at)) return;          // before the #/club bounce below
   if (!all || !all.length) { location.hash = '#/club/' + ci; return; }
   const topApps = all[0];
   const topGoals = [...all].sort((a, b) => b.goals - a.goals)[0];
@@ -2658,8 +2683,10 @@ async function screenCollege(team) {
   }
 }
 async function screenCups() {
+  const at = location.hash || '#/map';
   crumb.textContent = 'Trophies';
   const cups = await cupsDb();
+  if (routedAway(at)) return;
   const keys = Object.keys(cups);
   /* each trophy knows who can hold it: a men's cup must never link a
      women's club, and a college cup's short names ("North Carolina",
@@ -3240,7 +3267,13 @@ function route() {
      chips, so a user with player favorites also waits for the module */
   const needsRosters = ['club', 'player', 'myxi', 'table'].includes(parts[0])
     || favs().players.length > 0;
-  if (needsRosters) { loadRosters().then(dispatch, dispatch); return; }
+  /* rosters arrive async, so the reader can route away before they land —
+     the same overtaking routedAway() guards inside a screen, one level up. */
+  if (needsRosters) {
+    const fresh = () => { if (!routedAway(h)) dispatch(); };
+    loadRosters().then(fresh, fresh);
+    return;
+  }
   dispatch();
   function dispatch() {
   if (parts[0] === 'tiers') screenPyramid();
