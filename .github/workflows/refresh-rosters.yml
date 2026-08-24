@@ -32,6 +32,7 @@ jobs:
       # play". It exits non-zero if every feed errors, so an ESPN block fails
       # the run instead of quietly publishing an empty schedule.
       - run: python scripts/fetch_fixtures.py
+      - run: python scripts/fetch_match_stats.py
       # Season Race inputs: current standings, the schedule still to come, and
       # each league's real season window. Same ESPN host and the same plain-UA
       # rule as fixtures; it exits non-zero only if EVERY feed fails, so one
@@ -55,7 +56,7 @@ jobs:
         run: |
           git config user.name "roster-bot"
           git config user.email "actions@github.com"
-          git add js/rosters.js js/data.js data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/rank_snapshot.json data/rank_history.json
+          git add js/rosters.js js/data.js data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/match_stats.json data/rank_snapshot.json data/rank_history.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
