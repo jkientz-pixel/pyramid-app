@@ -890,6 +890,26 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 
 /* verified fixtures list (#/matches) — compact rows, day headers, and the
    model's home win probability in place of the "v" when both clubs are rated */
+.match.resrow{padding:9px 12px}
+.match.resrow>summary{list-style:none;cursor:pointer}
+.match.resrow>summary::-webkit-details-marker{display:none}
+.match.resrow .mrow{margin:0}
+.match.resrow .meta{margin-top:5px;font-size:.72rem}
+.match.resrow .score{font-family:var(--font-disp);font-weight:700;font-size:1.25rem;font-variant-numeric:tabular-nums;min-width:3.2em;text-align:center}
+.tapstats{color:var(--accent);font-weight:700}
+.match.resrow[open] .tapstats{opacity:.5}
+.goals{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 2px;font-size:.74rem;color:var(--ink-dim)}
+.goals .g-h span,.goals .g-a span{display:block}
+.goals .g-a{text-align:right}
+.statcmp{margin-top:8px;display:grid;gap:7px}
+.srow{display:grid;grid-template-columns:4.2em 1fr 4.2em;grid-template-rows:auto auto;align-items:center;column-gap:8px;row-gap:1px}
+.srow .sv-h,.srow .sv-a{font-variant-numeric:tabular-nums;font-weight:700;font-size:.9rem}
+.srow .sv-a{text-align:right}
+.srow .lead{color:var(--accent)}
+.srow .pct{font-style:normal;font-weight:400;font-size:.7rem;color:var(--ink-dim)}
+.srow .sbar{display:flex;height:6px;border-radius:3px;overflow:hidden;gap:2px;background:var(--ground2)}
+.srow .sbar i{display:block;height:100%}
+.srow .slab{grid-column:1/4;text-align:center;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim)}
 .fxday{margin:14px 0 6px;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);font-weight:600}
 .match.fxrow{padding:9px 12px}
 .match.fxrow .mrow{margin:0}

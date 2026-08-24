@@ -1615,6 +1615,63 @@ function renderFixtures(box, all, forSex) {
     fxLimit += 60; renderFixtures(box, all, forSex);
   });
 }
+/* ---- results with box scores ------------------------------------------
+   data/match_stats.json — the last two weeks of completed pro matches, with
+   the two-team box score ESPN publishes (scripts/fetch_match_stats.py).
+   Each row is the score; tapping it opens the side-by-side comparison. The
+   bars are share-of-total between the two sides, so a 60/40 possession
+   split and a 12/8 shot count read the same way. */
+let _mstats = null;
+const matchStatsDb = () => _mstats || (_mstats = fetch('data/match_stats.json?v=__RXIV__')
+  .then(r => r.ok ? r.json() : []).catch(() => []));
+const STAT_ROWS = [['pos', 'Possession', '%'], ['sh', 'Shots'], ['sot', 'On target'], ['ck', 'Corners'],
+  ['pa', 'Passes completed'], ['fl', 'Fouls'], ['off', 'Offsides'], ['yc', 'Yellow cards'], ['rc', 'Red cards'], ['sv', 'Saves']];
+const resSide = (t, cls) => {
+  const c = t.id ? CLUBS.find(o => o.id === t.id) : null;
+  return c ? `<a class="side ${cls}" href="#/club/${c.id}">${mcrest(c)}<span class="sn">${esc(t.n)}</span></a>`
+           : `<span class="side ${cls}"><span class="sn">${esc(t.n)}</span></span>`;
+};
+function resultRow(m, open) {
+  const hs = m.h.s || {}, as = m.a.s || {};
+  const hasStats = Object.keys(hs).length && Object.keys(as).length;
+  const stats = hasStats ? STAT_ROWS.filter(([k]) => hs[k] != null && as[k] != null).map(([k, label, unit]) => {
+    const x = hs[k], y = as[k], tot = x + y || 1;
+    const hc = x > y ? LEAGUES[m.lg].color : 'var(--line)', ac = y > x ? LEAGUES[m.lg].color : 'var(--line)';
+    const fmt = v => k === 'pa' && hs.pt && as.pt ? `${v} <i class="pct">${Math.round(v / (x === v ? hs.pt : as.pt) * 100)}%</i>` : `${v}${unit || ''}`;
+    return `<div class="srow"><span class="sv-h${x > y ? ' lead' : ''}">${fmt(x)}</span><span class="sbar"><i style="width:${(x / tot * 100).toFixed(0)}%;background:${hc}"></i><i style="width:${(y / tot * 100).toFixed(0)}%;background:${ac}"></i></span><span class="sv-a${y > x ? ' lead' : ''}">${fmt(y)}</span><span class="slab">${label}</span></div>`;
+  }).join('') : '';
+  const goals = (m.goals || []).length ? `<div class="goals">${['h', 'a'].map(side =>
+    `<div class="g-${side}">${m.goals.filter(g => g.side === side).map(g => `<span>${esc(g.who || 'Goal')}${g.min ? ` ${g.min}'` : ''}${g.pen ? ' (p)' : ''}${g.og ? ' (og)' : ''}</span>`).join('')}</div>`).join('')}</div>` : '';
+  const bits = [fxDay(m.date + 'T12:00:00')];
+  if (m.venue) bits.push(esc(m.venue));
+  if (m.att) bits.push(`${Number(m.att).toLocaleString()} att.`);
+  return `<details class="match resrow"${open ? ' open' : ''}>
+    <summary><div class="mrow">${resSide(m.h, '')}<span class="score">${m.h.g}&ndash;${m.a.g}</span>${resSide(m.a, 'away')}</div>
+      <div class="meta"><span>${bits.join(' · ')}</span><span>${lgIcon(m.lg)}${LEAGUES[m.lg] ? LEAGUES[m.lg].label : ''}${hasStats ? ' · <b class="tapstats">stats</b>' : ''}</span></div></summary>
+    ${goals}${stats ? `<div class="statcmp">${stats}</div>` : '<p class="note" style="margin:6px 0 0">No box score published for this match.</p>'}
+  </details>`;
+}
+let resLg = 'all', resLimit = 20;
+function renderResults(box, all, forSex, clubId) {
+  const mine = all.filter(m => LEAGUES[m.lg] && LEAGUES[m.lg].sex === forSex && (!clubId || m.h.id === clubId || m.a.id === clubId));
+  if (!mine.length) { box.innerHTML = clubId ? '' : ''; return; }
+  const lgs = [...new Set(mine.map(m => m.lg))];
+  if (resLg !== 'all' && !lgs.includes(resLg)) resLg = 'all';
+  const shown = clubId ? mine : (resLg === 'all' ? mine : mine.filter(m => m.lg === resLg));
+  const page = shown.slice(0, clubId ? 5 : resLimit);
+  box.innerHTML = `<div class="kicker" style="margin-top:18px">${clubId ? 'Recent results · with box score' : 'Results · last two weeks · with box scores'}</div>
+    ${clubId ? '' : `<h2 class="disp">Final Score</h2>
+    <div class="chips" id="reschips">${['all', ...lgs].map(g =>
+      `<button class="chip solid" data-reslg="${g}" aria-pressed="${resLg === g}">${g === 'all' ? `All (${mine.length})` : `${LEAGUES[g].label} (${mine.filter(m => m.lg === g).length})`}</button>`).join('')}</div>`}
+    ${page.map((m, i) => resultRow(m, clubId && i === 0)).join('')}
+    ${shown.length > page.length && !clubId ? `<button class="chip solid" id="resmore" style="margin-top:8px">Show more (${shown.length - page.length} left)</button>` : ''}
+    ${clubId ? '' : '<p class="note">Tap a result for the two-team comparison — possession, shots, corners, passing, discipline. Box scores come from ESPN’s public match summary for the four pro leagues it carries; the bars are each side’s share of the total.</p>'}`;
+  box.querySelector('#reschips')?.addEventListener('click', e => {
+    const b = e.target.closest('[data-reslg]'); if (!b) return;
+    resLg = b.dataset.reslg; resLimit = 20; renderResults(box, all, forSex, clubId);
+  });
+  box.querySelector('#resmore')?.addEventListener('click', () => { resLimit += 30; renderResults(box, all, forSex, clubId); });
+}
 function screenMatches(preH) {
   crumb.textContent = 'Matches';
   const rated = pool().filter(c => c.r).sort((a, b) => b.r - a.r);
@@ -1640,6 +1697,7 @@ function screenMatches(preH) {
     <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>This week's results, upsets and rating swings &mdash; generated from real data.</span></a>
     <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>USA national teams, senior through U-15 &mdash; fixtures, how to watch, squad history and player bios back to 1930.</span></a>
     <div id="realfx"></div>
+    <div id="realres"></div>
     ${matchupMachineHtml(rated, preH)}
     <div class="kicker" style="margin-top:18px">Rivalry Radar · nearest matchups by geography</div>
     <h2 class="disp">Rivalry Radar</h2>
@@ -1656,6 +1714,11 @@ function screenMatches(preH) {
     const box = view.querySelector('#realfx');
     if (!box || sex !== fxSex) return;
     renderFixtures(box, all, fxSex);
+  });
+  matchStatsDb().then(all => {
+    const box = view.querySelector('#realres');
+    if (!box || sex !== fxSex) return;
+    renderResults(box, all, fxSex);
   });
 }
 
@@ -2240,6 +2303,7 @@ async function screenClub(ref) {
       return `<li><span class="cw-years">${e.y}</span><span class="cw-club">${e.ha === 'H' ? 'v' : 'at'} ${esc(e.opp)} &middot; ${e.gf}&ndash;${e.ga}${e.aet ? ' aet' : ''}${e.pens ? ` (${e.pens[0]}&ndash;${e.pens[1]}p)` : ''}</span><span class="cw-stat">${wl}${e.d ? ` &middot; ${e.d > 0 ? '+' : ''}${e.d}` : ''}</span></li>`;
     }).join('')}</ul></div>
     <p class="note">${c.g === 'mls' ? 'Shown for the record — MLS ranks by the official league table, so Cup results never move an MLS rating here.' : 'These matches move the rating. Cross-tier cup results are where the levels actually meet; extra-time and shootout wins count at reduced weight.'}${c.pv ? " Marked provisional: most of this club's cup movement came against opponents outside our database, valued at league average." : ''}</p>` : ''}
+    <div id="clubres"></div>
     ${communityResultsHtml(c, cres)}
     ${/* One number per club. The experimental results-only Elo used to sit
           right under the headline rating, so the page showed two different
@@ -2318,6 +2382,9 @@ async function screenClub(ref) {
   if (simb) simb.addEventListener('click', () => { location.hash = '#/sim/' + simb.dataset.sim; });
   if (c.r) renderRatingHistory(c);
   wireResultForm(c);
+  if (['mls', 'uslc', 'usl1', 'nwsl'].includes(c.g)) matchStatsDb().then(all => {
+    const box = view.querySelector('#clubres'); if (box && view.contains(box)) renderResults(box, all, c.x, c.id);
+  });
   const sb = view.querySelector('.sharebtn');
   if (sb) sb.addEventListener('click', async () => {
     /* rated clubs have a static /club/<id> page with a per-club share card —
