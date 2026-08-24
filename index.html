@@ -8,7 +8,7 @@
 <meta property="og:title" content="Ranked XI — every US soccer club, one map, one table"><meta property="og:description" content="Ranked XI is the national table of American soccer: every club from MLS to the grassroots, men&#x27;s and women&#x27;s, ranked on one scale."><meta property="og:url" content="https://www.rankedxi.com/"><meta property="og:site_name" content="Ranked XI"><meta property="og:locale" content="en_US"><meta property="og:type" content="website"><meta property="og:image" content="https://www.rankedxi.com/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Ranked XI — the national table of American soccer"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Ranked XI — every US soccer club, one map, one table"><meta name="twitter:description" content="Ranked XI is the national table of American soccer: every club from MLS to the grassroots, men&#x27;s and women&#x27;s, ranked on one scale."><meta name="twitter:image" content="https://www.rankedxi.com/og.png"><meta name="twitter:image:alt" content="Ranked XI — the national table of American soccer">
 <link rel="manifest" href="manifest.webmanifest">
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://www.rankedxi.com/#organization", "name": "Ranked XI", "legalName": "The Delegate, Inc.", "url": "https://www.rankedxi.com/", "logo": {"@type": "ImageObject", "url": "https://www.rankedxi.com/icon-512.png", "width": 512, "height": 512}, "description": "Ranked XI is the national table of American soccer: every club from MLS to the grassroots, men's and women's, ranked on one scale.", "email": "hello@rankedxi.com", "founder": {"@id": "https://www.rankedxi.com/about#jeremy-kientz"}, "sameAs": ["https://play.google.com/store/apps/details?id=com.rankedxi.app"]}, {"@type": "WebSite", "@id": "https://www.rankedxi.com/#website", "url": "https://www.rankedxi.com/", "name": "Ranked XI", "description": "Ranked XI is the national table of American soccer: every club from MLS to the grassroots, men's and women's, ranked on one scale.", "inLanguage": "en-US", "publisher": {"@id": "https://www.rankedxi.com/#organization"}}, {"@type": ["SoftwareApplication", "SportsApplication"], "@id": "https://www.rankedxi.com/#app", "name": "Ranked XI", "applicationCategory": "SportsApplication", "operatingSystem": "Android, Web", "description": "Ranked XI is the national table of American soccer: every club from MLS to the grassroots, men's and women's, ranked on one scale.", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "downloadUrl": "https://play.google.com/store/apps/details?id=com.rankedxi.app", "publisher": {"@id": "https://www.rankedxi.com/#organization"}}]}
+{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://www.rankedxi.com/#organization", "name": "Ranked XI", "legalName": "The Delegate, Inc.", "url": "https://www.rankedxi.com/", "logo": {"@type": "ImageObject", "url": "https://www.rankedxi.com/icon-512.png", "width": 512, "height": 512}, "description": "Ranked XI is the national table of American soccer: every club from MLS to the grassroots, men's and women's, ranked on one scale.", "email": "hello@rankedxi.com", "founder": {"@id": "https://www.rankedxi.com/about#jeremy-kientz"}, "sameAs": ["https://play.google.com/store/apps/details?id=com.rankedxi.app"]}, {"@type": "WebSite", "@id": "https://www.rankedxi.com/#website", "url": "https://www.rankedxi.com/", "name": "Ranked XI", "description": "Ranked XI is the national table of American soccer: every club from MLS to the grassroots, men's and women's, ranked on one scale.", "inLanguage": "en-US", "publisher": {"@id": "https://www.rankedxi.com/#organization"}}, {"@type": ["SoftwareApplication", "SportsApplication"], "@id": "https://www.rankedxi.com/#app", "name": "Ranked XI", "applicationCategory": "SportsApplication", "operatingSystem": "Android, iOS, Web", "description": "Ranked XI is the national table of American soccer: every club from MLS to the grassroots, men's and women's, ranked on one scale.", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "downloadUrl": "https://play.google.com/store/apps/details?id=com.rankedxi.app", "publisher": {"@id": "https://www.rankedxi.com/#organization"}}]}
 </script>
 <script src="/js/rxi-a.js?v=__RXIV__" defer></script>
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js'));</script>
@@ -44,6 +44,15 @@ h1{font-size:clamp(2.6rem,6vw,5rem);line-height:.95;margin:.2em 0}
 .playbar a{color:#F2C078;font-weight:700;text-decoration:underline;white-space:nowrap}
 .playbadge{display:inline-flex;align-items:center}
 .playbadge img{display:block;border-radius:8px}
+/* iPhone badge: hand-built twin of the Play badge (Apple's official badge is
+   App Store-only, which this deliberately is not). Same 52px footprint so the
+   pair reads as one row of equals. */
+.iosbadge{display:inline-flex;align-items:center;gap:9px;height:52px;padding:0 16px 0 13px;
+  background:#000;border:1px solid #A6A6A6;border-radius:8px;text-decoration:none;color:#fff}
+.iosbadge svg{width:22px;height:34px;flex:none}
+.iosbadge span{display:flex;flex-direction:column;line-height:1.15;text-align:left}
+.iosbadge i{font-style:normal;font-size:.56rem;letter-spacing:.04em;text-transform:uppercase;opacity:.85}
+.iosbadge b{font-size:1.05rem;font-weight:600;letter-spacing:.01em;white-space:nowrap}
 .stats{display:flex;gap:28px;flex-wrap:wrap;color:var(--dim);font-size:.9rem}
 .stats b{display:block;color:var(--ink);font-size:1.5rem;font-variant-numeric:tabular-nums}
 .phone-wrap{display:flex;justify-content:center}
@@ -72,7 +81,7 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
 <link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="icon" href="/icon-192.png" sizes="192x192" type="image/png"><link rel="icon" href="/icon-512.png" sizes="512x512" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body>
-<aside class="playbar"><b>Ranked XI is now on Google Play.</b> The full US soccer pyramid — <span data-stat="clubs">4,367</span> clubs, ratings, and matchups — on Android now. <a href="https://play.google.com/store/apps/details?id=com.rankedxi.app">Get it on Google Play</a></aside>
+<aside class="playbar"><b>Ranked XI is now an app on Android and iPhone.</b> The full US soccer pyramid — <span data-stat="clubs">4,367</span> clubs, ratings, and matchups. <a href="https://play.google.com/store/apps/details?id=com.rankedxi.app">Get it on Google Play</a> &middot; <a href="#get-ios" id="iosbarlink">Add&nbsp;to&nbsp;iPhone</a></aside>
 <header><a class="mark disp" href="/">Ranked XI</a><a class="cta" href="/app">Open the app</a></header>
 <main>
 <section class="hero">
@@ -86,6 +95,7 @@ footer{color:var(--dim);font-size:.8rem;padding:26px clamp(20px,5vw,64px) 44px;b
       <a class="ghost" href="#join">Get launch updates</a>
       <a class="ghost" href="#" id="installbtn" hidden>Install the app</a>
       <a class="playbadge" href="https://play.google.com/store/apps/details?id=com.rankedxi.app"><img src="/google-play-badge.png?v=__RXIV__" alt="Get it on Google Play" width="134" height="52" loading="eager"></a>
+      <a class="iosbadge" href="#get-ios" id="get-ios" aria-expanded="false" aria-controls="ioshowto"><svg viewBox="0 0 22 34" aria-hidden="true"><rect x="1.2" y="1.2" width="19.6" height="31.6" rx="4.2" fill="none" stroke="#fff" stroke-width="1.7"/><line x1="8" y1="28.4" x2="14" y2="28.4" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg><span><i>Get it on</i><b>iPhone &amp; iPad</b></span></a>
     </div>
     <p id="ioshowto" hidden style="margin:-14px 0 26px;font-size:.85rem;color:var(--dim);border:1px solid var(--line);border-radius:12px;padding:10px 14px;max-width:520px">On iPhone or iPad: open this page in <b>Safari</b>, tap the <b>Share</b> button, then <b>"Add to Home Screen."</b> Ranked XI installs with its own icon, opens full-screen, and works offline — no app store needed.</p>
     <div class="stats">
@@ -261,14 +271,31 @@ joinForm.addEventListener('submit', async e => {
   if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) return;
   let deferred = null;
   addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; btn.hidden = false; });
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  if (isIOS) btn.hidden = false;
+  /* The ghost button now exists only for Chrome's native one-tap install
+     (beforeinstallprompt). iOS visitors get the always-visible iPhone badge
+     below instead — two install buttons saying the same thing is one too many. */
   btn.addEventListener('click', e => {
     e.preventDefault();
     if (deferred) { deferred.prompt(); deferred = null; btn.hidden = true; }
     else howto.hidden = !howto.hidden;
   });
+  /* The iPhone badge and the banner link are always visible — Android/desktop
+     visitors get the instructions too, because the phone they install on is
+     rarely the machine they are reading on. */
+  const ios = document.getElementById('get-ios');
+  const barlink = document.getElementById('iosbarlink');
+  const showHowto = e => {
+    e.preventDefault();
+    howto.hidden = false;
+    ios.setAttribute('aria-expanded', 'true');
+    howto.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  };
+  ios.addEventListener('click', e => {
+    e.preventDefault();
+    howto.hidden = !howto.hidden;
+    ios.setAttribute('aria-expanded', String(!howto.hidden));
+  });
+  if (barlink) barlink.addEventListener('click', showHowto);
   addEventListener('appinstalled', () => { btn.hidden = true; });
 })();
 </script>

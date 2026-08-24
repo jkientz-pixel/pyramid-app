@@ -48,12 +48,22 @@
     if (shown) return;
     shown = true;
 
+    /* The sheet sits ABOVE the tab bar, never over it: covering the app's
+       only navigation reads as the app breaking (it did — "the map is super
+       glitchy"). The bar is measured rather than hardcoded, and only counts
+       when it is actually anchored to the viewport bottom (wide layout moves
+       it to the top, where no offset is wanted). z-index stays below the
+       bar's 30 so no stacking surprise can ever block a tab. */
+    var bar = document.querySelector('.tabbar');
+    var r = bar && bar.getBoundingClientRect();
+    var lift = (r && r.bottom > innerHeight - 5) ? Math.ceil(r.height) : 0;
+
     var css =
-      '#rxi-a2hs{position:fixed;left:0;right:0;bottom:0;z-index:9999;' +
+      '#rxi-a2hs{position:fixed;left:0;right:0;bottom:' + lift + 'px;z-index:20;' +
         'background:var(--raise,#fff);color:var(--ink,#16211B);' +
         'border-top:1px solid var(--line,#DCE2D8);border-radius:16px 16px 0 0;' +
         'box-shadow:0 -8px 30px rgba(22,33,27,.18);' +
-        'padding:18px 18px calc(18px + env(safe-area-inset-bottom));' +
+        'padding:18px 18px ' + (lift ? '18px' : 'calc(18px + env(safe-area-inset-bottom))') + ';' +
         'font:15px/1.45 -apple-system,"Segoe UI",Roboto,sans-serif;' +
         'transform:translateY(100%);transition:transform .35s cubic-bezier(.16,1,.3,1)}' +
       '#rxi-a2hs.on{transform:none}' +
@@ -107,7 +117,14 @@
     });
   }
 
-  /* Engagement gate: the second hash route of the session. The app is a
-     hash-routed SPA, so a hashchange is the cleanest "they kept going". */
-  addEventListener('hashchange', show, { once: true });
+  /* Engagement gate: the second hash route of the session — but never while
+     the visitor is on the map. The map is a full-bleed pan/zoom surface, and
+     a sheet sliding over it mid-gesture reads as the app glitching. Wait for
+     whichever later route isn't the map. */
+  function maybeShow() {
+    if (location.hash.indexOf('#/map') === 0) return;   /* keep waiting */
+    removeEventListener('hashchange', maybeShow);
+    show();
+  }
+  addEventListener('hashchange', maybeShow);
 })();
