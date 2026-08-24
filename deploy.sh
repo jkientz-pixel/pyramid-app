@@ -115,11 +115,12 @@ verify_url() {
 }
 # /app.html 308s to /app, an un-tokened URL the edge caches — a check fired
 # right after "Deployment complete" can still see the previous build, so this
-# gets the same retry window the data files do (2026-08-18 false alarm).
+# gets the same retry window verify_www does (2026-08-18 false alarm).
+# It previously got 5x3s and cried wolf on a good deploy on 2026-08-24.
 verify_token() {
-  for i in 1 2 3 4 5; do
+  for i in $(seq 1 18); do          # ~90s, matching verify_www below
     curl -sfL "$LIVE/app.html" | grep -q "$NEWV" && return 0
-    sleep 3
+    sleep 5
   done
   echo "DEPLOY VERIFY FAILED: live app.html is not serving v$NEWV" >&2
   return 1
