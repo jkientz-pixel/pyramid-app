@@ -717,50 +717,20 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     /* z4 country -> z11 city. Tuned against the dark hillshade underneath:
        past ~0.62 the inversion washes the terrain out entirely. */
     const streetOpacity = z => Math.max(0.18, Math.min(0.62, 0.18 + (z - 4) * 0.063));
-    /* The national border and state lines were only ever the OSM overlay at
-       18% opacity, which on a phone against the dark hillshade is invisible —
-       the country read as a cloud of pins with no coastline. Draw them as a
-       vector layer instead: a bright coastline/border with quieter state
-       lines, in a pane under the pins so it never covers a club. Strokes get
-       thinner as you zoom in and the streets take over. */
+    /* The national border was only ever the OSM overlay at 18% opacity,
+       which on a phone against the dark hillshade is invisible — the country
+       read as a cloud of pins with no coastline. Draw it as a vector layer
+       from the Census 1:5m nation boundary (real coast, so shoreline pins sit
+       inside it) in a pane under the pins. Thins as you zoom in and the
+       streets take over. */
     leafMap.createPane('outline').style.zIndex = 350;
-    const outlineWeight = z => ({ border: Math.max(1.2, 2.4 - (z - 4) * 0.25), state: Math.max(0.6, 1.1 - (z - 4) * 0.1) });
-    fetch('data/us_states.json?v=__RXIV__').then(r => r.ok ? r.json() : null).then(gj => {
+    const outlineWeight = z => Math.max(1, 2.2 - (z - 4) * 0.2);
+    fetch('data/us_nation.json?v=__RXIV__').then(r => r.ok ? r.json() : null).then(gj => {
       if (!gj || !leafMap) return;
-      const style = () => {
-        const w = outlineWeight(leafMap.getZoom());
-        return { pane: 'outline', fill: false, interactive: false, color: 'rgba(210,225,235,.42)', weight: w.state, lineJoin: 'round' };
-      };
-      const states = L.geoJSON(gj, { style: style() }).addTo(leafMap);
-      /* dissolve to the outer boundary for the bold stroke: any edge shared by
-         two states is interior, everything else is coast or the national line */
-      const edges = new Map();
-      const ring = (coords, feature) => { for (let i = 1; i < coords.length; i++) {
-        const a = coords[i - 1], b = coords[i];
-        const k = a[0] < b[0] || (a[0] === b[0] && a[1] < b[1]) ? a + '|' + b : b + '|' + a;
-        edges.set(k, (edges.get(k) || 0) + 1);
-      } };
-      for (const f of gj.features) {
-        const g = f.geometry; if (!g) continue;
-        const polys = g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : [];
-        for (const poly of polys) for (const r of poly) ring(r, f);
-      }
-      const segs = [];
-      for (const f of gj.features) {
-        const g = f.geometry; if (!g) continue;
-        const polys = g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : [];
-        for (const poly of polys) for (const r of poly) for (let i = 1; i < r.length; i++) {
-          const a = r[i - 1], b = r[i];
-          const k = a[0] < b[0] || (a[0] === b[0] && a[1] < b[1]) ? a + '|' + b : b + '|' + a;
-          if (edges.get(k) === 1) segs.push([[a[1], a[0]], [b[1], b[0]]]);
-        }
-      }
-      const border = L.polyline(segs, { pane: 'outline', interactive: false, color: 'rgba(235,242,248,.85)', weight: outlineWeight(leafMap.getZoom()).border, lineJoin: 'round', lineCap: 'round' }).addTo(leafMap);
-      leafMap.on('zoomend', () => {
-        const w = outlineWeight(leafMap.getZoom());
-        states.setStyle({ weight: w.state });
-        border.setStyle({ weight: w.border });
-      });
+      const border = L.geoJSON(gj, { pane: 'outline', interactive: false, style: () => ({
+        fill: false, color: 'rgba(232,240,246,.78)', weight: outlineWeight(leafMap.getZoom()), lineJoin: 'round', lineCap: 'round',
+      }) }).addTo(leafMap);
+      leafMap.on('zoomend', () => border.setStyle({ weight: outlineWeight(leafMap.getZoom()) }));
     }).catch(() => {});
     /* frame the scoped clubs (state/region) but plot everything, so panning
        past a border reveals the neighbors instead of empty map */
