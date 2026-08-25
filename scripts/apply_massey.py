@@ -152,7 +152,13 @@ def main(band_d1=(1355, 1610), band_d2=(1285, 1505),
         if not rows:
             print(f'{div}: no usable rows', file=sys.stderr); continue
         rats = sorted(r['rat'] for r in rows)
-        lo_r, hi_r = rats[int(.02 * len(rats))], rats[int(.98 * len(rats)) - 1]
+        # Floor is winsorized at the 2nd percentile (a couple of hopeless
+        # sides must not stretch the band), but the CEILING is the true best
+        # rating: clipping at the 98th percentile stacked the top 2% of every
+        # division on the band's max — 5 D1 men tied at 1608, 8 D1 women at
+        # 1755, 10 D3 sides at 1410 (found 2026-08-25). One club sits at the
+        # band ceiling; everyone else spreads below it.
+        lo_r, hi_r = rats[int(.02 * len(rats))], rats[-1]
         span = (hi_r - lo_r) or 1
         pool = [c for c in clubs if c['g'] == div]
         by_id = {c['id']: c for c in pool}
