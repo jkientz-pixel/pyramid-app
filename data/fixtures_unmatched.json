@@ -1,7 +1,7 @@
 [
  [
   "ncaa1: VMI",
-  7
+  6
  ],
  [
   "ncaa1: UConn",
@@ -36,14 +36,6 @@
   6
  ],
  [
-  "ncaa1: Maryland",
-  5
- ],
- [
-  "ncaa1: South Carolina",
-  5
- ],
- [
   "ncaa1: NJIT",
   5
  ],
@@ -65,10 +57,6 @@
  ],
  [
   "ncaa1: California",
-  5
- ],
- [
-  "ncaa1w: Massachusetts",
   5
  ],
  [
@@ -160,14 +148,6 @@
   5
  ],
  [
-  "ncaa1: Charlotte",
-  4
- ],
- [
-  "ncaa1: North Carolina",
-  4
- ],
- [
   "ncaa1: UAB",
   4
  ],
@@ -208,7 +188,15 @@
   4
  ],
  [
+  "ncaa1: South Carolina",
+  4
+ ],
+ [
   "ncaa1: UCF",
+  4
+ ],
+ [
+  "ncaa1: Maryland",
   4
  ],
  [
@@ -296,6 +284,10 @@
   4
  ],
  [
+  "ncaa1w: Massachusetts",
+  4
+ ],
+ [
   "ncaa1w: Fresno State",
   4
  ],
@@ -304,7 +296,15 @@
   4
  ],
  [
+  "ncaa1: Charlotte",
+  3
+ ],
+ [
   "ncaa1: Howard",
+  3
+ ],
+ [
+  "ncaa1: North Carolina",
   3
  ],
  [
@@ -316,15 +316,15 @@
   3
  ],
  [
+  "ncaa1w: Sacramento State",
+  3
+ ],
+ [
   "ncaa1w: UConn",
   3
  ],
  [
   "ncaa1w: St. John's",
-  3
- ],
- [
-  "ncaa1w: Sacramento State",
   3
  ],
  [
