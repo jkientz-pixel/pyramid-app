@@ -1118,3 +1118,17 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 /* inside the panel the pitch shrinks to the column instead of scrolling
    sideways — a phone shows the whole match, smaller, rather than one box */
 .pm .sh-pitch{min-width:0}
+
+/* National Teams jump bar: sticks to the top of the scrolling <main> (its
+   14px top padding is why top is negative) so every team is one tap away
+   from anywhere in the list. Anchored blocks leave room for it. */
+.ntjump{position:sticky;top:-14px;z-index:6;margin:6px -16px 0;padding:8px 16px 6px;background:var(--ground);border-bottom:1px solid var(--line)}
+.ntjumprow{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
+.ntjumprow::-webkit-scrollbar{display:none}
+.ntjumplbl{flex:none;color:var(--ink-dim);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;width:52px}
+.ntjump .chip{flex:none;padding:5px 10px;font-size:.7rem}
+.ntjump .ntcount{background:var(--accent);color:var(--ground);border-radius:999px;min-width:16px;height:16px;line-height:16px;text-align:center;font-size:.62rem;padding:0 4px}
+.ntblock{scroll-margin-top:88px}
+.ntsub{display:flex;align-items:center;gap:8px;margin:14px 0 6px;color:var(--ink-dim);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase}
+.ntsub::after{content:"";flex:1;border-top:1px solid var(--line)}
+.ntsubn{color:var(--ink);font-weight:600}

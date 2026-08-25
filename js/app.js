@@ -1891,6 +1891,16 @@ function ntMatchRow(m, tag) {
     ${cal}
   </div>`;
 }
+/* results and fixtures read differently — a score column vs a kickoff and
+   watch chips — but a mixed list hides where one ends and the other begins.
+   Upcoming games come first (that is what a reader arrives for), then the
+   results, each under its own sub-head. Nothing is reordered within a group. */
+function ntMatchGroups(matches, tag) {
+  const up = matches.filter(m => m.status !== 'ENDED'), past = matches.filter(m => m.status === 'ENDED');
+  const grp = (title, list) => list.length
+    ? `<div class="ntsub">${title} <span class="ntsubn">${list.length}</span></div>${list.map(m => ntMatchRow(m, tag)).join('')}` : '';
+  return (up.length && past.length) ? grp('Upcoming', up) + grp('Results', past) : matches.map(m => ntMatchRow(m, tag)).join('');
+}
 function ntTeamBlock(t, withHistoryLink) {
   const tag = ntTag(t);
   const links = [
@@ -1901,11 +1911,11 @@ function ntTeamBlock(t, withHistoryLink) {
     t.url ? `<a class="watchlink" href="${t.url}" target="_blank" rel="noopener">Official team site &#8599;</a>` : ''
   ].filter(Boolean).join('<span style="color:var(--ink-dim)"> &nbsp;·&nbsp; </span>');
   return `
-    <div class="kicker" style="margin-top:22px">${esc(t.comp)}${t.compDates ? ' · ' + esc(t.compDates) : ''}</div>
+    <div class="kicker ntblock" id="nt-${esc(t.id)}" style="margin-top:22px">${esc(t.comp)}${t.compDates ? ' · ' + esc(t.compDates) : ''}</div>
     <h2 class="disp">${esc(t.name)}</h2>
     ${t.note ? `<p class="note" style="margin:2px 0 8px">${esc(t.note)}</p>` : ''}
     ${(t.achievements || []).map(a => `<span class="badge c" style="margin:0 6px 8px 0;display:inline-block">${esc(a)}</span>`).join('')}
-    ${(t.matches || []).map(m => ntMatchRow(m, tag)).join('')}
+    ${ntMatchGroups(t.matches || [], tag)}
     ${t.next ? `<p class="note" style="margin:6px 0 0">${esc(t.next)}</p>` : ''}
     ${links ? `<p style="margin:8px 0 0">${links}</p>` : ''}`;
 }
@@ -1934,17 +1944,32 @@ async function screenNationalTeams(sub, sub2) {
   const db = await natTeamsDb();
   const teams = db.teams || [];
   if (routedAway(at)) return;
+  const men = teams.filter(t => t.g !== 'women'), women = teams.filter(t => t.g === 'women');
   const section = (title, list) => list.length ? `
-    <div class="kicker" style="margin-top:30px;font-size:1rem;letter-spacing:.08em">${title}</div>
+    <div class="kicker ntblock" id="nt-${title.toLowerCase()}" style="margin-top:30px;font-size:1rem;letter-spacing:.08em">${title}</div>
     <hr style="border:none;border-top:1px solid var(--line,#24352C);margin:4px 0 0">
     ${list.map(t => ntTeamBlock(t, true)).join('')}` : '';
+  /* jump bar: fourteen teams stack into one long scroll, and the USWNT sits
+     under every men's age group — a reader who does not scroll never learns
+     it is here. One chip per team, sticky, with a game count so the squads
+     that actually have fixtures stand out from the camp-cycle ones. */
+  const jump = (title, list) => list.length ? `
+    <div class="ntjumprow"><span class="ntjumplbl">${title}</span>${list.map(t => {
+      const n = (t.matches || []).length;
+      return `<button class="chip" type="button" aria-pressed="${n ? 'true' : 'false'}" data-nt="${esc(t.id)}" title="${esc(t.name)}">${esc(t.label || t.name)}${n ? `<span class="ntcount">${n}</span>` : ''}</button>`;
+    }).join('')}</div>` : '';
   view.innerHTML = `
     <div class="kicker">USA national teams · senior through U-15 · Concacaf &amp; FIFA competitions</div>
     <h2 class="disp">National Teams</h2>
+    ${teams.length ? `<nav class="ntjump" aria-label="Jump to a team">${jump('Men', men)}${jump('Women', women)}</nav>` : ''}
     ${teams.length
-      ? section('Men', teams.filter(t => t.g !== 'women')) + section('Women', teams.filter(t => t.g === 'women'))
+      ? section('Men', men) + section('Women', women)
       : '<p class="note">National-team fixtures are loading into the dataset.</p>'}
     <p class="note">Kickoffs shown in Eastern and your local time. Results, venues and broadcasts from U.S. Soccer, Concacaf and FIFA — nothing is invented. Teams shown without match rows are in camp-and-friendly cycles with no published fixture data. Watch links appear only on upcoming games.</p>`;
+  view.querySelectorAll('.ntjump [data-nt]').forEach(b => b.addEventListener('click', () => {
+    const el = view.querySelector('#nt-' + CSS.escape(b.dataset.nt));
+    if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  }));
 }
 
 /* age at a June 15 midpoint of the tournament year — squads pages span
