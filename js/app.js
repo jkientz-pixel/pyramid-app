@@ -940,7 +940,7 @@ function screenMap() {
     })()}
     <a class="fa-card" href="#/wire" id="wirehook"><b>&#128240; The Wire</b><span>Upsets, rating swings, golden-boot races &mdash; generated live from real results.</span></a>
     <a class="fa-card" href="#/sim"><b>&#128200; Rank Simulator</b><span>Pick any club, invent a scoreline, and watch its rank move &mdash; powered by the real ratings.</span></a>
-    <a class="fa-card" href="#/predict"><b>&#9876; Matchup Machine</b><span>Any club against any club &mdash; predicted score, three-way odds, and a confidence read.</span></a>
+    <a class="fa-card" href="#/predict"><b>&#9876; Matchup Machine</b><span>Any club against any club &mdash; predicted score and a confidence read (win odds for pro leagues).</span></a>
     <a class="fa-card" href="#/freeagents"><b>&#9733; Free Agents</b><span>No club right now? Get seen by every club on this map.</span></a>
     <p class="note">Tap a state to zoom in. Tap a pin for the club. Pinch, scroll, or use +/&minus; to zoom further.</p>
     <label class="sr-only" for="statejump">Jump to a state or province</label>
@@ -1098,6 +1098,14 @@ const FACT = [1, 1, 2, 6, 24, 120, 720, 5040];
 /* Tier-tuned engine — backtested 2026-07-27 on 1,377 real matches (310 NPSL
    + 1,067 pro): amateur football wants a bigger K and smaller home edge than
    pro parity leagues, so params split by tier instead of one-size-fits-all. */
+/* Published win percentages are gated to SENIOR PRO leagues. Amateur, college
+   and (one day) youth clubs get the same engine re-skinned as a projection —
+   favourite, likely score, confidence — with no percentages. Odds on amateur
+   or minors' football turn a neutral rating into a betting line, and the
+   neutrality is the asset (policy set 2026-08-25). NISA is excluded while
+   unsanctioned. */
+const ODDS_TIER = new Set(['mls', 'uslc', 'usl1', 'mnp', 'nwsl', 'uslw']);
+const oddsAllowed = (h, a) => ODDS_TIER.has(h.g) && ODDS_TIER.has(a.g);
 const AMATEUR_TIER = new Set(['npsl', 'upsl', 'usl2', 'apsl', 'gcpl', 'loc', 'csl', 'sfsfl', 'eplwa', 'lisfl', 'uslwl', 'wpsl', 'uws', 'nisa', 'ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w']);
 function oddsFor(h, a, homeAdv, wantCells) {
   const amateur = AMATEUR_TIER.has(h.g) && AMATEUR_TIER.has(a.g);
@@ -1205,23 +1213,27 @@ function matchCard(h, a, when, real) {
   </div>`;
   const o = oddsFor(h, a, null, true);
   const cf = confidenceFor(o, h, a);
-  return `<div class="match">
-    ${head}
-    <div class="scoreline">${o.score[0]}–${o.score[1]}</div>
-    <div class="meta" style="justify-content:center;margin-top:0"><span>most likely score</span></div>
-    ${scorelinesHtml(o, h, a)}
+  const withOdds = oddsAllowed(h, a);
+  const oddsBlock = withOdds ? `${scorelinesHtml(o, h, a)}
     <div class="oddsrow">
       <div class="odds"><b>${(o.pH * 100).toFixed(1)}%</b><span>${esc(initials(h.n))} win</span></div>
       <div class="odds"><b>${(o.pD * 100).toFixed(1)}%</b><span>Draw</span></div>
       <div class="odds"><b>${(o.pA * 100).toFixed(1)}%</b><span>${esc(initials(a.n))} win</span></div>
-    </div>
-    <div class="confmeter l${cf.n}" role="img" aria-label="Confidence: ${cf.tag} — ${cf.fav} at ${(cf.top * 100).toFixed(1)} percent">
-      <span class="conf-label">Confidence</span>
+    </div>` : '';
+  const confLabel = withOdds ? `Confidence: ${cf.tag} — ${cf.fav} at ${(cf.top * 100).toFixed(1)} percent` : `Projection: ${cf.tag} — ${cf.fav}`;
+  return `<div class="match${withOdds ? '' : ' projection'}">
+    ${head}
+    <div class="scoreline">${o.score[0]}–${o.score[1]}</div>
+    <div class="meta" style="justify-content:center;margin-top:0"><span>${withOdds ? 'most likely score' : 'projected score'}</span></div>
+    ${oddsBlock}
+    <div class="confmeter l${cf.n}" role="img" aria-label="${confLabel}">
+      <span class="conf-label">${withOdds ? 'Confidence' : 'Projection'}</span>
       <span class="conf-segs">${[1, 2, 3, 4].map(i => `<i${i <= cf.n ? ' class="on"' : ''}></i>`).join('')}</span>
       <span class="conf-read"><b>${cf.tag}</b> · ${cf.fav}</span>
     </div>
-    <div class="prob"><i style="width:${(o.pH * 100).toFixed(1)}%;background:${LEAGUES[h.g].color}"></i><i style="width:${(o.pD * 100).toFixed(1)}%;background:var(--line)"></i><i style="flex:1;background:${LEAGUES[a.g].color};opacity:.55"></i></div>
+    ${withOdds ? `<div class="prob"><i style="width:${(o.pH * 100).toFixed(1)}%;background:${LEAGUES[h.g].color}"></i><i style="width:${(o.pD * 100).toFixed(1)}%;background:var(--line)"></i><i style="flex:1;background:${LEAGUES[a.g].color};opacity:.55"></i></div>` : ''}
     <div class="meta"><span>Elo ${h.r} v ${a.r}</span><span>home edge +${o.ha}</span></div>
+    ${withOdds ? '' : '<p class="note" style="margin:6px 0 0">Match projection only — win percentages are published for senior professional leagues, never for amateur, college or youth football.</p>'}
     ${real ? watchRow(h, a) : ''}
   </div>`;
 }
@@ -1328,10 +1340,10 @@ function wireMatchupMachine(rated) {
    were ported in, which is why each still has a landing page of its own. */
 const TOOLS = [
   { href: '#/predict', title: 'Matchup Machine', tag: 'Every rated club',
-    blurb: 'Pick two clubs and get win odds, a likely scoreline, and the Elo gap behind them.',
+    blurb: 'Pick two clubs and get a likely scoreline, a confidence read and the Elo gap behind them (win odds for pro leagues).',
     icon: '<path d="M4.5 4.5l15 15M19.5 4.5l-15 15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M14.5 4.5h5v5M4.5 14.5v5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>' },
   { href: '#/compare', title: 'Compare Clubs', tag: 'Every rated club',
-    blurb: 'Two clubs side by side: rating, ranks, honours, home ground — and the odds if they met.',
+    blurb: 'Two clubs side by side: rating, ranks, honours, home ground — and a projection if they met.',
     icon: '<rect x="3" y="5" width="7.5" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="13.5" y="5" width="7.5" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 9h2.5M5.5 12h2.5M16 9h2.5M16 12h2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>' },
   { href: '#/race', title: 'Season Race', tag: 'Four pro leagues',
     blurb: 'Where every club is on course to finish, and how often each one actually wins the league.',
@@ -1505,7 +1517,7 @@ function screenCompare(idA, idB) {
     <div class="btnrow" style="margin:10px 0"><button type="button" class="hdrlink" id="cmpSwap">&#8646; Swap home / away</button><button type="button" class="hdrlink sharebtn" id="cmpShare">Share</button></div>
     <div class="kicker" style="margin-top:8px">If they met · ${esc(A.n)} at home</div>
     ${matchCard(A, B, 'HYPOTHETICAL')}
-    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier. Predictions, not betting advice.</p>`;
+    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier. Predictions, not betting advice. Win percentages appear only for senior pro leagues.</p>`;
   const go = (a, b) => { location.hash = '#/compare/' + a.id + '/' + b.id; };
   const wire = (btnId, other, slot) => view.querySelector('#' + btnId).addEventListener('click', () => {
     const ok = new Set(rated.map(c => c.id));
@@ -1529,7 +1541,7 @@ function screenPredict(preH) {
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/tools'">&larr; Back</button>
     ${sexToggle()}
     ${matchupMachineHtml(rated, preH)}
-    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Predictions, not betting advice.</p>
+    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Predictions, not betting advice. Win percentages appear only for senior pro leagues.</p>
     <a class="fa-card" href="#/matches"><b>&#128197; Matches &amp; Rivalry Radar</b><span>Verified fixtures and the nearest-rival matchups the model finds on its own.</span></a>
     <p class="note">Every rated club page has a &#9876; Predict Result button that starts from that club.</p>`;
   wireSexToggle();
@@ -1573,7 +1585,9 @@ function fixtureRow(f) {
   let edge = '';
   if (h && a && h.r && a.r) {
     const o = oddsFor(h, a);
-    edge = `<span class="fxodds" title="Model home win probability">${(o.pH * 100).toFixed(0)}%</span>`;
+    edge = oddsAllowed(h, a)
+      ? `<span class="fxodds" title="Model home win probability">${(o.pH * 100).toFixed(0)}%</span>`
+      : `<span class="fxodds" title="Model favourite (no percentages outside senior pro leagues)">${o.pH > o.pA ? '&#9650; home' : o.pA > o.pH ? '&#9660; away' : 'even'}</span>`;
   }
   const bits = [fxTime(f.start)];
   if (f.venue) bits.push(esc(f.venue));
@@ -1766,7 +1780,7 @@ function screenMatches(preH) {
     <h2 class="disp">Rivalry Radar</h2>
     <p class="note" style="margin:2px 0 10px">Who's closest to whom — and how the model thinks it would go. A discovery feature, not a schedule: these games aren't scheduled, so there are no dates. The real ones are above.</p>
     ${pairs.map(([h, a]) => matchCard(h, a, `${milesApart(h, a)} MI APART`)).join('')}
-    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Predictions, not betting advice.</p>`;
+    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Predictions, not betting advice. Win percentages appear only for senior pro leagues.</p>`;
   wireSexToggle();
   wireMatchupMachine(rated);
   /* Sex is captured before the await: a reader who toggles to the women's
@@ -2710,7 +2724,12 @@ const TIERS = {
   m: [
     { t: 'Division I', pro: true, leagues: ['mls'] },
     { t: 'Division II', pro: true, leagues: ['uslc'] },
-    { t: 'Division III', pro: true, leagues: ['usl1', 'mnp'], extra: ['nisa'], note: 'NISA: professional sanctioning not awarded — unsanctioned since Dec 2024' },
+    { t: 'Division III', pro: true, leagues: ['usl1', 'mnp'] },
+    /* NISA is rated (Pro Cup results) but sits OUTSIDE the sanctioned pro
+       blocks until USSF grants Division III — listing it inside D-III
+       contradicted the note underneath it. Re-file into the tier above when
+       sanctioning lands. */
+    { t: 'Unsanctioned professional', leagues: ['nisa'], note: 'NISA: professional sanctioning not awarded — unsanctioned since Dec 2024. Rated from NISA Pro Cup results; not a USSF Division III league.' },
     { t: 'National amateur', leagues: ['npsl', 'usl2', 'upsl'] },
     { t: 'Regional & emerging', leagues: ['apsl', 'gcpl', 'loc', 'swpl', 'mpl', 'mwpl', 'cpl', 'csl', 'sfsfl', 'eplwa', 'lisfl'], coming: [
       /* The old Eastern Premier (EPSL) is NOT missing: it renamed to APSL in
