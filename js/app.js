@@ -1891,6 +1891,16 @@ function ntMatchRow(m, tag) {
     ${cal}
   </div>`;
 }
+/* results and fixtures read differently — a score column vs a kickoff and
+   watch chips — but a mixed list hides where one ends and the other begins.
+   Upcoming games come first (that is what a reader arrives for), then the
+   results, each under its own sub-head. Nothing is reordered within a group. */
+function ntMatchGroups(matches, tag) {
+  const up = matches.filter(m => m.status !== 'ENDED'), past = matches.filter(m => m.status === 'ENDED');
+  const grp = (title, list) => list.length
+    ? `<div class="ntsub">${title} <span class="ntsubn">${list.length}</span></div>${list.map(m => ntMatchRow(m, tag)).join('')}` : '';
+  return (up.length && past.length) ? grp('Upcoming', up) + grp('Results', past) : matches.map(m => ntMatchRow(m, tag)).join('');
+}
 function ntTeamBlock(t, withHistoryLink) {
   const tag = ntTag(t);
   const links = [
@@ -1905,7 +1915,7 @@ function ntTeamBlock(t, withHistoryLink) {
     <h2 class="disp">${esc(t.name)}</h2>
     ${t.note ? `<p class="note" style="margin:2px 0 8px">${esc(t.note)}</p>` : ''}
     ${(t.achievements || []).map(a => `<span class="badge c" style="margin:0 6px 8px 0;display:inline-block">${esc(a)}</span>`).join('')}
-    ${(t.matches || []).map(m => ntMatchRow(m, tag)).join('')}
+    ${ntMatchGroups(t.matches || [], tag)}
     ${t.next ? `<p class="note" style="margin:6px 0 0">${esc(t.next)}</p>` : ''}
     ${links ? `<p style="margin:8px 0 0">${links}</p>` : ''}`;
 }

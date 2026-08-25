@@ -1128,4 +1128,7 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 .ntjumplbl{flex:none;color:var(--ink-dim);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;width:52px}
 .ntjump .chip{flex:none;padding:5px 10px;font-size:.7rem}
 .ntjump .ntcount{background:var(--accent);color:var(--ground);border-radius:999px;min-width:16px;height:16px;line-height:16px;text-align:center;font-size:.62rem;padding:0 4px}
-.ntblock{scroll-margin-top:8px}
+.ntblock{scroll-margin-top:88px}
+.ntsub{display:flex;align-items:center;gap:8px;margin:14px 0 6px;color:var(--ink-dim);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase}
+.ntsub::after{content:"";flex:1;border-top:1px solid var(--line)}
+.ntsubn{color:var(--ink);font-weight:600}
