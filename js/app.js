@@ -731,7 +731,28 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
         fill: false, color: 'rgba(232,240,246,.78)', weight: outlineWeight(leafMap.getZoom()), lineJoin: 'round', lineCap: 'round',
       }) }).addTo(leafMap);
       leafMap.on('zoomend', () => border.setStyle({ weight: outlineWeight(leafMap.getZoom()) }));
+      /* the same rings make the pin fan land-aware (see fanLatLng) */
+      landRings = gj.geometry.coordinates.flat(1).map(r => {
+        let x0 = 999, x1 = -999, y0 = 999, y1 = -999;
+        for (const [x, y] of r) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+        return { r, x0, x1, y0, y1 };
+      });
+      refan();
     }).catch(() => {});
+    let landRings = null;
+    let refan = () => {};
+    const isLand = (lat, lng) => {
+      if (!landRings) return true;
+      let inside = false;
+      for (const { r, x0, x1, y0, y1 } of landRings) {
+        if (lng < x0 || lng > x1 || lat < y0 || lat > y1) continue;
+        for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+          const [xi, yi] = r[i], [xj, yj] = r[j];
+          if ((yi > lat) !== (yj > lat) && lng < (xj - xi) * (lat - yi) / (yj - yi) + xi) inside = !inside;
+        }
+      }
+      return inside;
+    };
     /* frame the scoped clubs (state/region) but plot everything, so panning
        past a border reveals the neighbors instead of empty map */
     const frame = frameClubs.filter(c => isFinite(c.la) && isFinite(c.lo));
@@ -784,9 +805,18 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
       const z = leafMap.getZoom();
       const spread = Math.max(4, Math.min(44, 6 + (z - 4) * 3));
       const p = leafMap.project([c.la, c.lo], z);
-      const r = spread * Math.sqrt(i), a = i * GOLDEN;
-      const ll = leafMap.unproject(L.point(p.x + r * Math.cos(a), p.y + r * Math.sin(a)), z);
-      return [ll.lat, ll.lng];
+      /* Coastal stacks (Miami, Tampa, the Bay) used to spiral straight into
+         the water once the spread widened — the pins read as wrong, the
+         coordinates were not. Walk the spiral looking for a slot on land:
+         other angles at the same radius first, then tighter radii. A pin
+         that finds nothing stays on its true point. */
+      const r0 = spread * Math.sqrt(i);
+      for (let k = 0; k < 24; k++) {
+        const r = r0 * (k < 12 ? 1 : k < 18 ? 0.6 : 0.3), a = (i + k * 7) * GOLDEN;
+        const ll = leafMap.unproject(L.point(p.x + r * Math.cos(a), p.y + r * Math.sin(a)), z);
+        if (isLand(ll.lat, ll.lng)) return [ll.lat, ll.lng];
+      }
+      return [c.la, c.lo];
     };
     /* Pin size tracks zoom. A flat radius of 6 meant ~3,000 markers each 14px
        across on a 400px-wide national view — the pins covered more area than
@@ -815,7 +845,8 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
       streets.setOpacity(streetOpacity(z));
     };
     rescale();
-    leafMap.on('zoomend', () => { fanned.forEach(([m, c]) => m.setLatLng(fanLatLng(c))); rescale(); });
+    refan = () => fanned.forEach(([m, c]) => m.setLatLng(fanLatLng(c)));
+    leafMap.on('zoomend', () => { refan(); rescale(); });
     /* crest icons appear zoomed-in only, viewport-scoped and capped: 4k DOM
        image markers at national zoom would jank mobile for no visual gain */
     const crestLayer = L.layerGroup().addTo(leafMap);
