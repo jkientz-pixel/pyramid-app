@@ -728,7 +728,7 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     fetch('data/us_nation.json?v=__RXIV__').then(r => r.ok ? r.json() : null).then(gj => {
       if (!gj || !leafMap) return;
       const border = L.geoJSON(gj, { pane: 'outline', interactive: false, style: () => ({
-        fill: false, color: 'rgba(232,240,246,.78)', weight: outlineWeight(leafMap.getZoom()), lineJoin: 'round', lineCap: 'round',
+        fill: false, color: 'rgba(200,208,214,.42)', weight: outlineWeight(leafMap.getZoom()), lineJoin: 'round', lineCap: 'round',
       }) }).addTo(leafMap);
       leafMap.on('zoomend', () => border.setStyle({ weight: outlineWeight(leafMap.getZoom()) }));
       /* the same rings make the pin fan land-aware (see fanLatLng) */
