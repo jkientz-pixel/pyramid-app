@@ -36,6 +36,13 @@ const platformOf = (ua = '') => {
 const okEndpoint = e =>
   typeof e === 'string' && e.length <= 1024 && /^https:\/\/[^\s]+$/.test(e);
 
+/* APNs device tokens from the native iOS app (~/rankedxi-ios): 64 hex chars.
+   Stored as the pseudo-endpoint apns://<token> so one table and one DELETE
+   path cover both channels; the web-push sender skips these rows and the
+   APNs sender selects only them. */
+const okApns = t => typeof t === 'string' && /^[0-9a-f]{64}$/i.test(t);
+const okAnyEndpoint = e => okEndpoint(e) || (typeof e === 'string' && okApns(e.replace(/^apns:\/\//, '')) && e.startsWith('apns://'));
+
 /* base64url, as PushSubscription.toJSON() emits its keys */
 const okKey = (k, max) =>
   typeof k === 'string' && k.length > 0 && k.length <= max && /^[A-Za-z0-9_-]+=*$/.test(k);
@@ -50,10 +57,19 @@ export async function onRequestPost({ request, env }) {
     return json({ ok: false }, 400);
   }
 
-  const sub = body.sub || {};
-  const keys = sub.keys || {};
-  if (!okEndpoint(sub.endpoint) || !okKey(keys.p256dh, 256) || !okKey(keys.auth, 64)) {
-    return json({ ok: false }, 400);
+  let endpoint, p256dh, auth, plat;
+  if (body.apns !== undefined) {
+    if (!okApns(body.apns)) return json({ ok: false }, 400);
+    endpoint = 'apns://' + String(body.apns).toLowerCase();
+    p256dh = '-'; auth = '-'; plat = 'ios-app';
+  } else {
+    const sub = body.sub || {};
+    const keys = sub.keys || {};
+    if (!okEndpoint(sub.endpoint) || !okKey(keys.p256dh, 256) || !okKey(keys.auth, 64)) {
+      return json({ ok: false }, 400);
+    }
+    endpoint = sub.endpoint; p256dh = keys.p256dh; auth = keys.auth;
+    plat = platformOf(request.headers.get('user-agent') || '');
   }
 
   /* The club list is capped and slug-checked, not trusted: it is the one
@@ -71,11 +87,11 @@ export async function onRequestPost({ request, env }) {
          clubs=excluded.clubs`
     ).bind(
       new Date().toISOString(),
-      sub.endpoint,
-      keys.p256dh,
-      keys.auth,
+      endpoint,
+      p256dh,
+      auth,
       JSON.stringify(clubs),
-      platformOf(request.headers.get('user-agent') || '')
+      plat
     ).run();
   } catch (e) {
     return json({ ok: false }, 500);
@@ -92,7 +108,7 @@ export async function onRequestDelete({ request, env }) {
     return json({ ok: false }, 400);
   }
   const endpoint = clip(body.endpoint, 1024);
-  if (!okEndpoint(endpoint)) return json({ ok: false }, 400);
+  if (!okAnyEndpoint(endpoint)) return json({ ok: false }, 400);
 
   try {
     await env.DB.prepare('DELETE FROM push_subs WHERE endpoint = ?').bind(endpoint).run();

@@ -20,6 +20,8 @@
 /* VAPID public key — pairs with ~/.config/rankxi/vapid_private.pem on the
    sending side. Public by design: every subscriber's browser hands it to the
    push service so only our sender can use the subscription. */
+import { nativePush } from './native.js?v=__RXIV__';
+
 const VAPID_PUBLIC =
   'BBA0wcgG7nP2Ph6dIAqVEdEQDVaYuxRf40N1JH2Da-5xT2Fba6flVkS4Bc6IJMiNCC7v1t-temcGbB9ZDTNpm3A';
 
@@ -40,8 +42,18 @@ const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
 
 const reg = () => navigator.serviceWorker.ready;
 
+/* Native iOS app: APNs through the Capacitor plugin instead of web push.
+   The server row uses the pseudo-endpoint apns://<token> so the same
+   /api/push table and DELETE path serve both channels. */
+const native = () => nativePush.available();
+const apnsEndpoint = t => 'apns://' + t;
+
 /* 'ok' | 'on' | 'denied' | 'install' | 'no' */
 export async function support() {
+  if (native()) {
+    if ((await nativePush.permission()) === 'denied') return 'denied';
+    return nativePush.token() ? 'on' : 'ok';
+  }
   if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
     return isIOS && !standalone() ? 'install' : 'no';
   }
@@ -56,12 +68,17 @@ async function post(sub, clubs) {
   const r = await fetch('/api/push', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ sub: sub.toJSON(), clubs }),
+    body: JSON.stringify(sub.apns ? { apns: sub.apns, clubs } : { sub: sub.toJSON(), clubs }),
   });
   if (!r.ok) throw new Error('push register failed');
 }
 
 export async function enable(clubs) {
+  if (native()) {
+    const token = await nativePush.register();
+    await post({ apns: token }, clubs);
+    return;
+  }
   const perm = await Notification.requestPermission();
   if (perm !== 'granted') throw new Error('permission ' + perm);
   const sub = await (await reg()).pushManager.subscribe({
@@ -72,6 +89,20 @@ export async function enable(clubs) {
 }
 
 export async function disable() {
+  if (native()) {
+    const token = nativePush.token();
+    if (token) {
+      try {
+        await fetch('/api/push', {
+          method: 'DELETE',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ endpoint: apnsEndpoint(token) }),
+        });
+      } catch { /* reaped at send time */ }
+    }
+    await nativePush.unregister();
+    return;
+  }
   const sub = await (await reg()).pushManager.getSubscription();
   if (!sub) return;
   /* Best effort on the server row: if the DELETE is lost the sender will
@@ -87,6 +118,11 @@ export async function disable() {
 }
 
 export async function sync(clubs) {
+  if (native()) {
+    const token = nativePush.token();
+    if (token) { try { await post({ apns: token }, clubs); } catch { /* next visit */ } }
+    return;
+  }
   try {
     const sub = await (await reg()).pushManager.getSubscription();
     if (sub) await post(sub, clubs);
