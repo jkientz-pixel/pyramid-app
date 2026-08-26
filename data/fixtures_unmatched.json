@@ -1,10 +1,18 @@
 [
  [
+  "ncaa1w: Southern",
+  7
+ ],
+ [
   "ncaa1: VMI",
   6
  ],
  [
   "ncaa1: UConn",
+  6
+ ],
+ [
+  "ncaa1: UAlbany",
   6
  ],
  [
@@ -28,10 +36,6 @@
   6
  ],
  [
-  "ncaa1w: Southern",
-  6
- ],
- [
   "ncaa1w: Nevada",
   6
  ],
@@ -40,7 +44,7 @@
   5
  ],
  [
-  "ncaa1: UAlbany",
+  "ncaa1: NC State",
   5
  ],
  [
@@ -57,6 +61,14 @@
  ],
  [
   "ncaa1: California",
+  5
+ ],
+ [
+  "ncaa1: American University",
+  5
+ ],
+ [
+  "ncaa1: South Carolina",
   5
  ],
  [
@@ -104,6 +116,10 @@
   5
  ],
  [
+  "ncaa1w: Louisiana",
+  5
+ ],
+ [
   "ncaa1w: Miami (OH)",
   5
  ],
@@ -148,15 +164,7 @@
   5
  ],
  [
-  "ncaa1: UAB",
-  4
- ],
- [
   "ncaa1: West Florida",
-  4
- ],
- [
-  "ncaa1: NC State",
   4
  ],
  [
@@ -172,11 +180,11 @@
   4
  ],
  [
-  "ncaa1: Virginia Tech",
+  "ncaa1: Charlotte",
   4
  ],
  [
-  "ncaa1: American University",
+  "ncaa1: Virginia Tech",
   4
  ],
  [
@@ -188,7 +196,7 @@
   4
  ],
  [
-  "ncaa1: South Carolina",
+  "ncaa1: Howard",
   4
  ],
  [
@@ -196,7 +204,15 @@
   4
  ],
  [
+  "ncaa1: North Carolina",
+  4
+ ],
+ [
   "ncaa1: Maryland",
+  4
+ ],
+ [
+  "ncaa1: UAB",
   4
  ],
  [
@@ -252,10 +268,6 @@
   4
  ],
  [
-  "ncaa1w: Louisiana",
-  4
- ],
- [
   "ncaa1w: Texas",
   4
  ],
@@ -294,18 +306,6 @@
  [
   "ncaa1w: North Carolina",
   4
- ],
- [
-  "ncaa1: Charlotte",
-  3
- ],
- [
-  "ncaa1: Howard",
-  3
- ],
- [
-  "ncaa1: North Carolina",
-  3
  ],
  [
   "ncaa1: Seattle U",
@@ -456,11 +456,7 @@
   1
  ],
  [
-  "ncaa1w: Central Baptist",
-  1
- ],
- [
-  "ncaa1w: Marywood",
+  "ncaa1: Hanover",
   1
  ],
  [
@@ -537,6 +533,10 @@
  ],
  [
   "ncaa1w: Central Washington",
+  1
+ ],
+ [
+  "ncaa1w: Adelphi",
   1
  ]
 ]
