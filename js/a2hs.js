@@ -42,6 +42,10 @@
   /* Inside the native iOS app (Capacitor shell) the icon already exists. */
   var isNativeApp = false;
   try { isNativeApp = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); } catch (e) {}
+  /* Belt and braces: the shell also stamps its user agent (capacitor.config
+     ios.appendUserAgent), so the bail-out holds even if the bridge object
+     is ever absent. */
+  if (/RankedXI-iOS/.test(ua)) isNativeApp = true;
   if (isNativeApp || !isIOS || !isSafari || standalone()) return;
   try { if (localStorage.getItem(KEY)) return; } catch (e) { return; }
 
