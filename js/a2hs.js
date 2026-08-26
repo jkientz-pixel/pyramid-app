@@ -39,7 +39,10 @@
      doesn't. Instructions below are Safari's, so only Safari qualifies. */
   var isSafari = !/CriOS|FxiOS|EdgiOS|OPT\/|Brave/i.test(ua);
 
-  if (!isIOS || !isSafari || standalone()) return;
+  /* Inside the native iOS app (Capacitor shell) the icon already exists. */
+  var isNativeApp = false;
+  try { isNativeApp = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); } catch (e) {}
+  if (isNativeApp || !isIOS || !isSafari || standalone()) return;
   try { if (localStorage.getItem(KEY)) return; } catch (e) { return; }
 
   var shown = false;

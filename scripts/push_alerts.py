@@ -108,7 +108,10 @@ def main():
         return
     print(f'{len(fixtures)} fixtures today')
 
-    subs = q('SELECT id, endpoint, p256dh, auth, clubs FROM push_subs')
+    # apns:// rows belong to the native iOS app and need the APNs sender
+    # (not built until the Apple developer account exists); pywebpush would
+    # choke on them, so select web-push rows only.
+    subs = q("SELECT id, endpoint, p256dh, auth, clubs FROM push_subs WHERE endpoint LIKE 'https://%'")
     if not subs:
         print('no subscribers')
         return

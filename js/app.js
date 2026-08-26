@@ -1,5 +1,6 @@
 import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=__RXIV__';
 import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=__RXIV__';
+import { share } from './native.js?v=__RXIV__';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
@@ -1574,7 +1575,7 @@ function screenCompare(idA, idB) {
   const sb = view.querySelector('#cmpShare');
   sb.addEventListener('click', async () => {
     const url = `https://www.rankedxi.com/app#/compare/${A.id}/${B.id}`;
-    if (navigator.share) { try { await navigator.share({ title: `${A.n} v ${B.n} — Ranked XI`, url }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+    if (await share({ title: `${A.n} v ${B.n} — Ranked XI`, url })) return;
     try { await navigator.clipboard.writeText(url); sb.textContent = 'Link copied ✓'; } catch { sb.textContent = url; }
     setTimeout(() => { sb.textContent = 'Share'; }, 1800);
   });
@@ -2539,10 +2540,7 @@ async function screenClub(ref) {
        that's the link that unfurls properly everywhere; unrated (youth
        directory) clubs fall back to the app route */
     const url = (c.r && !c.h) ? `https://www.rankedxi.com/club/${c.id}` : `https://www.rankedxi.com/app#/club/${c.id}`;
-    if (navigator.share) {
-      try { await navigator.share({ title: `${c.n} — Ranked XI`, url }); return; }
-      catch (e) { if (e && e.name === 'AbortError') return; }
-    }
+    if (await share({ title: `${c.n} — Ranked XI`, url })) return;
     try { await navigator.clipboard.writeText(url); sb.textContent = 'Link copied ✓'; }
     catch { sb.textContent = url; }
     setTimeout(() => { sb.textContent = 'Share'; }, 1800);

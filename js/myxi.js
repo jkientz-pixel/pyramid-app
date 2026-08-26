@@ -22,6 +22,7 @@
       never deletes a follow the visitor made somewhere else.
 */
 
+import { share } from './native.js?v=__RXIV__';
 import {
   extras, setExtras, setHome, isHome, encodePicks, decodePicks,
 } from './picks.js?v=__RXIV__';
@@ -507,7 +508,7 @@ export async function render(view, ctx) {
       const msg = view.querySelector('#mxsharemsg');
       const url = location.origin + '/app#/myxi/i/' + encodeURIComponent(encodePicks(favs(), extras()));
       try {
-        if (navigator.share) { await navigator.share({ title: 'My XI on Ranked XI', url }); return; }
+        if (await share({ title: 'My XI on Ranked XI', url })) return;
         await navigator.clipboard.writeText(url);
         msg.textContent = 'Link copied — open it on your other device to load these picks.';
       } catch {
