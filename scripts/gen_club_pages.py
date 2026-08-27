@@ -842,10 +842,15 @@ open(os.path.join(ROOT, 'sitemap.xml'), 'w').write('\n'.join(index) + '\n')
 # is why this is a cheap extra and not a strategy (audit T9).
 INDEXNOW_KEY = 'a7f3c1d94b6e42f8ae05c7213d9b8e64'
 open(os.path.join(ROOT, f'{INDEXNOW_KEY}.txt'), 'w').write(INDEXNOW_KEY + '\n')
-# only the pages worth a push: the hubs. Pushing 1,400 unrated stubs would be
-# the same crawl-budget mistake, made in someone else's index.
+# Every URL in every sitemap, not just the hubs. The hubs-only push (PR #86)
+# assumed Bing would follow the sitemaps into the club pages on its own; by
+# 2026-08-27 it had indexed 25 pages of 4,597. Jeremy chose to push the lot
+# (IndexNow accepts up to 10,000 URLs per request, so one payload still fits).
 push = STATIC_URLS + [f'{SITE}/league/{g}' for g in lg_ids] + \
-       [f'{SITE}/state/{s}' for s in st_ids]
+       [f'{SITE}/state/{s}' for s in st_ids] + \
+       [f'{SITE}/club/{c["id"]}' for c in rated] + \
+       [f'{SITE}/club/{c["id"]}' for c in unrated]
+assert len(push) <= 10_000, f'IndexNow caps a request at 10,000 URLs; got {len(push)}'
 json.dump({'host': 'www.rankedxi.com', 'key': INDEXNOW_KEY,
            'keyLocation': f'{SITE}/{INDEXNOW_KEY}.txt', 'urlList': push},
           open(os.path.join(ROOT, 'indexnow.json'), 'w'))
