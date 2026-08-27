@@ -4,15 +4,15 @@
   7
  ],
  [
-  "ncaa1: VMI",
-  6
- ],
- [
   "ncaa1: UConn",
   6
  ],
  [
   "ncaa1: UAlbany",
+  6
+ ],
+ [
+  "ncaa1: California",
   6
  ],
  [
@@ -36,8 +36,16 @@
   6
  ],
  [
+  "ncaa1w: Seattle U",
+  6
+ ],
+ [
   "ncaa1w: Nevada",
   6
+ ],
+ [
+  "ncaa1: Georgetown",
+  5
  ],
  [
   "ncaa1: NJIT",
@@ -45,10 +53,6 @@
  ],
  [
   "ncaa1: NC State",
-  5
- ],
- [
-  "ncaa1: Georgetown",
   5
  ],
  [
@@ -60,7 +64,7 @@
   5
  ],
  [
-  "ncaa1: California",
+  "ncaa1: Massachusetts",
   5
  ],
  [
@@ -72,7 +76,7 @@
   5
  ],
  [
-  "ncaa1w: Indiana",
+  "ncaa1: VMI",
   5
  ],
  [
@@ -96,6 +100,10 @@
   5
  ],
  [
+  "ncaa1w: Louisiana",
+  5
+ ],
+ [
   "ncaa1w: Maryland",
   5
  ],
@@ -116,10 +124,6 @@
   5
  ],
  [
-  "ncaa1w: Louisiana",
-  5
- ],
- [
   "ncaa1w: Miami (OH)",
   5
  ],
@@ -137,10 +141,6 @@
  ],
  [
   "ncaa1w: Cal State Fullerton",
-  5
- ],
- [
-  "ncaa1w: Seattle U",
   5
  ],
  [
@@ -173,10 +173,6 @@
  ],
  [
   "ncaa1: Sacramento State",
-  4
- ],
- [
-  "ncaa1: Massachusetts",
   4
  ],
  [
@@ -292,6 +288,10 @@
   4
  ],
  [
+  "ncaa1w: Indiana",
+  4
+ ],
+ [
   "ncaa1w: Ohio",
   4
  ],
@@ -312,6 +312,10 @@
   3
  ],
  [
+  "ncaa1w: St. John's",
+  3
+ ],
+ [
   "ncaa1w: West Florida",
   3
  ],
@@ -321,10 +325,6 @@
  ],
  [
   "ncaa1w: UConn",
-  3
- ],
- [
-  "ncaa1w: St. John's",
   3
  ],
  [
@@ -362,18 +362,6 @@
  [
   "ncaa1w: Our Lady of the Lake",
   2
- ],
- [
-  "ncaa1: Randolph",
-  1
- ],
- [
-  "ncaa1: Webber International",
-  1
- ],
- [
-  "ncaa1: Blackburn",
-  1
  ],
  [
   "ncaa1: Waynesburg",
@@ -460,10 +448,6 @@
   1
  ],
  [
-  "ncaa1w: Grand View",
-  1
- ],
- [
   "ncaa1w: St. Ambrose",
   1
  ],
@@ -537,6 +521,10 @@
  ],
  [
   "ncaa1w: Adelphi",
+  1
+ ],
+ [
+  "ncaa1w: Thomas Jefferson",
   1
  ]
 ]
