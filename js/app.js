@@ -2616,7 +2616,7 @@ function screenAbout() {
     <div class="kicker" style="margin-top:14px">Coming layers</div>
     <ul class="lglist">${ROADMAP.map(r =>
       `<li><a href="${r.url}" target="_blank" rel="noopener"><span class="dot" style="background:var(--ink-dim);width:12px;height:12px;border-radius:50%;opacity:.4"></span><b>${r.label}</b><span>~${r.teams} teams · ${r.sex === 'w' ? "women's" : "men's"}</span></a></li>`).join('')}</ul>
-    <p class="note">NISA is currently unsanctioned by U.S. Soccer (Dec 2024); its clubs are shown for completeness. UPSL layer holds the clubs mapped so far — the full league is 400+ clubs.</p>
+    <p class="note">NISA is currently unsanctioned by U.S. Soccer (Dec 2024); its clubs are shown for completeness. UPSL layer covers 900+ clubs across every conference.</p>
     <p class="fine" style="font-size:.75rem">Data last refreshed: ${BUILD_DATE} (build v${BUILDV}) &middot; rosters and stats auto-refresh every 12 hours &middot; <a href="#/legal" style="color:var(--accent)">Terms &amp; Privacy</a> &middot; <a href="/methodology" style="color:var(--accent)">Methodology &amp; Disclaimer</a></p>
     <p class="fine" style="font-size:.75rem">Data: Wikipedia (CC BY-SA — rosters, profiles, photos, crests), league sites and public feeds (NPSL/Squadi, UPSL), OpenStreetMap Nominatim geocoding. Club and league marks belong to their owners.</p>
     <p class="fine" style="font-size:.75rem">Built by Jeremy Kientz · 2026</p>

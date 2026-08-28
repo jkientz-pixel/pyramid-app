@@ -178,7 +178,7 @@ export async function render(view, ctx) {
       <div class="kicker" style="margin-top:16px">Start here</div>
       <a class="fa-card" href="#/table"><b>&#9733; Follow a club</b><span>Open any club and tap Follow &mdash; the national table is the fastest way to find one.</span></a>
       <a class="fa-card" href="#/table/players"><b>&#9733; Follow a player</b><span>The player table, ranked across every league &mdash; open one and tap Follow.</span></a>
-      <a class="fa-card" href="#/map"><b>&#128205; Find your local side</b><span>4,000+ clubs on the map. Somebody near you is on it.</span></a>
+      <a class="fa-card" href="#/map"><b>&#128205; Find your local side</b><span>4,500+ clubs on the map. Somebody near you is on it.</span></a>
       ${addBlock()}
       ${accountState().signedIn ? accountBlock() : ''}
       ${socialBlock()}`;

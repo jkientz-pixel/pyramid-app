@@ -10,7 +10,7 @@
 import { CLUBS } from '../js/data.js';
 
 const COLLEGE = new Set(['ncaa1', 'ncaa2', 'ncaa3', 'ncaa1w', 'ncaa2w', 'naia']);
-const YOUTH = new Set(['ecrlb', 'ecrlg', 'ecnlb', 'ecnlg', 'mlsnext', 'ga', 'gaa', 'ea']);
+const YOUTH = new Set(['ecrlb', 'ecrlg', 'ecnlb', 'ecnlg', 'pecnlb', 'pecnlg', 'mlsnext', 'ga', 'gaa', 'ea']);
 
 /* h:1 is a tombstone — CLUBS is append-only, so rows are retired rather than
    deleted and a raw .length overcounts. */
