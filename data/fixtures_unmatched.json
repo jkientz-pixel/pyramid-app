@@ -4,6 +4,10 @@
   7
  ],
  [
+  "ncaa1: VMI",
+  6
+ ],
+ [
   "ncaa1: UConn",
   6
  ],
@@ -22,10 +26,6 @@
  [
   "ncaa1w: Stephen F. Austin",
   6
- ],
- [
-  "ncaa1: VMI",
-  5
  ],
  [
   "ncaa1: Maryland",
@@ -49,6 +49,10 @@
  ],
  [
   "ncaa1: Indiana",
+  5
+ ],
+ [
+  "ncaa1: American University",
   5
  ],
  [
@@ -128,6 +132,10 @@
   5
  ],
  [
+  "ncaa1w: Charleston",
+  5
+ ],
+ [
   "ncaa1w: Miami (OH)",
   5
  ],
@@ -168,10 +176,6 @@
   4
  ],
  [
-  "ncaa1: American University",
-  4
- ],
- [
   "ncaa1: NJIT",
   4
  ],
@@ -192,7 +196,15 @@
   4
  ],
  [
+  "ncaa1: Howard",
+  4
+ ],
+ [
   "ncaa1w: UAlbany",
+  4
+ ],
+ [
+  "ncaa1w: Quinnipiac",
   4
  ],
  [
@@ -228,15 +240,15 @@
   4
  ],
  [
+  "ncaa1w: Mount St. Mary's",
+  4
+ ],
+ [
   "ncaa1w: Purdue",
   4
  ],
  [
   "ncaa1w: Cal State Fullerton",
-  4
- ],
- [
-  "ncaa1w: Charleston",
   4
  ],
  [
@@ -304,15 +316,7 @@
   3
  ],
  [
-  "ncaa1: Howard",
-  3
- ],
- [
   "ncaa1: North Carolina",
-  3
- ],
- [
-  "ncaa1w: Quinnipiac",
   3
  ],
  [
@@ -321,10 +325,6 @@
  ],
  [
   "ncaa1w: Robert Morris",
-  3
- ],
- [
-  "ncaa1w: Mount St. Mary's",
   3
  ],
  [
@@ -509,6 +509,10 @@
  ],
  [
   "ncaa1w: Warner",
+  1
+ ],
+ [
+  "ncaa1w: Eckerd",
   1
  ]
 ]
