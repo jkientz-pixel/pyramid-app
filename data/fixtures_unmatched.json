@@ -1,10 +1,14 @@
 [
  [
-  "ncaa1w: VMI",
+  "ncaa1w: Southern",
+  7
+ ],
+ [
+  "ncaa1: UConn",
   6
  ],
  [
-  "ncaa1w: Southern",
+  "ncaa1w: VMI",
   6
  ],
  [
@@ -20,23 +24,11 @@
   6
  ],
  [
-  "ncaa1: Massachusetts",
-  5
- ],
- [
-  "ncaa1: American University",
-  5
- ],
- [
-  "ncaa1: South Carolina",
-  5
- ],
- [
-  "ncaa1: NJIT",
-  5
- ],
- [
   "ncaa1: VMI",
+  5
+ ],
+ [
+  "ncaa1: Maryland",
   5
  ],
  [
@@ -44,15 +36,27 @@
   5
  ],
  [
+  "ncaa1: Georgetown",
+  5
+ ],
+ [
   "ncaa1: UAlbany",
   5
  ],
  [
-  "ncaa1: UConn",
+  "ncaa1: NC State",
+  5
+ ],
+ [
+  "ncaa1: Indiana",
   5
  ],
  [
   "ncaa1: California",
+  5
+ ],
+ [
+  "ncaa1: South Carolina",
   5
  ],
  [
@@ -61,6 +65,14 @@
  ],
  [
   "ncaa1w: Long Beach State",
+  5
+ ],
+ [
+  "ncaa1w: Southern Illinois",
+  5
+ ],
+ [
+  "ncaa1w: Alabama",
   5
  ],
  [
@@ -84,15 +96,23 @@
   5
  ],
  [
+  "ncaa1w: Penn State",
+  5
+ ],
+ [
   "ncaa1w: East Texas A&M",
   5
  ],
  [
-  "ncaa1w: Southern Illinois",
+  "ncaa1w: Wisconsin",
   5
  ],
  [
-  "ncaa1w: Wisconsin",
+  "ncaa1w: UL Monroe",
+  5
+ ],
+ [
+  "ncaa1w: LSU",
   5
  ],
  [
@@ -120,7 +140,11 @@
   5
  ],
  [
-  "ncaa1w: Fresno State",
+  "ncaa1w: Maryland",
+  5
+ ],
+ [
+  "ncaa1w: Illinois",
   5
  ],
  [
@@ -128,15 +152,27 @@
   5
  ],
  [
-  "ncaa1: Charlotte",
+  "ncaa1w: Fresno State",
+  5
+ ],
+ [
+  "ncaa1: UAB",
   4
  ],
  [
-  "ncaa1: Virginia Tech",
+  "ncaa1: Wisconsin",
   4
  ],
  [
-  "ncaa1: George Washington",
+  "ncaa1: Sacramento State",
+  4
+ ],
+ [
+  "ncaa1: American University",
+  4
+ ],
+ [
+  "ncaa1: NJIT",
   4
  ],
  [
@@ -144,39 +180,15 @@
   4
  ],
  [
-  "ncaa1: Howard",
-  4
- ],
- [
   "ncaa1: UCF",
   4
  ],
  [
-  "ncaa1: North Carolina",
+  "ncaa1: Massachusetts",
   4
  ],
  [
-  "ncaa1: Maryland",
-  4
- ],
- [
-  "ncaa1: Georgetown",
-  4
- ],
- [
-  "ncaa1: NC State",
-  4
- ],
- [
-  "ncaa1: Indiana",
-  4
- ],
- [
-  "ncaa1: UAB",
-  4
- ],
- [
-  "ncaa1: Sacramento State",
+  "ncaa1: Virginia Tech",
   4
  ],
  [
@@ -200,7 +212,15 @@
   4
  ],
  [
-  "ncaa1w: Penn State",
+  "ncaa1w: South Carolina",
+  4
+ ],
+ [
+  "ncaa1w: Arkansas",
+  4
+ ],
+ [
+  "ncaa1w: Missouri",
   4
  ],
  [
@@ -209,14 +229,6 @@
  ],
  [
   "ncaa1w: Purdue",
-  4
- ],
- [
-  "ncaa1w: UL Monroe",
-  4
- ],
- [
-  "ncaa1w: LSU",
   4
  ],
  [
@@ -236,7 +248,15 @@
   4
  ],
  [
-  "ncaa1w: Alabama",
+  "ncaa1w: Texas",
+  4
+ ],
+ [
+  "ncaa1w: Southern Miss",
+  4
+ ],
+ [
+  "ncaa1w: West Florida",
   4
  ],
  [
@@ -244,7 +264,7 @@
   4
  ],
  [
-  "ncaa1w: Maryland",
+  "ncaa1w: Jacksonville",
   4
  ],
  [
@@ -252,11 +272,15 @@
   4
  ],
  [
-  "ncaa1w: Illinois",
+  "ncaa1w: Tennessee",
   4
  ],
  [
   "ncaa1w: SE Louisiana",
+  4
+ ],
+ [
+  "ncaa1w: Texas A&M",
   4
  ],
  [
@@ -268,11 +292,23 @@
   3
  ],
  [
-  "ncaa1: Wisconsin",
+  "ncaa1: George Washington",
   3
  ],
  [
   "ncaa1: Seattle U",
+  3
+ ],
+ [
+  "ncaa1: Charlotte",
+  3
+ ],
+ [
+  "ncaa1: Howard",
+  3
+ ],
+ [
+  "ncaa1: North Carolina",
   3
  ],
  [
@@ -288,18 +324,6 @@
   3
  ],
  [
-  "ncaa1w: South Carolina",
-  3
- ],
- [
-  "ncaa1w: Arkansas",
-  3
- ],
- [
-  "ncaa1w: Missouri",
-  3
- ],
- [
   "ncaa1w: Mount St. Mary's",
   3
  ],
@@ -308,35 +332,7 @@
   3
  ],
  [
-  "ncaa1w: Texas",
-  3
- ],
- [
   "ncaa1w: St Bonaventure",
-  3
- ],
- [
-  "ncaa1w: Southern Miss",
-  3
- ],
- [
-  "ncaa1w: West Florida",
-  3
- ],
- [
-  "ncaa1w: Jacksonville",
-  3
- ],
- [
-  "ncaa1w: Tennessee",
-  3
- ],
- [
-  "ncaa1w: Texas A&M",
-  3
- ],
- [
-  "ncaa1w: Sacramento State",
   3
  ],
  [
@@ -344,11 +340,11 @@
   3
  ],
  [
-  "ncaa1: Warren Wilson",
-  2
+  "ncaa1w: Sacramento State",
+  3
  ],
  [
-  "ncaa1w: Bob Jones",
+  "ncaa1: Warren Wilson",
   2
  ],
  [
@@ -362,10 +358,6 @@
  [
   "ncaa1w: UConn",
   2
- ],
- [
-  "ncaa1: Southern Virginia",
-  1
  ],
  [
   "ncaa1: Keystone",
@@ -492,6 +484,10 @@
   1
  ],
  [
+  "ncaa1w: Bob Jones",
+  1
+ ],
+ [
   "ncaa1w: Concordia (TX)",
   1
  ],
@@ -509,6 +505,10 @@
  ],
  [
   "ncaa1w: Thomas Jefferson",
+  1
+ ],
+ [
+  "ncaa1w: Warner",
   1
  ]
 ]
