@@ -1,26 +1,30 @@
 [
  [
-  "ncaa1w: Southern",
+  "ncaa1w: Tennessee Tech",
   7
+ ],
+ [
+  "ncaa1: UAlbany",
+  6
  ],
  [
   "ncaa1: UConn",
   6
  ],
  [
-  "ncaa1w: Southern Illinois",
-  6
- ],
- [
-  "ncaa1w: VMI",
-  6
- ],
- [
-  "ncaa1w: Tennessee Tech",
+  "ncaa1w: Wisconsin",
   6
  ],
  [
   "ncaa1w: Nevada",
+  6
+ ],
+ [
+  "ncaa1w: NC State",
+  6
+ ],
+ [
+  "ncaa1w: Miami (OH)",
   6
  ],
  [
@@ -32,15 +36,27 @@
   6
  ],
  [
+  "ncaa1w: VMI",
+  6
+ ],
+ [
+  "ncaa1w: Massachusetts",
+  6
+ ],
+ [
+  "ncaa1w: Southern",
+  6
+ ],
+ [
+  "ncaa1w: North Carolina",
+  6
+ ],
+ [
   "ncaa1: San Jos\u00e9 State",
   5
  ],
  [
   "ncaa1: Georgetown",
-  5
- ],
- [
-  "ncaa1: UAlbany",
   5
  ],
  [
@@ -76,55 +92,7 @@
   5
  ],
  [
-  "ncaa1w: East Texas A&M",
-  5
- ],
- [
-  "ncaa1w: Alabama",
-  5
- ],
- [
-  "ncaa1w: UT Rio Grande Valley",
-  5
- ],
- [
-  "ncaa1w: LSU",
-  5
- ],
- [
-  "ncaa1w: Northwestern",
-  5
- ],
- [
-  "ncaa1w: Columbia",
-  5
- ],
- [
-  "ncaa1w: Lafayette",
-  5
- ],
- [
-  "ncaa1w: NJIT",
-  5
- ],
- [
-  "ncaa1w: Ohio",
-  5
- ],
- [
-  "ncaa1w: Penn State",
-  5
- ],
- [
-  "ncaa1w: Wisconsin",
-  5
- ],
- [
   "ncaa1w: UL Monroe",
-  5
- ],
- [
-  "ncaa1w: NC State",
   5
  ],
  [
@@ -136,7 +104,7 @@
   5
  ],
  [
-  "ncaa1w: Miami (OH)",
+  "ncaa1w: Louisiana",
   5
  ],
  [
@@ -144,7 +112,7 @@
   5
  ],
  [
-  "ncaa1w: Massachusetts",
+  "ncaa1w: Ohio",
   5
  ],
  [
@@ -152,20 +120,32 @@
   5
  ],
  [
+  "ncaa1w: Miami",
+  5
+ ],
+ [
+  "ncaa1w: Southern Illinois",
+  5
+ ],
+ [
+  "ncaa1w: NJIT",
+  5
+ ],
+ [
   "ncaa1w: Illinois",
   5
  ],
  [
-  "ncaa1w: North Carolina",
+  "ncaa1w: Northwestern",
+  5
+ ],
+ [
+  "ncaa1w: Columbia",
   5
  ],
  [
   "ncaa1w: Fresno State",
   5
- ],
- [
-  "ncaa1: West Florida",
-  4
  ],
  [
   "ncaa1: UAB",
@@ -208,43 +188,7 @@
   4
  ],
  [
-  "ncaa1w: Virginia Tech",
-  4
- ],
- [
-  "ncaa1w: Indiana",
-  4
- ],
- [
-  "ncaa1w: Charlotte",
-  4
- ],
- [
-  "ncaa1w: Robert Morris",
-  4
- ],
- [
-  "ncaa1w: South Carolina",
-  4
- ],
- [
-  "ncaa1w: Arkansas",
-  4
- ],
- [
-  "ncaa1w: Missouri",
-  4
- ],
- [
-  "ncaa1w: Missouri State",
-  4
- ],
- [
   "ncaa1w: Mount St. Mary's",
-  4
- ],
- [
-  "ncaa1w: Purdue",
   4
  ],
  [
@@ -252,11 +196,11 @@
   4
  ],
  [
-  "ncaa1w: Louisiana",
+  "ncaa1w: St. Thomas",
   4
  ],
  [
-  "ncaa1w: St. Thomas",
+  "ncaa1w: Nebraska",
   4
  ],
  [
@@ -280,6 +224,10 @@
   4
  ],
  [
+  "ncaa1w: UAlbany",
+  4
+ ],
+ [
   "ncaa1w: California",
   4
  ],
@@ -288,11 +236,43 @@
   4
  ],
  [
-  "ncaa1w: Miami",
+  "ncaa1w: Missouri State",
+  4
+ ],
+ [
+  "ncaa1w: Lafayette",
   4
  ],
  [
   "ncaa1w: Tennessee",
+  4
+ ],
+ [
+  "ncaa1w: Penn State",
+  4
+ ],
+ [
+  "ncaa1w: Virginia Tech",
+  4
+ ],
+ [
+  "ncaa1w: Alabama",
+  4
+ ],
+ [
+  "ncaa1w: East Texas A&M",
+  4
+ ],
+ [
+  "ncaa1w: LSU",
+  4
+ ],
+ [
+  "ncaa1w: Purdue",
+  4
+ ],
+ [
+  "ncaa1w: UT Rio Grande Valley",
   4
  ],
  [
@@ -312,6 +292,10 @@
   4
  ],
  [
+  "ncaa1w: Indiana",
+  4
+ ],
+ [
   "ncaa1: Seattle U",
   3
  ],
@@ -320,15 +304,11 @@
   3
  ],
  [
-  "ncaa1w: Nebraska",
+  "ncaa1: West Florida",
   3
  ],
  [
   "ncaa1w: St. John's",
-  3
- ],
- [
-  "ncaa1w: UAlbany",
   3
  ],
  [
@@ -340,7 +320,31 @@
   3
  ],
  [
+  "ncaa1w: Missouri",
+  3
+ ],
+ [
+  "ncaa1w: Arkansas",
+  3
+ ],
+ [
   "ncaa1w: Quinnipiac",
+  3
+ ],
+ [
+  "ncaa1w: Robert Morris",
+  3
+ ],
+ [
+  "ncaa1w: UConn",
+  3
+ ],
+ [
+  "ncaa1w: Charlotte",
+  3
+ ],
+ [
+  "ncaa1w: South Carolina",
   3
  ],
  [
@@ -353,10 +357,6 @@
  ],
  [
   "ncaa1w: Hawai'i",
-  2
- ],
- [
-  "ncaa1w: UConn",
   2
  ],
  [
@@ -420,14 +420,6 @@
   1
  ],
  [
-  "ncaa1w: Holy Family",
-  1
- ],
- [
-  "ncaa1w: Texas A&M International",
-  1
- ],
- [
   "ncaa1w: Tougaloo",
   1
  ],
@@ -472,11 +464,11 @@
   1
  ],
  [
-  "ncaa1w: Central Washington",
+  "ncaa1w: Saint Xavier",
   1
  ],
  [
-  "ncaa1w: Saint Xavier",
+  "ncaa1w: Central Washington",
   1
  ],
  [
@@ -493,6 +485,10 @@
  ],
  [
   "ncaa1w: Eckerd",
+  1
+ ],
+ [
+  "ncaa1w: Schreiner",
   1
  ]
 ]
