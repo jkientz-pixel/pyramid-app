@@ -37,6 +37,13 @@ ANCHOR = 1350.0   # UPSL mean implied by the fitted Open Cup offset
 SPREAD = 55.0     # target sd — deliberately tight; divisions don't interplay
 K = 6             # shrinkage constant, in games
 
+# Clubs whose standings row doesn't normalise to the display name.
+# club id -> norm() of the team name exactly as data/upsl.json spells it.
+ALIASES = {
+    'bellevue-athletic-fc': 'bellevueathletic',   # standings drop the "FC"
+    'texas-havoc-fc': 'texashavocfc',             # rebranded Inter Nova Havoc FC
+}
+
 
 def norm(x):
     s = unicodedata.normalize('NFKD', x).encode('ascii', 'ignore').decode().lower()
@@ -75,7 +82,11 @@ def main():
     upsl = [c for c in clubs
             if c.get('g') == 'upsl' and not c.get('h') and c.get('x') != 'w']
 
-    matched = {c['id']: rows[norm(c['n'])] for c in upsl if norm(c['n']) in rows}
+    matched = {}
+    for c in upsl:
+        key = ALIASES.get(c['id'], norm(c['n']))
+        if key in rows:
+            matched[c['id']] = rows[key]
     if not matched:
         sys.exit('FATAL: no UPSL club matched a standings row — refusing to write')
 
