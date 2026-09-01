@@ -28,14 +28,6 @@
   6
  ],
  [
-  "ncaa1: Indiana",
-  5
- ],
- [
-  "ncaa1: UAB",
-  5
- ],
- [
   "ncaa1: American University",
   5
  ],
@@ -57,6 +49,10 @@
  ],
  [
   "ncaa1: UAlbany",
+  5
+ ],
+ [
+  "ncaa1: Georgetown",
   5
  ],
  [
@@ -132,22 +128,6 @@
   5
  ],
  [
-  "ncaa1: George Washington",
-  4
- ],
- [
-  "ncaa1: Wisconsin",
-  4
- ],
- [
-  "ncaa1: Seattle U",
-  4
- ],
- [
-  "ncaa1: Sacramento State",
-  4
- ],
- [
   "ncaa1: Penn State",
   4
  ],
@@ -160,11 +140,11 @@
   4
  ],
  [
-  "ncaa1: Georgetown",
+  "ncaa1: Maryland",
   4
  ],
  [
-  "ncaa1: Maryland",
+  "ncaa1: Indiana",
   4
  ],
  [
@@ -180,15 +160,15 @@
   4
  ],
  [
+  "ncaa1: UAB",
+  4
+ ],
+ [
   "ncaa1: Howard",
   4
  ],
  [
   "ncaa1: North Carolina",
-  4
- ],
- [
-  "ncaa1w: St Bonaventure",
   4
  ],
  [
@@ -284,7 +264,23 @@
   4
  ],
  [
+  "ncaa1: Seattle U",
+  3
+ ],
+ [
   "ncaa1: West Florida",
+  3
+ ],
+ [
+  "ncaa1: Wisconsin",
+  3
+ ],
+ [
+  "ncaa1: Sacramento State",
+  3
+ ],
+ [
+  "ncaa1: George Washington",
   3
  ],
  [
@@ -328,6 +324,10 @@
   3
  ],
  [
+  "ncaa1w: St Bonaventure",
+  3
+ ],
+ [
   "ncaa1w: UConn",
   3
  ],
@@ -356,8 +356,8 @@
   2
  ],
  [
-  "ncaa1: St. Thomas (FL)",
-  1
+  "ncaa1w: Texas A&M-San Antonio",
+  2
  ],
  [
   "ncaa1: Trinity Baptist",
@@ -433,10 +433,6 @@
  ],
  [
   "ncaa1w: Montreat",
-  1
- ],
- [
-  "ncaa1w: Texas A&M-San Antonio",
   1
  ],
  [
