@@ -56,7 +56,11 @@ jobs:
         run: |
           git config user.name "roster-bot"
           git config user.email "actions@github.com"
-          git add js/rosters.js js/data.js data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/match_stats.json data/match_stats_archive.json data/rank_snapshot.json data/rank_history.json
+          # the fetch_race.py outputs MUST be in this list: preflight fails any
+          # push once committed schedule_rest.json fixtures slip into the past
+          # (bit master on 2026-09-01 — race data regenerated every run but was
+          # never committed, frozen at 8/27)
+          git add js/rosters.js js/data.js data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/match_stats.json data/match_stats_archive.json data/rank_snapshot.json data/rank_history.json data/standings.json data/seasons.json data/schedule_rest.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
