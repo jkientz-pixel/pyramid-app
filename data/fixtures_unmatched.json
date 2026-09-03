@@ -416,22 +416,6 @@
   5
  ],
  [
-  "ncaa1w: Morehead State MOREHEAD STATE EAGLES",
-  5
- ],
- [
-  "ncaa1w: Mercyhurst Lakers",
-  5
- ],
- [
-  "ncaa1w: UNC Greensboro UNC GREENSBORO SPARTANS",
-  5
- ],
- [
-  "ncaa1w: Toledo Rockets",
-  5
- ],
- [
   "ncaa1w: Indiana State Sycamores",
   5
  ],
@@ -460,6 +444,10 @@
   5
  ],
  [
+  "ncaa1w: Hampton Pirates",
+  5
+ ],
+ [
   "ncaa1w: Western Kentucky Hilltoppers",
   5
  ],
@@ -485,6 +473,10 @@
  ],
  [
   "ncaa1w: Colgate Raiders",
+  5
+ ],
+ [
+  "ncaa1w: Drexel Dragons",
   5
  ],
  [
@@ -1200,10 +1192,6 @@
   4
  ],
  [
-  "ncaa1w: Duquesne Dukes",
-  4
- ],
- [
   "ncaa1w: Monmouth Hawks",
   4
  ],
@@ -1240,10 +1228,6 @@
   4
  ],
  [
-  "ncaa1w: Hampton Pirates",
-  4
- ],
- [
   "ncaa1w: DePaul DePAUL BLUE DEMONS",
   4
  ],
@@ -1277,10 +1261,6 @@
  ],
  [
   "ncaa1w: Cornell Big Red",
-  4
- ],
- [
-  "ncaa1w: Drexel Dragons",
   4
  ],
  [
@@ -1776,6 +1756,10 @@
   4
  ],
  [
+  "ncaa1w: UNC Greensboro UNC GREENSBORO SPARTANS",
+  4
+ ],
+ [
   "ncaa1w: Bowling Green Falcons",
   4
  ],
@@ -1784,7 +1768,15 @@
   4
  ],
  [
+  "ncaa1w: Mercyhurst Lakers",
+  4
+ ],
+ [
   "ncaa1w: UMass Lowell River Hawks",
+  4
+ ],
+ [
+  "ncaa1w: Morehead State MOREHEAD STATE EAGLES",
   4
  ],
  [
@@ -1800,7 +1792,19 @@
   4
  ],
  [
+  "ncaa1w: St. Bonaventure Bonnies",
+  4
+ ],
+ [
   "ncaa1w: Fordham FORDHAM RAMS",
+  4
+ ],
+ [
+  "ncaa1w: Toledo Rockets",
+  4
+ ],
+ [
+  "ncaa1w: VCU Rams",
   4
  ],
  [
@@ -2080,10 +2084,6 @@
   3
  ],
  [
-  "ncaa1w: St. Bonaventure Bonnies",
-  3
- ],
- [
   "ncaa1w: UConn Huskies",
   3
  ],
@@ -2093,10 +2093,6 @@
  ],
  [
   "ncaa1w: West Georgia Wolves",
-  3
- ],
- [
-  "ncaa1w: VCU Rams",
   3
  ],
  [
@@ -2145,6 +2141,10 @@
  ],
  [
   "ncaa1w: Texas Longhorns",
+  3
+ ],
+ [
+  "ncaa1w: Duquesne Dukes",
   3
  ],
  [
