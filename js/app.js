@@ -277,7 +277,7 @@ window.submitInterest = (ev, f) => {
 /* crest-content generation: bump when crest PIXELS change under the same
    filename (e.g. a strip_crest_bg.py run) — crest URLs are cached immutable
    and cache-first, so only a new ?cv= reaches returning browsers */
-const CRESTV = '12';
+const CRESTV = '13';
 /* Venue line for the club header. `acc` is the location grade set by the data
    pipeline: 'v' = coordinates are the ground itself (Wikidata home-venue or a
    league portal venue), 'a' = approximate, unset = league-stated city only.

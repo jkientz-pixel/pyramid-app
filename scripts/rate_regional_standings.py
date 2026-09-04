@@ -41,6 +41,7 @@ ALIASES = {
         'ehtar-belleville': 'ehtarbellevillefc',
         'stl-development-academy': 'stlouisdevelopmentacademy',
         'st-louis-fusion-fc': 'stlouisfusion',
+        'midwest-united-fc-u23-mwpl': 'midwestunitedfc',  # table drops the U23
     },
 }
 
