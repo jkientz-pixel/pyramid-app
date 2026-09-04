@@ -487,9 +487,9 @@ for c in listed:
                         f'whatever division it plays in.'))
     else:
         faq.append((f'Why does {c["n"]} have no rating?',
-                    f'{label} does not publish standings or match results for this club\'s division '
-                    f'in a form we can verify. Ranked XI labels the gap instead of filling it with '
-                    f'an estimate.'))
+                    f'Ranked XI has not yet connected a verified standings table or results feed '
+                    f'for this club\'s {label} division. The gap is labelled instead of filled '
+                    f'with an estimate.'))
         faq.append(('When will a rating appear?',
                     'As soon as a usable table or set of results is published for the division. '
                     'The page updates automatically on the next data run.'))
