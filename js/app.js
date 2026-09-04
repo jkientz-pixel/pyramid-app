@@ -277,7 +277,7 @@ window.submitInterest = (ev, f) => {
 /* crest-content generation: bump when crest PIXELS change under the same
    filename (e.g. a strip_crest_bg.py run) — crest URLs are cached immutable
    and cache-first, so only a new ?cv= reaches returning browsers */
-const CRESTV = '12';
+const CRESTV = '13';
 /* Venue line for the club header. `acc` is the location grade set by the data
    pipeline: 'v' = coordinates are the ground itself (Wikidata home-venue or a
    league portal venue), 'a' = approximate, unset = league-stated city only.
@@ -2483,7 +2483,7 @@ async function screenClub(ref) {
     <p class="note">Every player named in a matchday squad this season, most-used first, from banked USL League Two team sheets. Appearances count matchday squads, not minutes &mdash; the source lists the eleven and the reserves, not who came on. No ages: players under 18 keep their name and lose their birth year here, and an appearance count never needed one.</p>
     ${claimCta(c)}`
     : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p>${claimCta(c)}`}
-    ${worldLadder(c)}` : LEVELS.youth.includes(c.g) ? `<p class="note" style="font-size:.9rem">Youth directory listing — an active ${LEAGUES[c.g].label} member club. Youth organizations carry no ratings, fixtures, or player data here; the entry is name, league, and league-stated location only.</p>` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
+    ${worldLadder(c)}` : LEVELS.youth.includes(c.g) ? `<p class="note" style="font-size:.9rem">Youth directory listing — an active ${LEAGUES[c.g].label} member club. Youth organizations carry no ratings, fixtures, or player data here; the entry is name, league, and league-stated location only.</p>` : `<p class="note" style="font-size:.9rem">Active ${LEAGUES[c.g].label} member club — not yet rated. A rating comes only from a published standings table or results feed, and this league's hasn't been connected yet. Until it is, the page carries league, location and official links, with no estimate standing in for a number.</p>`}
     ${(() => {
       if (!hist) return '';
       const rows = [];
