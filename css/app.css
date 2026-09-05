@@ -1143,3 +1143,75 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 .ntsub{display:flex;align-items:center;gap:8px;margin:14px 0 6px;color:var(--ink-dim);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase}
 .ntsub::after{content:"";flex:1;border-top:1px solid var(--line)}
 .ntsubn{color:var(--ink);font-weight:600}
+
+/* ---- squad tables: header row + fixed columns (2026-09-05) ---- */
+.squad li.sq-head,.apps-list li.apps-head{display:flex;align-items:center;gap:10px;padding:5px 12px;background:var(--ground2);color:var(--ink-dim);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--line);font-weight:600}
+.squad .sq-num,.squad .sq-pos,.squad .sq-age,.squad .sq-ga,.squad .sq-form{flex:none}
+.squad .sq-pos{width:2.6em;text-align:center}
+.squad .sq-form{width:3.2em;text-align:right}
+.squad.nonum .sq-num{display:none}
+.squad.nonat .sq-age{display:none}
+.squad.staff .sq-form{width:auto}
+.squad.staff .sq-form small{font-weight:400;color:var(--ink-dim);font-size:.66rem;letter-spacing:.04em}
+.kicker.sq-sub{font-size:.62rem;margin-top:8px}
+.apps-row{padding:0}
+.apps-row>a{display:flex;align-items:center;gap:10px;padding:6px 12px;width:100%;color:inherit;text-decoration:none}
+.apps-row>a:hover .apps-name,.apps-row>a:focus-visible .apps-name{color:var(--accent)}
+.apps-num{flex:none;width:1.6em;text-align:right;color:var(--ink-dim);font-variant-numeric:tabular-nums;font-family:var(--font-disp);font-weight:700}
+.apps-list.nonum .apps-num{display:none}
+.apps-head .apps-bar{background:none;height:auto}
+.apps-hn{flex:none;text-align:right}
+.apps-hn small{display:block;font-size:.56rem;letter-spacing:.06em;font-weight:400}
+
+/* ---- USL2 player match log ---- */
+.mlog{list-style:none;margin:8px 0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--raise)}
+.mlog li{display:flex;align-items:center;gap:10px;padding:7px 12px;border-bottom:1px solid var(--line);font-size:.82rem}
+.mlog li:last-child{border-bottom:none}
+.ml-date{flex:none;width:3.6em;color:var(--ink-dim);font-variant-numeric:tabular-nums;font-size:.74rem}
+.ml-opp{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ml-opp a{color:inherit;text-decoration:none;border-bottom:1px dotted var(--line)}
+.ml-opp a:hover{color:var(--accent)}
+.ml-opp i{font-style:normal;color:var(--ink-dim);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase}
+.ml-role{flex:none;width:4.6em;text-align:right;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim)}
+.ml-score{flex:none;width:4.6em;display:inline-flex;justify-content:flex-end;align-items:center;gap:7px;font-variant-numeric:tabular-nums}
+.ml-score b{width:1.3em;text-align:center;border-radius:4px;font-size:.68rem;line-height:1.6}
+.ml-W .ml-score b{background:var(--sim-up);color:#fff}
+.ml-L .ml-score b{background:var(--sim-down);color:#fff}
+.ml-D .ml-score b{background:var(--ground2);color:var(--ink-dim)}
+
+/* ---- searchable selects (js/ssel.js) ---- */
+select.ssel-native{position:absolute!important;width:1px!important;height:1px!important;min-width:0!important;margin:0!important;padding:0!important;border:0!important;opacity:0!important;pointer-events:none!important;overflow:hidden!important}
+.ssel-btn{display:flex;align-items:center;gap:8px;width:100%;min-width:0;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--raise);color:var(--ink);font:inherit;font-size:.9rem;line-height:1.25;text-align:left;cursor:pointer;-webkit-appearance:none;appearance:none}
+.ssel-btn:hover{border-color:var(--accent)}
+.ssel-btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.ssel-btn[aria-expanded="true"]{border-color:var(--accent)}
+.ssel-btn[disabled]{opacity:.5;cursor:default}
+.ssel-val{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ssel-val.ph{color:var(--ink-dim)}
+.ssel-btn svg{flex:none;width:14px;height:14px;color:var(--ink-dim)}
+#statejump+.ssel-btn{margin:10px 0 2px;padding:10px 12px}
+.beatpro .ssel-btn{display:inline-flex;width:auto;max-width:100%;margin:0 2px;padding:3px 8px;border-radius:8px;font-size:.88rem;font-weight:600;vertical-align:baseline}
+.mx-state .ssel-btn,.pickrow .ssel-btn,.simpickrow .ssel-btn{flex:1;width:auto;padding:8px 10px;font-size:.85rem}
+.joinform .ssel-btn{flex:1 1 110px;width:auto;padding:11px 12px;font-size:.88rem}
+.fixform .ssel-btn{margin:0 0 6px;padding:8px 10px;border-radius:8px}
+.claimscr .ssel-btn{padding:9px 10px;border-radius:8px;font-size:.95rem}
+.ssel-pop{position:fixed;z-index:400;display:flex;flex-direction:column;background:var(--raise);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 44px rgba(10,20,14,.28);overflow:hidden}
+.ssel-search{flex:none;padding:8px;border-bottom:1px solid var(--line);background:var(--ground2)}
+.ssel-search input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--raise);color:var(--ink);font:inherit;font-size:.9rem;-webkit-appearance:none;appearance:none}
+.ssel-search input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.ssel-list{list-style:none;margin:0;padding:4px 0;overflow-y:auto;overscroll-behavior:contain;flex:1 1 auto;min-height:0}
+.ssel-list li{padding:8px 12px;font-size:.88rem;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ssel-list li.grp{padding:9px 12px 3px;color:var(--ink-dim);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;cursor:default}
+.ssel-list li.act{background:var(--ground2)}
+.ssel-list li[aria-selected="true"]{color:var(--accent);font-weight:600}
+.ssel-list li.dis{opacity:.45;cursor:default}
+.ssel-list mark{background:none;color:var(--accent);font-weight:700}
+.ssel-empty{padding:12px;color:var(--ink-dim);font-size:.82rem}
+.ssel-count{flex:none;padding:4px 12px 6px;color:var(--ink-dim);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;border-top:1px solid var(--line)}
+.squad li.sq-head span,.apps-list li.apps-head span{font:inherit;color:inherit;letter-spacing:inherit}
+.ssel-search{display:flex;gap:6px;align-items:center}
+.ssel-search input{flex:1;min-width:0}
+.ssel-close{flex:none;width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--raise);color:var(--ink-dim);font:inherit;font-size:1.2rem;line-height:1;cursor:pointer}
+.ssel-close:hover{color:var(--ink);border-color:var(--accent)}
+.ssel-scrim{display:none}
+@media (max-width:599px){.ssel-scrim{display:block;position:fixed;inset:0;z-index:399;background:rgba(6,12,9,.55)}}
