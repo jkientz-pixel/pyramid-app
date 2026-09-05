@@ -1,7 +1,9 @@
 #!/bin/bash
 # Rank XI deploy to Cloudflare Pages (canonical). This script does not touch
 # git: the cache-bust token is minted here and stamped into the staged tree
-# only, so a deploy no longer produces a commit to push.
+# only, so a deploy no longer produces a commit to push. It does rewrite the
+# three rating files in the working tree when a writer left them
+# un-recalibrated (see the recalibrate2 step) — commit those with the writer.
 set -e
 cd "$(dirname "$0")"
 
@@ -33,6 +35,20 @@ fi
 # never committed cannot collide between branches, cannot be walked backwards
 # by a merge, and cannot leave a PR red just for being a few hours old.
 NEWV=$(python3 scripts/cachebust.py --mint)
+
+# Ratings ship recalibrated, every time. recalibrate2.py is the single
+# cross-league authority (league means pinned to the measured Open Cup offsets,
+# per-club cup nudges applied) and until 2026-09-04 nothing invoked it: every
+# writer's docstring said "run recalibrate2 afterwards" and neither this script
+# nor the scheduled refresh did. The 52 MWPL clubs shipped with no cup nudges
+# and the pro leagues shipped bare walk ratings for weeks. It is idempotent on
+# a tree that is already recalibrated (0 clubs move, <0.1s) and runs BEFORE the
+# generators so share cards, club pages and the sitemap carry the same numbers
+# as the app. It rewrites js/data.js, data/recal2_state.json and
+# data/cup_receipts.json — those three always travel together in a commit. A
+# tier violation exits non-zero and stops the deploy on purpose: that is the
+# Vermont-Green-over-Atlanta guard doing its job.
+python3 scripts/recalibrate2.py
 
 # regenerate the static SEO surface from current data: the two hand-tuned
 # league landing pages, per-club share cards (og/ — must run before club pages

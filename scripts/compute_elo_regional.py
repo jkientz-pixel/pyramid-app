@@ -17,7 +17,7 @@ Usage: compute_elo_regional.py <league> [--dry]
 """
 import json, math, sys, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from _datajs import load_clubs, write_clubs, ROOT
+from _datajs import load_clubs, write_clubs, stored_nudges, ROOT
 from rate_regional_standings import ALIASES, norm
 
 K, HOME, MIN_GP = 64, 30, 3
@@ -64,9 +64,7 @@ def main():
     # so a writer must leave the nudge IN `r`. Writing the bare walk would make
     # the next recal strip a nudge that is not there and cancel the club's cup
     # results on every rerun (Woodland FC's two qualifiers, 2026-09-04).
-    state_path = ROOT / 'data' / 'recal2_state.json'
-    nudges = ({cid: v.get('n', 0.0) for cid, v in json.load(open(state_path)).get('clubs', {}).items()}
-              if state_path.exists() else {})
+    nudges = stored_nudges()
     # Anchor to the league's CUP-FREE mean: anchoring to `r` (which carries the
     # nudges) and then adding the nudges back would lift the league mean by the
     # average nudge on every rerun.

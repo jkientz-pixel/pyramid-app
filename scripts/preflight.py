@@ -7,6 +7,18 @@ ship a broken or stale build. Checks:
   3. every data/*.json the app fetches exists and parses.
 """
 import datetime as _dt
+
+
+def _pacific_today():
+    """Today in Los Angeles. The data is refreshed and read on Pacific time, so
+    the date checks below must not roll over at 5 PM PT just because a CI
+    runner sits on UTC — that made every evening deploy flag the day's
+    remaining fixtures as stale (four red emails on 2026-09-04)."""
+    try:
+        from zoneinfo import ZoneInfo
+        return _dt.datetime.now(ZoneInfo('America/Los_Angeles')).date()
+    except Exception:  # no tz database on the host: fixed PST is still closer than UTC
+        return (_dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(hours=8)).date()
 import json, re, pathlib, subprocess, sys
 import html as html_mod
 import cachebust
@@ -154,7 +166,7 @@ try:
     miss = sorted(std_ids - _clubs)
     if miss:
         fail.append(f'standings.json has {len(miss)} club ids not in data.js: {miss[:4]}')
-    today = _dt.date.today().isoformat()
+    today = _pacific_today().isoformat()
     stale = [f for f in _sch if f['d'] < today]
     if stale:
         fail.append(f'schedule_rest.json holds {len(stale)} fixtures before today — '
