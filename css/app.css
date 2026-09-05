@@ -139,6 +139,17 @@ button.pickq{text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;t
 .stat{background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
 .stat b{display:block;font-size:1.3rem;font-variant-numeric:tabular-nums}
 .stat span{color:var(--ink-dim);font-size:.75rem;text-transform:uppercase;letter-spacing:.09em}
+/* "Could you beat a pro club?" — one big rounded number, the picker inline in the sentence */
+.beatpro{background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 14px}
+.beatpro .bp-row{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:8px}
+.beatpro .bp-num{display:flex;align-items:baseline;gap:10px}
+.beatpro .bp-num b{font-size:1.9rem;line-height:1;font-variant-numeric:tabular-nums;color:var(--accent)}
+.beatpro .bp-num span{color:var(--ink-dim);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.beatpro .bp-text{min-width:0;max-width:100%;font-size:.92rem;line-height:1.5}
+.beatpro .bp-text b{font-variant-numeric:tabular-nums}
+.beatpro select{max-width:100%;margin:0 2px;padding:3px 6px;border:1px solid var(--line);border-radius:8px;background:var(--raise);color:var(--ink);font:inherit;font-size:.88rem;font-weight:600}
+.beatpro select:hover{border-color:var(--accent)}
+.beatpro select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .results{list-style:none;margin:8px 0;padding:0}
 .results li{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line);font-size:.86rem}
 .wl{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:.7rem;font-weight:700;color:#fff;flex:none}
