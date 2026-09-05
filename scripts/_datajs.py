@@ -12,6 +12,7 @@ import json, os, re, pathlib, shutil, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA_JS = ROOT / 'js' / 'data.js'
+STATE_JSON = ROOT / 'data' / 'recal2_state.json'
 CLUBS_RE = re.compile(r'export const CLUBS=(\[.*?\]);', re.S)
 
 def load_clubs(src=None):
@@ -50,3 +51,21 @@ def write_clubs(clubs, src=None):
     tmp.write_text(out)
     os.replace(tmp, DATA_JS)
     print(f'js/data.js written: {len(clubs)} clubs (backup at data.js.bak)', file=sys.stderr)
+
+
+def stored_nudges(path=STATE_JSON):
+    """Per-club cup nudge from recalibrate2's last run, as {club id: points}.
+
+    recalibrate2 derives each club's base as `r minus its stored nudge`, so a
+    writer that overwrites `r` must write its own number PLUS this nudge.
+    Writing the bare number makes the next recal strip a nudge that is not
+    there, which cancels the club's cup results for good — Louisville City's
+    +82 from the 2026 Open Cup was missing from production for exactly this
+    reason (found 2026-09-04; the regional writer hit it the same night).
+    No state file yet means no nudges yet: an empty map.
+    """
+    p = pathlib.Path(path)
+    if not p.exists():
+        return {}
+    return {cid: float(v.get('n', 0.0))
+            for cid, v in json.load(open(p)).get('clubs', {}).items()}
