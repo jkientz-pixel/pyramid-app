@@ -11,3 +11,11 @@
 # indexable document. /terms is now the crawlable copy.
 /legal /terms 301
 /app/legal /terms 301
+
+# Tombstoned duplicate clubs (h:1 + dup in js/data.js). The app's hash route
+# already redirects; these keep the static /club/<id> pages and any shared
+# link landing on the surviving club instead of a 404.
+/club/peak-xi /club/peak-xi-fc 301
+/club/gfi-academy /club/global-football-innovation-academy 301
+/club/round-lake-evolution-ii /club/round-lake-evolution-fc 301
+/club/real-central-new-jersey /club/real-central-nj-2026 301
