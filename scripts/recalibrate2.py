@@ -229,12 +229,33 @@ def tier_check(by_lg, walk_of, mls_mean, O):
     return bad
 
 
-def cup_walk(men, by_id, anchored, mls_mean, O, HOME):
+def dup_aliases(clubs, by_id):
+    """Cup-name aliases from tombstoned duplicates: a club hidden with h:1 and
+    a `dup` pointer (index or id) still answers to its old name in the cup
+    feed, so its results follow the merge to the surviving club instead of
+    silently dropping out of the walk (Real Central New Jersey -> Real Central
+    NJ (2026) carried three qualifying-round receipts, 2026-09-05)."""
+    out = {}
+    for c in clubs:
+        if not c.get('h') or c.get('dup') is None:
+            continue
+        ptr = c['dup']
+        target = clubs[ptr] if isinstance(ptr, int) and ptr < len(clubs) else by_id.get(ptr)
+        if target and target.get('id') in by_id:
+            out.setdefault(cup_norm(c['n']), []).append((target['g'], target['id']))
+    return out
+
+
+def cup_walk(men, by_id, anchored, mls_mean, O, HOME, aliases=None):
     """Chronological walk over 2022-26 cup matches on anchored ratings.
     Returns (nudge, proxy_gain, receipts). MLS clubs never move."""
     idx = {}
     for c in men:
         idx.setdefault(cup_norm(c['n']), []).append((c['g'], c['id']))
+    for key, cands in (aliases or {}).items():
+        # a live club's own name always wins over a tombstone's alias
+        live = idx.setdefault(key, [])
+        live.extend(x for x in cands if x not in live)
 
     def join(name, tag):
         # normalized-name ties (Foro SC apsl vs Foro Soccer Club upsl) break
@@ -380,7 +401,10 @@ def main():
                   f'(check for league-churn contamination): {wild[:5]}', file=sys.stderr)
 
     # --- 3. cup walk + provisional flags ---
-    nudge, proxy_gain, receipts = cup_walk(men, by_id, anchored, mls_mean, O, HOME)
+    aliases = dup_aliases(clubs, by_id)
+    if aliases:
+        print(f'cup aliases from tombstoned duplicates: {len(aliases)}', file=sys.stderr)
+    nudge, proxy_gain, receipts = cup_walk(men, by_id, anchored, mls_mean, O, HOME, aliases)
     moved = 0
     state = {'mls_mean': round(mls_mean, 1), 'usl2_anchor': round(usl2_anchor, 1),
              'shifts': {g: round(s, 1) for g, s in shifts.items()}, 'clubs': {}}
