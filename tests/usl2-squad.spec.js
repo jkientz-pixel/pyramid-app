@@ -90,3 +90,32 @@ test('a pro club’s squad table has a header row and a legend', async ({ page }
   // no empty staff box when the club has no listed coach
   for (const ul of await page.locator('.squad.staff').all()) expect(await ul.locator('li').count()).toBeGreaterThan(0);
 });
+
+/* Coaching staff rows open #/staff/<sid>: the record the sheets support plus
+   an honest blank where a résumé would go and the claim form to fill it. */
+test('a staff row opens a coach page with the sheet record and a claim path', async ({ page }) => {
+  const errors = trackErrors(page);
+  await gotoRoute(page, CLUB);
+  await page.waitForSelector('.usl2staff li a');
+  const first = page.locator('.usl2staff li a').first();
+  const name = (await first.locator('.sq-name').textContent() || '').trim();
+  const sheets = Number(((await first.locator('.sq-form').textContent()) || '').match(/(\d+) sheet/)[1]);
+  expect(await first.getAttribute('href')).toMatch(/^#\/staff\/\d+$/);
+  await first.click();
+  await expect(page).toHaveURL(/#\/staff\/\d+$/);
+  await expect(page.locator('h2')).toHaveText(name);
+  await expect(page.locator('.statgrid .stat')).toHaveCount(3);
+  await expect(page.locator('.statgrid .stat').first()).toContainText(String(sheets));
+  await expect(page.locator('.mlog li')).toHaveCount(sheets);
+  await expect(page.locator('.kicker', { hasText: 'résumé' })).toHaveCount(1);
+  await expect(page.locator('.claimform select[name=role] option').first()).toHaveText(/this coach/);
+  await expect(page.locator('.claimform input[name=fa]')).toHaveCount(0);
+  await expect(page.locator('h2')).not.toHaveText(/\b(19|20)\d\d\b/);
+  expect(errors).toEqual([]);
+});
+
+test('an unknown staff id is a 404, not a blank page', async ({ page }) => {
+  await gotoRoute(page, '#/staff/0');
+  await expect(page.locator('.kicker', { hasText: '404' })).toHaveCount(1);
+  await expect(page.locator('.mlog')).toHaveCount(0);
+});

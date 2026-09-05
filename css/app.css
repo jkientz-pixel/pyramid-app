@@ -1215,3 +1215,5 @@ select.ssel-native{position:absolute!important;width:1px!important;height:1px!im
 .ssel-close:hover{color:var(--ink);border-color:var(--accent)}
 .ssel-scrim{display:none}
 @media (max-width:599px){.ssel-scrim{display:block;position:fixed;inset:0;z-index:399;background:rgba(6,12,9,.55)}}
+.squad.staff li.lnk{padding:0}
+.squad.staff li.lnk a:hover .sq-name,.squad.staff li.lnk a:focus-visible .sq-name{color:var(--accent)}

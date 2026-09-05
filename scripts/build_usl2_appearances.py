@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Turn banked USL League Two lineups into per-club appearance counts at
 data/usl2_appearances.json, plus a per-club match log at
-data/usl2_player_logs.json that the player pages read.
+data/usl2_player_logs.json that the player pages read, and data/usl2_staff.json
+(one record per sheet-listed staff id) that the #/staff/<sid> pages read.
 
 data/usl2_lineups.json holds the starting eleven and reserves for 1,039
 matches — who actually played, which nothing in the app has ever shown. This
@@ -100,12 +101,13 @@ for mid in sorted(lineups, key=match_order):
                     rec['_nums'][numbers[pid]] += 1
         for s in ex.get(tid, {}).get('staff', []):
             key = s['sid']
-            st = sq['staff'].setdefault(key, {'n': s['n'], 'role': s['role'], 'sid': key, 'g': 0})
+            st = sq['staff'].setdefault(key, {'n': s['n'], 'role': s['role'], 'sid': key, 'g': 0, '_log': []})
             st['g'] += 1
+            st['_log'].append(gi)
             if s['role'] and not st['role']:
                 st['role'] = s['role']
 
-out, logs = {}, {}
+out, logs, staff_out = {}, {}, {}
 for cid, sq in squads.items():
     players = []
     for rec in sq['players'].values():
@@ -116,11 +118,15 @@ for cid, sq in squads.items():
                 row['num'] = num
         players.append(row)
     players.sort(key=lambda p: (-(p['st'] + p['sub']), -p['st'], p['n']))
-    staff = sorted(sq['staff'].values(), key=lambda s: (-s['g'], s['n']))
+    staff = [{k: v for k, v in st.items() if k != '_log'}
+             for st in sorted(sq['staff'].values(), key=lambda s: (-s['g'], s['n']))]
     entry = {'club': sq['club'], 'players': players}
     if staff:
         entry['staff'] = staff
     out[cid] = entry
+    for st in sq['staff'].values():          # one club per staff id in 2026 — asserted below
+        assert st['sid'] not in staff_out, f"staff id {st['sid']} listed by two clubs"
+        staff_out[st['sid']] = {'n': st['n'], 'role': st['role'], 'c': cid, 'g': st['g'], 'log': st['_log']}
     logs[cid] = {'m': sq['games'], 'p': {pid: rec['_log'] for pid, rec in sq['players'].items()}}
 
 unmatched = sorted({team_name[t] for t in team_name if t not in tid_club})
@@ -142,3 +148,6 @@ print(f'wrote {path}')
 path = os.path.join(DATA, 'usl2_player_logs.json')
 json.dump(logs, open(path, 'w'), separators=(',', ':'), sort_keys=True)
 print(f'wrote {path} ({os.path.getsize(path) // 1024} KB)')
+path = os.path.join(DATA, 'usl2_staff.json')
+json.dump(staff_out, open(path, 'w'), separators=(',', ':'), sort_keys=True)
+print(f'wrote {path} ({len(staff_out)} staff)')

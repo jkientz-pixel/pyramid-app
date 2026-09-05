@@ -2235,7 +2235,7 @@ function usl2SquadHtml(c, apps) {
   return `<div class="kicker" style="margin-top:14px">Squad &middot; ${apps.players.length} players used</div>
     ${staff.length ? `<div class="kicker sq-sub">Coaching staff &middot; as listed on the team sheet</div>
     <ul class="squad staff usl2staff">${staff.map(s2 =>
-      `<li><span class="sq-num">${s2.role ? tag(s2.role) : ''}</span><span class="sq-name">${esc(s2.n)}</span><span class="sq-pos">${esc(s2.role || 'Staff')}</span><span class="sq-age"></span><span class="sq-form"><small>${s2.g} sheet${s2.g === 1 ? '' : 's'}</small></span></li>`).join('')}</ul>` : ''}
+      `<li class="lnk"><a href="#/staff/${s2.sid}"><span class="sq-num">${s2.role ? tag(s2.role) : ''}</span><span class="sq-name">${esc(s2.n)}</span><span class="sq-pos">${esc(s2.role || 'Staff')}</span><span class="sq-age"></span><span class="sq-form"><small>${s2.g} sheet${s2.g === 1 ? '' : 's'}</small></span></a></li>`).join('')}</ul>` : ''}
     <ul class="apps-list${hasNum ? '' : ' nonum'}">
       <li class="apps-head" aria-hidden="true"><span class="apps-num">#</span><span class="apps-name">Player</span><span class="apps-bar"></span><span class="apps-hn">Squads<small>starts &middot; bench</small></span></li>
       ${apps.players.map(pl => `<li class="apps-row"><a href="#/player/${c.id}/u${pl.pid}">
@@ -2495,6 +2495,12 @@ async function usl2Apps() {
   _usl2apps ??= fetch('data/usl2_appearances.json?v=__RXIV__')
     .then(r => r.json()).catch(() => ({}));
   return _usl2apps;
+}
+let _usl2staff = null;
+async function usl2Staff() {
+  _usl2staff ??= fetch('data/usl2_staff.json?v=__RXIV__')
+    .then(r => r.json()).catch(() => ({}));
+  return _usl2staff;
 }
 let _usl2logs = null;
 async function usl2Logs() {
@@ -2845,16 +2851,21 @@ async function screenPlayer(ci, pi) {
 }
 
 /* The claim-your-profile form, shared by roster players and USL2 sheet players. */
-function claimProfileHtml() {
-  return `<details class="how" style="margin-top:14px"><summary><b>Is this you? Claim your profile — free</b></summary>
-      <p class="note">Claimed profiles add film links, socials, corrected history, and recruiting visibility — and claiming is how you join the <a href="#/freeagents" style="color:var(--accent)">Free Agents board</a>. Every claim is verified with the club or league before anything changes; nothing publishes automatically.</p>
+function claimProfileHtml(kind = 'player') {
+  const coach = kind === 'coach';
+  return `<details class="how" style="margin-top:14px"><summary><b>Is this you? Claim your ${coach ? 'coaching ' : ''}profile — free</b></summary>
+      <p class="note">${coach
+        ? 'A claimed coaching profile carries your background — prior clubs, playing career, licences — plus socials and a contact link, so a club looking at your record sees the whole of it. Every claim is verified with the club or league before anything changes; nothing publishes automatically.'
+        : 'Claimed profiles add film links, socials, corrected history, and recruiting visibility — and claiming is how you join the <a href="#/freeagents" style="color:var(--accent)">Free Agents board</a>. Every claim is verified with the club or league before anything changes; nothing publishes automatically.'}</p>
       <form class="joinform claimform" novalidate>
         <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
         <input type="text" name="name" placeholder="Your name" autocomplete="name" maxlength="80">
         <input type="email" name="email" placeholder="Email" required autocomplete="email" maxlength="254">
-        <select name="role" aria-label="I am"><option value="player">I'm this player</option><option value="agent">Agent / representative</option><option value="club">Club officer</option></select>
-        <input type="text" name="note" placeholder="Anything to add? Film link, correction… (optional)" maxlength="200">
-        <label class="ck"><input type="checkbox" name="fa" value="1"> Also list me on the Free Agents board — I confirm I'm 18 or older</label>
+        <select name="role" aria-label="I am">${coach
+          ? `<option value="coach">I'm this coach</option><option value="club">Club officer</option><option value="agent">Agent / representative</option>`
+          : `<option value="player">I'm this player</option><option value="agent">Agent / representative</option><option value="club">Club officer</option>`}</select>
+        <input type="text" name="note" placeholder="${coach ? 'Prior clubs, licences, playing career… (optional)' : 'Anything to add? Film link, correction… (optional)'}" maxlength="200">
+        ${coach ? '' : `<label class="ck"><input type="checkbox" name="fa" value="1"> Also list me on the Free Agents board — I confirm I'm 18 or older</label>`}
         <button type="submit" class="joinbtn">Claim this profile</button>
       </form>
       <p class="join-msg claim-msg" role="status" aria-live="polite"></p>
@@ -2917,6 +2928,60 @@ async function screenUsl2Player(c, pid) {
   wireClaimForm({ name: pl.n }, c);
 }
 
+/* A sheet-listed coach or staffer: #/staff/<sid> on the league's staff id.
+   The sheets give a name, a role label and which matches the person was listed
+   for — so the page is the record those sheets support (sheets, share of the
+   club's games, W-D-L when listed, the log) and an honest blank where a résumé
+   would go, with the claim form as the way to fill it. */
+async function screenStaff(sid) {
+  const at = location.hash || '#/map';
+  const [staff, logs] = await Promise.all([usl2Staff(), usl2Logs()]);
+  if (routedAway(at)) return;
+  const st = staff[String(sid)]; const ci = st ? clubIdx(String(st.c)) : -1;
+  if (!st || ci < 0) return screenNotFound(location.hash);
+  const c = CLUBS[ci];
+  const games = (logs[c.id] || {}).m || [];
+  const rows = st.log.map(gi => games[gi]).filter(Boolean);
+  const rec = { w: 0, d: 0, l: 0 };
+  for (const g of rows) { if (g[2] == null) continue; if (g[2] > g[3]) rec.w++; else if (g[2] < g[3]) rec.l++; else rec.d++; }
+  const share = games.length ? Math.round(100 * rows.length / games.length) : 0;
+  const day = d => /^\d{4}-\d\d-\d\d$/.test(d)
+    ? new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : esc(d);
+  const roleNote = st.role === 'Assistant Coach'
+    ? 'The sheet platform labels nearly every staffer &ldquo;Assistant Coach&rdquo;, so the label may understate the job.'
+    : st.role ? '' : 'The sheet left this person&#39;s role blank.';
+  crumb.textContent = c.st;
+  view.innerHTML = `
+    <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/club/${c.id}'">&larr; ${esc(c.n)}</button>
+    <div class="clubhead">
+      <img class="pphoto" src="${AVATAR}" alt="">
+      <div><h2 class="disp" style="margin:0">${esc(st.n)}</h2>
+      <span class="sub">${esc(st.role || 'Staff')} · ${esc(c.n)} · ${LEAGUES[c.g].label}</span></div>
+    </div>
+    <span class="badge v">Real 2026 team sheets &middot; USL League Two</span>
+    <div class="statgrid">
+      <div class="stat"><b>${rows.length}</b><span>Sheets listed on</span></div>
+      <div class="stat"><b>${share}%</b><span>of ${games.length} club games</span></div>
+      <div class="stat"><b>${rec.w}-${rec.d}-${rec.l}</b><span>W-D-L when listed</span></div>
+    </div>
+    <div class="kicker" style="margin-top:12px">Background &amp; r&eacute;sum&eacute;</div>
+    <p class="note">USL League Two team sheets carry a name and, at most, a role label &mdash; no prior clubs, playing career, or licences &mdash; and there is no public source we would trust to fill that in, so nothing here is invented. ${roleNote} A claimed profile is how the record gets its history.</p>
+    ${claimProfileHtml('coach')}
+    <div class="kicker" style="margin-top:12px">Match by match &middot; most recent first</div>
+    <ul class="mlog">${rows.slice().reverse().map(g => {
+      const [d, opp, gf, ga, home, br] = g; const oi = clubIdx(String(opp)); const oc = oi >= 0 ? CLUBS[oi] : null;
+      const res = gf == null ? '' : gf > ga ? 'W' : gf < ga ? 'L' : 'D';
+      return `<li class="ml-${res || 'x'}"><span class="ml-date">${day(d)}</span><span class="ml-opp">${home ? 'v' : '@'} ${oc ? `<a href="#/club/${oc.id}">${esc(oc.n)}</a>` : esc(opp)}${br && br !== 'League' ? ` <i>${esc(br)}</i>` : ''}</span><span class="ml-score"><b>${res}</b>${gf == null ? '' : `${gf}&ndash;${ga}`}</span></li>`; }).join('')}</ul>
+    <p class="note">One row per team sheet this person was listed on. Scores read from the club&#39;s side.</p>
+    <div class="kicker" style="margin-top:10px">Links</div>
+    <div class="linkrow">
+      <a href="#/club/${c.id}">${esc(c.n)}</a>
+      <a href="https://www.google.com/search?q=${encodeURIComponent(st.n + ' ' + c.n + ' coach')}" target="_blank" rel="noopener">Search the web</a>
+    </div>
+    ${reportLink('Fix', st.n)}`;
+  wireClaimForm({ name: st.n, kind: 'coach' }, c);
+}
+
 function wireClaimForm(pl, c) {
   const form = view.querySelector('.claimform');
   if (!form) return;
@@ -2928,11 +2993,12 @@ function wireClaimForm(pl, c) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { msg.textContent = 'A real email address is required.'; return; }
     msg.textContent = 'Saving…';
     const note = String(f.get('note') || '').slice(0, 200);
-    const message = `claim: ${pl.name} @ ${c.n} [${c.id}] · fa:${f.get('fa') ? 'yes' : 'no'}${note ? ' · ' + note : ''}`;
+    const coach = pl.kind === 'coach';
+    const message = `${coach ? 'coach claim' : 'claim'}: ${pl.name} @ ${c.n} [${c.id}]${coach ? '' : ` · fa:${f.get('fa') ? 'yes' : 'no'}`}${note ? ' · ' + note : ''}`;
     try {
       const r = await fetch('/api/signup', {
         method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ kind: 'claim', source: 'player-page', email,
+        body: JSON.stringify({ kind: 'claim', source: coach ? 'staff-page' : 'player-page', email,
           name: f.get('name'), role: f.get('role'), message, website: f.get('website') })
       });
       const d = await r.json();
@@ -3859,7 +3925,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', compare: 'Compare Clubs', tools: 'Tools', race: 'Season Race', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', claim: 'Claim your club', player: 'Player', notfound: 'Page not found' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', compare: 'Compare Clubs', tools: 'Tools', race: 'Season Race', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', claim: 'Claim your club', player: 'Player', staff: 'Coach', notfound: 'Page not found' };
 /* Hash routes people actually type or get sent. Every one of these was a
    plausible guess at a real screen that silently rendered the map instead —
    a stranger following a link from a DM concluded the site was broken rather
@@ -3976,6 +4042,7 @@ function route() {
   else if (parts[0] === 'region') screenRegion(parts[1]);
   else if (parts[0] === 'club') screenClub(parts[1]);
   else if (parts[0] === 'claim') screenClaim(parts[1]);
+  else if (parts[0] === 'staff') screenStaff(parts[1]);
   else if (parts[0] === 'player') screenPlayer(parts[1], parts[2]);
   else if (parts[0] === 'map' || parts[0] === '') screenMap();
   else { screenNotFound(h); parts[0] = 'notfound'; }
