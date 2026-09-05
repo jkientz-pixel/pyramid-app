@@ -1207,7 +1207,7 @@ function beatProHtml(c, pro) {
   /* the sub-label and the range are worded, not computed to false precision:
      "1 in 142" is not a thing anyone knows about a soccer match */
   const sub = mid < 0.01 ? 'a long shot' : mid < 0.4 ? `about 1 in ${oneIn}` : 'a real contest';
-  const range = hi < 0.01 ? 'it stays under <b>1%</b> either way'
+  const range = hi < 0.02 ? 'it stays under <b>2%</b> either way'
     : pct(lo) === pct(hi) ? `it stays about <b>${pct(hi)}%</b> either way`
     : `it lands between <b>${pct(lo)}%</b> and <b>${pct(hi)}%</b>`;
   const groups = ['mls', 'uslc', 'usl1', 'mnp'].map(g => {
