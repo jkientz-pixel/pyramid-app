@@ -10,8 +10,7 @@ Anchoring: the walk starts everyone at 1500, so its mean is arbitrary. The band
 is shifted so the matched clubs' mean equals the mean of their CURRENT ratings
 (the standings pass already sits at the Open Cup-measured league anchor), so the
 league keeps its place on the national scale and only the ORDER and SPREAD
-change, and the spread is shrunk by games played (SHRINK_K, as in
-recalibrate2.py). Standings rating stays as `rt` for transparency; `r` becomes
+change. Standings rating stays as `rt` for transparency; `r` becomes
 the results Elo with rr=1.
 
 Usage: compute_elo_regional.py <league> [--dry]
@@ -22,7 +21,6 @@ from _datajs import load_clubs, write_clubs, ROOT
 from rate_regional_standings import ALIASES, norm
 
 K, HOME, MIN_GP = 64, 30, 3
-SHRINK_K = 10   # recalibrate2.py's evidence weight: a 10-game walk keeps half its spread
 
 
 def main():
@@ -71,12 +69,13 @@ def main():
     if unknown:
         print(f'  UNMATCHED team names ({len(unknown)}): {sorted(unknown)}', file=err)
 
-    # Shrink the spread toward the league mean by the evidence behind it, the
-    # same gp/(gp+K) rule recalibrate2.py applies to every results-Elo league:
-    # ten games is not enough to trust a 400-point band.
+    # No spread shrink. The 2026-09-04 backtest (rating-backtest-2026-09-04/)
+    # showed recalibrate2's gp/(gp+10) rule makes held-out predictions WORSE on
+    # both MWPL and USL2; the raw walk's spread is what the results support.
+    # Cross-league plausibility is a separate question (an explicit band), not
+    # a reason to compress the within-league order.
     def shrunk(k):
-        w = played[k] / (played[k] + SHRINK_K)
-        return cur_mean + (elo[k] - elo_mean) * w
+        return cur_mean + (elo[k] - elo_mean)
 
     # re-base wire ratings onto the anchored band so the feed matches the page
     for w in wire:
