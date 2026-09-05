@@ -104,6 +104,26 @@ except (OSError, KeyError, ValueError):
     SNAP, SNAP_DATE = {}, None
 
 rated = [c for c in clubs if not c.get('h') and c.get('r') and c.get('id')]
+
+# Content signature of each share card, written by gen_og_cards.py (it runs
+# first in deploy.sh; absent in CI, which has no Pillow). It rides on the
+# og:image URL as a query string because Instagram, Facebook and iMessage
+# cache a link preview by image URL: a card re-rendered at the same URL kept
+# showing Woodland FC's old 1347 rating beside its new title (2026-09-04).
+try:
+    CARD_SIG = json.load(open(os.path.join(ROOT, 'og', '.cards.json')))
+except Exception:
+    CARD_SIG = {}
+
+
+def card_url(c):
+    """Versioned share-card URL for a club, or None when no card exists."""
+    if not os.path.exists(os.path.join(ROOT, 'og', f"{c['id']}.jpg")):
+        return None
+    sig = CARD_SIG.get(c['id'])
+    return f"{SITE}/og/{c['id']}.jpg" + (f'?v={sig[:10]}' if sig else '')
+
+
 # Clubs we hold but cannot rate still get a page. They are real clubs with a
 # crest, a city and socials, and 279 of them are UPSL sides whose divisions
 # publish no usable standings. Dropping their pages would 404 indexed URLs
@@ -419,8 +439,7 @@ for c in listed:
 
     # per-club share card when gen_og_cards.py produced one (it runs first in
     # deploy.sh); otherwise the site-wide banner
-    has_card = os.path.exists(os.path.join(ROOT, 'og', f"{c['id']}.jpg"))
-    og_img = f"{SITE}/og/{c['id']}.jpg" if has_card else S.OG_DEFAULT
+    og_img = card_url(c) or S.OG_DEFAULT
     og_alt = (f"{c['n']} — #{lg_rank[c['id']]} in {label}, #{nat_rank[c['id']]} nationally, Ranked XI rating {c['r']}"
               if is_rated else f"{c['n']} — {label} club profile on Ranked XI")
 
