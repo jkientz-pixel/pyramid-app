@@ -301,6 +301,7 @@ def main():
     offs = json.load(open(ROOT / 'data' / 'opencup_offsets.json'))['modern']
     O, HOME = dict(offs['offsets']), offs['home_adv']
     O['loc'] = O['regional']
+    O['mwpl'] = O['regional']  # same amateur band: same tail cap + tier check
 
     src, clubs = load_clubs(args.datajs)
     men = [c for c in clubs if c.get('x') == 'm' and c.get('r') and not c.get('h')]

@@ -1301,11 +1301,11 @@ let _wireFeed = null;
 async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
-  const [npsl, asa, usl2] = await Promise.all([
+  const [npsl, asa, usl2, mwpl] = await Promise.all([
     grab('data/wire_npsl.json?v=__RXIV__'), grab('data/wire_asa.json?v=__RXIV__'),
-    grab('data/wire_usl2.json?v=__RXIV__')]);
+    grab('data/wire_usl2.json?v=__RXIV__'), grab('data/wire_mwpl.json?v=__RXIV__')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' }))
-    .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })))
+    .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })), mwpl.map(w => ({ ...w, lg: 'mwpl' })))
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
 }
@@ -2441,8 +2441,8 @@ async function screenClub(ref) {
     <div class="btnrow">${favBtn('clubs', c.id)}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.r ? `<button class="predictbtn2" data-sim="${c.id}">&#128200; Rank Simulator</button>` : ''}${c.r ? `<a class="hdrlink" href="#/compare/${c.id}">Compare</a>` : ''}<button class="hdrlink sharebtn" type="button">Share</button>${c.url ? `<a class="hdrlink" href="${safeHref(c.url)}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${safeHref(c.si)}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${safeHref(c.sx)}" target="_blank" rel="noopener">X</a>` : ''}${c.sf ? `<a class="hdrlink" href="${safeHref(c.sf)}" target="_blank" rel="noopener">Facebook</a>` : ''}</div>
     ${(HONOURS[rosterKey(c)] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[rosterKey(c)] || []).map(h2 => `<li><b>${esc(h2.t)}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
-      <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : DTAG + 'Rating'}${c.pv ? ' · provisional' : ''}</span></div>
       <div class="stat"><b>${rank ? '#' + rank : 'NR'}</b><span>${m.label}</span></div>
+      <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : DTAG + 'Rating'}${c.pv ? ' · provisional' : ''}</span></div>
       <div class="stat"><b>${c.rr ? '#' + (natl.indexOf(c) + 1) : 'NR'}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
     </div>
     <div id="rhist" class="rhist" hidden></div>
@@ -2464,7 +2464,7 @@ async function screenClub(ref) {
     <p class="note" style="margin:2px 0 8px">Who's nearby, and how the model thinks it would go — a discovery feature, not a schedule. Verified fixtures appear when this league's feed connects.</p>
     ${opps.slice(0, 2).map((o, i) => matchCard(i === 0 ? c : o, i === 0 ? o : c, `${milesApart(c, o)} MI APART`)).join('') || '<p class="note">No rated opponents in the dataset yet.</p>'}
     <details class="how"><summary>How is this club's rating made?</summary><p>${c.rr === 1
-      ? "From real results: Elo over this season's matches — everyone starts at 1500, winners take points from losers, weighted by upset size and goal margin, with a backtested tier-tuned home edge (+30 amateur, +65 pro)."
+      ? "From real results: Elo over this season's matches — everyone starts at 1500, winners take points from losers, weighted by upset size and goal margin, with a backtested tier-tuned home edge (+30 amateur, +65 pro)." + (c.rt ? ` The league-table-only version of this club's rating was <b>${c.rt}</b>; the match-by-match walk replaced it.` : '')
       : c.rr === 2
       ? 'From real league standings: points and goal difference set the rating band.'
       : c.rr === 3
@@ -3653,7 +3653,7 @@ function wireLeaders(lgs) {
 }
 async function screenWire() {
   crumb.textContent = 'The Wire';
-  const lgs = (sex === 'w' ? ['nwsl', 'uslw'] : ['mls', 'uslc', 'usl1', 'mnp', 'usl2', 'npsl']).filter(g => LEAGUES[g]);
+  const lgs = (sex === 'w' ? ['nwsl', 'uslw'] : ['mls', 'uslc', 'usl1', 'mnp', 'usl2', 'npsl', 'mwpl']).filter(g => LEAGUES[g]);
   if (wireLg !== 'all' && !lgs.includes(wireLg)) wireLg = 'all';
   const active = wireLg === 'all' ? lgs : [wireLg];
   const leaders = wireLeaders(active).map(it => `

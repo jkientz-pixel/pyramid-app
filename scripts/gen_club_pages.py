@@ -421,7 +421,7 @@ for c in listed:
     # deploy.sh); otherwise the site-wide banner
     has_card = os.path.exists(os.path.join(ROOT, 'og', f"{c['id']}.jpg"))
     og_img = f"{SITE}/og/{c['id']}.jpg" if has_card else S.OG_DEFAULT
-    og_alt = (f"{c['n']} — Ranked XI rating {c['r']}, #{nat_rank[c['id']]} nationally"
+    og_alt = (f"{c['n']} — #{lg_rank[c['id']]} in {label}, #{nat_rank[c['id']]} nationally, Ranked XI rating {c['r']}"
               if is_rated else f"{c['n']} — {label} club profile on Ranked XI")
 
     riv_rows = ''.join(
