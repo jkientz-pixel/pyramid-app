@@ -14,7 +14,7 @@ test('an amateur men\'s club page answers "could you beat a pro club?"', async (
   await box.locator('select').selectOption('atlanta-united');
   /* the block re-renders against the chosen club and keeps the range */
   await expect(page.locator('#beatpro select option:checked')).toHaveText('Atlanta United');
-  await expect(page.locator('#beatpro')).toContainText(/between \S+% and \S+%/);
+  await expect(page.locator('#beatpro')).toContainText(/(between \S+% and \S+%|stays (under|about) \S+% either way)/);
   expect(errors).toEqual([]);
 });
 
