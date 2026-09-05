@@ -1180,6 +1180,64 @@ function oddsFor(h, a, homeAdv, wantCells) {
   return { pH: pH / tot, pD: pD / tot, pA: pA / tot, score: best, ha, cells };
 }
 
+/* ---- "Could you beat a pro club?" ----------------------------------------
+   The one question an amateur club's page actually gets asked (Jeremy,
+   2026-09-04: "what people would look at is if their team could beat a pro
+   team"). Honest to publish since #117 put the amateur leagues on their real
+   within-league spread, and cup results rather than the pro label decide who
+   sits above whom. This is the ONE deliberate exception to the ODDS_TIER
+   rule above: a rounded, neutral-ground range against a senior pro side,
+   never a line on an amateur v amateur fixture. Men's senior amateur clubs
+   only — those leagues sit on a measured Open Cup anchor. Women's amateur
+   leagues have no cross-league cup measurement; college and youth carry no
+   odds by policy. The range IS the cross-league uncertainty: the league
+   anchors are measured from ~600 Open Cup results and carry about ±50 Elo
+   (the amateur-league offsets have ±110 CIs), so the midpoint alone would
+   overstate what the model knows. */
+const CROSS_LEAGUE_ELO_CI = 50;
+const beatProEligible = c => !!(c.r && c.rr && c.x === 'm' && !c.h && LEVELS.amateur.includes(c.g));
+const proOpponents = () => CLUBS.filter(o => o.x === 'm' && o.r && o.rr && !o.h && ODDS_TIER.has(o.g));
+const nearestPro = c => proOpponents().sort((a, b) => dist2(a, c) - dist2(b, c))[0];
+function beatProHtml(c, pro) {
+  if (!pro) return '';
+  const pAt = gap => oddsFor({ g: c.g, r: c.r + gap }, pro, 0).pH;   // neutral ground
+  const lo = pAt(-CROSS_LEAGUE_ELO_CI), mid = pAt(0), hi = pAt(CROSS_LEAGUE_ELO_CI);
+  const pct = p => p < 0.01 ? '<1' : String(Math.round(p * 100));
+  const oneIn = Math.round(1 / Math.max(mid, 0.01));
+  /* the sub-label and the range are worded, not computed to false precision:
+     "1 in 142" is not a thing anyone knows about a soccer match */
+  const sub = mid < 0.01 ? 'a long shot' : mid < 0.4 ? `about 1 in ${oneIn}` : 'a real contest';
+  const range = hi < 0.02 ? 'it stays under <b>2%</b> either way'
+    : pct(lo) === pct(hi) ? `it stays about <b>${pct(hi)}%</b> either way`
+    : `it lands between <b>${pct(lo)}%</b> and <b>${pct(hi)}%</b>`;
+  const groups = ['mls', 'uslc', 'usl1', 'mnp'].map(g => {
+    const opts = proOpponents().filter(o => o.g === g).sort((a, b) => a.n.localeCompare(b.n))
+      .map(o => `<option value="${o.id}"${o === pro ? ' selected' : ''}>${esc(o.n)}</option>`).join('');
+    return opts ? `<optgroup label="${esc(LEAGUES[g].label)}">${opts}</optgroup>` : '';
+  }).join('');
+  return `<div class="beatpro" id="beatpro">
+    <div class="kicker">Could you beat a pro club?</div>
+    <div class="bp-row">
+      <span class="bp-num"><b>${pct(mid)}%</b><span>${sub}</span></span>
+      <span class="bp-text">chance of beating <select class="bp-pick" aria-label="Pro club to measure against">${groups}</select> in a one-off game on a neutral field. Allow for how loosely the leagues are tied together and ${range}.</span>
+    </div>
+    <p class="note" style="margin-top:8px">Nearest pro club first; pick any. Elo ${c.r} v ${pro.r}. A rough read, not a betting line: league levels come from Open Cup results and carry about ±${CROSS_LEAGUE_ELO_CI} points, which is why the range is the honest number.</p>
+  </div>`;
+}
+function wireBeatPro(c) {
+  const sel = view.querySelector('#beatpro .bp-pick');
+  if (!sel) return;
+  sel.addEventListener('change', () => {
+    const pro = CLUBS[clubIdx(sel.value)];
+    const box = view.querySelector('#beatpro');
+    if (!pro || !box) return;
+    box.outerHTML = beatProHtml(c, pro);
+    wireBeatPro(c);
+    const next = view.querySelector('#beatpro .bp-pick');
+    if (next) next.focus();
+  });
+}
+
 /* ico = crests/platform-<ico>.svg; 'inv' logos are dark-on-transparent
    wordmarks that invert under the dark theme */
 const WATCH = {
@@ -2445,6 +2503,7 @@ async function screenClub(ref) {
       <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : DTAG + 'Rating'}${c.pv ? ' · provisional' : ''}</span></div>
       <div class="stat"><b>${c.rr ? '#' + (natl.indexOf(c) + 1) : 'NR'}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
     </div>
+    ${beatProEligible(c) ? beatProHtml(c, nearestPro(c)) : ''}
     <div id="rhist" class="rhist" hidden></div>
     ${cupRec.length ? `<div class="kicker" style="margin-top:10px">U.S. Open Cup &middot; real results, ${Math.min(...cupRec.map(e => e.y))}&ndash;${Math.max(...cupRec.map(e => e.y))}</div>
     <div class="histwrap" tabindex="0" role="region" aria-label="U.S. Open Cup match history"><ul class="careerway">${cupRec.slice().reverse().map(e => {
@@ -2530,6 +2589,7 @@ async function screenClub(ref) {
   const simb = view.querySelector('[data-sim]');
   if (simb) simb.addEventListener('click', () => { location.hash = '#/sim/' + simb.dataset.sim; });
   if (c.r) renderRatingHistory(c);
+  wireBeatPro(c);
   wireResultForm(c);
   if (['mls', 'uslc', 'usl1', 'nwsl'].includes(c.g)) matchStatsDb().then(all => {
     const box = view.querySelector('#clubres'); if (box && view.contains(box)) renderResults(box, all, c.x, c.id);
