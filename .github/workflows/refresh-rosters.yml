@@ -27,6 +27,14 @@ jobs:
       - run: python scripts/refresh_rosters.py
       - run: python scripts/fetch_asa.py
       - run: python scripts/fetch_asa_games.py
+      # fetch_asa_games rewrites the USLC/USL1/MLSNP ratings from the results
+      # walk; the cross-league recalibration (league anchors + per-club Open
+      # Cup nudges) is a separate pass that nothing ran before 2026-09-04, so
+      # production alternated between recalibrated (a manual run) and bare
+      # (this job, twice a day). Idempotent and sub-second. Its two state
+      # files are committed below with data.js — the three must always move
+      # together; never reset one to a different commit than the others.
+      - run: python scripts/recalibrate2.py
       # fixtures carry a rolling three-week horizon, so they go stale on their
       # own — this is the step that keeps #/matches answering "when do they
       # play". It exits non-zero if every feed errors, so an ESPN block fails
@@ -60,7 +68,7 @@ jobs:
           # push once committed schedule_rest.json fixtures slip into the past
           # (bit master on 2026-09-01 — race data regenerated every run but was
           # never committed, frozen at 8/27)
-          git add js/rosters.js js/data.js data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/match_stats.json data/match_stats_archive.json data/rank_snapshot.json data/rank_history.json data/standings.json data/seasons.json data/schedule_rest.json
+          git add js/rosters.js js/data.js data/recal2_state.json data/cup_receipts.json data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/match_stats.json data/match_stats_archive.json data/rank_snapshot.json data/rank_history.json data/standings.json data/seasons.json data/schedule_rest.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else

@@ -25,7 +25,7 @@ Usage: rate_regional_standings.py <league-code> [--dry]
 import json, re, sys, pathlib, unicodedata
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from _datajs import load_clubs, write_clubs, ROOT
+from _datajs import load_clubs, write_clubs, stored_nudges, ROOT
 
 MLS_MEAN = 1886.0     # same constant rate_upsl_standings.py derives its 1350 from
 SPREAD = 55.0
@@ -98,12 +98,15 @@ def main():
     mu = sum(raws.values()) / len(raws)
     sd = (sum((v - mu) ** 2 for v in raws.values()) / len(raws)) ** 0.5 or 1.0
 
+    # the table gives the cup-free number; recalibrate2 reads `r` as
+    # table + stored cup nudge, so the nudge rides along (see stored_nudges)
+    nudges = stored_nudges()
     rated = cleared = 0
     for c in pool:
         row = matched.get(c['id'])
         if row:
             z = (raws[c['id']] - mu) / sd * (row['gp'] / (row['gp'] + K))
-            c['r'] = round(anchor + z * SPREAD)
+            c['r'] = round(anchor + z * SPREAD + nudges.get(c['id'], 0.0))
             c['rr'] = 2
             rated += 1
         else:
