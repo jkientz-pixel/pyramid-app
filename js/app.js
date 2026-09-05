@@ -2441,8 +2441,8 @@ async function screenClub(ref) {
     <div class="btnrow">${favBtn('clubs', c.id)}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.r ? `<button class="predictbtn2" data-sim="${c.id}">&#128200; Rank Simulator</button>` : ''}${c.r ? `<a class="hdrlink" href="#/compare/${c.id}">Compare</a>` : ''}<button class="hdrlink sharebtn" type="button">Share</button>${c.url ? `<a class="hdrlink" href="${safeHref(c.url)}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${safeHref(c.si)}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${safeHref(c.sx)}" target="_blank" rel="noopener">X</a>` : ''}${c.sf ? `<a class="hdrlink" href="${safeHref(c.sf)}" target="_blank" rel="noopener">Facebook</a>` : ''}</div>
     ${(HONOURS[rosterKey(c)] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[rosterKey(c)] || []).map(h2 => `<li><b>${esc(h2.t)}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
-      <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : DTAG + 'Rating'}${c.pv ? ' · provisional' : ''}</span></div>
       <div class="stat"><b>${rank ? '#' + rank : 'NR'}</b><span>${m.label}</span></div>
+      <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : DTAG + 'Rating'}${c.pv ? ' · provisional' : ''}</span></div>
       <div class="stat"><b>${c.rr ? '#' + (natl.indexOf(c) + 1) : 'NR'}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
     </div>
     <div id="rhist" class="rhist" hidden></div>

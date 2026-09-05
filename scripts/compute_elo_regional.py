@@ -60,7 +60,18 @@ def main():
     matched = {k: c for k, c in key_to_club.items() if played.get(k, 0) >= MIN_GP}
     if not matched:
         sys.exit(f'FATAL: no {league} club matched a match row — refusing to write')
-    cur_mean = sum(c['r'] for c in matched.values() if c.get('r')) / max(1, sum(1 for c in matched.values() if c.get('r')))
+    # recalibrate2 derives each club's base as `r minus its stored cup nudge`,
+    # so a writer must leave the nudge IN `r`. Writing the bare walk would make
+    # the next recal strip a nudge that is not there and cancel the club's cup
+    # results on every rerun (Woodland FC's two qualifiers, 2026-09-04).
+    state_path = ROOT / 'data' / 'recal2_state.json'
+    nudges = ({cid: v.get('n', 0.0) for cid, v in json.load(open(state_path)).get('clubs', {}).items()}
+              if state_path.exists() else {})
+    # Anchor to the league's CUP-FREE mean: anchoring to `r` (which carries the
+    # nudges) and then adding the nudges back would lift the league mean by the
+    # average nudge on every rerun.
+    rated = [c for c in matched.values() if c.get('r')]
+    cur_mean = sum(c['r'] - nudges.get(c['id'], 0.0) for c in rated) / max(1, len(rated))
     elo_mean = sum(elo[k] for k in matched) / len(matched)
     shift = cur_mean - elo_mean
     err = sys.stderr
@@ -74,7 +85,7 @@ def main():
     # both MWPL and USL2; the raw walk's spread is what the results support.
     # Cross-league plausibility is a separate question (an explicit band), not
     # a reason to compress the within-league order.
-    def shrunk(k):
+    def anchored(k):
         return cur_mean + (elo[k] - elo_mean)
 
     # re-base wire ratings onto the anchored band so the feed matches the page
@@ -84,9 +95,10 @@ def main():
 
     n = 0
     for k, c in matched.items():
-        new = round(shrunk(k))
+        nudge = nudges.get(c['id'], 0.0)
+        new = round(anchored(k) + nudge)
         if c.get('rr') == 2 and c.get('r'):
-            c['rt'] = c['r']            # keep the standings number for transparency
+            c['rt'] = round(c['r'] - nudge)  # standings number, cup-free, for transparency
         c['r'], c['rr'] = new, 1
         c.pop('pv', None)
         n += 1
