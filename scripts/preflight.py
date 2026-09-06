@@ -419,7 +419,8 @@ try:
     for d in gen_dirs_present:
         produced |= {f'/{d}/{x.stem}' for x in (ROOT / d).glob('*.html')}
 
-    long_titles, no_desc, no_canon, no_og, bad_ld, brand = [], [], [], [], [], []
+    long_titles, no_desc, no_canon, no_og, bad_ld, brand, bad_href = [], [], [], [], [], [], []
+    _HREF = re.compile(r'href="(/(?:club|league|state)/[^"#?]+)')
     _TITLE = re.compile(r'<title>(.*?)</title>', re.S)
     _DESC = re.compile(r'<meta name="description" content="(.*?)">', re.S)
     _LD = re.compile(r'<script type="application/ld\+json">(.*?)</script>', re.S)
@@ -463,6 +464,13 @@ try:
                         bad_ld.append(f'{rel} -> {probe} (file missing)')
                 elif probe not in produced:
                     bad_ld.append(f'{rel} -> {probe}')
+        # visible links get the same test. Only rated leagues get a static
+        # /league/ page, but 1,205 unrated club pages linked to /league/<g>
+        # anyway; Search Console listed them as Not found from 2026-09-04
+        # (/league/cpl, /league/cplw, /league/pecnlg) and nothing here noticed
+        for u in set(_HREF.findall(body)):
+            if u.rstrip('/') not in produced:
+                bad_href.append(f'{rel} -> {u}')
 
     def _cap(items, n=6):
         return ', '.join(items[:n]) + (f' (+{len(items) - n} more)' if len(items) > n else '')
@@ -479,9 +487,12 @@ try:
         fail.append(f'"Rank XI" (the old, wrong entity name) appears in: {_cap(brand)}')
     if bad_ld:
         fail.append(f'JSON-LD points at URLs this build did not produce: {_cap(sorted(set(bad_ld)))}')
-    if checked and not (long_titles or no_desc or no_canon or no_og or brand or bad_ld):
+    if bad_href:
+        fail.append(f'{len(bad_href)} club/league/state links point at pages this build did not '
+                    f'produce: {_cap(sorted(set(bad_href)))}')
+    if checked and not (long_titles or no_desc or no_canon or no_og or brand or bad_ld or bad_href):
         print(f'  SEO: {checked} pages — titles fit, descriptions set, canonical + og:url '
-              f'present, one brand name, no 404s in JSON-LD')
+              f'present, one brand name, no 404s in JSON-LD or club/league/state links')
     if not gen_dirs_present:
         print('  SEO: club/league/state not generated in this checkout — leaf pages not scanned')
 
