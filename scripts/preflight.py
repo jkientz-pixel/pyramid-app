@@ -468,9 +468,12 @@ try:
         # /league/ page, but 1,205 unrated club pages linked to /league/<g>
         # anyway; Search Console listed them as Not found from 2026-09-04
         # (/league/cpl, /league/cplw, /league/pecnlg) and nothing here noticed
-        for u in set(_HREF.findall(body)):
-            if u.rstrip('/') not in produced:
-                bad_href.append(f'{rel} -> {u}')
+        # (CI's validator job runs without the generated tree, so there is
+        # nothing to resolve a link against - skip, as the leaf scan does)
+        if len(gen_dirs_present) == 3:
+            for u in set(_HREF.findall(body)):
+                if u.rstrip('/') not in produced:
+                    bad_href.append(f'{rel} -> {u}')
 
     def _cap(items, n=6):
         return ', '.join(items[:n]) + (f' (+{len(items) - n} more)' if len(items) > n else '')
