@@ -75,7 +75,7 @@ today_h = datetime.date.today().strftime('%d %B %Y').lstrip('0')
 
 # leagues that already have a hand-tuned static landing page from
 # gen_seo_pages.py; a second auto-generated page would compete with it
-HAS_LANDING = {'upsl': '/upsl-rankings', 'npsl': '/npsl-rankings'}
+HAS_LANDING = S.HAS_LANDING
 
 # Hand-curated league prose, used for the "what this league is" paragraph the
 # audit asked for. Missing entries simply fall back to the generated line.
@@ -229,8 +229,18 @@ def fit_title(*candidates):
 
 
 def lg_href(g):
-    """Dedicated landing page where one exists, generated league page otherwise."""
-    return HAS_LANDING.get(g, f'/league/{g}')
+    """Dedicated landing page where one exists, generated league page where the
+    league has rated clubs, the live app otherwise. Only rated leagues get a
+    static /league/ page (see the league loop below), but unrated clubs -
+    youth and the small regionals - still get a club page, and 1,205 of
+    those linked to /league/<g> URLs that never existed. Search Console
+    started listing them as Not found on 2026-09-04 (/league/cpl,
+    /league/cplw, /league/pecnlg)."""
+    if g in HAS_LANDING:
+        return HAS_LANDING[g]
+    if g in lg_pools:
+        return f'/league/{g}'
+    return f'/app#/league/{g}'
 
 
 def lg_label(g):
