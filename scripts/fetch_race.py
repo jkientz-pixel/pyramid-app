@@ -24,7 +24,7 @@ league going quiet never blocks a deploy.
 """
 from _datajs import load_clubs, ROOT
 import json, os, re, sys, time, unicodedata, urllib.request
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 
 UA = {'User-Agent': 'curl/8.4.0'}                       # plain on purpose
 STAND = 'https://site.api.espn.com/apis/v2/sports/soccer/%s/standings'
@@ -66,6 +66,15 @@ def fetch(url):
         urllib.request.Request(url, headers=UA), timeout=60))
 
 
+def kicked_off_before(iso, cutoff):
+    """True when an ESPN event date ('2026-09-06T14:45Z') is earlier than
+    `cutoff` (aware UTC datetime). Unparseable dates are treated as future."""
+    try:
+        return datetime.strptime(iso, '%Y-%m-%dT%H:%MZ').replace(tzinfo=timezone.utc) < cutoff
+    except ValueError:
+        return False
+
+
 def month_ranges(start, end):
     """ESPN caps a scoreboard call at limit=1000, so walk month by month."""
     y, m = start.year, start.month
@@ -80,6 +89,7 @@ def month_ranges(start, end):
 def main():
     clubs = [c for c in load_clubs() if not c.get('h')]
     today = date.today()
+    now = datetime.now(timezone.utc)
     seasons, standings, schedule = {}, {}, []
     failed, notes = [], []
 
@@ -156,7 +166,18 @@ def main():
                 continue
             for ev in b.get('events', []):
                 comp = (ev.get('competitions') or [{}])[0]
-                if (comp.get('status', {}).get('type', {}) or {}).get('completed'):
+                st = comp.get('status', {}).get('type', {}) or {}
+                # "Still to play" means kickoff is ahead of us. ESPN's table
+                # counts a match from kickoff, but the scoreboard only flips
+                # `completed` after full time, and lags the table by minutes.
+                # 2026-09-06: a 14:45Z kickoff was in the table (24 played)
+                # and still in this list (7 left) when the 17:02Z refresh ran,
+                # so Pittsburgh summed to 31 of 30 and preflight killed the
+                # deploy. A match in progress, or past its kickoff time, is
+                # therefore counted as played here too, never as remaining.
+                if st.get('completed') or st.get('state') == 'in':
+                    continue
+                if kicked_off_before(ev.get('date', ''), now):
                     continue
                 dt = ev.get('date', '')[:10]
                 if not dt or dt < today.isoformat():
