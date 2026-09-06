@@ -47,7 +47,15 @@ jobs:
       # league going quiet does not fail the run. Runs after fixtures so a
       # rate-limited ESPN shows up on the fixtures step first, where the
       # failure is more obvious.
-      - run: python scripts/fetch_race.py
+      # Race data is secondary: a bad fetch must not block rosters, ratings,
+      # cups and share cards (2026-09-06: one ESPN timing glitch did exactly
+      # that for twelve hours). fetch_race.py writes nothing when every feed
+      # fails, and race_gate.py --fallback restores the last committed trio
+      # whenever the fresh one fails the preflight rules, with a warning
+      # annotation on the run instead of a failed job.
+      - run: python scripts/fetch_race.py || echo "::warning title=Season race::fetch_race.py failed, keeping the last committed race data"
+      - name: Season race gate (fallback to last good)
+        run: python scripts/race_gate.py --fallback
       # a broken scrape must never silently publish stale or empty data:
       # the gate diffs the fresh files against HEAD and fails on collapse
       - name: Gate — refuse empty or shrunken data
