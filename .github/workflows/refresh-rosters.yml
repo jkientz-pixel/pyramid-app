@@ -59,11 +59,16 @@ jobs:
       # The script is time-gated: it no-ops until the snapshot is 6 days old.
       - name: Rotate weekly rank snapshot
         run: python scripts/snapshot_ranks.py
-      - name: Commit if changed
+      # Stage the refreshed files now, commit them only AFTER deploy.sh has
+      # passed. deploy.sh carries preflight; when the commit came first, a
+      # preflight failure left the bad data on master, every PR's CI went red
+      # on data it never touched, and the bot's fixing push (github.token)
+      # triggered no CI to clear it (2026-09-06, four failure mails for one
+      # ESPN glitch). deploy.sh ships the working tree, so it does not need
+      # the commit to exist.
+      - name: Stage refreshed data
         id: commit
         run: |
-          git config user.name "roster-bot"
-          git config user.email "actions@github.com"
           # the fetch_race.py outputs MUST be in this list: preflight fails any
           # push once committed schedule_rest.json fixtures slip into the past
           # (bit master on 2026-09-01 — race data regenerated every run but was
@@ -72,7 +77,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
-            git commit -m "chore: scheduled roster refresh" && git push
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
       - uses: actions/setup-node@v4
@@ -88,6 +92,14 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: ./deploy.sh
+      # Runs only when deploy.sh passed or was skipped (a failed step stops
+      # the job here), so master never carries data preflight rejected.
+      - name: Commit if deployed
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          git config user.name "roster-bot"
+          git config user.email "actions@github.com"
+          git commit -m "chore: scheduled roster refresh" && git push
       - name: Alert on failure
         if: failure()
         env:
@@ -102,5 +114,5 @@ jobs:
             gh issue create -R "${{ github.repository }}" \
               --title "Roster refresh failed $(date -u +%F)" \
               --label scrape-failure \
-              --body "The scheduled roster refresh failed. Run: $url — if it died before the commit step nothing was committed, if it died in deploy.sh the refreshed data IS on master but the site keeps serving the last good deploy. Check scripts/refresh_rosters.py / fetch_asa.py / fetch_asa_games.py / fetch_fixtures.py and the verify_refresh.py gate output in the run log."
+              --body "The scheduled roster refresh failed. Run: $url — nothing was committed (the commit runs only after deploy.sh passes); the site keeps serving the last good deploy. Check scripts/refresh_rosters.py / fetch_asa.py / fetch_asa_games.py / fetch_fixtures.py and the verify_refresh.py gate output in the run log."
           fi
