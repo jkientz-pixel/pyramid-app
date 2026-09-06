@@ -6,19 +6,7 @@ ship a broken or stale build. Checks:
      that needs it carries the placeholder deploy.sh stamps (see cachebust.py);
   3. every data/*.json the app fetches exists and parses.
 """
-import datetime as _dt
-
-
-def _pacific_today():
-    """Today in Los Angeles. The data is refreshed and read on Pacific time, so
-    the date checks below must not roll over at 5 PM PT just because a CI
-    runner sits on UTC — that made every evening deploy flag the day's
-    remaining fixtures as stale (four red emails on 2026-09-04)."""
-    try:
-        from zoneinfo import ZoneInfo
-        return _dt.datetime.now(ZoneInfo('America/Los_Angeles')).date()
-    except Exception:  # no tz database on the host: fixed PST is still closer than UTC
-        return (_dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(hours=8)).date()
+from race_gate import pacific_today as _pacific_today, check as _race_check
 import json, re, pathlib, subprocess, sys
 import html as html_mod
 import cachebust
@@ -149,51 +137,10 @@ if _data_ok:
 # length that disagrees with played + scheduled produces a projected
 # points-per-game above the 3.0 maximum (which is how the NWSL/USLC hardcoded
 # season lengths were caught).
-try:
-    _race_before = len(fail)
-    _sea = json.loads((ROOT / 'data' / 'seasons.json').read_text()).get('leagues', {})
-    _std = json.loads((ROOT / 'data' / 'standings.json').read_text()).get('leagues', {})
-    _sch = json.loads((ROOT / 'data' / 'schedule_rest.json').read_text()).get('fixtures', [])
-    _clubs = {c['id'] for c in json.loads(
-        re.search(r'export const CLUBS=(\[.*?\]);', (ROOT / 'js' / 'data.js').read_text(), re.S).group(1))}
-    orphan_lg = sorted(set(_std) - set(_sea))
-    if orphan_lg:
-        fail.append(f'standings.json has leagues with no seasons.json entry: {orphan_lg}')
-    bad_ids = {f[k] for f in _sch for k in ('h', 'a') if f[k] not in _clubs}
-    if bad_ids:
-        fail.append(f'schedule_rest.json points at {len(bad_ids)} unknown club ids: {sorted(bad_ids)[:4]}')
-    std_ids = {r['id'] for g in _std.values() for grp in g['groups'] for r in grp['rows']}
-    miss = sorted(std_ids - _clubs)
-    if miss:
-        fail.append(f'standings.json has {len(miss)} club ids not in data.js: {miss[:4]}')
-    today = _pacific_today().isoformat()
-    stale = [f for f in _sch if f['d'] < today]
-    if stale:
-        fail.append(f'schedule_rest.json holds {len(stale)} fixtures before today — '
-                    'it must contain only games still to be played')
-    for lg, meta in _sea.items():
-        if lg not in _std:
-            continue
-        left = {}
-        for f in _sch:
-            if f.get('lg') != lg:
-                continue
-            for k in ('h', 'a'):
-                left[f[k]] = left.get(f[k], 0) + 1
-        for grp in _std[lg]['groups']:
-            for r in grp['rows']:
-                tot = r['gp'] + left.get(r['id'], 0)
-                if tot > meta['games']:
-                    fail.append(f'{lg}/{r["id"]}: {r["gp"]} played + {left.get(r["id"], 0)} '
-                                f'scheduled = {tot}, more than the {meta["games"]}-game season')
-                    break
-    if len(fail) == _race_before:
-        print(f'  season race OK - {len(_sea)} leagues, {len(std_ids)} clubs, '
-              f'{len(_sch)} fixtures still to play')
-except FileNotFoundError as e:
-    fail.append(f'season race data missing: {e}')
-except Exception as e:
-    fail.append(f'season race gate: {e}')
+_race_fail, _race_summary = _race_check(ROOT)
+fail.extend(_race_fail)
+if not _race_fail:
+    print(f'  season race OK - {_race_summary}')
 
 # 4. cups.json structural sanity — the Wikipedia parser once shipped an MVP
 #    (a person) as an MLS Cup champion and future host cities as winners;
