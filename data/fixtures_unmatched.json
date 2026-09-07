@@ -1,9 +1,5 @@
 [
  [
-  "ncaa1: Fairleigh Dickinson Knights",
-  6
- ],
- [
   "ncaa1: Princeton Tigers",
   6
  ],
@@ -66,14 +62,6 @@
  [
   "ncaa1w: South Carolina Upstate SOUTH CAROLINA UPSTATE SPARTANS",
   6
- ],
- [
-  "ncaa1: James Madison Dukes",
-  5
- ],
- [
-  "ncaa1: Villanova Wildcats",
-  5
  ],
  [
   "ncaa1: Loyola Chicago Ramblers",
@@ -356,6 +344,10 @@
   5
  ],
  [
+  "ncaa1: Fairleigh Dickinson Knights",
+  5
+ ],
+ [
   "ncaa1: Bucknell Bison",
   5
  ],
@@ -369,10 +361,6 @@
  ],
  [
   "ncaa1: Hofstra Pride",
-  5
- ],
- [
-  "ncaa1w: Jackson State JACKSON STATE LADY TIGERS",
   5
  ],
  [
@@ -724,10 +712,6 @@
   5
  ],
  [
-  "ncaa1: NJIT NJIT HIGHLANDERS",
-  4
- ],
- [
   "ncaa1: Western Michigan WESTERN MICHIGAN BRONCOS",
   4
  ],
@@ -956,6 +940,10 @@
   4
  ],
  [
+  "ncaa1: James Madison Dukes",
+  4
+ ],
+ [
   "ncaa1: Longwood Lancers",
   4
  ],
@@ -1089,6 +1077,10 @@
  ],
  [
   "ncaa1: Xavier Muskateers",
+  4
+ ],
+ [
+  "ncaa1: Villanova Wildcats",
   4
  ],
  [
@@ -1696,6 +1688,10 @@
   4
  ],
  [
+  "ncaa1w: St. Bonaventure Bonnies",
+  4
+ ],
+ [
   "ncaa1w: William & Mary Tribe",
   4
  ],
@@ -1721,10 +1717,6 @@
  ],
  [
   "ncaa1w: Old Dominion Monarchs",
-  4
- ],
- [
-  "ncaa1w: St. Bonaventure Bonnies",
   4
  ],
  [
@@ -1773,6 +1765,10 @@
  ],
  [
   "ncaa1w: Oklahoma State Cowboys",
+  4
+ ],
+ [
+  "ncaa1w: Jackson State JACKSON STATE LADY TIGERS",
   4
  ],
  [
@@ -1869,6 +1865,10 @@
  ],
  [
   "ncaa1: Saint Peter's Peacocks",
+  3
+ ],
+ [
+  "ncaa1: NJIT NJIT HIGHLANDERS",
   3
  ],
  [
@@ -2257,10 +2257,6 @@
  ],
  [
   "ncaa1: Guilford",
-  1
- ],
- [
-  "ncaa1w: Delta State",
   1
  ],
  [
