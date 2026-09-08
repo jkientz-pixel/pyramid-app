@@ -22,9 +22,10 @@ test('high schools are an opt-in directory layer', async ({ page }) => {
   await chip.click();
   await expect(page.locator('#lgchips [data-hs]')).toHaveAttribute('aria-pressed', 'true');
   await mapReady(page);
-  // national frame: nothing drawn, the reader is told to zoom in
+  // national frame: every school as a density dot, names need zoom
   await expect(page.locator('.hsnote')).toBeVisible();
   await expect(page.locator('.hsnote')).toContainText('Zoom in');
+  await page.waitForFunction(() => document.querySelector('.leafmap')._rxiHsCount > 20000);
   expect(fetched.length).toBe(1);
 
   await page.evaluate(ll => { document.querySelector('.leafmap')._rxiMap.setView(ll, 10); }, LOS_ANGELES);
@@ -33,6 +34,21 @@ test('high schools are an opt-in directory layer', async ({ page }) => {
   // the club count copy is untouched: schools are not clubs
   await expect(page.locator('.kicker').first()).toContainText(/of \d+ men's clubs/);
   await expect(page.locator('#view')).toContainText('not counted among the clubs');
+});
+
+test('the High schools level shows schools only and keeps the lower-48 frame', async ({ page }) => {
+  await gotoRoute(page, '#/map');
+  await mapReady(page);
+  await page.click('[data-lvl="hs"]');
+  await mapReady(page);
+  await expect(page.locator('[data-lvl="hs"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.kicker').first()).toContainText('High schools directory');
+  await expect(page.locator('#lgchips [data-hs]')).toHaveCount(0);
+  await expect(page.locator('#lgchips .chip[aria-pressed="true"]')).toHaveCount(0);
+  await page.waitForFunction(() => document.querySelector('.leafmap')._rxiHsCount > 20000);
+  const b = await page.evaluate(() => { const b = document.querySelector('.leafmap')._rxiMap.getBounds(); return { n: b.getNorth(), s: b.getSouth() }; });
+  expect(b.n).toBeLessThan(56);
+  expect(b.s).toBeGreaterThan(18);
 });
 
 test('the toggle is remembered and the table screen does not offer it', async ({ page }) => {

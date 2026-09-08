@@ -49,6 +49,7 @@ const HS_COLOR = '#E8C547';
 const HS_MIN_ZOOM = 7;
 const HS_MAX_PINS = 3000;
 const HS_KIND = { p: 'Public high school', c: 'Public charter high school', v: 'Private high school' };
+const hsShow = () => hsOn || level === 'hs';
 function toggleHs() {
   hsOn = !hsOn;
   try { localStorage.setItem(HS_KEY, hsOn ? '1' : '0'); } catch {}
@@ -368,13 +369,13 @@ function leagueChips(opts = {}) {
     if (!mine.length) continue;
     html += `<span class="chipgrp">${label}</span>` + mine.map(chip).join('');
   }
-  if (opts.hs) {
+  if (opts.hs && level !== 'hs') {
     html += `<span class="chipgrp">High schools</span>` +
       `<button class="chip" data-hs="1" aria-pressed="${hsOn}" title="Directory only: name and location, no ratings">` +
       `<span class="dot" style="background:${HS_COLOR}"></span>High schools</button>`;
   }
   html += `</div>`;
-  if (opts.hs && hsOn) {
+  if (opts.hs && hsShow()) {
     html += `<p class="note hsnote" hidden></p>` +
       `<p class="note">High schools are a <b>directory layer</b>: name and location from NCES, nothing else. ` +
       `No ratings, no rankings, and they are not counted among the clubs. Whether a school fields a soccer side is not yet confirmed.</p>`;
@@ -810,7 +811,7 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
       if (restore) { leafMap.setView([restore.lat, restore.lng], restore.zoom); return; }
       if (fitSet.length) leafMap.fitBounds(L.latLngBounds(fitSet.map(c => [c.la, c.lo])).pad(FRAME_PAD));
       else if (pts.length) leafMap.fitBounds(L.latLngBounds(pts.map(c => [c.la, c.lo])).pad(FRAME_PAD));
-      else leafMap.setView([39.5, -98.35], 4);
+      else leafMap.fitBounds(L.latLngBounds([[24.4, -124.8], [49.4, -66.9]]).pad(FRAME_PAD));
     };
     fitFrame();
     /* if the container had no layout size yet, fitBounds degenerates to
@@ -914,6 +915,9 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
        moved on while the JSON was loading) is dropped by the sequence check. */
     leafMap.createPane('hs').style.zIndex = 350;
     const hsLayer = L.layerGroup().addTo(leafMap);
+    /* every school as a 1.6px dot for the national/state frames — built
+       once, kept, so panning at low zoom never rebuilds 24k markers */
+    let hsAll = null;
     leafEl._rxiHsCount = 0;
     let hsSeq = 0;
     const hsPopup = s => `<div class="hspop"><b>${esc(s.n)}</b><br>${HS_KIND[s.k] || 'High school'} &middot; ${esc(s.ct)}, ${esc(s.st)}` +
@@ -922,15 +926,22 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
       hsLayer.clearLayers();
       leafEl._rxiHsCount = 0;
       const note = view.querySelector('.hsnote');
-      if (!hsOn) { if (note) note.hidden = true; return; }
+      if (!hsShow()) { if (note) note.hidden = true; if (hsAll) leafMap.removeLayer(hsAll); return; }
       const seq = ++hsSeq;
       const rows = await highSchoolsDb();
       if (seq !== hsSeq || !box.isConnected) return;
       const z = leafMap.getZoom();
       if (z < HS_MIN_ZOOM) {
-        if (note) { note.textContent = `Zoom in to see high schools (${rows.length.toLocaleString()} listed nationally).`; note.hidden = false; }
+        if (!hsAll) {
+          hsAll = L.layerGroup();
+          for (const s of rows) L.circleMarker([s.la, s.lo], { pane: 'hs', radius: 1.6, color: HS_COLOR, weight: 0.6, fillColor: HS_COLOR, fillOpacity: 0.35, interactive: false }).addTo(hsAll);
+        }
+        if (!leafMap.hasLayer(hsAll)) hsAll.addTo(leafMap);
+        leafEl._rxiHsCount = rows.length;
+        if (note) { note.textContent = `All ${rows.length.toLocaleString()} high schools as dots. Zoom in, or jump to a state below, for names.`; note.hidden = false; }
         return;
       }
+      if (hsAll && leafMap.hasLayer(hsAll)) leafMap.removeLayer(hsAll);
       if (note) note.hidden = true;
       const b = leafMap.getBounds().pad(0.15);
       const r = Math.max(2, pinRadius(z) - 1);
@@ -1029,7 +1040,8 @@ let level = 'all';
 const DTAG = '<span class="dtag">Illustrative</span>';
 function levelChips() {
   return `<div class="chips" id="lvlchips">${Object.keys(LEVELS).map(k =>
-    `<button class="chip solid" data-lvl="${k}" aria-pressed="${level === k}">${k === 'all' ? 'All levels' : k[0].toUpperCase() + k.slice(1)}</button>`).join('')}</div>`;
+    `<button class="chip solid" data-lvl="${k}" aria-pressed="${level === k}">${k === 'all' ? 'All levels' : k[0].toUpperCase() + k.slice(1)}</button>`).join('')}` +
+    `<button class="chip solid" data-lvl="hs" aria-pressed="${level === 'hs'}">High schools</button></div>`;
 }
 function wireLevelChips() {
   const el = view.querySelector('#lvlchips');
@@ -1037,7 +1049,10 @@ function wireLevelChips() {
   el.addEventListener('click', e => {
     const b = e.target.closest('[data-lvl]'); if (!b) return;
     level = b.dataset.lvl;
-    leagueFilter = new Set(LEVELS[level] ? leaguesFor(sex).filter(k => LEVELS[level].includes(k)) : leaguesFor(sex));
+    /* the High schools level shows schools ONLY: every club league off, the
+       directory layer on. Tapping a league chip afterwards overlays it. */
+    leagueFilter = level === 'hs' ? new Set()
+      : new Set(LEVELS[level] ? leaguesFor(sex).filter(k => LEVELS[level].includes(k)) : leaguesFor(sex));
     route();
   });
 }
@@ -1047,7 +1062,8 @@ function screenMap() {
   view.innerHTML = `
     ${sexToggle()}
     ${levelChips()}
-    <div class="kicker">National map · ${visible(clubs).length} of ${clubs.length} ${sex === 'w' ? "women's" : "men's"} clubs</div>
+    <div class="kicker">${level === 'hs' ? 'National map · High schools directory · not clubs, not rated'
+      : `National map · ${visible(clubs).length} of ${clubs.length} ${sex === 'w' ? "women's" : "men's"} clubs`}</div>
     <div class="chips" id="regionchips">${['all', ...Object.keys(REGIONS)].map(r =>
       `<button class="chip solid" data-region="${r}" aria-pressed="${r === 'all'}">${r === 'all' ? 'All USA' : REGION_LABEL[r]}</button>`).join('')}</div>
     ${renderMapSvg(visible(clubs))}
