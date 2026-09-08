@@ -30,6 +30,30 @@ const STATE_NAME = { AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'Cal
 let sex = 'm';
 const leaguesFor = s => Object.keys(LEAGUES).filter(k => LEAGUES[k].sex === s);
 let leagueFilter = new Set(leaguesFor(sex));
+/* High schools are a DIRECTORY layer, not a league and not clubs. The pins come
+   from NCES (public schools + private-school survey, official coordinates) and
+   say only "a school teaching grade 12 is here" — roughly half of them field
+   no soccer side, so the copy never calls them teams and they are never
+   counted among clubs. Off by default, fetched on first toggle only (~600 KB
+   gzipped), drawn viewport-scoped at zoom 7+ in a pane beneath the club pins.
+   No ratings, no pages, no sitemap entries (see gen_club_pages.py). */
+const HS_KEY = 'rxi-hs';
+let hsOn = false;
+try { hsOn = localStorage.getItem(HS_KEY) === '1'; } catch {}
+let _hs = null;
+const highSchoolsDb = () => _hs || (_hs = fetch('data/high_schools.json?v=__RXIV__')
+  .then(r => r.json())
+  .then(d => d.rows.map(r => ({ n: r[0], la: r[1], lo: r[2], st: r[3], ct: r[4], k: r[5], id: r[6] })))
+  .catch(() => { _hs = null; return []; }));
+const HS_COLOR = '#E8C547';
+const HS_MIN_ZOOM = 7;
+const HS_MAX_PINS = 3000;
+const HS_KIND = { p: 'Public high school', c: 'Public charter high school', v: 'Private high school' };
+function toggleHs() {
+  hsOn = !hsOn;
+  try { localStorage.setItem(HS_KEY, hsOn ? '1' : '0'); } catch {}
+  route();
+}
 
 function XY(lat, lon) {
   /* AK and HI live in inset boxes with their own Albers params */
@@ -331,7 +355,7 @@ function toggleLeague(k) {
   }
   route();
 }
-function leagueChips() {
+function leagueChips(opts = {}) {
   const groups = [['Professional', LEVELS.pro], ['Amateur', LEVELS.amateur], ['College', LEVELS.college], ['Youth', LEVELS.youth]];
   const chip = k => {
     const m = LEAGUES[k];
@@ -344,7 +368,18 @@ function leagueChips() {
     if (!mine.length) continue;
     html += `<span class="chipgrp">${label}</span>` + mine.map(chip).join('');
   }
-  return html + `</div>`;
+  if (opts.hs) {
+    html += `<span class="chipgrp">High schools</span>` +
+      `<button class="chip" data-hs="1" aria-pressed="${hsOn}" title="Directory only: name and location, no ratings">` +
+      `<span class="dot" style="background:${HS_COLOR}"></span>High schools</button>`;
+  }
+  html += `</div>`;
+  if (opts.hs && hsOn) {
+    html += `<p class="note hsnote" hidden></p>` +
+      `<p class="note">High schools are a <b>directory layer</b>: name and location from NCES, nothing else. ` +
+      `No ratings, no rankings, and they are not counted among the clubs. Whether a school fields a soccer side is not yet confirmed.</p>`;
+  }
+  return html;
 }
 
 /* ranking comparator: clubs rated on real data (rr set) always sort above
@@ -634,6 +669,7 @@ function wireMap(scopeStates, mapClubs, frameClubs) {
   const chips = view.querySelector('#lgchips');
   if (chips) chips.addEventListener('click', e => {
     const b = e.target.closest('.chip'); if (!b) return;
+    if (b.dataset.hs) { toggleHs(); return; }
     toggleLeague(b.dataset.lg);
   });
 }
@@ -871,6 +907,44 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     };
     leafMap.on('zoomend moveend', refreshCrests);
     refreshCrests();
+    /* High-school directory pins: their own pane BELOW the overlay pane so a
+       club pin in the same town stays on top and clickable; viewport-scoped
+       and capped like the crests, because 24k unconditional markers is the
+       coloured-soup problem again. A stale async fill (reader toggled off or
+       moved on while the JSON was loading) is dropped by the sequence check. */
+    leafMap.createPane('hs').style.zIndex = 350;
+    const hsLayer = L.layerGroup().addTo(leafMap);
+    leafEl._rxiHsCount = 0;
+    let hsSeq = 0;
+    const hsPopup = s => `<div class="hspop"><b>${esc(s.n)}</b><br>${HS_KIND[s.k] || 'High school'} &middot; ${esc(s.ct)}, ${esc(s.st)}` +
+      `<br><span class="dim">Directory listing &middot; soccer program not yet confirmed &middot; no rating</span></div>`;
+    const refreshHs = async () => {
+      hsLayer.clearLayers();
+      leafEl._rxiHsCount = 0;
+      const note = view.querySelector('.hsnote');
+      if (!hsOn) { if (note) note.hidden = true; return; }
+      const seq = ++hsSeq;
+      const rows = await highSchoolsDb();
+      if (seq !== hsSeq || !box.isConnected) return;
+      const z = leafMap.getZoom();
+      if (z < HS_MIN_ZOOM) {
+        if (note) { note.textContent = `Zoom in to see high schools (${rows.length.toLocaleString()} listed nationally).`; note.hidden = false; }
+        return;
+      }
+      if (note) note.hidden = true;
+      const b = leafMap.getBounds().pad(0.15);
+      const r = Math.max(2, pinRadius(z) - 1);
+      let n = 0;
+      for (const s of rows) {
+        if (!b.contains([s.la, s.lo])) continue;
+        if (++n > HS_MAX_PINS) break;
+        L.circleMarker([s.la, s.lo], { pane: 'hs', radius: r, color: HS_COLOR, weight: 1.2, fillColor: HS_COLOR, fillOpacity: 0.12 })
+          .addTo(hsLayer).bindTooltip(`${s.n} · High school`).bindPopup(hsPopup(s));
+      }
+      leafEl._rxiHsCount = Math.min(n, HS_MAX_PINS);
+    };
+    leafMap.on('zoomend moveend', refreshHs);
+    refreshHs();
     /* sessionStorage as well as the module variable: club routes are hash
        navigations so the variable survives them, but a hard reload or an
        external link back into the app would otherwise lose the reader's
@@ -977,7 +1051,7 @@ function screenMap() {
     <div class="chips" id="regionchips">${['all', ...Object.keys(REGIONS)].map(r =>
       `<button class="chip solid" data-region="${r}" aria-pressed="${r === 'all'}">${r === 'all' ? 'All USA' : REGION_LABEL[r]}</button>`).join('')}</div>
     ${renderMapSvg(visible(clubs))}
-    ${leagueChips()}
+    ${leagueChips({ hs: true })}
     ${(() => {
       const f = favs();
       if (!f.clubs.length && !f.players.length) return '';
@@ -1043,7 +1117,7 @@ function screenRegion(key) {
     ${sexToggle()}
     <div class="kicker">Region</div><h2 class="disp">${REGION_LABEL[key]}</h2>
     ${renderMapSvg(allVis, true, nearBy)}
-    ${leagueChips()}
+    ${leagueChips({ hs: true })}
     <div class="kicker" style="margin-top:10px">Top clubs · ${clubs.length} in region</div>
     <ul class="clublist">${ranked.slice(0, 15).map((c, i) => clubRow(c, rankNo(c, i))).join('')}</ul>`;
   wireSexToggle();
@@ -1063,7 +1137,7 @@ function screenState(st) {
     ${sexToggle()}
     <div class="kicker">State</div><h2 class="disp">${STATE_NAME[st]}</h2>
     ${mappable ? renderMapSvg(allVis, true, nearBy) : ''}
-    ${clubs.length ? leagueChips() : ''}
+    ${clubs.length ? leagueChips({ hs: true }) : ''}
     <div class="kicker" style="margin-top:10px">${clubs.length ? `Clubs · ${clubs.length}` : 'No clubs mapped yet'}</div>
     <ul class="clublist" id="statelist">${ranked.map((c, i) => clubRow(c, rankNo(c, i))).join('')}${concepts.map(c => clubRow(c)).join('')}</ul>
     ${clubs.length ? '' : '<p class="note">This is where league expansion starts — the dataset grows as leagues are added.</p>'}`;
@@ -1126,6 +1200,7 @@ function screenTable() {
   });
   view.querySelector('#lgchips').addEventListener('click', e => {
     const b = e.target.closest('.chip'); if (!b) return;
+    if (b.dataset.hs) { toggleHs(); return; }
     tableLimit = 40;
     toggleLeague(b.dataset.lg);
   });
