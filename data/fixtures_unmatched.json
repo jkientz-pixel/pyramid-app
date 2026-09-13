@@ -1,26 +1,10 @@
 [
  [
-  "ncaa1: East Tennessee State EAST TENNESSEE STATE BUCCANEERS",
+  "ncaa1w: South Carolina Upstate SOUTH CAROLINA UPSTATE SPARTANS",
   7
  ],
  [
-  "ncaa1: Milwaukee MILWAUKEE PANTHERS",
-  6
- ],
- [
-  "ncaa1: Bucknell Bison",
-  6
- ],
- [
-  "ncaa1: Elon Phoenix",
-  6
- ],
- [
-  "ncaa1: UNC Wilmington Seahawks",
-  6
- ],
- [
-  "ncaa1: Delaware Fightin' Blue Hens",
+  "ncaa1: Seattle U SEATTLE U REDHAWKS",
   6
  ],
  [
@@ -28,11 +12,35 @@
   6
  ],
  [
-  "ncaa1w: Utah Valley Wolverines",
+  "ncaa1: Pacific PACIFIC TIGERS",
   6
  ],
  [
-  "ncaa1w: South Carolina Upstate SOUTH CAROLINA UPSTATE SPARTANS",
+  "ncaa1: San Diego State Aztecs",
+  6
+ ],
+ [
+  "ncaa1: UC Irvine Anteaters",
+  6
+ ],
+ [
+  "ncaa1: Siena Saints",
+  6
+ ],
+ [
+  "ncaa1: Elon Phoenix",
+  6
+ ],
+ [
+  "ncaa1: Radford Highlanders",
+  6
+ ],
+ [
+  "ncaa1: East Tennessee State EAST TENNESSEE STATE BUCCANEERS",
+  6
+ ],
+ [
+  "ncaa1: Cal State Fullerton Titans",
   6
  ],
  [
@@ -40,131 +48,31 @@
   6
  ],
  [
+  "ncaa1w: Cal State Bakersfield CAL STATE BAKERSFIELD ROADRUNNERS",
+  6
+ ],
+ [
   "ncaa1w: James Madison Dukes",
   6
  ],
  [
-  "ncaa1: Liberty Flames",
+  "ncaa1w: Coastal Carolina Chanticleers",
+  6
+ ],
+ [
+  "ncaa1w: Utah Valley Wolverines",
+  6
+ ],
+ [
+  "ncaa1: Western Michigan WESTERN MICHIGAN BRONCOS",
   5
  ],
  [
-  "ncaa1: Navy Midshipmen",
+  "ncaa1: Omaha OMAHA MAVERICKS",
   5
  ],
  [
-  "ncaa1: Marquette Golden Eagles",
-  5
- ],
- [
-  "ncaa1: Southern Indiana Screaming Eagles",
-  5
- ],
- [
-  "ncaa1: Saint Joseph's Hawks",
-  5
- ],
- [
-  "ncaa1: Stony Brook Seawolves",
-  5
- ],
- [
-  "ncaa1: Chicago State Cougars",
-  5
- ],
- [
-  "ncaa1: Fairleigh Dickinson Knights",
-  5
- ],
- [
-  "ncaa1: Bryant Bulldogs",
-  5
- ],
- [
-  "ncaa1: Providence Friars",
-  5
- ],
- [
-  "ncaa1: Central Connecticut Blue Devils",
-  5
- ],
- [
-  "ncaa1: Rhode Island Rams",
-  5
- ],
- [
-  "ncaa1: New Haven Chargers",
-  5
- ],
- [
-  "ncaa1: Rider Broncs",
-  5
- ],
- [
-  "ncaa1: Seton Hall Pirates",
-  5
- ],
- [
-  "ncaa1: Queens University Royals",
-  5
- ],
- [
-  "ncaa1: UAlbany Great Danes",
-  5
- ],
- [
-  "ncaa1: Princeton Tigers",
-  5
- ],
- [
-  "ncaa1: William & Mary Tribe",
-  5
- ],
- [
-  "ncaa1: Syracuse Orange",
-  5
- ],
- [
-  "ncaa1: Dayton Flyers",
-  5
- ],
- [
-  "ncaa1: Florida Gulf Coast Eagles",
-  5
- ],
- [
-  "ncaa1: North Florida Ospreys",
-  5
- ],
- [
-  "ncaa1: Monmouth Hawks",
-  5
- ],
- [
-  "ncaa1: Hofstra Pride",
-  5
- ],
- [
-  "ncaa1: Stetson Hatters",
-  5
- ],
- [
-  "ncaa1: Akron Zips",
-  5
- ],
- [
-  "ncaa1: Grand Canyon Antelopes",
-  5
- ],
- [
-  "ncaa1: UC Santa Barbara Gauchos",
-  5
- ],
- [
-  "ncaa1: San Francisco Dons",
-  5
- ],
- [
-  "ncaa1: Seattle U SEATTLE U REDHAWKS",
+  "ncaa1: Saint Mary's Gaels",
   5
  ],
  [
@@ -176,7 +84,19 @@
   5
  ],
  [
+  "ncaa1: California Golden Bears",
+  5
+ ],
+ [
   "ncaa1: Villanova Wildcats",
+  5
+ ],
+ [
+  "ncaa1: George Washington Revolutionaries",
+  5
+ ],
+ [
+  "ncaa1: Yale Bulldogs",
   5
  ],
  [
@@ -188,7 +108,7 @@
   5
  ],
  [
-  "ncaa1: Pacific PACIFIC TIGERS",
+  "ncaa1: Cal State Northridge Matadors",
   5
  ],
  [
@@ -196,15 +116,27 @@
   5
  ],
  [
-  "ncaa1: San Diego State Aztecs",
+  "ncaa1: San Diego Toreros",
   5
  ],
  [
-  "ncaa1: UC Irvine Anteaters",
+  "ncaa1: UIC Flames",
+  5
+ ],
+ [
+  "ncaa1: Loyola Chicago Ramblers",
+  5
+ ],
+ [
+  "ncaa1: Oregon State Beavers",
   5
  ],
  [
   "ncaa1: Utah Tech Trailblazers",
+  5
+ ],
+ [
+  "ncaa1: UC San Diego Tritons",
   5
  ],
  [
@@ -216,7 +148,11 @@
   5
  ],
  [
-  "ncaa1: Siena Saints",
+  "ncaa1: Dartmouth Big Green",
+  5
+ ],
+ [
+  "ncaa1: Stony Brook Seawolves",
   5
  ],
  [
@@ -224,7 +160,71 @@
   5
  ],
  [
+  "ncaa1: St. Bonaventure Bonnies",
+  5
+ ],
+ [
+  "ncaa1: Drexel Dragons",
+  5
+ ],
+ [
+  "ncaa1: Navy Midshipmen",
+  5
+ ],
+ [
+  "ncaa1: Milwaukee MILWAUKEE PANTHERS",
+  5
+ ],
+ [
+  "ncaa1: Bowling Green Falcons",
+  5
+ ],
+ [
+  "ncaa1: UNC Wilmington Seahawks",
+  5
+ ],
+ [
+  "ncaa1: New Hampshire Wildcats",
+  5
+ ],
+ [
+  "ncaa1: Harvard Crimson",
+  5
+ ],
+ [
+  "ncaa1: Northeastern NORTHEASTERN HUSKIES",
+  5
+ ],
+ [
+  "ncaa1: Saint Joseph's Hawks",
+  5
+ ],
+ [
+  "ncaa1: Iona Gaels",
+  5
+ ],
+ [
+  "ncaa1: Wofford Terriers",
+  5
+ ],
+ [
+  "ncaa1: South Carolina Upstate SOUTH CAROLINA UPSTATE SPARTANS",
+  5
+ ],
+ [
   "ncaa1: Brown Bears",
+  5
+ ],
+ [
+  "ncaa1: Rhode Island Rams",
+  5
+ ],
+ [
+  "ncaa1: Bucknell Bison",
+  5
+ ],
+ [
+  "ncaa1: Winthrop Eagles",
   5
  ],
  [
@@ -232,11 +232,35 @@
   5
  ],
  [
+  "ncaa1: North Florida Ospreys",
+  5
+ ],
+ [
+  "ncaa1: High Point Panthers",
+  5
+ ],
+ [
   "ncaa1: Duke Blue Devils",
   5
  ],
  [
-  "ncaa1: Radford Highlanders",
+  "ncaa1: Queens University Royals",
+  5
+ ],
+ [
+  "ncaa1: Hofstra Pride",
+  5
+ ],
+ [
+  "ncaa1: Vermont Catamounts",
+  5
+ ],
+ [
+  "ncaa1: UAlbany Great Danes",
+  5
+ ],
+ [
+  "ncaa1: North Carolina Tar Heels",
   5
  ],
  [
@@ -244,7 +268,27 @@
   5
  ],
  [
+  "ncaa1: Notre Dame Fighting Irish",
+  5
+ ],
+ [
+  "ncaa1: Delaware Fightin' Blue Hens",
+  5
+ ],
+ [
   "ncaa1: Cornell Big Red",
+  5
+ ],
+ [
+  "ncaa1: Princeton Tigers",
+  5
+ ],
+ [
+  "ncaa1: Stetson Hatters",
+  5
+ ],
+ [
+  "ncaa1: Presbyterian Blue Hose",
   5
  ],
  [
@@ -256,31 +300,55 @@
   5
  ],
  [
+  "ncaa1: Central Arkansas Bears",
+  5
+ ],
+ [
+  "ncaa1: Santa Clara SANTA CLARA BRONCOS",
+  5
+ ],
+ [
+  "ncaa1: Massachusetts MInutewomen",
+  5
+ ],
+ [
   "ncaa1: UNC Asheville UNC ASHEVILLE BULLDOGS",
   5
  ],
  [
-  "ncaa1: Cal State Fullerton Titans",
+  "ncaa1: Missouri State MISSOURI STATE BEARS",
   5
  ],
  [
-  "ncaa1w: Kansas Jayhawks",
+  "ncaa1: Florida Gulf Coast Eagles",
   5
  ],
  [
-  "ncaa1w: New Mexico State NEW MEXICO STATE AGGIES",
+  "ncaa1: San Francisco Dons",
   5
  ],
  [
-  "ncaa1w: New Mexico Lobos",
+  "ncaa1: UC Santa Barbara Gauchos",
   5
  ],
  [
-  "ncaa1w: Long Beach State 49ers",
+  "ncaa1: VMI Keydets",
   5
  ],
  [
-  "ncaa1w: Utah Utes",
+  "ncaa1: Lehigh Mountain Hawks",
+  5
+ ],
+ [
+  "ncaa1: Dayton Flyers",
+  5
+ ],
+ [
+  "ncaa1: William & Mary Tribe",
+  5
+ ],
+ [
+  "ncaa1w: Syracuse Orange",
   5
  ],
  [
@@ -292,11 +360,27 @@
   5
  ],
  [
+  "ncaa1w: Duke Blue Devils",
+  5
+ ],
+ [
+  "ncaa1w: Penn State Nittany Lions",
+  5
+ ],
+ [
   "ncaa1w: Minnesota Golden Gophers",
   5
  ],
  [
   "ncaa1w: William & Mary Tribe",
+  5
+ ],
+ [
+  "ncaa1w: Nevada Wolf Pack",
+  5
+ ],
+ [
+  "ncaa1w: Butler Bulldogs",
   5
  ],
  [
@@ -312,7 +396,19 @@
   5
  ],
  [
+  "ncaa1w: Elon Phoenix",
+  5
+ ],
+ [
+  "ncaa1w: Charleston Southern Buccaneers",
+  5
+ ],
+ [
   "ncaa1w: Jacksonville Dolphins",
+  5
+ ],
+ [
+  "ncaa1w: George Mason Patriots",
   5
  ],
  [
@@ -321,6 +417,18 @@
  ],
  [
   "ncaa1w: Hofstra Pride",
+  5
+ ],
+ [
+  "ncaa1w: Indiana Hoosiers",
+  5
+ ],
+ [
+  "ncaa1w: Ohio State Buckeyes",
+  5
+ ],
+ [
+  "ncaa1w: Old Dominion Monarchs",
   5
  ],
  [
@@ -340,6 +448,10 @@
   5
  ],
  [
+  "ncaa1w: Saint Joseph's Hawks",
+  5
+ ],
+ [
   "ncaa1w: Texas A&M-Corpus Christi Islanders",
   5
  ],
@@ -356,7 +468,15 @@
   5
  ],
  [
+  "ncaa1w: Pennsylvania Quakers",
+  5
+ ],
+ [
   "ncaa1w: West Virginia Mountaineers",
+  5
+ ],
+ [
+  "ncaa1w: UConn Huskies",
   5
  ],
  [
@@ -376,7 +496,23 @@
   5
  ],
  [
+  "ncaa1w: Troy TROY TROJANS",
+  5
+ ],
+ [
+  "ncaa1w: Creighton Bluejays",
+  5
+ ],
+ [
+  "ncaa1w: DePaul DePAUL BLUE DEMONS",
+  5
+ ],
+ [
   "ncaa1w: North Texas Mean Green",
+  5
+ ],
+ [
+  "ncaa1w: Davidson Wildcats",
   5
  ],
  [
@@ -384,7 +520,23 @@
   5
  ],
  [
+  "ncaa1w: Michigan Wolverines",
+  5
+ ],
+ [
   "ncaa1w: Incarnate Word INCARNATE WORD CARDINALS",
+  5
+ ],
+ [
+  "ncaa1w: Lamar Cardinals",
+  5
+ ],
+ [
+  "ncaa1w: Southern SOUTHERN JAGUARS",
+  5
+ ],
+ [
+  "ncaa1w: Longwood Lancers",
   5
  ],
  [
@@ -404,15 +556,35 @@
   5
  ],
  [
+  "ncaa1w: Winthrop Eagles",
+  5
+ ],
+ [
+  "ncaa1w: Northwestern Wildcats",
+  5
+ ],
+ [
   "ncaa1w: Kansas State KANSAS STATE WILDCATS",
   5
  ],
  [
-  "ncaa1w: Cal State Bakersfield CAL STATE BAKERSFIELD ROADRUNNERS",
+  "ncaa1w: Arizona Wildcats",
   5
  ],
  [
-  "ncaa1w: Arizona Wildcats",
+  "ncaa1w: Richmond Spiders",
+  5
+ ],
+ [
+  "ncaa1w: San Jos\u00e9 State Spartans",
+  5
+ ],
+ [
+  "ncaa1w: Cal State Northridge Matadors",
+  5
+ ],
+ [
+  "ncaa1w: UC Santa Barbara Gauchos",
   5
  ],
  [
@@ -428,6 +600,10 @@
   5
  ],
  [
+  "ncaa1w: Santa Clara SANTA CLARA BRONCOS",
+  5
+ ],
+ [
   "ncaa1w: Fresno State FRESNO STATE BULLDOGS",
   5
  ],
@@ -440,7 +616,27 @@
   5
  ],
  [
+  "ncaa1w: UNC Asheville UNC ASHEVILLE BULLDOGS",
+  5
+ ],
+ [
   "ncaa1w: VMI Keydets",
+  5
+ ],
+ [
+  "ncaa1w: USC Trojans",
+  5
+ ],
+ [
+  "ncaa1w: Purdue Boilermakers",
+  5
+ ],
+ [
+  "ncaa1w: Washington Huskies",
+  5
+ ],
+ [
+  "ncaa1w: Cal State Fullerton Titans",
   5
  ],
  [
@@ -460,6 +656,10 @@
   5
  ],
  [
+  "ncaa1w: Gardner-Webb Runnin' Bulldogs",
+  5
+ ],
+ [
   "ncaa1w: Jacksonville State JACKSONVILLE STATE GAMECOCKS",
   5
  ],
@@ -472,7 +672,7 @@
   5
  ],
  [
-  "ncaa1w: Coastal Carolina Chanticleers",
+  "ncaa1w: UNC Wilmington Seahawks",
   5
  ],
  [
@@ -488,15 +688,19 @@
   5
  ],
  [
+  "ncaa1w: Radford Highlanders",
+  5
+ ],
+ [
   "ncaa1w: East Tennessee State EAST TENNESSEE STATE BUCCANEERS",
   5
  ],
  [
-  "ncaa1w: Lamar Cardinals",
+  "ncaa1w: Seattle U SEATTLE U REDHAWKS",
   5
  ],
  [
-  "ncaa1w: Southern SOUTHERN JAGUARS",
+  "ncaa1w: Kansas City Kangaroos",
   5
  ],
  [
@@ -504,7 +708,27 @@
   5
  ],
  [
+  "ncaa1w: UC San Diego Tritons",
+  5
+ ],
+ [
   "ncaa1w: Louisiana Ragin' Cajuns",
+  5
+ ],
+ [
+  "ncaa1w: Georgetown Hoyas",
+  5
+ ],
+ [
+  "ncaa1w: Villanova Wildcats",
+  5
+ ],
+ [
+  "ncaa1w: California Golden Bears",
+  5
+ ],
+ [
+  "ncaa1w: UC Riverside Highlanders",
   5
  ],
  [
@@ -512,7 +736,27 @@
   5
  ],
  [
+  "ncaa1w: Long Beach State 49ers",
+  5
+ ],
+ [
+  "ncaa1w: New Mexico Lobos",
+  5
+ ],
+ [
   "ncaa1w: UC Davis Aggies",
+  5
+ ],
+ [
+  "ncaa1w: UC Irvine Anteaters",
+  5
+ ],
+ [
+  "ncaa1w: California Baptist Lancers",
+  5
+ ],
+ [
+  "ncaa1w: Sacramento State Hornets",
   5
  ],
  [
@@ -520,139 +764,15 @@
   5
  ],
  [
-  "ncaa1: Virginia Cavaliers",
-  4
+  "ncaa1w: Rider Broncs",
+  5
  ],
  [
-  "ncaa1: Holy Cross Crusaders",
-  4
+  "ncaa1w: Cal Poly CAL POLY MUSTANGS",
+  5
  ],
  [
-  "ncaa1: Northern Kentucky Norse",
-  4
- ],
- [
-  "ncaa1: Oakland Golden Grizzlies",
-  4
- ],
- [
-  "ncaa1: Saint Peter's Peacocks",
-  4
- ],
- [
-  "ncaa1: Bellarmine Knights",
-  4
- ],
- [
-  "ncaa1: Wright State Raiders",
-  4
- ],
- [
-  "ncaa1: IU Indianapolis Jaguars",
-  4
- ],
- [
-  "ncaa1: NJIT NJIT HIGHLANDERS",
-  4
- ],
- [
-  "ncaa1: Binghamton Bearcats",
-  4
- ],
- [
-  "ncaa1: Le Moyne Dolphins",
-  4
- ],
- [
-  "ncaa1: Army Black Knights",
-  4
- ],
- [
-  "ncaa1: Lafayette Leopards",
-  4
- ],
- [
-  "ncaa1: Campbell Fighting Camels",
-  4
- ],
- [
-  "ncaa1: Belmont BELMONT BRUINS",
-  4
- ],
- [
-  "ncaa1: Fairfield Stags",
-  4
- ],
- [
-  "ncaa1: Memphis Tigers",
-  4
- ],
- [
-  "ncaa1: La Salle Explorers",
-  4
- ],
- [
-  "ncaa1: Pennsylvania Quakers",
-  4
- ],
- [
-  "ncaa1: Jacksonville Dolphins",
-  4
- ],
- [
-  "ncaa1: Cleveland State Vikings",
-  4
- ],
- [
-  "ncaa1: Detroit Mercy Titans",
-  4
- ],
- [
-  "ncaa1: Butler Bulldogs",
-  4
- ],
- [
-  "ncaa1: Mount St. Mary's Mountaineers",
-  4
- ],
- [
-  "ncaa1: West Florida Argonauts",
-  4
- ],
- [
-  "ncaa1: Oral Roberts ORAL ROBERTS GOLDEN EAGLES",
-  4
- ],
- [
-  "ncaa1: Drake DRAKE BULLDOGS",
-  4
- ],
- [
-  "ncaa1: Saint Louis Billikens",
-  4
- ],
- [
-  "ncaa1: Cal State Bakersfield CAL STATE BAKERSFIELD ROADRUNNERS",
-  4
- ],
- [
-  "ncaa1: UC Davis Aggies",
-  4
- ],
- [
-  "ncaa1: Western Michigan WESTERN MICHIGAN BRONCOS",
-  4
- ],
- [
-  "ncaa1: California Golden Bears",
-  4
- ],
- [
-  "ncaa1: George Washington Revolutionaries",
-  4
- ],
- [
-  "ncaa1: Yale Bulldogs",
+  "ncaa1: St. Thomas-Minnesota Tommies",
   4
  ],
  [
@@ -664,27 +784,7 @@
   4
  ],
  [
-  "ncaa1: Cal State Northridge Matadors",
-  4
- ],
- [
-  "ncaa1: Omaha OMAHA MAVERICKS",
-  4
- ],
- [
-  "ncaa1: Saint Mary's Gaels",
-  4
- ],
- [
-  "ncaa1: San Diego Toreros",
-  4
- ],
- [
-  "ncaa1: UIC Flames",
-  4
- ],
- [
-  "ncaa1: Loyola Chicago Ramblers",
+  "ncaa1: Fordham FORDHAM RAMS",
   4
  ],
  [
@@ -692,15 +792,11 @@
   4
  ],
  [
-  "ncaa1: Oregon State Beavers",
-  4
- ],
- [
   "ncaa1: UNLV Rebels",
   4
  ],
  [
-  "ncaa1: UC San Diego Tritons",
+  "ncaa1: VCU Rams",
   4
  ],
  [
@@ -708,7 +804,11 @@
   4
  ],
  [
-  "ncaa1: Dartmouth Big Green",
+  "ncaa1: Bryant Bulldogs",
+  4
+ ],
+ [
+  "ncaa1: Lafayette Leopards",
   4
  ],
  [
@@ -716,11 +816,19 @@
   4
  ],
  [
-  "ncaa1: St. Bonaventure Bonnies",
+  "ncaa1: Columbia Lions",
   4
  ],
  [
-  "ncaa1: Drexel Dragons",
+  "ncaa1: New Haven Chargers",
+  4
+ ],
+ [
+  "ncaa1: Army Black Knights",
+  4
+ ],
+ [
+  "ncaa1: Fairleigh Dickinson Knights",
   4
  ],
  [
@@ -728,7 +836,7 @@
   4
  ],
  [
-  "ncaa1: Bowling Green Falcons",
+  "ncaa1: Longwood Lancers",
   4
  ],
  [
@@ -736,27 +844,15 @@
   4
  ],
  [
-  "ncaa1: New Hampshire Wildcats",
+  "ncaa1: Central Connecticut Blue Devils",
   4
  ],
  [
-  "ncaa1: Harvard Crimson",
+  "ncaa1: Bellarmine Knights",
   4
  ],
  [
-  "ncaa1: Northeastern NORTHEASTERN HUSKIES",
-  4
- ],
- [
-  "ncaa1: Iona Gaels",
-  4
- ],
- [
-  "ncaa1: Wofford Terriers",
-  4
- ],
- [
-  "ncaa1: South Carolina Upstate SOUTH CAROLINA UPSTATE SPARTANS",
+  "ncaa1: George Mason Patriots",
   4
  ],
  [
@@ -764,15 +860,31 @@
   4
  ],
  [
-  "ncaa1: Winthrop Eagles",
+  "ncaa1: Colgate Raiders",
   4
  ],
  [
-  "ncaa1: High Point Panthers",
+  "ncaa1: Syracuse Orange",
   4
  ],
  [
-  "ncaa1: Vermont Catamounts",
+  "ncaa1: Davidson Wildcats",
+  4
+ ],
+ [
+  "ncaa1: Marist Red Foxes",
+  4
+ ],
+ [
+  "ncaa1: Merrimack Warriors",
+  4
+ ],
+ [
+  "ncaa1: UMass Lowell River Hawks",
+  4
+ ],
+ [
+  "ncaa1: Michigan State MICHIGAN STATE SPARTANS",
   4
  ],
  [
@@ -780,11 +892,11 @@
   4
  ],
  [
-  "ncaa1: North Carolina Tar Heels",
+  "ncaa1: Detroit Mercy Titans",
   4
  ],
  [
-  "ncaa1: Notre Dame Fighting Irish",
+  "ncaa1: Pennsylvania Quakers",
   4
  ],
  [
@@ -796,11 +908,15 @@
   4
  ],
  [
-  "ncaa1: Presbyterian Blue Hose",
+  "ncaa1: UNC Greensboro UNC GREENSBORO SPARTANS",
   4
  ],
  [
   "ncaa1: South Florida Bulls",
+  4
+ ],
+ [
+  "ncaa1: Southern Indiana Screaming Eagles",
   4
  ],
  [
@@ -812,6 +928,10 @@
   4
  ],
  [
+  "ncaa1: Oral Roberts ORAL ROBERTS GOLDEN EAGLES",
+  4
+ ],
+ [
   "ncaa1: UT Rio Grande Valley Vaqueros",
   4
  ],
@@ -820,15 +940,7 @@
   4
  ],
  [
-  "ncaa1: Central Arkansas Bears",
-  4
- ],
- [
   "ncaa1: Stanford Cardinal",
-  4
- ],
- [
-  "ncaa1: Santa Clara SANTA CLARA BRONCOS",
   4
  ],
  [
@@ -836,15 +948,19 @@
   4
  ],
  [
-  "ncaa1: Massachusetts MInutewomen",
-  4
- ],
- [
-  "ncaa1: Missouri State MISSOURI STATE BEARS",
+  "ncaa1: Kansas City Kangaroos",
   4
  ],
  [
   "ncaa1: SIU Edwardsville SIU EDWARDSVILLE COUGARS",
+  4
+ ],
+ [
+  "ncaa1: Bradley Braves",
+  4
+ ],
+ [
+  "ncaa1: Chicago State Cougars",
   4
  ],
  [
@@ -856,11 +972,31 @@
   4
  ],
  [
+  "ncaa1: Grand Canyon Antelopes",
+  4
+ ],
+ [
   "ncaa1: California Baptist Lancers",
   4
  ],
  [
+  "ncaa1: Cal State Bakersfield CAL STATE BAKERSFIELD ROADRUNNERS",
+  4
+ ],
+ [
+  "ncaa1: Loyola Marymount Lions",
+  4
+ ],
+ [
   "ncaa1: Western Illinois Leathernecks",
+  4
+ ],
+ [
+  "ncaa1: Sacramento State Hornets",
+  4
+ ],
+ [
+  "ncaa1: West Virginia Mountaineers",
   4
  ],
  [
@@ -872,6 +1008,10 @@
   4
  ],
  [
+  "ncaa1: UC Riverside Highlanders",
+  4
+ ],
+ [
   "ncaa1: Coastal Carolina Chanticleers",
   4
  ],
@@ -880,7 +1020,23 @@
   4
  ],
  [
+  "ncaa1: Seton Hall Pirates",
+  4
+ ],
+ [
+  "ncaa1: Manhattan Jaspers",
+  4
+ ],
+ [
+  "ncaa1: Akron Zips",
+  4
+ ],
+ [
   "ncaa1: Georgetown Hoyas",
+  4
+ ],
+ [
+  "ncaa1: Marquette Golden Eagles",
   4
  ],
  [
@@ -888,7 +1044,7 @@
   4
  ],
  [
-  "ncaa1: Wisconsin Badgers",
+  "ncaa1: UCF Knights",
   4
  ],
  [
@@ -896,7 +1052,19 @@
   4
  ],
  [
+  "ncaa1: South Carolina Gamecocks",
+  4
+ ],
+ [
   "ncaa1: Penn State Nittany Lions",
+  4
+ ],
+ [
+  "ncaa1: Belmont BELMONT BRUINS",
+  4
+ ],
+ [
+  "ncaa1: Providence Friars",
   4
  ],
  [
@@ -912,11 +1080,27 @@
   4
  ],
  [
+  "ncaa1: Marshall Thundering Herd",
+  4
+ ],
+ [
+  "ncaa1: Wisconsin Badgers",
+  4
+ ],
+ [
+  "ncaa1: UCLA Bruins",
+  4
+ ],
+ [
   "ncaa1: Loyola Maryland Greyhounds",
   4
  ],
  [
-  "ncaa1: VMI Keydets",
+  "ncaa1: Holy Cross Crusaders",
+  4
+ ],
+ [
+  "ncaa1: Rider Broncs",
   4
  ],
  [
@@ -924,11 +1108,59 @@
   4
  ],
  [
+  "ncaa1: Cleveland State Vikings",
+  4
+ ],
+ [
+  "ncaa1: Oakland Golden Grizzlies",
+  4
+ ],
+ [
+  "ncaa1: Saint Peter's Peacocks",
+  4
+ ],
+ [
   "ncaa1: Niagara Purple Eagles",
   4
  ],
  [
-  "ncaa1: Lehigh Mountain Hawks",
+  "ncaa1: Binghamton Bearcats",
+  4
+ ],
+ [
+  "ncaa1: IU Indianapolis Jaguars",
+  4
+ ],
+ [
+  "ncaa1: Northern Kentucky Norse",
+  4
+ ],
+ [
+  "ncaa1: Fairfield Stags",
+  4
+ ],
+ [
+  "ncaa1: Lipscomb Bisons",
+  4
+ ],
+ [
+  "ncaa1: Monmouth Hawks",
+  4
+ ],
+ [
+  "ncaa1: NJIT NJIT HIGHLANDERS",
+  4
+ ],
+ [
+  "ncaa1: Campbell Fighting Camels",
+  4
+ ],
+ [
+  "ncaa1: Saint Louis Billikens",
+  4
+ ],
+ [
+  "ncaa1: Duquesne Dukes",
   4
  ],
  [
@@ -936,39 +1168,35 @@
   4
  ],
  [
+  "ncaa1: Drake DRAKE BULLDOGS",
+  4
+ ],
+ [
   "ncaa1: Gardner-Webb Runnin' Bulldogs",
   4
  ],
  [
-  "ncaa1w: Saint Louis Billikens",
+  "ncaa1: Mount St. Mary's Mountaineers",
   4
  ],
  [
-  "ncaa1w: Louisville Cardinals",
+  "ncaa1: West Florida Argonauts",
   4
  ],
  [
-  "ncaa1w: Pittsburgh Panthers",
+  "ncaa1: Liberty Flames",
   4
  ],
  [
-  "ncaa1w: Omaha OMAHA MAVERICKS",
+  "ncaa1: Memphis Tigers",
   4
  ],
  [
-  "ncaa1w: San Diego State Aztecs",
-  4
- ],
- [
-  "ncaa1w: Syracuse Orange",
+  "ncaa1w: Dartmouth Big Green",
   4
  ],
  [
   "ncaa1w: Drexel Dragons",
-  4
- ],
- [
-  "ncaa1w: Duke Blue Devils",
   4
  ],
  [
@@ -984,19 +1212,11 @@
   4
  ],
  [
-  "ncaa1w: Penn State Nittany Lions",
-  4
- ],
- [
   "ncaa1w: UT Rio Grande Valley Vaqueros",
   4
  ],
  [
   "ncaa1w: Arkansas-Pine Bluff Golden Lions",
-  4
- ],
- [
-  "ncaa1w: Nevada Wolf Pack",
   4
  ],
  [
@@ -1008,23 +1228,7 @@
   4
  ],
  [
-  "ncaa1w: Butler Bulldogs",
-  4
- ],
- [
   "ncaa1w: Duquesne Dukes",
-  4
- ],
- [
-  "ncaa1w: Elon Phoenix",
-  4
- ],
- [
-  "ncaa1w: Charleston Southern Buccaneers",
-  4
- ],
- [
-  "ncaa1w: George Mason Patriots",
   4
  ],
  [
@@ -1032,11 +1236,7 @@
   4
  ],
  [
-  "ncaa1w: Indiana Hoosiers",
-  4
- ],
- [
-  "ncaa1w: Ohio State Buckeyes",
+  "ncaa1w: Brown Bears",
   4
  ],
  [
@@ -1044,11 +1244,15 @@
   4
  ],
  [
-  "ncaa1w: Old Dominion Monarchs",
+  "ncaa1w: Princeton Tigers",
   4
  ],
  [
   "ncaa1w: Monmouth Hawks",
+  4
+ ],
+ [
+  "ncaa1w: Columbia Lions",
   4
  ],
  [
@@ -1060,19 +1264,11 @@
   4
  ],
  [
-  "ncaa1w: Saint Joseph's Hawks",
-  4
- ],
- [
   "ncaa1w: Wagner Seahawks",
   4
  ],
  [
   "ncaa1w: Towson Tigers",
-  4
- ],
- [
-  "ncaa1w: Pennsylvania Quakers",
   4
  ],
  [
@@ -1084,15 +1280,7 @@
   4
  ],
  [
-  "ncaa1w: UConn Huskies",
-  4
- ],
- [
-  "ncaa1w: Troy TROY TROJANS",
-  4
- ],
- [
-  "ncaa1w: Creighton Bluejays",
+  "ncaa1w: Indiana State Sycamores",
   4
  ],
  [
@@ -1100,23 +1288,11 @@
   4
  ],
  [
-  "ncaa1w: DePaul DePAUL BLUE DEMONS",
-  4
- ],
- [
   "ncaa1w: Furman Paladins",
   4
  ],
  [
-  "ncaa1w: Davidson Wildcats",
-  4
- ],
- [
   "ncaa1w: Illinois Fighting Illini",
-  4
- ],
- [
-  "ncaa1w: Michigan Wolverines",
   4
  ],
  [
@@ -1133,10 +1309,6 @@
  ],
  [
   "ncaa1w: Lindenwood Lions",
-  4
- ],
- [
-  "ncaa1w: Longwood Lancers",
   4
  ],
  [
@@ -1172,10 +1344,6 @@
   4
  ],
  [
-  "ncaa1w: Winthrop Eagles",
-  4
- ],
- [
   "ncaa1w: South Carolina State SOUTH CAROLINA STATE BULLDOGS",
   4
  ],
@@ -1184,11 +1352,11 @@
   4
  ],
  [
-  "ncaa1w: Northwestern Wildcats",
+  "ncaa1w: Eastern Washington Eagles",
   4
  ],
  [
-  "ncaa1w: Eastern Washington Eagles",
+  "ncaa1w: Grand Canyon Antelopes",
   4
  ],
  [
@@ -1196,7 +1364,7 @@
   4
  ],
  [
-  "ncaa1w: Richmond Spiders",
+  "ncaa1w: Pepperdine Waves",
   4
  ],
  [
@@ -1204,11 +1372,7 @@
   4
  ],
  [
-  "ncaa1w: San Jos\u00e9 State Spartans",
-  4
- ],
- [
-  "ncaa1w: Cal State Northridge Matadors",
+  "ncaa1w: Saint Mary's Gaels",
   4
  ],
  [
@@ -1216,11 +1380,11 @@
   4
  ],
  [
-  "ncaa1w: Weber State WEBER STATE WILDCATS",
+  "ncaa1w: South Dakota State Jackrabbits",
   4
  ],
  [
-  "ncaa1w: UC Santa Barbara Gauchos",
+  "ncaa1w: Weber State WEBER STATE WILDCATS",
   4
  ],
  [
@@ -1228,11 +1392,11 @@
   4
  ],
  [
-  "ncaa1w: Santa Clara SANTA CLARA BRONCOS",
+  "ncaa1w: Southeast Missouri State SOUTHEAST MISSOURI STATE REDHAWKS",
   4
  ],
  [
-  "ncaa1w: Southeast Missouri State SOUTHEAST MISSOURI STATE REDHAWKS",
+  "ncaa1w: Belmont BELMONT BRUINS",
   4
  ],
  [
@@ -1244,23 +1408,11 @@
   4
  ],
  [
-  "ncaa1w: UNC Asheville UNC ASHEVILLE BULLDOGS",
-  4
- ],
- [
-  "ncaa1w: USC Trojans",
-  4
- ],
- [
-  "ncaa1w: Purdue Boilermakers",
-  4
- ],
- [
-  "ncaa1w: Washington Huskies",
-  4
- ],
- [
   "ncaa1w: Rutgers Scarlet Knights",
+  4
+ ],
+ [
+  "ncaa1w: Yale Bulldogs",
   4
  ],
  [
@@ -1268,15 +1420,7 @@
   4
  ],
  [
-  "ncaa1w: Cal State Fullerton Titans",
-  4
- ],
- [
   "ncaa1w: Sam Houston Bearkats",
-  4
- ],
- [
-  "ncaa1w: Gardner-Webb Runnin' Bulldogs",
   4
  ],
  [
@@ -1296,10 +1440,6 @@
   4
  ],
  [
-  "ncaa1w: UNC Wilmington Seahawks",
-  4
- ],
- [
   "ncaa1w: Marshall Thundering Herd",
   4
  ],
@@ -1316,11 +1456,7 @@
   4
  ],
  [
-  "ncaa1w: Radford Highlanders",
-  4
- ],
- [
-  "ncaa1w: Seattle U SEATTLE U REDHAWKS",
+  "ncaa1w: Southern Illinois Salukis",
   4
  ],
  [
@@ -1332,15 +1468,11 @@
   4
  ],
  [
-  "ncaa1w: Kansas City Kangaroos",
-  4
- ],
- [
   "ncaa1w: Oral Roberts ORAL ROBERTS GOLDEN EAGLES",
   4
  ],
  [
-  "ncaa1w: UC San Diego Tritons",
+  "ncaa1w: Loyola Marymount Lions",
   4
  ],
  [
@@ -1348,11 +1480,11 @@
   4
  ],
  [
-  "ncaa1w: Georgetown Hoyas",
+  "ncaa1w: George Washington Revolutionaries",
   4
  ],
  [
-  "ncaa1w: George Washington Revolutionaries",
+  "ncaa1w: Omaha OMAHA MAVERICKS",
   4
  ],
  [
@@ -1369,10 +1501,6 @@
  ],
  [
   "ncaa1w: The Citadel THE CITADEL BULLDOGS",
-  4
- ],
- [
-  "ncaa1w: Villanova Wildcats",
   4
  ],
  [
@@ -1401,10 +1529,6 @@
  ],
  [
   "ncaa1w: Eastern Michigan Eagles",
-  4
- ],
- [
-  "ncaa1w: California Golden Bears",
   4
  ],
  [
@@ -1448,6 +1572,14 @@
   4
  ],
  [
+  "ncaa1w: Pittsburgh Panthers",
+  4
+ ],
+ [
+  "ncaa1w: Virginia Tech Hokies",
+  4
+ ],
+ [
   "ncaa1w: UAB Blazers",
   4
  ],
@@ -1464,7 +1596,7 @@
   4
  ],
  [
-  "ncaa1w: UC Riverside Highlanders",
+  "ncaa1w: Miami Hurricanes",
   4
  ],
  [
@@ -1484,6 +1616,10 @@
   4
  ],
  [
+  "ncaa1w: South Alabama SOUTH ALABAMA JAGUARS",
+  4
+ ],
+ [
   "ncaa1w: Tulsa Golden Hurricane",
   4
  ],
@@ -1500,19 +1636,23 @@
   4
  ],
  [
+  "ncaa1w: New Mexico State NEW MEXICO STATE AGGIES",
+  4
+ ],
+ [
   "ncaa1w: Idaho Vandals",
   4
  ],
  [
-  "ncaa1w: UC Irvine Anteaters",
+  "ncaa1w: San Diego Toreros",
   4
  ],
  [
-  "ncaa1w: California Baptist Lancers",
+  "ncaa1w: Louisville Cardinals",
   4
  ],
  [
-  "ncaa1w: Sacramento State Hornets",
+  "ncaa1w: UNLV Rebels",
   4
  ],
  [
@@ -1529,6 +1669,10 @@
  ],
  [
   "ncaa1w: Georgia GEORGIA BULLDOGS",
+  4
+ ],
+ [
+  "ncaa1w: Kansas Jayhawks",
   4
  ],
  [
@@ -1592,6 +1736,14 @@
   4
  ],
  [
+  "ncaa1w: Utah Utes",
+  4
+ ],
+ [
+  "ncaa1w: Iona Gaels",
+  4
+ ],
+ [
   "ncaa1w: Northern Kentucky Norse",
   4
  ],
@@ -1617,10 +1769,6 @@
  ],
  [
   "ncaa1w: Bucknell Bison",
-  4
- ],
- [
-  "ncaa1w: Rider Broncs",
   4
  ],
  [
@@ -1656,6 +1804,14 @@
   4
  ],
  [
+  "ncaa1w: Saint Louis Billikens",
+  4
+ ],
+ [
+  "ncaa1w: VCU Rams",
+  4
+ ],
+ [
   "ncaa1w: Robert Morris Colonials",
   4
  ],
@@ -1668,7 +1824,7 @@
   4
  ],
  [
-  "ncaa1w: Cal Poly CAL POLY MUSTANGS",
+  "ncaa1w: St. John's Red Storm",
   4
  ],
  [
@@ -1680,75 +1836,11 @@
   4
  ],
  [
-  "ncaa1: Northern Illinois Huskies",
+  "ncaa1: Le Moyne Dolphins",
   3
  ],
  [
-  "ncaa1: Green Bay Phoenix",
-  3
- ],
- [
-  "ncaa1: Purdue Fort Wayne Mastodons",
-  3
- ],
- [
-  "ncaa1: Furman Paladins",
-  3
- ],
- [
-  "ncaa1: Gonzaga GONZAGA BULLDOGS",
-  3
- ],
- [
-  "ncaa1: St. Thomas-Minnesota Tommies",
-  3
- ],
- [
-  "ncaa1: Fordham FORDHAM RAMS",
-  3
- ],
- [
-  "ncaa1: VCU Rams",
-  3
- ],
- [
-  "ncaa1: Columbia Lions",
-  3
- ],
- [
-  "ncaa1: Longwood Lancers",
-  3
- ],
- [
-  "ncaa1: George Mason Patriots",
-  3
- ],
- [
-  "ncaa1: Colgate Raiders",
-  3
- ],
- [
-  "ncaa1: Davidson Wildcats",
-  3
- ],
- [
-  "ncaa1: Marist Red Foxes",
-  3
- ],
- [
-  "ncaa1: Merrimack Warriors",
-  3
- ],
- [
-  "ncaa1: UMass Lowell River Hawks",
-  3
- ],
- [
-  "ncaa1: Michigan State MICHIGAN STATE SPARTANS",
-  3
- ],
- [
-  "ncaa1: UNC Greensboro UNC GREENSBORO SPARTANS",
+  "ncaa1: La Salle Explorers",
   3
  ],
  [
@@ -1756,31 +1848,7 @@
   3
  ],
  [
-  "ncaa1: Kansas City Kangaroos",
-  3
- ],
- [
-  "ncaa1: Bradley Braves",
-  3
- ],
- [
   "ncaa1: Cal Poly CAL POLY MUSTANGS",
-  3
- ],
- [
-  "ncaa1: Loyola Marymount Lions",
-  3
- ],
- [
-  "ncaa1: Sacramento State Hornets",
-  3
- ],
- [
-  "ncaa1: West Virginia Mountaineers",
-  3
- ],
- [
-  "ncaa1: UC Riverside Highlanders",
   3
  ],
  [
@@ -1788,23 +1856,7 @@
   3
  ],
  [
-  "ncaa1: Manhattan Jaspers",
-  3
- ],
- [
-  "ncaa1: UCF Knights",
-  3
- ],
- [
-  "ncaa1: Maryland Terrapins",
-  3
- ],
- [
-  "ncaa1: South Carolina Gamecocks",
-  3
- ],
- [
-  "ncaa1: Marshall Thundering Herd",
+  "ncaa1: Butler Bulldogs",
   3
  ],
  [
@@ -1816,11 +1868,11 @@
   3
  ],
  [
-  "ncaa1: SMU Mustangs",
+  "ncaa1: Maryland Terrapins",
   3
  ],
  [
-  "ncaa1: UCLA Bruins",
+  "ncaa1: SMU Mustangs",
   3
  ],
  [
@@ -1828,11 +1880,35 @@
   3
  ],
  [
-  "ncaa1: Lipscomb Bisons",
+  "ncaa1: Green Bay Phoenix",
   3
  ],
  [
-  "ncaa1: Duquesne Dukes",
+  "ncaa1: Furman Paladins",
+  3
+ ],
+ [
+  "ncaa1: UC Davis Aggies",
+  3
+ ],
+ [
+  "ncaa1: Jacksonville Dolphins",
+  3
+ ],
+ [
+  "ncaa1: Purdue Fort Wayne Mastodons",
+  3
+ ],
+ [
+  "ncaa1: Wright State Raiders",
+  3
+ ],
+ [
+  "ncaa1: Virginia Cavaliers",
+  3
+ ],
+ [
+  "ncaa1: Northern Illinois Huskies",
   3
  ],
  [
@@ -1840,19 +1916,15 @@
   3
  ],
  [
-  "ncaa1w: Drake DRAKE BULLDOGS",
+  "ncaa1: Gonzaga GONZAGA BULLDOGS",
   3
  ],
  [
-  "ncaa1w: Wake Forest Demon Deacons",
+  "ncaa1: Utah Valley Wolverines",
   3
  ],
  [
-  "ncaa1w: Virginia Cavaliers",
-  3
- ],
- [
-  "ncaa1w: Dartmouth Big Green",
+  "ncaa1: Denver Pioneers",
   3
  ],
  [
@@ -1872,27 +1944,11 @@
   3
  ],
  [
-  "ncaa1w: Brown Bears",
-  3
- ],
- [
-  "ncaa1w: Princeton Tigers",
-  3
- ],
- [
   "ncaa1w: Liberty Flames",
   3
  ],
  [
-  "ncaa1w: Columbia Lions",
-  3
- ],
- [
   "ncaa1w: North Dakota Fighting Hawks",
-  3
- ],
- [
-  "ncaa1w: Indiana State Sycamores",
   3
  ],
  [
@@ -1912,10 +1968,6 @@
   3
  ],
  [
-  "ncaa1w: Grand Canyon Antelopes",
-  3
- ],
- [
   "ncaa1w: Northern Arizona Lumberjacks",
   3
  ],
@@ -1924,27 +1976,11 @@
   3
  ],
  [
-  "ncaa1w: Pepperdine Waves",
-  3
- ],
- [
-  "ncaa1w: Saint Mary's Gaels",
-  3
- ],
- [
   "ncaa1w: Southern Utah Thunderbirds",
   3
  ],
  [
-  "ncaa1w: South Dakota State Jackrabbits",
-  3
- ],
- [
   "ncaa1w: Portland State Vikings",
-  3
- ],
- [
-  "ncaa1w: Belmont BELMONT BRUINS",
   3
  ],
  [
@@ -1953,10 +1989,6 @@
  ],
  [
   "ncaa1w: Illinois State Redbirds",
-  3
- ],
- [
-  "ncaa1w: Yale Bulldogs",
   3
  ],
  [
@@ -1976,15 +2008,7 @@
   3
  ],
  [
-  "ncaa1w: Southern Illinois Salukis",
-  3
- ],
- [
   "ncaa1w: Texas State TEXAS STATE BOBCATS",
-  3
- ],
- [
-  "ncaa1w: Loyola Marymount Lions",
   3
  ],
  [
@@ -2020,15 +2044,15 @@
   3
  ],
  [
+  "ncaa1w: Providence Friars",
+  3
+ ],
+ [
   "ncaa1w: Clemson Tigers",
   3
  ],
  [
-  "ncaa1w: Virginia Tech Hokies",
-  3
- ],
- [
-  "ncaa1w: Miami Hurricanes",
+  "ncaa1w: Virginia Cavaliers",
   3
  ],
  [
@@ -2044,10 +2068,6 @@
   3
  ],
  [
-  "ncaa1w: South Alabama SOUTH ALABAMA JAGUARS",
-  3
- ],
- [
   "ncaa1w: Tarleton State Texans",
   3
  ],
@@ -2060,11 +2080,15 @@
   3
  ],
  [
-  "ncaa1w: San Diego Toreros",
+  "ncaa1w: Denver Pioneers",
   3
  ],
  [
-  "ncaa1w: UNLV Rebels",
+  "ncaa1w: San Francisco Dons",
+  3
+ ],
+ [
+  "ncaa1w: San Diego State Aztecs",
   3
  ],
  [
@@ -2088,10 +2112,6 @@
   3
  ],
  [
-  "ncaa1w: Iona Gaels",
-  3
- ],
- [
   "ncaa1w: Canisius Griffins",
   3
  ],
@@ -2104,7 +2124,7 @@
   3
  ],
  [
-  "ncaa1w: VCU Rams",
+  "ncaa1w: High Point Panthers",
   3
  ],
  [
@@ -2124,7 +2144,7 @@
   3
  ],
  [
-  "ncaa1w: St. John's Red Storm",
+  "ncaa1w: Evansville Purple Aces",
   3
  ],
  [
@@ -2136,43 +2156,23 @@
   3
  ],
  [
-  "ncaa1w: Florida Gulf Coast Eagles",
+  "ncaa1w: North Dakota State Bison",
   3
  ],
  [
-  "ncaa1: Utah Valley Wolverines",
-  2
- ],
- [
-  "ncaa1: Denver Pioneers",
-  2
+  "ncaa1w: Florida Gulf Coast Eagles",
+  3
  ],
  [
   "ncaa1w: Alabama State Hornets",
   2
  ],
  [
-  "ncaa1w: Providence Friars",
-  2
- ],
- [
-  "ncaa1w: Denver Pioneers",
+  "ncaa1w: Wake Forest Demon Deacons",
   2
  ],
  [
   "ncaa1w: Utah Tech Trailblazers",
-  2
- ],
- [
-  "ncaa1w: San Francisco Dons",
-  2
- ],
- [
-  "ncaa1w: High Point Panthers",
-  2
- ],
- [
-  "ncaa1w: Evansville Purple Aces",
   2
  ],
  [
@@ -2188,11 +2188,11 @@
   2
  ],
  [
-  "ncaa1w: Montana Grizzlies",
+  "ncaa1w: Drake DRAKE BULLDOGS",
   2
  ],
  [
-  "ncaa1w: North Dakota State Bison",
+  "ncaa1w: Montana Grizzlies",
   2
  ],
  [
@@ -2233,6 +2233,10 @@
  ],
  [
   "ncaa1: Eastern Mennonite",
+  1
+ ],
+ [
+  "ncaa1: Nebraska Wesleyan",
   1
  ],
  [
