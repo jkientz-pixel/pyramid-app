@@ -32,10 +32,6 @@
   6
  ],
  [
-  "ncaa1: Old Dominion Monarchs",
-  5
- ],
- [
   "ncaa1: Robert Morris Colonials",
   5
  ],
@@ -600,10 +596,6 @@
   5
  ],
  [
-  "ncaa1: VCU Rams",
-  4
- ],
- [
   "ncaa1: Bryant Bulldogs",
   4
  ],
@@ -829,6 +821,10 @@
  ],
  [
   "ncaa1: Ohio State Buckeyes",
+  4
+ ],
+ [
+  "ncaa1: Old Dominion Monarchs",
   4
  ],
  [
@@ -1092,15 +1088,15 @@
   4
  ],
  [
-  "ncaa1w: Eastern Kentucky EASTERN KENTUCKY COLONELS",
-  4
- ],
- [
   "ncaa1w: Long Island University Sharks",
   4
  ],
  [
   "ncaa1w: Central Connecticut Blue Devils",
+  4
+ ],
+ [
+  "ncaa1w: Eastern Kentucky EASTERN KENTUCKY COLONELS",
   4
  ],
  [
@@ -1688,10 +1684,6 @@
   4
  ],
  [
-  "ncaa1w: Middle Tennessee Blue Raiders",
-  4
- ],
- [
   "ncaa1w: Michigan State MICHIGAN STATE SPARTANS",
   4
  ],
@@ -1756,6 +1748,10 @@
   4
  ],
  [
+  "ncaa1w: Middle Tennessee Blue Raiders",
+  4
+ ],
+ [
   "ncaa1w: Minnesota Golden Gophers",
   4
  ],
@@ -1785,6 +1781,10 @@
  ],
  [
   "ncaa1w: Washington Huskies",
+  4
+ ],
+ [
+  "ncaa1w: North Dakota Fighting Hawks",
   4
  ],
  [
@@ -1865,6 +1865,10 @@
  ],
  [
   "ncaa1: Mercer Bears",
+  3
+ ],
+ [
+  "ncaa1: VCU Rams",
   3
  ],
  [
@@ -2116,15 +2120,15 @@
   3
  ],
  [
+  "ncaa1w: Portland State Vikings",
+  3
+ ],
+ [
   "ncaa1w: Saint Mary's Gaels",
   3
  ],
  [
   "ncaa1w: South Carolina State SOUTH CAROLINA STATE BULLDOGS",
-  3
- ],
- [
-  "ncaa1w: Portland State Vikings",
   3
  ],
  [
@@ -2145,10 +2149,6 @@
  ],
  [
   "ncaa1w: Texas State TEXAS STATE BOBCATS",
-  3
- ],
- [
-  "ncaa1w: North Dakota Fighting Hawks",
   3
  ],
  [
@@ -2261,6 +2261,10 @@
  ],
  [
   "ncaa1w: Schreiner",
+  1
+ ],
+ [
+  "ncaa1w: NORTH DAKOTA STATE COLLEGE OF SCIENCE",
   1
  ],
  [
