@@ -1878,6 +1878,7 @@ function screenMatches(preH) {
   view.innerHTML = `
     ${sexToggle()}
     <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>This week's results, upsets and rating swings &mdash; generated from real data.</span></a>
+    <a class="fa-card" href="#/opencup"><b>&#127942; U.S. Open Cup</b><span>This edition round by round &mdash; the next ties with kickoff, venue and broadcaster, and every result on the ladder.</span></a>
     <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>USA national teams, senior through U-15 &mdash; fixtures, how to watch, squad history and player bios back to 1930.</span></a>
     <div id="realfx"></div>
     <div id="realres"></div>
@@ -2558,7 +2559,8 @@ async function screenClub(ref) {
       const wl = e.gf > e.ga ? 'W' : e.gf < e.ga ? 'L' : (e.pens ? (e.pens[0] > e.pens[1] ? 'W' : 'L') + ' pens' : 'D');
       return `<li><span class="cw-years">${e.y}</span><span class="cw-club">${e.ha === 'H' ? 'v' : 'at'} ${esc(e.opp)} &middot; ${e.gf}&ndash;${e.ga}${e.aet ? ' aet' : ''}${e.pens ? ` (${e.pens[0]}&ndash;${e.pens[1]}p)` : ''}</span><span class="cw-stat">${wl}${e.d ? ` &middot; ${e.d > 0 ? '+' : ''}${e.d}` : ''}</span></li>`;
     }).join('')}</ul></div>
-    <p class="note">${c.g === 'mls' ? 'Shown for the record — MLS ranks by the official league table, so Cup results never move an MLS rating here.' : 'These matches move the rating. Cross-tier cup results are where the levels actually meet; extra-time and shootout wins count at reduced weight.'}${c.pv ? " Marked provisional: most of this club's cup movement came against opponents outside our database, valued at league average." : ''}</p>` : ''}
+    <p class="note">${c.g === 'mls' ? 'Shown for the record — MLS ranks by the official league table, so Cup results never move an MLS rating here.' : 'These matches move the rating. Cross-tier cup results are where the levels actually meet; extra-time and shootout wins count at reduced weight.'}${c.pv ? " Marked provisional: most of this club's cup movement came against opponents outside our database, valued at league average." : ''}</p>
+    <a class="gk-cta" href="#/opencup/${Math.max(...cupRec.map(e => e.y))}">The ${Math.max(...cupRec.map(e => e.y))} Open Cup, round by round &rarr;</a>` : ''}
     <div id="clubres"></div>
     ${communityResultsHtml(c, cres)}
     ${/* One number per club. The experimental results-only Elo used to sit
@@ -3374,6 +3376,37 @@ async function screenUpsets() {
       + '<p class="note">Open Cup results could not load. Check your connection and try again.</p>';
   }
 }
+/* The Open Cup, edition by edition (#/opencup, #/opencup/<year>). Wikipedia
+   rows (opencup_matches.json, shared with Giant-Killings) plus the current
+   edition's ties from ESPN (opencup_live.json) and each club's rating
+   receipts. Module is lazy for the same reason as Giant-Killings. */
+let _oclive = null;
+async function screenOpenCup(yr) {
+  const at = location.hash || '#/map';
+  crumb.textContent = 'Open Cup';
+  view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/cups\'">&larr; Trophy Room</button>'
+    + '<p class="note">Loading the Open Cup&hellip;</p>';
+  try {
+    const [data, live, receipts, cups, mod] = await Promise.all([
+      _opencup || fetch('data/opencup_matches.json?v=__RXIV__').then(r => r.json()),
+      _oclive || fetch('data/opencup_live.json?v=__RXIV__').then(r => r.ok ? r.json() : null).catch(() => null),
+      cupDb(),
+      cupsDb(),
+      import('./cupedition.js?v=__RXIV__'),
+    ]);
+    _opencup = data; _oclive = live;
+    if (routedAway(at)) return;
+    const okMen = c => c.x === 'm' && !LEVELS.college.includes(c.g);
+    mod.render(view, { data, live, receipts, finals: (cups.opencup || {}).finals || [], year: yr ? Number(yr) : null }, {
+      esc, CLUBS, LEAGUES, mcrest, oddsFor, oddsAllowed, fmtKick, calBtn, initials,
+      clubIdx: nm => clubIdxByName(nm, okMen),
+    });
+  } catch (e) {
+    if (routedAway(at)) return;
+    view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/cups\'">&larr; Trophy Room</button>'
+      + '<p class="note">The Open Cup record could not load. Check your connection and try again.</p>';
+  }
+}
 /* College Results (#/college): the 2025 NCAA D1 seasons behind the Massey
    rating snapshots the college layers rank by. Two files — the results and the
    ESPN-name-to-club map — both lazy, both only needed on this route. */
@@ -3430,6 +3463,7 @@ async function screenCups() {
   view.innerHTML = `
     <div class="kicker">Every national trophy · pro, amateur, college & open</div>
     <h2 class="disp">The Trophy Room</h2>
+    <a class="fa-card" href="#/opencup"><b>&#127942; The Open Cup, round by round</b><span>This edition tie by tie &mdash; tiers, scores, rating swings, and the next ties with kickoff and broadcaster.</span></a>
     ${!keys.length ? '<p class="note">Tournament histories are loading into the dataset.</p>' : ''}
     ${SECTIONS.map(([kind, label]) => {
       const ks = keys.filter(k => cups[k].kind === kind);
@@ -3925,7 +3959,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', compare: 'Compare Clubs', tools: 'Tools', race: 'Season Race', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', claim: 'Claim your club', player: 'Player', staff: 'Coach', notfound: 'Page not found' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', compare: 'Compare Clubs', tools: 'Tools', race: 'Season Race', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', cups: 'Cups', upsets: 'Giant-Killings', opencup: 'U.S. Open Cup', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', claim: 'Claim your club', player: 'Player', staff: 'Coach', notfound: 'Page not found' };
 /* Hash routes people actually type or get sent. Every one of these was a
    plausible guess at a real screen that silently rendered the map instead —
    a stranger following a link from a DM concluded the site was broken rather
@@ -4030,6 +4064,7 @@ function route() {
      shipped to production under that name; keep the old hash working */
   else if (parts[0] === 'coach') { location.replace('#/player-sim'); return; }
   else if (parts[0] === 'upsets') screenUpsets();
+  else if (parts[0] === 'opencup') screenOpenCup(parts[1]);
   else if (parts[0] === 'college') screenCollege(parts[1] && decodeURIComponent(parts[1]));
   else if (parts[0] === 'shots') screenShots(parts.slice(1));
   else if (parts[0] === 'radar') screenRadar();

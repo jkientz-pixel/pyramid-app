@@ -1217,3 +1217,45 @@ select.ssel-native{position:absolute!important;width:1px!important;height:1px!im
 @media (max-width:599px){.ssel-scrim{display:block;position:fixed;inset:0;z-index:399;background:rgba(6,12,9,.55)}}
 .squad.staff li.lnk{padding:0}
 .squad.staff li.lnk a:hover .sq-name,.squad.staff li.lnk a:focus-visible .sq-name{color:var(--accent)}
+
+/* ---- The Open Cup (#/opencup) ------------------------------------------- */
+.oc-lead{margin:6px 0 2px;font-size:.95rem}
+.oc-lead a{color:var(--accent);text-decoration:none}
+.oc-round{margin-top:18px}
+.oc-round h3{margin:0;font-size:1.25rem;letter-spacing:.04em}
+.oc-roundmeta{color:var(--ink-dim);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;margin:2px 0 6px}
+.oc-list{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--raise)}
+.oc-tie{display:grid;grid-template-columns:4.4em minmax(0,1fr) auto minmax(0,1fr);grid-template-areas:"date home score away" ". mark mark mark";
+  align-items:center;column-gap:10px;row-gap:2px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:.86rem}
+.oc-tie:last-child{border-bottom:none}
+.oc-date{grid-area:date;color:var(--ink-dim);font-size:.72rem;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.oc-side{grid-area:home;display:flex;align-items:center;gap:6px;min-width:0}
+.oc-side.away{grid-area:away;flex-direction:row-reverse;text-align:right}
+.oc-nm{min-width:0;line-height:1.35}
+.oc-nm a{color:var(--ink);text-decoration:none}
+.oc-nm a:hover{color:var(--accent);text-decoration:underline}
+.oc-side.won .oc-nm a,.oc-side.won .oc-nm>span{font-weight:700}
+.oc-score{grid-area:score;text-align:center;font-weight:700;font-variant-numeric:tabular-nums;min-width:3.2em;line-height:1.1}
+.oc-score small{display:block;font-weight:400;font-size:.62rem;color:var(--ink-dim);white-space:nowrap}
+.oc-pending .oc-score small{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.oc-d{display:inline-block;margin-left:4px;padding:0 5px;border-radius:6px;font-size:.66rem;font-weight:700;font-variant-numeric:tabular-nums;vertical-align:1px}
+.oc-d.up{background:color-mix(in srgb,var(--sim-up) 14%,transparent);color:var(--sim-up)}
+.oc-d.down{background:color-mix(in srgb,var(--sim-down) 14%,transparent);color:var(--sim-down)}
+.oc-gk{background:color-mix(in srgb,var(--accent) 7%,var(--raise));box-shadow:inset 3px 0 0 var(--accent)}
+.oc-gkmark{grid-area:mark;color:var(--accent);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.oc-next .oc-livescore{flex:none;text-align:center;font-weight:700;font-size:1.05rem;font-variant-numeric:tabular-nums;line-height:1}
+.oc-next .oc-livescore small{display:block;font-weight:600;font-size:.62rem;color:var(--sim-down);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.oc-live{border-color:var(--accent)}
+.oc-call{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;margin-top:8px;font-size:.84rem}
+.oc-call .kicker{font-size:.66rem}
+.oc-elo{flex-basis:100%;color:var(--ink-dim);font-size:.72rem}
+.oc-tvrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px}
+.oc-tv{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:.72rem;font-weight:600;color:var(--ink-dim);letter-spacing:.04em}
+.oc-qual{margin-top:18px}
+.oc-qual .oc-round{margin-top:10px}
+.oc-qual .oc-round h3{font-size:1.05rem}
+@media (max-width:560px){
+  .oc-tie{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-areas:"date date date" "home score away" "mark mark mark";row-gap:3px;font-size:.82rem}
+  .oc-side,.oc-side.away{flex-direction:column;align-items:flex-start;text-align:left;gap:2px}
+  .oc-side.away{align-items:flex-end;text-align:right}
+}
