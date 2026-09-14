@@ -135,19 +135,28 @@ def parse_box(body, year, comp, rnd):
     return rec
 
 HEAD_RE = re.compile(r'^(={2,4})\s*(.*?)\s*\1\s*$', re.M)
+# A heading names a round only if it reads like one. The 2026 article puts a
+# "Teams" sub-heading (the entrant table) between the "Round of 32" heading
+# and that round's football boxes, and the nearest-heading rule banked all 16
+# ties as round "Teams" — a label nothing downstream could place. Non-round
+# headings are skipped so the boxes inherit the last real round above them.
+ROUND_HEAD_RE = re.compile(r'round|qualif|final|quarter|semi|play-?in|re-?play', re.I)
 
 def parse_article(src, year, comp):
-    """Walk headings; every football box under the most recent heading gets that round name."""
+    """Walk headings; every football box under the most recent ROUND heading gets that round name."""
     matches = []
     # build (pos, heading) list
     heads = [(m.start(), m.group(2)) for m in HEAD_RE.finditer(src)]
+    def clean(h):
+        return re.sub(r"'''?|\[\[|\]\]", '', h or '').strip()
     def round_at(pos):
         cur = None
         for p, h in heads:
             if p > pos:
                 break
-            cur = h
-        return re.sub(r"'''?|\[\[|\]\]", '', cur or '').strip()
+            if ROUND_HEAD_RE.search(clean(h)):
+                cur = h
+        return clean(cur)
     for m in re.finditer(r'\{\{\s*(football\s*box(?:\s+collapsible)?|footballbox(?:\s+collapsible)?)\s*[|\n]', src, re.I):
         start = m.start()
         depth, i = 0, start
