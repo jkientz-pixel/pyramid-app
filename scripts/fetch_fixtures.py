@@ -13,6 +13,9 @@ already uses for college results. Two things about it are worth writing down:
   * It 403s a BROWSER User-Agent and serves a plain one. That is backwards from
     every other host in this repo, and it is why the existing RankXI/1.0 agent
     started failing — do not "fix" the UA to look like Chrome.
+  * Since 2026-09-16 it 400s every YYYYMMDD-YYYYMMDD range in ?dates=; the
+    window is walked one day at a time (scripts/_espn.py) — do not put the
+    range back, and do not switch to months (NCAA women overflow limit=1000).
   * MLS Next Pro, USL Super League, NPSL, USL2 and UPSL have no slug. Six
     leagues is what ESPN carries, so six leagues is what ships. Nothing is
     invented to fill the others.
@@ -31,6 +34,7 @@ present last month's fixtures as upcoming, which is the failure the empty state
 was there to prevent.
 """
 from _datajs import load_clubs, ROOT
+from _espn import events_by_day
 import collections, json, os, re, sys, time, unicodedata, urllib.request
 
 # plain agent on purpose — see module docstring
@@ -110,7 +114,7 @@ def main():
             return hit[0]['id'] if hit and len(hit) == 1 else None
 
         try:
-            data = fetch(API % (slug, f'{start}-{end}'))
+            data = events_by_day(fetch, lambda d: API % (slug, d), start, end)
         except Exception as e:
             print(f'  ! {slug}: {e}')
             failed.append(slug)

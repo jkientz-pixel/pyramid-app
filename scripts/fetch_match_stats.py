@@ -27,6 +27,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _datajs import load_clubs, ROOT
 import collections
 from fetch_fixtures import ALIAS, API, FEEDS, fetch, strip
+from _espn import events_by_day
 
 SUMMARY = 'https://site.api.espn.com/apis/site/v2/sports/soccer/%s/summary?event=%s'
 LOOKBACK_DAYS = 14
@@ -94,7 +95,7 @@ def main():
             return hit[0]['id'] if hit and len(hit) == 1 else None
 
         try:
-            data = fetch(API % (slug, f'{start}-{end}'))
+            data = events_by_day(fetch, lambda d: API % (slug, d), start, end)
         except Exception as e:
             print(f'  ! {slug}: {e}'); failed.append(slug); continue
         kept = 0

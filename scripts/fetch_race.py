@@ -76,11 +76,12 @@ def kicked_off_before(iso, cutoff):
 
 
 def month_ranges(start, end):
-    """ESPN caps a scoreboard call at limit=1000, so walk month by month."""
+    """ESPN caps a scoreboard call at limit=1000, so walk month by month.
+    Bare YYYYMM: day ranges 400 since 2026-09-16 (see scripts/_espn.py); a
+    pro-league month never nears the cap."""
     y, m = start.year, start.month
     while (y, m) <= (end.year, end.month):
-        last = (date(y + (m == 12), m % 12 + 1, 1) - timedelta(days=1)).day
-        yield '%04d%02d01-%04d%02d%02d' % (y, m, y, m, last)
+        yield '%04d%02d' % (y, m)
         m += 1
         if m > 12:
             m, y = 1, y + 1

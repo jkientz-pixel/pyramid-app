@@ -26,7 +26,8 @@ import collections, json, os, re, sys, time, unicodedata, urllib.request
 
 UA = {'User-Agent': 'curl/8.4.0'}
 API = ('https://site.api.espn.com/apis/site/v2/sports/soccer/usa.open/'
-       'scoreboard?dates=%s0101-%s1231&limit=1000')
+       'scoreboard?dates=%s&limit=1000')  # a bare YYYY = the whole edition;
+# YYYYMMDD-YYYYMMDD ranges 400 since 2026-09-16 (see scripts/_espn.py)
 OUT = os.path.join(ROOT, 'data', 'opencup_live.json')
 
 # ESPN's season slug -> the round name Wikipedia's articles use, which is the
@@ -114,7 +115,7 @@ def main():
         return pick(exact.get(deacc(name).lower())) or pick(loose.get(strip(name)))
 
     try:
-        data = fetch(API % (year, year))
+        data = fetch(API % year)
     except Exception as e:  # noqa: BLE001 — any transport error is the same to us
         print(f'WARNING: usa.open fetch failed ({e}); keeping the last file', file=sys.stderr)
         return 0
