@@ -352,6 +352,14 @@
   5
  ],
  [
+  "ncaa1w: Western Michigan Broncos",
+  5
+ ],
+ [
+  "ncaa1w: The Citadel Bulldogs",
+  5
+ ],
+ [
   "ncaa1w: VMI Keydets",
   5
  ],
@@ -445,6 +453,10 @@
  ],
  [
   "ncaa1w: Tennessee Tech Golden Eagles",
+  5
+ ],
+ [
+  "ncaa1w: Santa Clara Broncos",
   5
  ],
  [
@@ -596,6 +608,10 @@
   5
  ],
  [
+  "ncaa1w: South Carolina Upstate Spartans",
+  5
+ ],
+ [
   "ncaa1w: St. John's Red Storm",
   5
  ],
@@ -621,6 +637,10 @@
  ],
  [
   "ncaa1w: Sacred Heart Pioneers",
+  5
+ ],
+ [
+  "ncaa1w: Cal State Bakersfield Roadrunners",
   5
  ],
  [
@@ -1068,19 +1088,7 @@
   4
  ],
  [
-  "ncaa1w: Long Island University Sharks",
-  4
- ],
- [
-  "ncaa1w: Central Connecticut Blue Devils",
-  4
- ],
- [
   "ncaa1w: Eastern Kentucky Colonels",
-  4
- ],
- [
-  "ncaa1w: Western Michigan Broncos",
   4
  ],
  [
@@ -1196,6 +1204,10 @@
   4
  ],
  [
+  "ncaa1w: Incarnate Word Cardinals",
+  4
+ ],
+ [
   "ncaa1w: Rice Owls",
   4
  ],
@@ -1220,11 +1232,19 @@
   4
  ],
  [
+  "ncaa1w: SE Louisiana Lions",
+  4
+ ],
+ [
   "ncaa1w: McNeese Cowboys",
   4
  ],
  [
   "ncaa1w: South Alabama Jaguars",
+  4
+ ],
+ [
+  "ncaa1w: Troy Trojans",
   4
  ],
  [
@@ -1237,6 +1257,10 @@
  ],
  [
   "ncaa1w: Tarleton State Texans",
+  4
+ ],
+ [
+  "ncaa1w: Texas Southern Tigers",
   4
  ],
  [
@@ -1256,7 +1280,7 @@
   4
  ],
  [
-  "ncaa1w: Santa Clara Broncos",
+  "ncaa1w: Southeast Missouri State Redhawks",
   4
  ],
  [
@@ -1409,6 +1433,10 @@
  ],
  [
   "ncaa1w: Arkansas Razorbacks",
+  4
+ ],
+ [
+  "ncaa1w: LSU Tigers",
   4
  ],
  [
@@ -1592,6 +1620,14 @@
   4
  ],
  [
+  "ncaa1w: Seattle U Redhawks",
+  4
+ ],
+ [
+  "ncaa1w: Weber State Wildcats",
+  4
+ ],
+ [
   "ncaa1w: UAlbany Great Danes",
   4
  ],
@@ -1668,6 +1704,10 @@
   4
  ],
  [
+  "ncaa1w: NJIT Highlanders",
+  4
+ ],
+ [
   "ncaa1w: New Hampshire Wildcats",
   4
  ],
@@ -1693,6 +1733,10 @@
  ],
  [
   "ncaa1w: Wagner Seahawks",
+  4
+ ],
+ [
+  "ncaa1w: Samford Bulldogs",
   4
  ],
  [
@@ -1724,6 +1768,10 @@
   4
  ],
  [
+  "ncaa1w: Missouri State Bears",
+  4
+ ],
+ [
   "ncaa1w: Central Arkansas Bears",
   4
  ],
@@ -1745,6 +1793,10 @@
  ],
  [
   "ncaa1w: Saint Mary's Gaels",
+  4
+ ],
+ [
+  "ncaa1w: South Carolina State Bulldogs",
   4
  ],
  [
@@ -1884,10 +1936,6 @@
   3
  ],
  [
-  "ncaa1w: The Citadel Bulldogs",
-  3
- ],
- [
   "ncaa1w: Grambling Tigers",
   3
  ],
@@ -1916,10 +1964,6 @@
   3
  ],
  [
-  "ncaa1w: Incarnate Word Cardinals",
-  3
- ],
- [
   "ncaa1w: East Texas A&M Lions",
   3
  ],
@@ -1929,22 +1973,6 @@
  ],
  [
   "ncaa1w: South Florida Bulls",
-  3
- ],
- [
-  "ncaa1w: SE Louisiana Lions",
-  3
- ],
- [
-  "ncaa1w: Troy Trojans",
-  3
- ],
- [
-  "ncaa1w: Texas Southern Tigers",
-  3
- ],
- [
-  "ncaa1w: Southeast Missouri State Redhawks",
   3
  ],
  [
@@ -1965,10 +1993,6 @@
  ],
  [
   "ncaa1w: Notre Dame Fighting Irish",
-  3
- ],
- [
-  "ncaa1w: LSU Tigers",
   3
  ],
  [
@@ -2044,11 +2068,23 @@
   3
  ],
  [
+  "ncaa1w: Central Connecticut Blue Devils",
+  3
+ ],
+ [
   "ncaa1w: Yale Bulldogs",
   3
  ],
  [
   "ncaa1w: Dartmouth Big Green",
+  3
+ ],
+ [
+  "ncaa1w: Long Island University Sharks",
+  3
+ ],
+ [
+  "ncaa1w: SIU Edwardsville Cougars",
   3
  ],
  [
@@ -2148,39 +2184,7 @@
   3
  ],
  [
-  "ncaa1w: Samford Bulldogs",
-  3
- ],
- [
-  "ncaa1w: Weber State Wildcats",
-  3
- ],
- [
   "ncaa1w: Liberty Flames",
-  3
- ],
- [
-  "ncaa1w: South Carolina Upstate Spartans",
-  3
- ],
- [
-  "ncaa1w: South Carolina State Bulldogs",
-  3
- ],
- [
-  "ncaa1w: Seattle U Redhawks",
-  3
- ],
- [
-  "ncaa1w: Cal State Bakersfield Roadrunners",
-  3
- ],
- [
-  "ncaa1w: Missouri State Bears",
-  3
- ],
- [
-  "ncaa1w: NJIT Highlanders",
   3
  ],
  [
@@ -2196,18 +2200,6 @@
   2
  ],
  [
-  "ncaa1w: South Carolina Upstate SOUTH CAROLINA UPSTATE SPARTANS",
-  2
- ],
- [
-  "ncaa1w: The Citadel THE CITADEL BULLDOGS",
-  2
- ],
- [
-  "ncaa1w: Cal State Bakersfield CAL STATE BAKERSFIELD ROADRUNNERS",
-  2
- ],
- [
   "ncaa1w: Cornell Big Red",
   2
  ],
@@ -2217,10 +2209,6 @@
  ],
  [
   "ncaa1w: Alabama State Hornets",
-  2
- ],
- [
-  "ncaa1w: SIU Edwardsville Cougars",
   2
  ],
  [
@@ -2276,55 +2264,11 @@
   1
  ],
  [
-  "ncaa1w: Seattle U SEATTLE U REDHAWKS",
-  1
- ],
- [
-  "ncaa1w: Weber State WEBER STATE WILDCATS",
-  1
- ],
- [
-  "ncaa1w: NJIT NJIT HIGHLANDERS",
-  1
- ],
- [
   "ncaa1w: Schreiner",
   1
  ],
  [
-  "ncaa1w: Samford SAMFORD BULLDOGS",
-  1
- ],
- [
-  "ncaa1w: Western Michigan WESTERN MICHIGAN BRONCOS",
-  1
- ],
- [
-  "ncaa1w: Texas Southern TEXAS SOUTHERN LADY TIGERS",
-  1
- ],
- [
-  "ncaa1w: Missouri State MISSOURI STATE BEARS",
-  1
- ],
- [
-  "ncaa1w: SIU Edwardsville SIU EDWARDSVILLE COUGARS",
-  1
- ],
- [
-  "ncaa1w: Southeast Missouri State SOUTHEAST MISSOURI STATE REDHAWKS",
-  1
- ],
- [
-  "ncaa1w: South Carolina State SOUTH CAROLINA STATE BULLDOGS",
-  1
- ],
- [
   "ncaa1w: NORTH DAKOTA STATE COLLEGE OF SCIENCE",
-  1
- ],
- [
-  "ncaa1w: Santa Clara SANTA CLARA BRONCOS",
   1
  ],
  [
@@ -2333,22 +2277,6 @@
  ],
  [
   "ncaa1w: Texas A&M-Victoria",
-  1
- ],
- [
-  "ncaa1w: Troy TROY TROJANS",
-  1
- ],
- [
-  "ncaa1w: SE Louisiana SE LOUISIANA LIONS",
-  1
- ],
- [
-  "ncaa1w: Incarnate Word INCARNATE WORD CARDINALS",
-  1
- ],
- [
-  "ncaa1w: LSU LSU TIGERS",
   1
  ]
 ]
