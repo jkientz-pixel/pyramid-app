@@ -26,6 +26,21 @@ else:
             fail.append(f'data.js: {sum(1 for i in ids if not i)} clubs missing an id slug')
         if len(set(ids)) != len(ids):
             fail.append('data.js: duplicate club slugs')
+        # Two LIVE rows with the same name, league and sex render byte-identical
+        # /club/ pages; Google indexes one and reports the other as a duplicate
+        # (whatcom-fc-rangers-ecrlg, GSC 2026-09-16). Retire the twin with h:1
+        # + dup + a 301 in _redirects instead of leaving both live.
+        seen, twins = {}, []
+        for c in clubs:
+            if c.get('h'):
+                continue
+            key = (c.get('n'), c.get('g'), c.get('x'))
+            if key in seen:
+                twins.append(f"{seen[key]} / {c.get('id')}")
+            seen[key] = c.get('id')
+        if twins:
+            fail.append(f'data.js: {len(twins)} live club pairs share name+league+sex '
+                        f'(duplicate /club/ pages): {twins[:5]}')
         broken = [c['id'] for c in clubs
                   if c.get('img') and not (ROOT / c['img']).exists()]
         if broken:
