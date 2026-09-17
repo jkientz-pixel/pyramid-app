@@ -27,6 +27,13 @@ jobs:
       # and preflight runs gen_club_domains.py --check against it.
       - name: Generate the club domain map preflight checks
         run: python3 scripts/gen_club_domains.py
+      # preflight rejects any fixture dated before today, and the committed
+      # schedule only advances when refresh-rosters commits. Every push made
+      # after a night of games therefore failed here (three red runs on
+      # 2026-09-17) even though the deploy job passes — it runs this same
+      # fallback first, which restores the committed trio minus played games.
+      - name: Prune played fixtures from the committed season race
+        run: python3 scripts/race_gate.py --fallback
       - name: Run preflight gate
         run: python3 scripts/preflight.py
 
