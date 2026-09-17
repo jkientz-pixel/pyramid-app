@@ -40,6 +40,10 @@ jobs:
       # play". It exits non-zero if every feed errors, so an ESPN block fails
       # the run instead of quietly publishing an empty schedule.
       - run: python scripts/fetch_fixtures.py
+      # Current-edition Open Cup ties for #/opencup (kickoffs, venues, TV,
+      # live scores). Soft-fails on its own: a stale semifinal preview beats
+      # a blocked refresh.
+      - run: python scripts/fetch_opencup_live.py
       - run: python scripts/fetch_match_stats.py
       # Season Race inputs: current standings, the schedule still to come, and
       # each league's real season window. Same ESPN host and the same plain-UA
@@ -81,7 +85,7 @@ jobs:
           # push once committed schedule_rest.json fixtures slip into the past
           # (bit master on 2026-09-01 — race data regenerated every run but was
           # never committed, frozen at 8/27)
-          git add js/rosters.js js/data.js data/recal2_state.json data/cup_receipts.json data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/match_stats.json data/match_stats_archive.json data/rank_snapshot.json data/rank_history.json data/standings.json data/seasons.json data/schedule_rest.json
+          git add js/rosters.js js/data.js data/recal2_state.json data/cup_receipts.json data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/opencup_live.json data/match_stats.json data/match_stats_archive.json data/rank_snapshot.json data/rank_history.json data/standings.json data/seasons.json data/schedule_rest.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
