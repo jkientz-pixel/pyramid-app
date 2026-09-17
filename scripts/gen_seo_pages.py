@@ -450,10 +450,16 @@ faq_pairs = [
      f'days; removal requests are confirmed as coming from the club or player and then actioned, '
      f'usually within the week. Crests and images come down first. See the terms page for the '
      f'full notice process.'),
+    ('Are high schools ranked on Ranked XI?',
+     'No. High schools appear on the map as an opt-in directory layer: roughly 24,600 US '
+     'schools that teach grade 12, with name and location taken from the National Center for '
+     'Education Statistics. That is all the layer says. There are no ratings, no rankings, '
+     'no player data, and schools are never counted among the clubs. Whether a school fields '
+     'a soccer side is not yet confirmed; only around half of US high schools do.'),
 ]
 faq_crumbs = [('Ranked XI', '/'), ('FAQ', None)]
 faq_title = 'Ranked XI FAQ — how US soccer clubs are ranked | Ranked XI'
-faq_desc = ('Answers to the twelve questions asked most about Ranked XI: what it is, how the '
+faq_desc = ('Answers to the thirteen questions asked most about Ranked XI: what it is, how the '
             'cross-league ratings are built, what each basis label means, why some clubs are '
             'unrated, and how to request a correction or removal.')
 faq_ld = S.graph(S.organization(), S.website(), S.faq_page(faq_pairs),
@@ -464,7 +470,7 @@ write('faq.html', page_head(faq_title, faq_desc, '/faq', faq_ld, DOC_STYLE,
 {S.crumbs_html(faq_crumbs)}
 <h1 class="disp">Frequently asked questions</h1>
 <p class="sub">Ratings computed {today_h} · method last changed {METHOD_CHANGED}</p>
-<p class="lead"><strong>{html.escape(S.ENTITY)}</strong> Below are the twelve questions that
+<p class="lead"><strong>{html.escape(S.ENTITY)}</strong> Below are the thirteen questions that
 come up most, answered in full — including the ones with awkward answers.</p>
 {S.faq_html(faq_pairs, 'Questions')}
 <section><h2>Still stuck?</h2>
