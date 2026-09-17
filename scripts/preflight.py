@@ -6,7 +6,7 @@ ship a broken or stale build. Checks:
      that needs it carries the placeholder deploy.sh stamps (see cachebust.py);
   3. every data/*.json the app fetches exists and parses.
 """
-import datetime as _dt
+from race_gate import pacific_today as _pacific_today, check as _race_check
 import json, re, pathlib, subprocess, sys
 import html as html_mod
 import cachebust
@@ -26,6 +26,21 @@ else:
             fail.append(f'data.js: {sum(1 for i in ids if not i)} clubs missing an id slug')
         if len(set(ids)) != len(ids):
             fail.append('data.js: duplicate club slugs')
+        # Two LIVE rows with the same name, league and sex render byte-identical
+        # /club/ pages; Google indexes one and reports the other as a duplicate
+        # (whatcom-fc-rangers-ecrlg, GSC 2026-09-16). Retire the twin with h:1
+        # + dup + a 301 in _redirects instead of leaving both live.
+        seen, twins = {}, []
+        for c in clubs:
+            if c.get('h'):
+                continue
+            key = (c.get('n'), c.get('g'), c.get('x'))
+            if key in seen:
+                twins.append(f"{seen[key]} / {c.get('id')}")
+            seen[key] = c.get('id')
+        if twins:
+            fail.append(f'data.js: {len(twins)} live club pairs share name+league+sex '
+                        f'(duplicate /club/ pages): {twins[:5]}')
         broken = [c['id'] for c in clubs
                   if c.get('img') and not (ROOT / c['img']).exists()]
         if broken:
@@ -137,51 +152,10 @@ if _data_ok:
 # length that disagrees with played + scheduled produces a projected
 # points-per-game above the 3.0 maximum (which is how the NWSL/USLC hardcoded
 # season lengths were caught).
-try:
-    _race_before = len(fail)
-    _sea = json.loads((ROOT / 'data' / 'seasons.json').read_text()).get('leagues', {})
-    _std = json.loads((ROOT / 'data' / 'standings.json').read_text()).get('leagues', {})
-    _sch = json.loads((ROOT / 'data' / 'schedule_rest.json').read_text()).get('fixtures', [])
-    _clubs = {c['id'] for c in json.loads(
-        re.search(r'export const CLUBS=(\[.*?\]);', (ROOT / 'js' / 'data.js').read_text(), re.S).group(1))}
-    orphan_lg = sorted(set(_std) - set(_sea))
-    if orphan_lg:
-        fail.append(f'standings.json has leagues with no seasons.json entry: {orphan_lg}')
-    bad_ids = {f[k] for f in _sch for k in ('h', 'a') if f[k] not in _clubs}
-    if bad_ids:
-        fail.append(f'schedule_rest.json points at {len(bad_ids)} unknown club ids: {sorted(bad_ids)[:4]}')
-    std_ids = {r['id'] for g in _std.values() for grp in g['groups'] for r in grp['rows']}
-    miss = sorted(std_ids - _clubs)
-    if miss:
-        fail.append(f'standings.json has {len(miss)} club ids not in data.js: {miss[:4]}')
-    today = _dt.date.today().isoformat()
-    stale = [f for f in _sch if f['d'] < today]
-    if stale:
-        fail.append(f'schedule_rest.json holds {len(stale)} fixtures before today — '
-                    'it must contain only games still to be played')
-    for lg, meta in _sea.items():
-        if lg not in _std:
-            continue
-        left = {}
-        for f in _sch:
-            if f.get('lg') != lg:
-                continue
-            for k in ('h', 'a'):
-                left[f[k]] = left.get(f[k], 0) + 1
-        for grp in _std[lg]['groups']:
-            for r in grp['rows']:
-                tot = r['gp'] + left.get(r['id'], 0)
-                if tot > meta['games']:
-                    fail.append(f'{lg}/{r["id"]}: {r["gp"]} played + {left.get(r["id"], 0)} '
-                                f'scheduled = {tot}, more than the {meta["games"]}-game season')
-                    break
-    if len(fail) == _race_before:
-        print(f'  season race OK - {len(_sea)} leagues, {len(std_ids)} clubs, '
-              f'{len(_sch)} fixtures still to play')
-except FileNotFoundError as e:
-    fail.append(f'season race data missing: {e}')
-except Exception as e:
-    fail.append(f'season race gate: {e}')
+_race_fail, _race_summary = _race_check(ROOT)
+fail.extend(_race_fail)
+if not _race_fail:
+    print(f'  season race OK - {_race_summary}')
 
 # 4. cups.json structural sanity — the Wikipedia parser once shipped an MVP
 #    (a person) as an MLS Cup champion and future host cities as winners;
@@ -407,7 +381,8 @@ try:
     for d in gen_dirs_present:
         produced |= {f'/{d}/{x.stem}' for x in (ROOT / d).glob('*.html')}
 
-    long_titles, no_desc, no_canon, no_og, bad_ld, brand = [], [], [], [], [], []
+    long_titles, no_desc, no_canon, no_og, bad_ld, brand, bad_href = [], [], [], [], [], [], []
+    _HREF = re.compile(r'href="(/(?:club|league|state)/[^"#?]+)')
     _TITLE = re.compile(r'<title>(.*?)</title>', re.S)
     _DESC = re.compile(r'<meta name="description" content="(.*?)">', re.S)
     _LD = re.compile(r'<script type="application/ld\+json">(.*?)</script>', re.S)
@@ -451,6 +426,16 @@ try:
                         bad_ld.append(f'{rel} -> {probe} (file missing)')
                 elif probe not in produced:
                     bad_ld.append(f'{rel} -> {probe}')
+        # visible links get the same test. Only rated leagues get a static
+        # /league/ page, but 1,205 unrated club pages linked to /league/<g>
+        # anyway; Search Console listed them as Not found from 2026-09-04
+        # (/league/cpl, /league/cplw, /league/pecnlg) and nothing here noticed
+        # (CI's validator job runs without the generated tree, so there is
+        # nothing to resolve a link against - skip, as the leaf scan does)
+        if len(gen_dirs_present) == 3:
+            for u in set(_HREF.findall(body)):
+                if u.rstrip('/') not in produced:
+                    bad_href.append(f'{rel} -> {u}')
 
     def _cap(items, n=6):
         return ', '.join(items[:n]) + (f' (+{len(items) - n} more)' if len(items) > n else '')
@@ -467,9 +452,12 @@ try:
         fail.append(f'"Rank XI" (the old, wrong entity name) appears in: {_cap(brand)}')
     if bad_ld:
         fail.append(f'JSON-LD points at URLs this build did not produce: {_cap(sorted(set(bad_ld)))}')
-    if checked and not (long_titles or no_desc or no_canon or no_og or brand or bad_ld):
+    if bad_href:
+        fail.append(f'{len(bad_href)} club/league/state links point at pages this build did not '
+                    f'produce: {_cap(sorted(set(bad_href)))}')
+    if checked and not (long_titles or no_desc or no_canon or no_og or brand or bad_ld or bad_href):
         print(f'  SEO: {checked} pages — titles fit, descriptions set, canonical + og:url '
-              f'present, one brand name, no 404s in JSON-LD')
+              f'present, one brand name, no 404s in JSON-LD or club/league/state links')
     if not gen_dirs_present:
         print('  SEO: club/league/state not generated in this checkout — leaf pages not scanned')
 

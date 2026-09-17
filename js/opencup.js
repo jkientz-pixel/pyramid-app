@@ -17,7 +17,7 @@
    Renames matter here: "USL" is what USL Championship was called through 2018,
    and "PDL" is what USL League Two was called through 2018 — treating either as
    a separate league would have scored a straight league match as an upset. */
-const TIER = {
+export const TIER = {
   MLS: 1,
   USLC: 2, USL: 2, NASL: 2,
   USL1: 3, MLSNP: 3, NISA: 3,
@@ -25,10 +25,10 @@ const TIER = {
   APSL: 5, EPSL: 5, SWPL: 5, MPL: 5, MWPL: 5, CPL: 5, CSL: 5, SFSFL: 5,
   EPLWA: 5, LISFL: 5, GCPL: 5, NISAN: 5, NSL: 5,
 };
-const TIER_NAME = { 1: 'Division I', 2: 'Division II', 3: 'Division III',
+export const TIER_NAME = { 1: 'Division I', 2: 'Division II', 3: 'Division III',
   4: 'National amateur', 5: 'Regional' };
 /* what the codes above stand for, for the tooltip on each badge */
-const LEAGUE_NAME = {
+export const LEAGUE_NAME = {
   MLS: 'MLS', USLC: 'USL Championship', USL: 'USL (now USL Championship)',
   NASL: 'NASL', USL1: 'USL League One', MLSNP: 'MLS Next Pro', NISA: 'NISA',
   NPSL: 'NPSL', USL2: 'USL League Two', PDL: 'PDL (now USL League Two)',
@@ -40,8 +40,9 @@ const LEAGUE_NAME = {
   NISAN: 'NISA Nation', NSL: 'National Soccer League',
 };
 
-/** One row of the source file, normalised into winner/loser terms. */
-function normalise(m) {
+/** One row of the source file, normalised into winner/loser terms; null unless
+    it is a giant-killing. Shared with the edition page (cupedition.js). */
+export function normalise(m) {
   const t1 = TIER[m.l1], t2 = TIER[m.l2];
   const w = m.winner;
   if (!w || !t1 || !t2 || t1 === t2) return null;
@@ -137,7 +138,8 @@ export function render(view, data, helpers) {
       regional play and state leagues &mdash; sit on no national tier, so they are left out of
       these totals rather than guessed at. A score marked <i>after level</i> was decided in extra
       time or on penalties; the figure shown is the 90-minute score the source records.
-      Match data from Wikipedia (CC BY-SA 4.0).</p>`;
+      Match data from Wikipedia (CC BY-SA 4.0).</p>
+    <a class="gk-cta" href="#/opencup">This year's Cup, round by round &rarr;</a>`;
 
   view.querySelector('#gk-years').addEventListener('click', e => {
     const b = e.target.closest('[data-yr]'); if (!b) return;

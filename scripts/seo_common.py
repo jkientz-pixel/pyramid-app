@@ -16,6 +16,11 @@ import html
 import json
 
 SITE = 'https://www.rankedxi.com'
+# Leagues whose rankings page is a hand-written landing page, not a generated
+# /league/<g>. A generated twin would compete for the same query, so /league/upsl
+# and /league/npsl 404 on purpose (a test asserts it); every generator must link
+# here instead of guessing /league/<g>.
+HAS_LANDING = {'upsl': '/upsl-rankings', 'npsl': '/npsl-rankings'}
 
 # The canonical entity sentence. Byte-identical wherever a description is asked
 # for — schema, meta, manifest, Play Store, social bios. Repetition across

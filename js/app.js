@@ -1,6 +1,7 @@
 import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=__RXIV__';
 import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=__RXIV__';
 import { share } from './native.js?v=__RXIV__';
+import './ssel.js?v=__RXIV__';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
    views read it — imported on demand, idle-prefetched after first paint.
    On import failure the app still renders: empty ROSTERS degrades to the same
@@ -277,7 +278,7 @@ window.submitInterest = (ev, f) => {
 /* crest-content generation: bump when crest PIXELS change under the same
    filename (e.g. a strip_crest_bg.py run) — crest URLs are cached immutable
    and cache-first, so only a new ?cv= reaches returning browsers */
-const CRESTV = '12';
+const CRESTV = '13';
 /* Venue line for the club header. `acc` is the location grade set by the data
    pipeline: 'v' = coordinates are the ground itself (Wikidata home-venue or a
    league portal venue), 'a' = approximate, unset = league-stated city only.
@@ -1180,6 +1181,64 @@ function oddsFor(h, a, homeAdv, wantCells) {
   return { pH: pH / tot, pD: pD / tot, pA: pA / tot, score: best, ha, cells };
 }
 
+/* ---- "Could you beat a pro club?" ----------------------------------------
+   The one question an amateur club's page actually gets asked (Jeremy,
+   2026-09-04: "what people would look at is if their team could beat a pro
+   team"). Honest to publish since #117 put the amateur leagues on their real
+   within-league spread, and cup results rather than the pro label decide who
+   sits above whom. This is the ONE deliberate exception to the ODDS_TIER
+   rule above: a rounded, neutral-ground range against a senior pro side,
+   never a line on an amateur v amateur fixture. Men's senior amateur clubs
+   only — those leagues sit on a measured Open Cup anchor. Women's amateur
+   leagues have no cross-league cup measurement; college and youth carry no
+   odds by policy. The range IS the cross-league uncertainty: the league
+   anchors are measured from ~600 Open Cup results and carry about ±50 Elo
+   (the amateur-league offsets have ±110 CIs), so the midpoint alone would
+   overstate what the model knows. */
+const CROSS_LEAGUE_ELO_CI = 50;
+const beatProEligible = c => !!(c.r && c.rr && c.x === 'm' && !c.h && LEVELS.amateur.includes(c.g));
+const proOpponents = () => CLUBS.filter(o => o.x === 'm' && o.r && o.rr && !o.h && ODDS_TIER.has(o.g));
+const nearestPro = c => proOpponents().sort((a, b) => dist2(a, c) - dist2(b, c))[0];
+function beatProHtml(c, pro) {
+  if (!pro) return '';
+  const pAt = gap => oddsFor({ g: c.g, r: c.r + gap }, pro, 0).pH;   // neutral ground
+  const lo = pAt(-CROSS_LEAGUE_ELO_CI), mid = pAt(0), hi = pAt(CROSS_LEAGUE_ELO_CI);
+  const pct = p => p < 0.01 ? '<1' : String(Math.round(p * 100));
+  const oneIn = Math.round(1 / Math.max(mid, 0.01));
+  /* the sub-label and the range are worded, not computed to false precision:
+     "1 in 142" is not a thing anyone knows about a soccer match */
+  const sub = mid < 0.01 ? 'a long shot' : mid < 0.4 ? `about 1 in ${oneIn}` : 'a real contest';
+  const range = hi < 0.02 ? 'it stays under <b>2%</b> either way'
+    : pct(lo) === pct(hi) ? `it stays about <b>${pct(hi)}%</b> either way`
+    : `it lands between <b>${pct(lo)}%</b> and <b>${pct(hi)}%</b>`;
+  const groups = ['mls', 'uslc', 'usl1', 'mnp'].map(g => {
+    const opts = proOpponents().filter(o => o.g === g).sort((a, b) => a.n.localeCompare(b.n))
+      .map(o => `<option value="${o.id}"${o === pro ? ' selected' : ''}>${esc(o.n)}</option>`).join('');
+    return opts ? `<optgroup label="${esc(LEAGUES[g].label)}">${opts}</optgroup>` : '';
+  }).join('');
+  return `<div class="beatpro" id="beatpro">
+    <div class="kicker">Could you beat a pro club?</div>
+    <div class="bp-row">
+      <span class="bp-num"><b>${pct(mid)}%</b><span>${sub}</span></span>
+      <span class="bp-text">chance of beating <select class="bp-pick" aria-label="Pro club to measure against">${groups}</select> in a one-off game on a neutral field. Allow for how loosely the leagues are tied together and ${range}.</span>
+    </div>
+    <p class="note" style="margin-top:8px">Nearest pro club first; pick any. Elo ${c.r} v ${pro.r}. A rough read, not a betting line: league levels come from Open Cup results and carry about ±${CROSS_LEAGUE_ELO_CI} points, which is why the range is the honest number.</p>
+  </div>`;
+}
+function wireBeatPro(c) {
+  const sel = view.querySelector('#beatpro .bp-pick');
+  if (!sel) return;
+  sel.addEventListener('change', () => {
+    const pro = CLUBS[clubIdx(sel.value)];
+    const box = view.querySelector('#beatpro');
+    if (!pro || !box) return;
+    box.outerHTML = beatProHtml(c, pro);
+    wireBeatPro(c);
+    const next = view.querySelector('#beatpro .bp-pick');
+    if (next) next.focus();
+  });
+}
+
 /* ico = crests/platform-<ico>.svg; 'inv' logos are dark-on-transparent
    wordmarks that invert under the dark theme */
 const WATCH = {
@@ -1301,11 +1360,11 @@ let _wireFeed = null;
 async function wireDb() {
   if (_wireFeed) return _wireFeed;
   const grab = u => fetch(u).then(r => r.json()).catch(() => []);
-  const [npsl, asa, usl2] = await Promise.all([
+  const [npsl, asa, usl2, mwpl] = await Promise.all([
     grab('data/wire_npsl.json?v=__RXIV__'), grab('data/wire_asa.json?v=__RXIV__'),
-    grab('data/wire_usl2.json?v=__RXIV__')]);
+    grab('data/wire_usl2.json?v=__RXIV__'), grab('data/wire_mwpl.json?v=__RXIV__')]);
   _wireFeed = npsl.map(w => ({ ...w, lg: 'npsl' }))
-    .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })))
+    .concat(asa, usl2.map(w => ({ ...w, lg: 'usl2' })), mwpl.map(w => ({ ...w, lg: 'mwpl' })))
     .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
   return _wireFeed;
 }
@@ -1819,6 +1878,7 @@ function screenMatches(preH) {
   view.innerHTML = `
     ${sexToggle()}
     <a class="fa-card" href="#/wire"><b>&#128240; The Wire</b><span>This week's results, upsets and rating swings &mdash; generated from real data.</span></a>
+    <a class="fa-card" href="#/opencup"><b>&#127942; U.S. Open Cup</b><span>This edition round by round &mdash; the next ties with kickoff, venue and broadcaster, and every result on the ladder.</span></a>
     <a class="fa-card" href="#/nt"><b>&#127482;&#127480; National Teams</b><span>USA national teams, senior through U-15 &mdash; fixtures, how to watch, squad history and player bios back to 1930.</span></a>
     <div id="realfx"></div>
     <div id="realres"></div>
@@ -2151,6 +2211,41 @@ function squadFor(c) {
       nat: rp.nat ? rp.nat.toUpperCase() : null, wiki: rp.wiki, real: true, rs, age: null };
   });
 }
+/* Squad table for clubs with a real roster. Fixed column widths and a header
+   row: with the value column free-width, wide numbers shoved every other
+   column left row by row, and "1g 0a" carried no legend (Jeremy, 2026-09-05). */
+function squadListHtml(c) {
+  const sq = squadFor(c), staff = staffFor(c);
+  const hasNum = sq.some(pl => pl.num), hasNat = sq.some(pl => pl.real && pl.nat);
+  return `<div class="kicker" style="margin-top:14px">Squad</div>${verifyBadge(c)}
+    ${staff.length ? `<ul class="squad staff">${staff.map(st2 =>
+      `<li><span class="sq-num">${st2.tag}</span><span class="sq-name">${esc(st2.name)}</span><span class="sq-pos">${st2.role}</span><span class="sq-age">${st2.age}</span><span class="sq-form"></span></li>`).join('')}</ul>` : ''}
+    <ul class="squad${hasNum ? '' : ' nonum'}${hasNat ? '' : ' nonat'}">
+      <li class="sq-head" aria-hidden="true"><span class="sq-num">#</span><span class="sq-name">Player</span><span class="sq-pos">Pos</span><span class="sq-age">Nat</span><span class="sq-ga">G &middot; A</span><span class="sq-form">Value</span></li>
+      ${sq.map((pl, pi) =>
+      `<li><a href="#/player/${c.id}/${pi}"><span class="sq-num">${pl.num}</span><span class="sq-name">${esc(pl.name)}</span><span class="sq-pos">${pl.pos}</span><span class="sq-age">${pl.real ? (pl.nat || '') : ''}</span><span class="sq-ga">${pl.pos === 'GK' ? pl.cs + ' CS' : pl.goals + ' &middot; ' + pl.assists}</span><span class="sq-form">${pl.pvr}</span></a></li>`).join('')}</ul>
+    <p class="note">Pos = position. G &middot; A = goals and assists this season; keepers show clean sheets (CS). Value is the player value rating &mdash; tap a name for the full line.</p>`;
+}
+/* USL League Two squads come from team sheets: who was named, how often, the
+   shirt number they usually wore, and the staff the club listed. Positions are
+   not on the sheets, so none are shown — no guessed ones. */
+function usl2SquadHtml(c, apps) {
+  const staff = apps.staff || [], top = apps.players[0].st + apps.players[0].sub;
+  const hasNum = apps.players.some(p => p.num);
+  const tag = role => role.split(/\s+/).map(w => w[0] || '').join('').slice(0, 2).toUpperCase();
+  return `<div class="kicker" style="margin-top:14px">Squad &middot; ${apps.players.length} players used</div>
+    ${staff.length ? `<div class="kicker sq-sub">Coaching staff &middot; as listed on the team sheet</div>
+    <ul class="squad staff usl2staff">${staff.map(s2 =>
+      `<li class="lnk"><a href="#/staff/${s2.sid}"><span class="sq-num">${s2.role ? tag(s2.role) : ''}</span><span class="sq-name">${esc(s2.n)}</span><span class="sq-pos">${esc(s2.role || 'Staff')}</span><span class="sq-age"></span><span class="sq-form"><small>${s2.g} sheet${s2.g === 1 ? '' : 's'}</small></span></a></li>`).join('')}</ul>` : ''}
+    <ul class="apps-list${hasNum ? '' : ' nonum'}">
+      <li class="apps-head" aria-hidden="true"><span class="apps-num">#</span><span class="apps-name">Player</span><span class="apps-bar"></span><span class="apps-hn">Squads<small>starts &middot; bench</small></span></li>
+      ${apps.players.map(pl => `<li class="apps-row"><a href="#/player/${c.id}/u${pl.pid}">
+      <span class="apps-num">${pl.num || ''}</span>
+      <span class="apps-name">${esc(pl.n)}</span>
+      <span class="apps-bar" aria-hidden="true"><i style="width:${Math.round(100 * pl.st / Math.max(1, top))}%"></i></span>
+      <span class="apps-n">${pl.st + pl.sub}<small>${pl.st} start${pl.st === 1 ? '' : 's'}${pl.sub ? ` &middot; ${pl.sub} sub` : ''}</small></span></a></li>`).join('')}</ul>
+    <p class="note">Every player named in a matchday squad this season, most-used first, from banked USL League Two team sheets. Tap a name for the match-by-match log. A shirt number shows when the player wore it on most of their sheets.${staff.length ? ' Staff are the names the club put on its sheets, most-listed first. The sheet platform labels nearly everyone &ldquo;Assistant Coach&rdquo; and leaves the rest blank (shown as &ldquo;Staff&rdquo;), so it never says who the head coach is &mdash; the most-listed name is the best clue.' : ''} The sheets don&#39;t publish positions, so none are shown &mdash; no guessed ones. Appearances count matchday squads, not minutes &mdash; the source lists the eleven and the reserves, not who came on. No ages: players under 18 keep their name and lose their birth year here, and an appearance count never needed one.</p>`;
+}
 function staffFor(c) {
   /* real coaches only — an invented name next to a real roster reads as a
      data error, not a demo (first Reddit feedback wave, Aug 2026) */
@@ -2402,6 +2497,18 @@ async function usl2Apps() {
     .then(r => r.json()).catch(() => ({}));
   return _usl2apps;
 }
+let _usl2staff = null;
+async function usl2Staff() {
+  _usl2staff ??= fetch('data/usl2_staff.json?v=__RXIV__')
+    .then(r => r.json()).catch(() => ({}));
+  return _usl2staff;
+}
+let _usl2logs = null;
+async function usl2Logs() {
+  _usl2logs ??= fetch('data/usl2_player_logs.json?v=__RXIV__')
+    .then(r => r.json()).catch(() => ({}));
+  return _usl2logs;
+}
 async function screenClub(ref) {
   const at = location.hash || '#/map';
   const idx = clubIdx(String(ref));
@@ -2441,17 +2548,19 @@ async function screenClub(ref) {
     <div class="btnrow">${favBtn('clubs', c.id)}${c.r ? `<button class="predictbtn2" data-predict="${idx}">&#9876; Predict Result</button>` : ''}${c.r ? `<button class="predictbtn2" data-sim="${c.id}">&#128200; Rank Simulator</button>` : ''}${c.r ? `<a class="hdrlink" href="#/compare/${c.id}">Compare</a>` : ''}<button class="hdrlink sharebtn" type="button">Share</button>${c.url ? `<a class="hdrlink" href="${safeHref(c.url)}" target="_blank" rel="noopener">Website &nearr;</a>` : `<a class="hdrlink dim" href="${gsearch(c.n, 'official site')}" target="_blank" rel="noopener">Find website</a>`}${c.si ? `<a class="hdrlink" href="${safeHref(c.si)}" target="_blank" rel="noopener">Instagram</a>` : ''}${c.sx ? `<a class="hdrlink" href="${safeHref(c.sx)}" target="_blank" rel="noopener">X</a>` : ''}${c.sf ? `<a class="hdrlink" href="${safeHref(c.sf)}" target="_blank" rel="noopener">Facebook</a>` : ''}</div>
     ${(HONOURS[rosterKey(c)] || []).length ? `<div class="kicker" style="margin-top:10px">Honours</div><ul class="honours">${(HONOURS[rosterKey(c)] || []).map(h2 => `<li><b>${esc(h2.t)}</b><span>${h2.y.join(', ')}</span></li>`).join('')}</ul>` : ''}
     ${c.r ? `<div class="statgrid">
-      <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : DTAG + 'Rating'}${c.pv ? ' · provisional' : ''}</span></div>
       <div class="stat"><b>${rank ? '#' + rank : 'NR'}</b><span>${m.label}</span></div>
+      <div class="stat"><b>${c.r}</b><span>${c.rr === 1 ? 'Rating · real results' : c.rr === 2 ? 'Rating · standings' : c.rr === 3 ? 'Rating · results model' : DTAG + 'Rating'}${c.pv ? ' · provisional' : ''}</span></div>
       <div class="stat"><b>${c.rr ? '#' + (natl.indexOf(c) + 1) : 'NR'}</b><span>National (${c.x === 'w' ? "women's" : "men's"})</span></div>
     </div>
+    ${beatProEligible(c) ? beatProHtml(c, nearestPro(c)) : ''}
     <div id="rhist" class="rhist" hidden></div>
     ${cupRec.length ? `<div class="kicker" style="margin-top:10px">U.S. Open Cup &middot; real results, ${Math.min(...cupRec.map(e => e.y))}&ndash;${Math.max(...cupRec.map(e => e.y))}</div>
     <div class="histwrap" tabindex="0" role="region" aria-label="U.S. Open Cup match history"><ul class="careerway">${cupRec.slice().reverse().map(e => {
       const wl = e.gf > e.ga ? 'W' : e.gf < e.ga ? 'L' : (e.pens ? (e.pens[0] > e.pens[1] ? 'W' : 'L') + ' pens' : 'D');
       return `<li><span class="cw-years">${e.y}</span><span class="cw-club">${e.ha === 'H' ? 'v' : 'at'} ${esc(e.opp)} &middot; ${e.gf}&ndash;${e.ga}${e.aet ? ' aet' : ''}${e.pens ? ` (${e.pens[0]}&ndash;${e.pens[1]}p)` : ''}</span><span class="cw-stat">${wl}${e.d ? ` &middot; ${e.d > 0 ? '+' : ''}${e.d}` : ''}</span></li>`;
     }).join('')}</ul></div>
-    <p class="note">${c.g === 'mls' ? 'Shown for the record — MLS ranks by the official league table, so Cup results never move an MLS rating here.' : 'These matches move the rating. Cross-tier cup results are where the levels actually meet; extra-time and shootout wins count at reduced weight.'}${c.pv ? " Marked provisional: most of this club's cup movement came against opponents outside our database, valued at league average." : ''}</p>` : ''}
+    <p class="note">${c.g === 'mls' ? 'Shown for the record — MLS ranks by the official league table, so Cup results never move an MLS rating here.' : 'These matches move the rating. Cross-tier cup results are where the levels actually meet; extra-time and shootout wins count at reduced weight.'}${c.pv ? " Marked provisional: most of this club's cup movement came against opponents outside our database, valued at league average." : ''}</p>
+    <a class="gk-cta" href="#/opencup/${Math.max(...cupRec.map(e => e.y))}">The ${Math.max(...cupRec.map(e => e.y))} Open Cup, round by round &rarr;</a>` : ''}
     <div id="clubres"></div>
     ${communityResultsHtml(c, cres)}
     ${/* One number per club. The experimental results-only Elo used to sit
@@ -2464,26 +2573,16 @@ async function screenClub(ref) {
     <p class="note" style="margin:2px 0 8px">Who's nearby, and how the model thinks it would go — a discovery feature, not a schedule. Verified fixtures appear when this league's feed connects.</p>
     ${opps.slice(0, 2).map((o, i) => matchCard(i === 0 ? c : o, i === 0 ? o : c, `${milesApart(c, o)} MI APART`)).join('') || '<p class="note">No rated opponents in the dataset yet.</p>'}
     <details class="how"><summary>How is this club's rating made?</summary><p>${c.rr === 1
-      ? "From real results: Elo over this season's matches — everyone starts at 1500, winners take points from losers, weighted by upset size and goal margin, with a backtested tier-tuned home edge (+30 amateur, +65 pro)."
+      ? "From real results: Elo over this season's matches — everyone starts at 1500, winners take points from losers, weighted by upset size and goal margin, with a backtested tier-tuned home edge (+30 amateur, +65 pro)." + (c.rt ? ` The league-table-only version of this club's rating was <b>${c.rt}</b>; the match-by-match walk replaced it.` : '')
       : c.rr === 2
       ? 'From real league standings: points and goal difference set the rating band.'
       : c.rr === 3
       ? 'From Massey Ratings — an independent results-based power rating for college soccer — rescaled onto our Elo bands. Preseason values until fall results land; refreshed as the season runs.' + (c.re ? ' The smaller results-only Elo is experimental — same match-by-match walk we use everywhere else, shown for transparency but not used for ranks.' : '')
       : "Illustrative placeholder until this league's results feed is connected — the number demonstrates the product, not the club."}${c.re && c.rr !== 3 ? ` Results-only Elo for this club is <b>${c.re}</b> — the same match-by-match walk, published for transparency but not used for the rating or the ranks.` : ''}</p></details>` : `<div class="kicker">Matches</div><p class="note">Match history and fixtures appear when this league's results feed is connected — no invented games on real organizations.</p>`}
-    ${squadFor(c).length ? `<div class="kicker" style="margin-top:14px">Squad</div>${verifyBadge(c)}
-    <ul class="squad staff">${staffFor(c).map(st2 =>
-      `<li><span class="sq-num">${st2.tag}</span><span class="sq-name">${esc(st2.name)}</span><span class="sq-pos">${st2.role}</span><span class="sq-age">${st2.age}</span><span class="sq-form"></span></li>`).join('')}</ul>
-    <ul class="squad">${squadFor(c).map((pl, pi) =>
-      `<li><a href="#/player/${c.id}/${pi}"><span class="sq-num">${pl.num}</span><span class="sq-name">${esc(pl.name)}</span><span class="sq-pos">${pl.pos}</span><span class="sq-age">${pl.real ? (pl.nat || '') : ''}</span><span class="sq-ga">${pl.pos === 'GK' ? pl.cs + ' CS' : pl.goals + 'g ' + pl.assists + 'a'}</span><span class="sq-form">${pl.pvr}</span></a></li>`).join('')}</ul>
-    ` : apps && apps.players.length ? `<div class="kicker" style="margin-top:14px">Squad &middot; ${apps.players.length} players used</div>
-    <ul class="apps-list">${apps.players.map(pl => `<li class="apps-row">
-      <span class="apps-name">${esc(pl.n)}</span>
-      <span class="apps-bar" aria-hidden="true"><i style="width:${Math.round(100 * pl.st / Math.max(1, apps.players[0].st + apps.players[0].sub))}%"></i></span>
-      <span class="apps-n">${pl.st + pl.sub}<small>${pl.st} start${pl.st === 1 ? '' : 's'}${pl.sub ? ` &middot; ${pl.sub} sub` : ''}</small></span></li>`).join('')}</ul>
-    <p class="note">Every player named in a matchday squad this season, most-used first, from banked USL League Two team sheets. Appearances count matchday squads, not minutes &mdash; the source lists the eleven and the reserves, not who came on. No ages: players under 18 keep their name and lose their birth year here, and an appearance count never needed one.</p>
+    ${squadFor(c).length ? squadListHtml(c) : apps && apps.players.length ? `${usl2SquadHtml(c, apps)}
     ${claimCta(c)}`
     : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p>${claimCta(c)}`}
-    ${worldLadder(c)}` : LEVELS.youth.includes(c.g) ? `<p class="note" style="font-size:.9rem">Youth directory listing — an active ${LEAGUES[c.g].label} member club. Youth organizations carry no ratings, fixtures, or player data here; the entry is name, league, and league-stated location only.</p>` : `<p class="note" style="font-size:.9rem">Expansion concept — not yet an active club. It appears on the map as a hollow pin.</p>`}
+    ${worldLadder(c)}` : LEVELS.youth.includes(c.g) ? `<p class="note" style="font-size:.9rem">Youth directory listing — an active ${LEAGUES[c.g].label} member club. Youth organizations carry no ratings, fixtures, or player data here; the entry is name, league, and league-stated location only.</p>` : `<p class="note" style="font-size:.9rem">Active ${LEAGUES[c.g].label} member club — not yet rated. A rating comes only from a published standings table or results feed, and this league's hasn't been connected yet. Until it is, the page carries league, location and official links, with no estimate standing in for a number.</p>`}
     ${(() => {
       if (!hist) return '';
       const rows = [];
@@ -2530,6 +2629,7 @@ async function screenClub(ref) {
   const simb = view.querySelector('[data-sim]');
   if (simb) simb.addEventListener('click', () => { location.hash = '#/sim/' + simb.dataset.sim; });
   if (c.r) renderRatingHistory(c);
+  wireBeatPro(c);
   wireResultForm(c);
   if (['mls', 'uslc', 'usl1', 'nwsl'].includes(c.g)) matchStatsDb().then(all => {
     const box = view.querySelector('#clubres'); if (box && view.contains(box)) renderResults(box, all, c.x, c.id);
@@ -2671,6 +2771,7 @@ async function screenPlayer(ci, pi) {
   if (cidx < 0) return screenMap();
   if (String(ci) !== CLUBS[cidx].id) { location.replace('#/player/' + CLUBS[cidx].id + '/' + pi); return; }
   const c = CLUBS[cidx]; if (!c.r) return screenMap();
+  if (/^u\d+$/.test(String(pi))) return screenUsl2Player(c, String(pi).slice(1));
   const sq = squadFor(c); const pl = sq[+pi]; if (!pl) return screenClub(ci);
   const prof = pl.real ? ((await profilesDb())[pl.name] || {}) : {};
   if (routedAway(at)) return;
@@ -2740,19 +2841,7 @@ async function screenPlayer(ci, pi) {
       <a href="https://www.transfermarkt.us/schnellsuche/ergebnis/schnellsuche?query=${encodeURIComponent(pl.name)}" target="_blank" rel="noopener">Transfermarkt</a>
     </div>
     ${(prof.ig || prof.x || prof.site) ? '' : '<p class="note">Socials appear when listed on the player\'s Wikipedia article or once the player claims the profile — no guessed links.</p>'}
-    ${pl.real ? `<details class="how" style="margin-top:14px"><summary><b>Is this you? Claim your profile — free</b></summary>
-      <p class="note">Claimed profiles add film links, socials, corrected history, and recruiting visibility — and claiming is how you join the <a href="#/freeagents" style="color:var(--accent)">Free Agents board</a>. Every claim is verified with the club or league before anything changes; nothing publishes automatically.</p>
-      <form class="joinform claimform" novalidate>
-        <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
-        <input type="text" name="name" placeholder="Your name" autocomplete="name" maxlength="80">
-        <input type="email" name="email" placeholder="Email" required autocomplete="email" maxlength="254">
-        <select name="role" aria-label="I am"><option value="player">I'm this player</option><option value="agent">Agent / representative</option><option value="club">Club officer</option></select>
-        <input type="text" name="note" placeholder="Anything to add? Film link, correction… (optional)" maxlength="200">
-        <label class="ck"><input type="checkbox" name="fa" value="1"> Also list me on the Free Agents board — I confirm I'm 18 or older</label>
-        <button type="submit" class="joinbtn">Claim this profile</button>
-      </form>
-      <p class="join-msg claim-msg" role="status" aria-live="polite"></p>
-    </details>` : ''}
+    ${pl.real ? claimProfileHtml() : ''}
     ${reportLink('Fix', pl.name)}`;
   /* fallback listener, not an inline onerror attribute: AVATAR is a data URI
      full of single quotes, which terminated the attribute's JS string and
@@ -2761,6 +2850,138 @@ async function screenPlayer(ci, pi) {
   if (ph) ph.addEventListener('error', () => { if (ph.src !== AVATAR) ph.src = AVATAR; });
   wireFav();
   wireClaimForm(pl, c);
+}
+
+/* The claim-your-profile form, shared by roster players and USL2 sheet players. */
+function claimProfileHtml(kind = 'player') {
+  const coach = kind === 'coach';
+  return `<details class="how" style="margin-top:14px"><summary><b>Is this you? Claim your ${coach ? 'coaching ' : ''}profile — free</b></summary>
+      <p class="note">${coach
+        ? 'A claimed coaching profile carries your background — prior clubs, playing career, licences — plus socials and a contact link, so a club looking at your record sees the whole of it. Every claim is verified with the club or league before anything changes; nothing publishes automatically.'
+        : 'Claimed profiles add film links, socials, corrected history, and recruiting visibility — and claiming is how you join the <a href="#/freeagents" style="color:var(--accent)">Free Agents board</a>. Every claim is verified with the club or league before anything changes; nothing publishes automatically.'}</p>
+      <form class="joinform claimform" novalidate>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+        <input type="text" name="name" placeholder="Your name" autocomplete="name" maxlength="80">
+        <input type="email" name="email" placeholder="Email" required autocomplete="email" maxlength="254">
+        <select name="role" aria-label="I am">${coach
+          ? `<option value="coach">I'm this coach</option><option value="club">Club officer</option><option value="agent">Agent / representative</option>`
+          : `<option value="player">I'm this player</option><option value="agent">Agent / representative</option><option value="club">Club officer</option>`}</select>
+        <input type="text" name="note" placeholder="${coach ? 'Prior clubs, licences, playing career… (optional)' : 'Anything to add? Film link, correction… (optional)'}" maxlength="200">
+        ${coach ? '' : `<label class="ck"><input type="checkbox" name="fa" value="1"> Also list me on the Free Agents board — I confirm I'm 18 or older</label>`}
+        <button type="submit" class="joinbtn">Claim this profile</button>
+      </form>
+      <p class="join-msg claim-msg" role="status" aria-live="polite"></p>
+    </details>`;
+}
+/* USL League Two players exist only as team-sheet rows — no stats feed, no
+   roster page — so their page is the honest thing the sheets support: how
+   often they were named, how often they started, and the match log behind the
+   count. Routed as #/player/<club>/u<pid> on the league's own player id. */
+async function screenUsl2Player(c, pid) {
+  const at = location.hash || '#/map';
+  const [apps, logs] = await Promise.all([usl2Apps(), usl2Logs()]);
+  if (routedAway(at)) return;
+  const sq = apps[c.id], pl = sq && sq.players.find(p => p.pid === pid);
+  if (!pl) return screenClub(c.id);
+  const log = logs[c.id] || {}, games = log.m || [];
+  const rows = ((log.p || {})[pid] || []).map(([gi, s2]) => ({ g: games[gi], s: s2 })).filter(r => r.g);
+  const record = keep => {
+    const r = { w: 0, d: 0, l: 0 };
+    for (const x of rows) {
+      if (!keep(x) || x.g[2] == null) continue;
+      if (x.g[2] > x.g[3]) r.w++; else if (x.g[2] < x.g[3]) r.l++; else r.d++;
+    }
+    return `${r.w}-${r.d}-${r.l}`;
+  };
+  const total = pl.st + pl.sub, share = games.length ? Math.round(100 * total / games.length) : 0;
+  const day = d => /^\d{4}-\d\d-\d\d$/.test(d)
+    ? new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : esc(d);
+  crumb.textContent = c.st;
+  view.innerHTML = `
+    <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/club/${c.id}'">&larr; ${esc(c.n)}</button>
+    <div class="clubhead">
+      <img class="pphoto" src="${AVATAR}" alt="">
+      <div><h2 class="disp" style="margin:0">${esc(pl.n)}</h2>
+      <span class="sub">${pl.num ? '#' + pl.num + ' · ' : ''}${esc(c.n)} · ${LEAGUES[c.g].label}</span></div>
+    </div>
+    <span class="badge v">Real 2026 team sheets &middot; USL League Two</span>
+    <div class="statgrid">
+      <div class="stat"><b>${total}</b><span>Matchday squads</span></div>
+      <div class="stat"><b>${pl.st}</b><span>Starts</span></div>
+      <div class="stat"><b>${pl.sub}</b><span>Named on the bench</span></div>
+      <div class="stat"><b>${share}%</b><span>of ${games.length} club games</span></div>
+      <div class="stat"><b>${record(() => true)}</b><span>W-D-L when in squad</span></div>
+      <div class="stat"><b>${record(x => x.s)}</b><span>W-D-L as a starter</span></div>
+    </div>
+    <p class="note">Position, minutes, goals and assists aren&#39;t on USL League Two team sheets, so none are shown &mdash; a blank beats a guess. No age is published for any player on this surface.</p>
+    <div class="kicker" style="margin-top:12px">Match by match &middot; most recent first</div>
+    <ul class="mlog">${rows.slice().reverse().map(({ g, s: started }) => {
+      const [d, opp, gf, ga, home, br] = g; const oi = clubIdx(String(opp)); const oc = oi >= 0 ? CLUBS[oi] : null;
+      const res = gf == null ? '' : gf > ga ? 'W' : gf < ga ? 'L' : 'D';
+      return `<li class="ml-${res || 'x'}"><span class="ml-date">${day(d)}</span><span class="ml-opp">${home ? 'v' : '@'} ${oc ? `<a href="#/club/${oc.id}">${esc(oc.n)}</a>` : esc(opp)}${br && br !== 'League' ? ` <i>${esc(br)}</i>` : ''}</span><span class="ml-role">${started ? 'Started' : 'Bench'}</span><span class="ml-score"><b>${res}</b>${gf == null ? '' : `${gf}&ndash;${ga}`}</span></li>`; }).join('')}</ul>
+    <p class="note">One row per team sheet the player was named on: the starting eleven or the reserves. "Bench" means named among the reserves &mdash; the sheets don&#39;t record who came on. Scores read from the club&#39;s side.</p>
+    <div class="kicker" style="margin-top:10px">Links</div>
+    <div class="linkrow">
+      <a href="#/club/${c.id}">${esc(c.n)}</a>
+      <a href="https://www.transfermarkt.us/schnellsuche/ergebnis/schnellsuche?query=${encodeURIComponent(pl.n)}" target="_blank" rel="noopener">Transfermarkt</a>
+    </div>
+    ${claimProfileHtml()}
+    ${reportLink('Fix', pl.n)}`;
+  wireClaimForm({ name: pl.n }, c);
+}
+
+/* A sheet-listed coach or staffer: #/staff/<sid> on the league's staff id.
+   The sheets give a name, a role label and which matches the person was listed
+   for — so the page is the record those sheets support (sheets, share of the
+   club's games, W-D-L when listed, the log) and an honest blank where a résumé
+   would go, with the claim form as the way to fill it. */
+async function screenStaff(sid) {
+  const at = location.hash || '#/map';
+  const [staff, logs] = await Promise.all([usl2Staff(), usl2Logs()]);
+  if (routedAway(at)) return;
+  const st = staff[String(sid)]; const ci = st ? clubIdx(String(st.c)) : -1;
+  if (!st || ci < 0) return screenNotFound(location.hash);
+  const c = CLUBS[ci];
+  const games = (logs[c.id] || {}).m || [];
+  const rows = st.log.map(gi => games[gi]).filter(Boolean);
+  const rec = { w: 0, d: 0, l: 0 };
+  for (const g of rows) { if (g[2] == null) continue; if (g[2] > g[3]) rec.w++; else if (g[2] < g[3]) rec.l++; else rec.d++; }
+  const share = games.length ? Math.round(100 * rows.length / games.length) : 0;
+  const day = d => /^\d{4}-\d\d-\d\d$/.test(d)
+    ? new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : esc(d);
+  const roleNote = st.role === 'Assistant Coach'
+    ? 'The sheet platform labels nearly every staffer &ldquo;Assistant Coach&rdquo;, so the label may understate the job.'
+    : st.role ? '' : 'The sheet left this person&#39;s role blank.';
+  crumb.textContent = c.st;
+  view.innerHTML = `
+    <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/club/${c.id}'">&larr; ${esc(c.n)}</button>
+    <div class="clubhead">
+      <img class="pphoto" src="${AVATAR}" alt="">
+      <div><h2 class="disp" style="margin:0">${esc(st.n)}</h2>
+      <span class="sub">${esc(st.role || 'Staff')} · ${esc(c.n)} · ${LEAGUES[c.g].label}</span></div>
+    </div>
+    <span class="badge v">Real 2026 team sheets &middot; USL League Two</span>
+    <div class="statgrid">
+      <div class="stat"><b>${rows.length}</b><span>Sheets listed on</span></div>
+      <div class="stat"><b>${share}%</b><span>of ${games.length} club games</span></div>
+      <div class="stat"><b>${rec.w}-${rec.d}-${rec.l}</b><span>W-D-L when listed</span></div>
+    </div>
+    <div class="kicker" style="margin-top:12px">Background &amp; r&eacute;sum&eacute;</div>
+    <p class="note">USL League Two team sheets carry a name and, at most, a role label &mdash; no prior clubs, playing career, or licences &mdash; and there is no public source we would trust to fill that in, so nothing here is invented. ${roleNote} A claimed profile is how the record gets its history.</p>
+    ${claimProfileHtml('coach')}
+    <div class="kicker" style="margin-top:12px">Match by match &middot; most recent first</div>
+    <ul class="mlog">${rows.slice().reverse().map(g => {
+      const [d, opp, gf, ga, home, br] = g; const oi = clubIdx(String(opp)); const oc = oi >= 0 ? CLUBS[oi] : null;
+      const res = gf == null ? '' : gf > ga ? 'W' : gf < ga ? 'L' : 'D';
+      return `<li class="ml-${res || 'x'}"><span class="ml-date">${day(d)}</span><span class="ml-opp">${home ? 'v' : '@'} ${oc ? `<a href="#/club/${oc.id}">${esc(oc.n)}</a>` : esc(opp)}${br && br !== 'League' ? ` <i>${esc(br)}</i>` : ''}</span><span class="ml-score"><b>${res}</b>${gf == null ? '' : `${gf}&ndash;${ga}`}</span></li>`; }).join('')}</ul>
+    <p class="note">One row per team sheet this person was listed on. Scores read from the club&#39;s side.</p>
+    <div class="kicker" style="margin-top:10px">Links</div>
+    <div class="linkrow">
+      <a href="#/club/${c.id}">${esc(c.n)}</a>
+      <a href="https://www.google.com/search?q=${encodeURIComponent(st.n + ' ' + c.n + ' coach')}" target="_blank" rel="noopener">Search the web</a>
+    </div>
+    ${reportLink('Fix', st.n)}`;
+  wireClaimForm({ name: st.n, kind: 'coach' }, c);
 }
 
 function wireClaimForm(pl, c) {
@@ -2774,11 +2995,12 @@ function wireClaimForm(pl, c) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { msg.textContent = 'A real email address is required.'; return; }
     msg.textContent = 'Saving…';
     const note = String(f.get('note') || '').slice(0, 200);
-    const message = `claim: ${pl.name} @ ${c.n} [${c.id}] · fa:${f.get('fa') ? 'yes' : 'no'}${note ? ' · ' + note : ''}`;
+    const coach = pl.kind === 'coach';
+    const message = `${coach ? 'coach claim' : 'claim'}: ${pl.name} @ ${c.n} [${c.id}]${coach ? '' : ` · fa:${f.get('fa') ? 'yes' : 'no'}`}${note ? ' · ' + note : ''}`;
     try {
       const r = await fetch('/api/signup', {
         method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ kind: 'claim', source: 'player-page', email,
+        body: JSON.stringify({ kind: 'claim', source: coach ? 'staff-page' : 'player-page', email,
           name: f.get('name'), role: f.get('role'), message, website: f.get('website') })
       });
       const d = await r.json();
@@ -3154,6 +3376,37 @@ async function screenUpsets() {
       + '<p class="note">Open Cup results could not load. Check your connection and try again.</p>';
   }
 }
+/* The Open Cup, edition by edition (#/opencup, #/opencup/<year>). Wikipedia
+   rows (opencup_matches.json, shared with Giant-Killings) plus the current
+   edition's ties from ESPN (opencup_live.json) and each club's rating
+   receipts. Module is lazy for the same reason as Giant-Killings. */
+let _oclive = null;
+async function screenOpenCup(yr) {
+  const at = location.hash || '#/map';
+  crumb.textContent = 'Open Cup';
+  view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/cups\'">&larr; Trophy Room</button>'
+    + '<p class="note">Loading the Open Cup&hellip;</p>';
+  try {
+    const [data, live, receipts, cups, mod] = await Promise.all([
+      _opencup || fetch('data/opencup_matches.json?v=__RXIV__').then(r => r.json()),
+      _oclive || fetch('data/opencup_live.json?v=__RXIV__').then(r => r.ok ? r.json() : null).catch(() => null),
+      cupDb(),
+      cupsDb(),
+      import('./cupedition.js?v=__RXIV__'),
+    ]);
+    _opencup = data; _oclive = live;
+    if (routedAway(at)) return;
+    const okMen = c => c.x === 'm' && !LEVELS.college.includes(c.g);
+    mod.render(view, { data, live, receipts, finals: (cups.opencup || {}).finals || [], year: yr ? Number(yr) : null }, {
+      esc, CLUBS, LEAGUES, mcrest, oddsFor, oddsAllowed, fmtKick, calBtn, initials,
+      clubIdx: nm => clubIdxByName(nm, okMen),
+    });
+  } catch (e) {
+    if (routedAway(at)) return;
+    view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/cups\'">&larr; Trophy Room</button>'
+      + '<p class="note">The Open Cup record could not load. Check your connection and try again.</p>';
+  }
+}
 /* College Results (#/college): the 2025 NCAA D1 seasons behind the Massey
    rating snapshots the college layers rank by. Two files — the results and the
    ESPN-name-to-club map — both lazy, both only needed on this route. */
@@ -3210,6 +3463,7 @@ async function screenCups() {
   view.innerHTML = `
     <div class="kicker">Every national trophy · pro, amateur, college & open</div>
     <h2 class="disp">The Trophy Room</h2>
+    <a class="fa-card" href="#/opencup"><b>&#127942; The Open Cup, round by round</b><span>This edition tie by tie &mdash; tiers, scores, rating swings, and the next ties with kickoff and broadcaster.</span></a>
     ${!keys.length ? '<p class="note">Tournament histories are loading into the dataset.</p>' : ''}
     ${SECTIONS.map(([kind, label]) => {
       const ks = keys.filter(k => cups[k].kind === kind);
@@ -3653,7 +3907,7 @@ function wireLeaders(lgs) {
 }
 async function screenWire() {
   crumb.textContent = 'The Wire';
-  const lgs = (sex === 'w' ? ['nwsl', 'uslw'] : ['mls', 'uslc', 'usl1', 'mnp', 'usl2', 'npsl']).filter(g => LEAGUES[g]);
+  const lgs = (sex === 'w' ? ['nwsl', 'uslw'] : ['mls', 'uslc', 'usl1', 'mnp', 'usl2', 'npsl', 'mwpl']).filter(g => LEAGUES[g]);
   if (wireLg !== 'all' && !lgs.includes(wireLg)) wireLg = 'all';
   const active = wireLg === 'all' ? lgs : [wireLg];
   const leaders = wireLeaders(active).map(it => `
@@ -3705,7 +3959,7 @@ async function screenWire() {
 /* WCAG 2.4.2 page titles + SPA route announcement: title updates per route
    and focus moves to <main> after navigation so screen readers hear the new
    screen (first paint keeps browser default focus) */
-const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', compare: 'Compare Clubs', tools: 'Tools', race: 'Season Race', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', cups: 'Cups', upsets: 'Giant-Killings', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', claim: 'Claim your club', player: 'Player', notfound: 'Page not found' };
+const ROUTE_TITLES = { map: 'Map', tiers: 'Tiers', table: 'National Table', matches: 'Matches', predict: 'Matchup Machine', compare: 'Compare Clubs', tools: 'Tools', race: 'Season Race', 'player-sim': 'Player Simulator', shots: 'Shot Maps', radar: 'Player Radar', myxi: 'My XI', about: 'About', legal: 'Terms, Privacy & Notices', wire: 'The Wire', sim: 'Rank Simulator', freeagents: 'Free Agents', freeagent: 'Free Agent', tryouts: 'Open Tryouts', pricing: 'Pricing', cups: 'Cups', upsets: 'Giant-Killings', opencup: 'U.S. Open Cup', college: 'College Results', league: 'League', nt: 'National Teams', legends: 'Legends', clubtools: 'Club Tools', state: 'State', region: 'Region', club: 'Club', claim: 'Claim your club', player: 'Player', staff: 'Coach', notfound: 'Page not found' };
 /* Hash routes people actually type or get sent. Every one of these was a
    plausible guess at a real screen that silently rendered the map instead —
    a stranger following a link from a DM concluded the site was broken rather
@@ -3810,6 +4064,7 @@ function route() {
      shipped to production under that name; keep the old hash working */
   else if (parts[0] === 'coach') { location.replace('#/player-sim'); return; }
   else if (parts[0] === 'upsets') screenUpsets();
+  else if (parts[0] === 'opencup') screenOpenCup(parts[1]);
   else if (parts[0] === 'college') screenCollege(parts[1] && decodeURIComponent(parts[1]));
   else if (parts[0] === 'shots') screenShots(parts.slice(1));
   else if (parts[0] === 'radar') screenRadar();
@@ -3822,6 +4077,7 @@ function route() {
   else if (parts[0] === 'region') screenRegion(parts[1]);
   else if (parts[0] === 'club') screenClub(parts[1]);
   else if (parts[0] === 'claim') screenClaim(parts[1]);
+  else if (parts[0] === 'staff') screenStaff(parts[1]);
   else if (parts[0] === 'player') screenPlayer(parts[1], parts[2]);
   else if (parts[0] === 'map' || parts[0] === '') screenMap();
   else { screenNotFound(h); parts[0] = 'notfound'; }

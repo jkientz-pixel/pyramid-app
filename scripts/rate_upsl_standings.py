@@ -31,7 +31,7 @@ claims to be a rating is not.
 import json, re, sys, pathlib, unicodedata
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from _datajs import load_clubs, write_clubs, ROOT
+from _datajs import load_clubs, write_clubs, stored_nudges, ROOT
 
 ANCHOR = 1350.0   # UPSL mean implied by the fitted Open Cup offset
 SPREAD = 55.0     # target sd — deliberately tight; divisions don't interplay
@@ -95,13 +95,16 @@ def main():
     var = sum((v - mu) ** 2 for v in raws.values()) / len(raws)
     sd = var ** 0.5 or 1.0
 
+    # the table gives the cup-free number; recalibrate2 reads `r` as
+    # table + stored cup nudge, so the nudge rides along (see stored_nudges)
+    nudges = stored_nudges()
     rated = cleared = 0
     for c in upsl:
         row = matched.get(c['id'])
         if row:
             z = (raws[c['id']] - mu) / sd
             z *= row['gp'] / (row['gp'] + K)     # small samples move less
-            c['r'] = round(ANCHOR + z * SPREAD)
+            c['r'] = round(ANCHOR + z * SPREAD + nudges.get(c['id'], 0.0))
             c['rr'] = 2                          # now genuinely standings-derived
             rated += 1
         else:

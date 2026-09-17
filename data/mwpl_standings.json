@@ -1,0 +1,669 @@
+{
+ "season": 2026,
+ "league": "mwpl",
+ "source": "https://www.midwestpl.com/2026-schedule/ (PlayMetrics league embed 1208-1981-dc58ba58, rendered 2026-09-04)",
+ "season_dates": "2026-04-01 to 2026-08-15",
+ "tables": [
+  {
+   "label": "Great Lakes East Division",
+   "url": "https://playmetricssports.com/g/leagues/1208-1981-dc58ba58/divisions/12784/division_view.html",
+   "rows": [
+    {
+     "pos": 1,
+     "team": "FC Pontiac",
+     "gp": 10,
+     "w": 10,
+     "l": 0,
+     "t": 0,
+     "gf": 31,
+     "ga": 10,
+     "gd": 21,
+     "pts": 30
+    },
+    {
+     "pos": 2,
+     "team": "Michigan Jaguars FC",
+     "gp": 10,
+     "w": 5,
+     "l": 1,
+     "t": 4,
+     "gf": 30,
+     "ga": 20,
+     "gd": 10,
+     "pts": 19
+    },
+    {
+     "pos": 3,
+     "team": "Futsal Factory Academy",
+     "gp": 10,
+     "w": 5,
+     "l": 3,
+     "t": 2,
+     "gf": 25,
+     "ga": 23,
+     "gd": 2,
+     "pts": 17
+    },
+    {
+     "pos": 4,
+     "team": "Michigan Development Academy",
+     "gp": 10,
+     "w": 4,
+     "l": 5,
+     "t": 1,
+     "gf": 24,
+     "ga": 24,
+     "gd": 0,
+     "pts": 13
+    },
+    {
+     "pos": 5,
+     "team": "Oakland County FC",
+     "gp": 10,
+     "w": 3,
+     "l": 4,
+     "t": 3,
+     "gf": 17,
+     "ga": 16,
+     "gd": 1,
+     "pts": 12
+    },
+    {
+     "pos": 6,
+     "team": "Cedars FC",
+     "gp": 10,
+     "w": 3,
+     "l": 5,
+     "t": 2,
+     "gf": 18,
+     "ga": 24,
+     "gd": -6,
+     "pts": 11
+    },
+    {
+     "pos": 7,
+     "team": "Toledo Villa FC",
+     "gp": 10,
+     "w": 2,
+     "l": 7,
+     "t": 1,
+     "gf": 22,
+     "ga": 30,
+     "gd": -8,
+     "pts": 7
+    },
+    {
+     "pos": 8,
+     "team": "Legends FC",
+     "gp": 10,
+     "w": 1,
+     "l": 8,
+     "t": 1,
+     "gf": 12,
+     "ga": 32,
+     "gd": -20,
+     "pts": 4
+    }
+   ],
+   "scored_games": 40
+  },
+  {
+   "label": "Great Lakes West Division",
+   "url": "https://playmetricssports.com/g/leagues/1208-1981-dc58ba58/divisions/12785/division_view.html",
+   "rows": [
+    {
+     "pos": 1,
+     "team": "Goshen City FC",
+     "gp": 10,
+     "w": 8,
+     "l": 2,
+     "t": 0,
+     "gf": 24,
+     "ga": 9,
+     "gd": 15,
+     "pts": 24
+    },
+    {
+     "pos": 2,
+     "team": "Tulip City United SC",
+     "gp": 10,
+     "w": 7,
+     "l": 2,
+     "t": 1,
+     "gf": 24,
+     "ga": 11,
+     "gd": 13,
+     "pts": 22
+    },
+    {
+     "pos": 3,
+     "team": "Lansing Common FC",
+     "gp": 10,
+     "w": 6,
+     "l": 2,
+     "t": 2,
+     "gf": 25,
+     "ga": 15,
+     "gd": 10,
+     "pts": 20
+    },
+    {
+     "pos": 4,
+     "team": "1927SC",
+     "gp": 10,
+     "w": 3,
+     "l": 6,
+     "t": 1,
+     "gf": 14,
+     "ga": 22,
+     "gd": -8,
+     "pts": 10
+    },
+    {
+     "pos": 5,
+     "team": "Midwest United FC",
+     "gp": 10,
+     "w": 2,
+     "l": 5,
+     "t": 3,
+     "gf": 12,
+     "ga": 17,
+     "gd": -5,
+     "pts": 9
+    },
+    {
+     "pos": 6,
+     "team": "Grand Rapids SC",
+     "gp": 10,
+     "w": 2,
+     "l": 6,
+     "t": 2,
+     "gf": 11,
+     "ga": 21,
+     "gd": -10,
+     "pts": 8
+    },
+    {
+     "pos": 7,
+     "team": "Holland Rovers",
+     "gp": 10,
+     "w": 2,
+     "l": 7,
+     "t": 1,
+     "gf": 13,
+     "ga": 28,
+     "gd": -15,
+     "pts": 7
+    }
+   ],
+   "scored_games": 35
+  },
+  {
+   "label": "Heartland Division 1",
+   "url": "https://playmetricssports.com/g/leagues/1208-1981-dc58ba58/divisions/12786/division_view.html",
+   "rows": [
+    {
+     "pos": 1,
+     "team": "Bavarian United SC",
+     "gp": 10,
+     "w": 7,
+     "l": 0,
+     "t": 3,
+     "gf": 35,
+     "ga": 8,
+     "gd": 27,
+     "pts": 24
+    },
+    {
+     "pos": 2,
+     "team": "Cedar Rapids Inferno",
+     "gp": 10,
+     "w": 5,
+     "l": 5,
+     "t": 0,
+     "gf": 22,
+     "ga": 25,
+     "gd": -3,
+     "pts": 15
+    },
+    {
+     "pos": 3,
+     "team": "Green Bay Glory",
+     "gp": 10,
+     "w": 4,
+     "l": 4,
+     "t": 2,
+     "gf": 17,
+     "ga": 17,
+     "gd": 0,
+     "pts": 14
+    },
+    {
+     "pos": 4,
+     "team": "Chicago House AC",
+     "gp": 10,
+     "w": 4,
+     "l": 4,
+     "t": 2,
+     "gf": 18,
+     "ga": 17,
+     "gd": 1,
+     "pts": 14
+    },
+    {
+     "pos": 5,
+     "team": "Edgewater Castle FC",
+     "gp": 10,
+     "w": 3,
+     "l": 6,
+     "t": 1,
+     "gf": 16,
+     "ga": 25,
+     "gd": -9,
+     "pts": 10
+    },
+    {
+     "pos": 6,
+     "team": "AFC Roscoe",
+     "gp": 10,
+     "w": 2,
+     "l": 6,
+     "t": 2,
+     "gf": 12,
+     "ga": 28,
+     "gd": -16,
+     "pts": 8
+    }
+   ],
+   "scored_games": 30
+  },
+  {
+   "label": "Heartland Division 2 - Group A",
+   "url": "https://playmetricssports.com/g/leagues/1208-1981-dc58ba58/divisions/12787/division_view.html",
+   "rows": [
+    {
+     "pos": 1,
+     "team": "Czarni Jaslo",
+     "gp": 10,
+     "w": 7,
+     "l": 2,
+     "t": 1,
+     "gf": 20,
+     "ga": 10,
+     "gd": 10,
+     "pts": 22
+    },
+    {
+     "pos": 2,
+     "team": "JaHbat FC",
+     "gp": 10,
+     "w": 5,
+     "l": 2,
+     "t": 3,
+     "gf": 22,
+     "ga": 12,
+     "gd": 10,
+     "pts": 18
+    },
+    {
+     "pos": 3,
+     "team": "Sueno FC",
+     "gp": 10,
+     "w": 5,
+     "l": 3,
+     "t": 2,
+     "gf": 36,
+     "ga": 22,
+     "gd": 14,
+     "pts": 17
+    },
+    {
+     "pos": 4,
+     "team": "Berber City FC",
+     "gp": 10,
+     "w": 5,
+     "l": 5,
+     "t": 0,
+     "gf": 18,
+     "ga": 30,
+     "gd": -12,
+     "pts": 15
+    },
+    {
+     "pos": 5,
+     "team": "AAC Eagles",
+     "gp": 10,
+     "w": 4,
+     "l": 4,
+     "t": 2,
+     "gf": 22,
+     "ga": 18,
+     "gd": 4,
+     "pts": 14
+    },
+    {
+     "pos": 6,
+     "team": "Steel City FC",
+     "gp": 10,
+     "w": 3,
+     "l": 6,
+     "t": 1,
+     "gf": 23,
+     "ga": 25,
+     "gd": -2,
+     "pts": 10
+    },
+    {
+     "pos": 7,
+     "team": "FC Select",
+     "gp": 10,
+     "w": 1,
+     "l": 8,
+     "t": 1,
+     "gf": 10,
+     "ga": 34,
+     "gd": -24,
+     "pts": 4
+    }
+   ],
+   "scored_games": 35
+  },
+  {
+   "label": "Heartland Division 2 - Group B",
+   "url": "https://playmetricssports.com/g/leagues/1208-1981-dc58ba58/divisions/13112/division_view.html",
+   "rows": [
+    {
+     "pos": 1,
+     "team": "RKC Third Coast",
+     "gp": 10,
+     "w": 8,
+     "l": 0,
+     "t": 2,
+     "gf": 30,
+     "ga": 11,
+     "gd": 19,
+     "pts": 26
+    },
+    {
+     "pos": 2,
+     "team": "Chicago Soccer Academy",
+     "gp": 10,
+     "w": 6,
+     "l": 1,
+     "t": 3,
+     "gf": 19,
+     "ga": 12,
+     "gd": 7,
+     "pts": 21
+    },
+    {
+     "pos": 3,
+     "team": "DeKalb County United",
+     "gp": 10,
+     "w": 5,
+     "l": 2,
+     "t": 3,
+     "gf": 15,
+     "ga": 10,
+     "gd": 5,
+     "pts": 18
+    },
+    {
+     "pos": 4,
+     "team": "Chicago Ghost FC",
+     "gp": 10,
+     "w": 2,
+     "l": 4,
+     "t": 4,
+     "gf": 10,
+     "ga": 12,
+     "gd": -2,
+     "pts": 10
+    },
+    {
+     "pos": 5,
+     "team": "River Light FC",
+     "gp": 10,
+     "w": 1,
+     "l": 7,
+     "t": 2,
+     "gf": 8,
+     "ga": 21,
+     "gd": -13,
+     "pts": 5
+    },
+    {
+     "pos": 6,
+     "team": "Madison Fire",
+     "gp": 10,
+     "w": 0,
+     "l": 8,
+     "t": 2,
+     "gf": 4,
+     "ga": 20,
+     "gd": -16,
+     "pts": 2
+    }
+   ],
+   "scored_games": 30
+  },
+  {
+   "label": "Gateway East Division",
+   "url": "https://playmetricssports.com/g/leagues/1208-1981-dc58ba58/divisions/12788/division_view.html",
+   "rows": [
+    {
+     "pos": 1,
+     "team": "St. Louis Stars",
+     "gp": 10,
+     "w": 8,
+     "l": 1,
+     "t": 1,
+     "gf": 20,
+     "ga": 8,
+     "gd": 12,
+     "pts": 25
+    },
+    {
+     "pos": 2,
+     "team": "Ehtar Belleville FC",
+     "gp": 10,
+     "w": 7,
+     "l": 3,
+     "t": 0,
+     "gf": 32,
+     "ga": 12,
+     "gd": 20,
+     "pts": 21
+    },
+    {
+     "pos": 3,
+     "team": "St. Louis Scott Gallagher",
+     "gp": 10,
+     "w": 6,
+     "l": 2,
+     "t": 2,
+     "gf": 34,
+     "ga": 18,
+     "gd": 16,
+     "pts": 20
+    },
+    {
+     "pos": 4,
+     "team": "Pearl City SC",
+     "gp": 10,
+     "w": 6,
+     "l": 2,
+     "t": 2,
+     "gf": 16,
+     "ga": 14,
+     "gd": 2,
+     "pts": 20
+    },
+    {
+     "pos": 5,
+     "team": "BOHFS St. Louis",
+     "gp": 10,
+     "w": 5,
+     "l": 3,
+     "t": 2,
+     "gf": 30,
+     "ga": 18,
+     "gd": 12,
+     "pts": 17
+    },
+    {
+     "pos": 6,
+     "team": "United Capital City Athletic",
+     "gp": 10,
+     "w": 5,
+     "l": 3,
+     "t": 2,
+     "gf": 20,
+     "ga": 13,
+     "gd": 7,
+     "pts": 17
+    },
+    {
+     "pos": 7,
+     "team": "St. Louis Development Academy",
+     "gp": 10,
+     "w": 4,
+     "l": 5,
+     "t": 1,
+     "gf": 15,
+     "ga": 13,
+     "gd": 2,
+     "pts": 13
+    },
+    {
+     "pos": 8,
+     "team": "St. Louis Fusion",
+     "gp": 10,
+     "w": 2,
+     "l": 5,
+     "t": 3,
+     "gf": 12,
+     "ga": 19,
+     "gd": -7,
+     "pts": 9
+    },
+    {
+     "pos": 9,
+     "team": "Southeast Soccer Academy",
+     "gp": 10,
+     "w": 1,
+     "l": 6,
+     "t": 3,
+     "gf": 13,
+     "ga": 28,
+     "gd": -15,
+     "pts": 6
+    },
+    {
+     "pos": 10,
+     "team": "314 Soccer Club",
+     "gp": 10,
+     "w": 0,
+     "l": 6,
+     "t": 4,
+     "gf": 6,
+     "ga": 33,
+     "gd": -27,
+     "pts": 4
+    },
+    {
+     "pos": 11,
+     "team": "FC Kirkwood",
+     "gp": 10,
+     "w": 0,
+     "l": 8,
+     "t": 2,
+     "gf": 11,
+     "ga": 33,
+     "gd": -22,
+     "pts": 2
+    }
+   ],
+   "scored_games": 55
+  },
+  {
+   "label": "Gateway West Division",
+   "url": "https://playmetricssports.com/g/leagues/1208-1981-dc58ba58/divisions/12789/division_view.html",
+   "rows": [
+    {
+     "pos": 1,
+     "team": "Great Plains FC",
+     "gp": 10,
+     "w": 8,
+     "l": 1,
+     "t": 1,
+     "gf": 25,
+     "ga": 10,
+     "gd": 15,
+     "pts": 25
+    },
+    {
+     "pos": 2,
+     "team": "AFC Columbia",
+     "gp": 10,
+     "w": 7,
+     "l": 2,
+     "t": 1,
+     "gf": 38,
+     "ga": 12,
+     "gd": 26,
+     "pts": 22
+    },
+    {
+     "pos": 3,
+     "team": "Woodland FC",
+     "gp": 10,
+     "w": 3,
+     "l": 4,
+     "t": 3,
+     "gf": 15,
+     "ga": 15,
+     "gd": 0,
+     "pts": 12
+    },
+    {
+     "pos": 4,
+     "team": "First City FC",
+     "gp": 10,
+     "w": 3,
+     "l": 5,
+     "t": 2,
+     "gf": 21,
+     "ga": 20,
+     "gd": 1,
+     "pts": 11
+    },
+    {
+     "pos": 5,
+     "team": "Union KC",
+     "gp": 10,
+     "w": 3,
+     "l": 6,
+     "t": 1,
+     "gf": 15,
+     "ga": 28,
+     "gd": -13,
+     "pts": 10
+    },
+    {
+     "pos": 6,
+     "team": "Southside FC",
+     "gp": 10,
+     "w": 1,
+     "l": 7,
+     "t": 2,
+     "gf": 13,
+     "ga": 42,
+     "gd": -29,
+     "pts": 5
+    }
+   ],
+   "scored_games": 30
+  }
+ ]
+}

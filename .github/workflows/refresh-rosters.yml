@@ -27,11 +27,23 @@ jobs:
       - run: python scripts/refresh_rosters.py
       - run: python scripts/fetch_asa.py
       - run: python scripts/fetch_asa_games.py
+      # fetch_asa_games rewrites the USLC/USL1/MLSNP ratings from the results
+      # walk; the cross-league recalibration (league anchors + per-club Open
+      # Cup nudges) is a separate pass that nothing ran before 2026-09-04, so
+      # production alternated between recalibrated (a manual run) and bare
+      # (this job, twice a day). Idempotent and sub-second. Its two state
+      # files are committed below with data.js — the three must always move
+      # together; never reset one to a different commit than the others.
+      - run: python scripts/recalibrate2.py
       # fixtures carry a rolling three-week horizon, so they go stale on their
       # own — this is the step that keeps #/matches answering "when do they
       # play". It exits non-zero if every feed errors, so an ESPN block fails
       # the run instead of quietly publishing an empty schedule.
       - run: python scripts/fetch_fixtures.py
+      # Current-edition Open Cup ties for #/opencup (kickoffs, venues, TV,
+      # live scores). Soft-fails on its own: a stale semifinal preview beats
+      # a blocked refresh.
+      - run: python scripts/fetch_opencup_live.py
       - run: python scripts/fetch_match_stats.py
       # Season Race inputs: current standings, the schedule still to come, and
       # each league's real season window. Same ESPN host and the same plain-UA
@@ -39,7 +51,15 @@ jobs:
       # league going quiet does not fail the run. Runs after fixtures so a
       # rate-limited ESPN shows up on the fixtures step first, where the
       # failure is more obvious.
-      - run: python scripts/fetch_race.py
+      # Race data is secondary: a bad fetch must not block rosters, ratings,
+      # cups and share cards (2026-09-06: one ESPN timing glitch did exactly
+      # that for twelve hours). fetch_race.py writes nothing when every feed
+      # fails, and race_gate.py --fallback restores the last committed trio
+      # whenever the fresh one fails the preflight rules, with a warning
+      # annotation on the run instead of a failed job.
+      - run: python scripts/fetch_race.py || echo "::warning title=Season race::fetch_race.py failed, keeping the last committed race data"
+      - name: Season race gate (fallback to last good)
+        run: python scripts/race_gate.py --fallback
       # a broken scrape must never silently publish stale or empty data:
       # the gate diffs the fresh files against HEAD and fails on collapse
       - name: Gate — refuse empty or shrunken data
@@ -51,20 +71,24 @@ jobs:
       # The script is time-gated: it no-ops until the snapshot is 6 days old.
       - name: Rotate weekly rank snapshot
         run: python scripts/snapshot_ranks.py
-      - name: Commit if changed
+      # Stage the refreshed files now, commit them only AFTER deploy.sh has
+      # passed. deploy.sh carries preflight; when the commit came first, a
+      # preflight failure left the bad data on master, every PR's CI went red
+      # on data it never touched, and the bot's fixing push (github.token)
+      # triggered no CI to clear it (2026-09-06, four failure mails for one
+      # ESPN glitch). deploy.sh ships the working tree, so it does not need
+      # the commit to exist.
+      - name: Stage refreshed data
         id: commit
         run: |
-          git config user.name "roster-bot"
-          git config user.email "actions@github.com"
           # the fetch_race.py outputs MUST be in this list: preflight fails any
           # push once committed schedule_rest.json fixtures slip into the past
           # (bit master on 2026-09-01 — race data regenerated every run but was
           # never committed, frozen at 8/27)
-          git add js/rosters.js js/data.js data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/match_stats.json data/match_stats_archive.json data/rank_snapshot.json data/rank_history.json data/standings.json data/seasons.json data/schedule_rest.json
+          git add js/rosters.js js/data.js data/recal2_state.json data/cup_receipts.json data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/opencup_live.json data/match_stats.json data/match_stats_archive.json data/rank_snapshot.json data/rank_history.json data/standings.json data/seasons.json data/schedule_rest.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
-            git commit -m "chore: scheduled roster refresh" && git push
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
       - uses: actions/setup-node@v4
@@ -80,6 +104,14 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: ./deploy.sh
+      # Runs only when deploy.sh passed or was skipped (a failed step stops
+      # the job here), so master never carries data preflight rejected.
+      - name: Commit if deployed
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          git config user.name "roster-bot"
+          git config user.email "actions@github.com"
+          git commit -m "chore: scheduled roster refresh" && git push
       - name: Alert on failure
         if: failure()
         env:
@@ -94,5 +126,5 @@ jobs:
             gh issue create -R "${{ github.repository }}" \
               --title "Roster refresh failed $(date -u +%F)" \
               --label scrape-failure \
-              --body "The scheduled roster refresh failed. Run: $url — nothing was committed; the site keeps serving the last good data. Check scripts/refresh_rosters.py / fetch_asa.py / fetch_asa_games.py / fetch_fixtures.py and the verify_refresh.py gate output in the run log."
+              --body "The scheduled roster refresh failed. Run: $url — nothing was committed (the commit runs only after deploy.sh passes); the site keeps serving the last good deploy. Check scripts/refresh_rosters.py / fetch_asa.py / fetch_asa_games.py / fetch_fixtures.py and the verify_refresh.py gate output in the run log."
           fi

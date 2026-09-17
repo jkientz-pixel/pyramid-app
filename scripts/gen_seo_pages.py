@@ -301,7 +301,7 @@ def tier_block(tier, sex):
     tbl = ''
     if rows:
         body = ''.join(
-            f'<tr><td><a href="/league/{r["g"]}">{html.escape(r["label"])}</a></td>'
+            f'<tr><td><a href="{S.HAS_LANDING.get(r["g"], "/league/" + r["g"])}">{html.escape(r["label"])}</a></td>'
             f'<td class="n">{r["n"]}</td><td class="n">{r["median"]}</td>'
             f'<td><a href="/club/{r["top"]["id"]}">{html.escape(r["top"]["n"])}</a> '
             f'({r["top"]["r"]})</td></tr>' for r in rows)

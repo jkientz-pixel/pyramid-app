@@ -10,8 +10,14 @@ pyramid holds, but within a league the order is pure results.
 MLS is the exception by design: its displayed ranking stays standings-derived
 (rr=2) because the league table is the official record everyone can check —
 the results-Elo lands in a secondary field (re) shown smaller with a
-disclaimer. UPSL stays standings-derived: no match-level feed exists for it."""
+disclaimer. UPSL stays standings-derived: no match-level feed exists for it.
+
+Ratings written here carry each club's stored Open Cup nudge on top of the
+walk (see _datajs.stored_nudges): recalibrate2.py, which runs right after this
+in the scheduled refresh and in deploy.sh, recovers the bare walk as
+`r minus nudge`. Writing the bare walk would cancel every cup result."""
 import json, re, urllib.request, time, os, sys, math, unicodedata
+from _datajs import stored_nudges
 
 B = 'https://app.americansocceranalysis.com/api/v1'
 UA = {'User-Agent': 'RankXI/0.1 (jkientz@gmail.com; results wire)'}
@@ -45,6 +51,7 @@ def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     cur = open(os.path.join(root, 'js', 'data.js')).read()
     clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', cur, re.S).group(1))
+    nudges = stored_nudges()
     club_by_norm = {}
     for c in clubs:
         club_by_norm.setdefault(c['g'] + ':' + norm(c['n']), c)
@@ -108,7 +115,8 @@ def main():
             if g == 'mls':
                 club['re'] = disp
             else:
-                club['r'] = disp; club['rr'] = 1; club.pop('re', None)
+                club['r'] = disp + round(nudges.get(club.get('id'), 0.0))
+                club['rr'] = 1; club.pop('re', None)
             applied += 1
         print(f'{g}: {"secondary results-Elo (re)" if g == "mls" else "results-Elo ratings"} on {applied} clubs')
     json.dump(wire, open(os.path.join(root, 'data', 'wire_asa.json'), 'w'), separators=(',', ':'))

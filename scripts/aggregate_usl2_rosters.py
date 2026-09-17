@@ -49,12 +49,14 @@ ALIAS = {  # Modular11 name -> data.js club name
     'Patuxent FA': 'Patuxent Football Athletics',
     'FC Motown STA': 'FC Motown',
     'Charlotte Independence 2': 'Charlotte Independence II',
+    'GFI': 'Global Football Innovation Academy',
+    'Real Central NJ': 'Real Central NJ (2026)',
 }
 
 src = (ROOT / 'js' / 'data.js').read_text()
 clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', src, re.S).group(1))
 by_name = {c['n']: c for c in clubs}
-usl2 = [c for c in clubs if c['g'] == 'usl2']
+usl2 = [c for c in clubs if c['g'] == 'usl2' and not c.get('h')]  # tombstones never own a squad
 NONLEAGUE_OK = ('upsl', 'npsl', 'nisa', 'loc')  # stale-label pools to fall back on
 
 cands = []
@@ -63,7 +65,7 @@ for tid, nm in team_name.items():
         cands.append((2.0, tid, by_name[ALIAS[nm]])); continue
     nt = toks(nm)
     if not nt: continue
-    for pool_rank, pool in ((1, usl2), (0, [c for c in clubs if c['g'] in NONLEAGUE_OK])):
+    for pool_rank, pool in ((1, usl2), (0, [c for c in clubs if c['g'] in NONLEAGUE_OK and not c.get('h')])):
         for c in pool:
             ct = toks(c['n'])
             if not ct: continue
