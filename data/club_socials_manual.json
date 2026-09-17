@@ -16,6 +16,18 @@
       "sx": "https://x.com/arkwolvesfc",
       "sf": "https://www.facebook.com/arkwolvesfc",
       "source_url": "https://arkansaswolves.com/"
+    },
+    "orlando-city": {
+      "why": "Only MLS club besides Chicago with no socials; 2026 Open Cup semifinalist, so the social pipeline could not tag them. Verified 2026-09-03.",
+      "si": "https://www.instagram.com/orlandocitysc",
+      "sx": "https://x.com/OrlandoCitySC",
+      "source_url": "https://www.orlandocitysc.com/club/contact"
+    },
+    "chicago-fire": {
+      "why": "The other MLS club with no socials. Verified 2026-09-03 against the club's own socials page.",
+      "si": "https://www.instagram.com/chicagofire",
+      "sx": "https://x.com/ChicagoFire",
+      "source_url": "https://www.chicagofirefc.com/socials"
     }
   }
 }
