@@ -252,6 +252,7 @@ def main():
     for c in adults:
         adult_states.setdefault(norm(c['n']), set()).add(c.get('st'))
     taken_ids = {c['id'] for c in adults}
+    youth_by_id = {c['id']: c for c in clubs if c['g'] in YOUTH and not c.get('h')}
     cache = json.load(open(GEO_CACHE)) if os.path.exists(GEO_CACHE) else {}
 
     report, new_youth = {}, []
@@ -288,7 +289,12 @@ def main():
                 log['no_geocode'].append(f"{r['name']} ({r['city']}, {r['st']})")
                 continue
             cid = slugify(r['name'])
-            if cid in taken_ids:
+            # taken_ids holds adult ids only, so a girls parse could land on an
+            # existing BOYS youth id and the in-place merge below flipped its
+            # sex (Whatcom FC Rangers, Minneapolis United, Bay Area Surf on
+            # 2026-08-22). An existing youth id of the other sex is taken too.
+            prior = youth_by_id.get(cid)
+            if cid in taken_ids or (prior is not None and prior.get('x') != x):
                 cid = f'{cid}-{g}'
             if cid in taken_ids:
                 log['youth_dup'].append(r['name'] + ' (slug)')

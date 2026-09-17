@@ -19,3 +19,13 @@
 /club/gfi-academy /club/global-football-innovation-academy 301
 /club/round-lake-evolution-ii /club/round-lake-evolution-fc 301
 /club/real-central-new-jersey /club/real-central-nj-2026 301
+
+# 2026-09-17: five club rows shared name+league+sex, producing byte-identical
+# /club/ pages that Google flagged as duplicates (whatcom-fc-rangers-ecrlg,
+# GSC 9/16). The three youth twins were boys rows the 8/22 rebuild flipped to
+# girls; the two UPSL twins came from two portal tiers. Older id survives.
+/club/whatcom-fc-rangers-ecrlg /club/whatcom-fc-rangers 301
+/club/minneapolis-united-ecrlg /club/minneapolis-united 301
+/club/bay-area-surf-ecnlg /club/bay-area-surf 301
+/club/sensatica-upsl /club/sensatica 301
+/club/orlando-rovers-fc-upsl /club/orlando-rovers-fc 301
