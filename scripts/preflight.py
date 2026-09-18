@@ -189,6 +189,28 @@ try:
 except Exception as e:
     fail.append(f'cups.json: {e}')
 
+# 4b. ea_age_groups.json — membership only. The feed it is read from carries
+#     records for children as young as U11; if a refresh ever lets one through,
+#     or keys a roll to a club that is gone, it dies here and not on a page.
+try:
+    ea = json.loads((ROOT / 'data' / 'ea_age_groups.json').read_text())
+    live = {c['id'] for c in clubs if not c.get('h')}
+    ages_ok = {'U11', 'U12', 'U13', 'U14', 'U15', 'U16', 'U17', 'U19'}
+    rolls = ea.get('clubs') or {}
+    if len(rolls) < 50:
+        fail.append(f'ea_age_groups.json: only {len(rolls)} clubs — refresh lost data')
+    for cid, rec in rolls.items():
+        if cid not in live:
+            fail.append(f'ea_age_groups.json: {cid} is not a live club'); break
+        if set(rec) - {'ea', 'ea2', 'div'}:
+            fail.append(f'ea_age_groups.json[{cid}]: unexpected keys {sorted(set(rec) - {"ea", "ea2", "div"})} '
+                        '— youth records must never be stored'); break
+        if not set(rec.get('ea', []) + rec.get('ea2', [])) <= ages_ok:
+            fail.append(f'ea_age_groups.json[{cid}]: unknown age group'); break
+    print(f'  ea_age_groups.json OK — {len(rolls)} clubs, age groups only')
+except Exception as e:
+    fail.append(f'ea_age_groups.json: {e}')
+
 # 5. national_teams.json structural sanity — fixtures are hand-curated from
 #    U.S. Soccer / Concacaf announcements; a match must never carry a score
 #    before it's played (or claim ENDED without one), and broadcast links
