@@ -103,6 +103,9 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Same key as ~/.config/rankxi/fingerprint-key on the laptop. Without it
+          # this job would re-ship UNMARKED coordinates twice a day.
+          RXI_FINGERPRINT_KEY: ${{ secrets.RXI_FINGERPRINT_KEY }}
         run: ./deploy.sh
       # Runs only when deploy.sh passed or was skipped (a failed step stops
       # the job here), so master never carries data preflight rejected.
