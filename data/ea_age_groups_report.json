@@ -1,0 +1,1188 @@
+{
+ "_source": "modular11.com Elite Academy League standings divisions (event 27; brackets 47 EA / 48 EA2). Team name + division only \u2014 no records, scores or players are stored.",
+ "season": "2026-27",
+ "updated": "2026-09-18",
+ "held": {
+  "Nevada Futbol Club": [
+   "nevada-futbol-club (wpsl, w)"
+  ],
+  "ALBION SC San Diego": [
+   "albion-san-diego (wpsl, w)"
+  ],
+  "Los Angeles SC": [
+   "los-angeles-sc (uws, w)"
+  ],
+  "SoCal Reds FC": [
+   "socal-reds-fc (uslwl, w)"
+  ],
+  "Colorado Elevation FC": [
+   "colorado-elevation-fc (wpsl, w)"
+  ],
+  "Team Chicago": [
+   "team-chicago (uws2, w)"
+  ]
+ },
+ "unpinned": {
+  "ALBION SC San Diego": {
+   "ea": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea": [
+     "Southwest",
+     "Southwest (South)",
+     "Southwest EA"
+    ],
+    "ea2": [
+     "SD / OC / IE"
+    ]
+   }
+  },
+  "ALBION SC Utah": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Southwest Desert"
+    ]
+   }
+  },
+  "Atletico": {
+   "ea": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "PACNW"
+    ]
+   }
+  },
+  "Colorado Elevation FC": {
+   "ea": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Southwest Desert"
+    ]
+   }
+  },
+  "Covered Bridge Soccer Club": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Southeast"
+    ]
+   }
+  },
+  "FC Stars": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Mid-America"
+    ]
+   }
+  },
+  "Global Foutbol Stras 11 Academy": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Northeast (East)"
+    ]
+   }
+  },
+  "Inland Surf": {
+   "ea": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Southwest (South)",
+     "Southwest EA"
+    ]
+   }
+  },
+  "Inter Utah SC": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Southwest Desert"
+    ]
+   }
+  },
+  "Los Angeles SC": {
+   "ea": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea": [
+     "Southwest",
+     "Southwest (North)"
+    ],
+    "ea2": [
+     "LA South",
+     "South"
+    ]
+   }
+  },
+  "NY Rush East": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Northeast (West)"
+    ]
+   }
+  },
+  "Nevada Futbol Club": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Nor Cal"
+    ]
+   }
+  },
+  "North East Reds Long Island": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Northeast (East)"
+    ]
+   }
+  },
+  "SoCal Reds FC": {
+   "ea": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea": [
+     "Southwest",
+     "Southwest (South)"
+    ],
+    "ea2": [
+     "SD / OC / IE",
+     "South"
+    ]
+   }
+  },
+  "Strikers FC North": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Southwest (South)"
+    ]
+   }
+  },
+  "Team Chicago": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Mid-America"
+    ]
+   }
+  },
+  "Total Futbol Academy OC": {
+   "ea": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea": [
+     "Southwest (South)",
+     "Southwest EA"
+    ],
+    "ea2": [
+     "LA South",
+     "South"
+    ]
+   }
+  },
+  "United Elite SC": {
+   "ea": [
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Mid-America"
+    ]
+   }
+  },
+  "United Sports FC": {
+   "ea": [
+    "U11",
+    "U12"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "PACNW"
+    ]
+   }
+  },
+  "Utah Athletic - North": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Southwest Desert"
+    ]
+   }
+  },
+  "Washington East Surf Columbia Basin": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "PACNW"
+    ]
+   }
+  }
+ },
+ "unmatched": {
+  "ADF Portland": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U14"
+   ],
+   "div": {
+    "ea2": [
+     "Oregon"
+    ]
+   }
+  },
+  "ALBION SC Miami": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Florida"
+    ]
+   }
+  },
+  "ALBION SC Portland": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14"
+   ],
+   "div": {
+    "ea2": [
+     "Oregon"
+    ]
+   }
+  },
+  "ALBION SC SCV": {
+   "ea": [],
+   "ea2": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA North"
+    ]
+   }
+  },
+  "Atlantic United": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Northeast (East)"
+    ]
+   }
+  },
+  "Autobahn SA": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA South",
+     "North"
+    ]
+   }
+  },
+  "BTX SC": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Texas"
+    ]
+   }
+  },
+  "Bell Gardens Football Club": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA South",
+     "North"
+    ]
+   }
+  },
+  "Bend FC": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14"
+   ],
+   "div": {
+    "ea2": [
+     "Oregon"
+    ]
+   }
+  },
+  "CF10 Houston FC": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Texas"
+    ]
+   }
+  },
+  "Central Coast Surf Soccer": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA North",
+     "North"
+    ]
+   }
+  },
+  "Central Coast United Soccer Club": {
+   "ea": [],
+   "ea2": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA North"
+    ]
+   }
+  },
+  "Crusaders SC": {
+   "ea": [],
+   "ea2": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "SD / OC / IE"
+    ]
+   }
+  },
+  "Culver City": {
+   "ea": [],
+   "ea2": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA South"
+    ]
+   }
+  },
+  "Culver City Football Club": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12"
+   ],
+   "div": {
+    "ea2": [
+     "North"
+    ]
+   }
+  },
+  "Downey United Football Club": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA South",
+     "North"
+    ]
+   }
+  },
+  "Dynamo": {
+   "ea": [],
+   "ea2": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA North"
+    ]
+   }
+  },
+  "EMPIRE SC": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "SD / OC / IE",
+     "South"
+    ]
+   }
+  },
+  "FC Man United": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA North",
+     "North"
+    ]
+   }
+  },
+  "FC Premier": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA South",
+     "South"
+    ]
+   }
+  },
+  "FC1 Academy Futures": {
+   "ea": [
+    "U12"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Mid-America"
+    ]
+   }
+  },
+  "Ignite Soccer Academy": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Florida"
+    ]
+   }
+  },
+  "LA Surf SC SFV": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA North",
+     "North"
+    ]
+   }
+  },
+  "La Cantera": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Florida"
+    ]
+   }
+  },
+  "Oregon Surf": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14"
+   ],
+   "div": {
+    "ea2": [
+     "Oregon"
+    ]
+   }
+  },
+  "Oregon Surf SC": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14"
+   ],
+   "div": {
+    "ea2": [
+     "Oregon"
+    ]
+   }
+  },
+  "Oregon Valley Futbol Alliance": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14"
+   ],
+   "div": {
+    "ea2": [
+     "Oregon"
+    ]
+   }
+  },
+  "Oxnard United Soccer Club": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA North",
+     "North"
+    ]
+   }
+  },
+  "PSG Academy DFW": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Texas"
+    ]
+   }
+  },
+  "PSL Hurricanes": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Florida"
+    ]
+   }
+  },
+  "Rayados Academy San Diego": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "SD / OC / IE",
+     "South"
+    ]
+   }
+  },
+  "Saints Soccer Academy": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14"
+   ],
+   "div": {
+    "ea2": [
+     "Oregon"
+    ]
+   }
+  },
+  "Skyline SA": {
+   "ea": [
+    "U11",
+    "U12"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Southwest Desert"
+    ]
+   }
+  },
+  "SoCal Pride FC": {
+   "ea": [],
+   "ea2": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA South"
+    ]
+   }
+  },
+  "Soccer Chance Academy": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14"
+   ],
+   "div": {
+    "ea2": [
+     "Oregon"
+    ]
+   }
+  },
+  "Sound FC": {
+   "ea": [
+    "U11",
+    "U12"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "PACNW"
+    ]
+   }
+  },
+  "Sporting So-Cal Soccer Club": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA South",
+     "South"
+    ]
+   }
+  },
+  "Steel United TX (STL)": {
+   "ea": [
+    "U11",
+    "U12"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Texas"
+    ]
+   }
+  },
+  "TFA-SGV": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA North",
+     "North"
+    ]
+   }
+  },
+  "Unico Futbol Club": {
+   "ea": [],
+   "ea2": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA North"
+    ]
+   }
+  },
+  "United Soccer Group": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Northeast (East)"
+    ]
+   }
+  },
+  "United Stars Academy": {
+   "ea": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "Florida"
+    ]
+   }
+  },
+  "Valley United Soccer Club": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "LA North",
+     "North"
+    ]
+   }
+  },
+  "Views FC": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12"
+   ],
+   "div": {
+    "ea2": [
+     "North"
+    ]
+   }
+  },
+  "Washington Rush": {
+   "ea": [
+    "U11",
+    "U12"
+   ],
+   "ea2": [],
+   "div": {
+    "ea": [
+     "PACNW"
+    ]
+   }
+  },
+  "Westside Metros": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14"
+   ],
+   "div": {
+    "ea2": [
+     "Oregon"
+    ]
+   }
+  },
+  "Westside Metros South": {
+   "ea": [],
+   "ea2": [
+    "U11",
+    "U12",
+    "U13",
+    "U14"
+   ],
+   "div": {
+    "ea2": [
+     "Oregon"
+    ]
+   }
+  },
+  "Zeta Academy": {
+   "ea": [],
+   "ea2": [
+    "U13",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U19"
+   ],
+   "div": {
+    "ea2": [
+     "SD / OC / IE"
+    ]
+   }
+  }
+ }
+}

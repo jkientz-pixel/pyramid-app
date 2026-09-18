@@ -2528,6 +2528,32 @@ async function profilesDb() {
   catch { _profiles = {}; }
   return _profiles;
 }
+let _eaAges = null;
+async function eaAgesDb() {
+  if (_eaAges) return _eaAges;
+  try { _eaAges = await (await fetch('data/ea_age_groups.json?v=__RXIV__')).json(); }
+  catch { _eaAges = {}; }
+  return _eaAges;
+}
+/* Which Elite Academy age groups a club fields, from the league's standings
+   divisions. Membership, never results: the feed carries records for children
+   as young as U11 and none of that is stored, let alone shown. EA members fold
+   into a higher pin when they have one (an MLS NEXT club, a same-state senior
+   club), so this can appear on a page whose league is not EA. */
+const EA_TIERS = [['ea', 'Elite Academy'], ['ea2', 'EA2 · second teams']];
+function eaAgesHtml(rec, season) {
+  if (!rec) return '';
+  const rows = EA_TIERS.filter(([t]) => (rec[t] || []).length).map(([t, label]) =>
+    `<div class="agerow" data-tier="${t}"><span class="agerow-l">${label}</span>
+      <span class="ages">${rec[t].map(a => `<span class="age">${esc(a)}</span>`).join('')}</span>
+      ${(rec.div?.[t] || []).length ? `<span class="agerow-d">${rec.div[t].map(esc).join(' · ')}</span>` : ''}</div>`);
+  if (!rows.length) return '';
+  return `<section id="ea-ages" aria-labelledby="ea-ages-h">
+    <div class="kicker" id="ea-ages-h" style="margin-top:14px">Elite Academy age groups${season ? ` · ${esc(season)}` : ''}</div>
+    ${rows.join('')}
+    <p class="note">Boys' sides this club registers in the Elite Academy League, read from the league's published standings divisions. Age groups only — no results, records or players for youth teams.</p>
+  </section>`;
+}
 let _tryouts = null;
 async function tryoutsDb() {
   if (_tryouts) return _tryouts;
@@ -2612,6 +2638,8 @@ async function screenClub(ref) {
   const cupRec = (await cupDb())[c.id] || [];
   const cres = (await communityResults()).results || [];
   const apps = c.g === 'usl2' ? (await usl2Apps())[c.id] : null;
+  const eaDb = await eaAgesDb();
+  const eaAges = (eaDb.clubs || {})[c.id];
   /* board listings that belong to this club — moderation sets clubId; the
      name match catches listings posted before the id was attached */
   const tToday = new Date().toISOString().slice(0, 10);
@@ -2674,6 +2702,7 @@ async function screenClub(ref) {
     ${claimCta(c)}`
     : `<div class="kicker" style="margin-top:14px">Squad</div><p class="note">Roster unclaimed. Real rosters come from league feeds and claimed clubs — no placeholder players on real organizations.</p>${claimCta(c)}`}
     ${worldLadder(c)}` : LEVELS.youth.includes(c.g) ? `<p class="note" style="font-size:.9rem">Youth directory listing — an active ${LEAGUES[c.g].label} member club. Youth organizations carry no ratings, fixtures, or player data here; the entry is name, league, and league-stated location only.</p>` : `<p class="note" style="font-size:.9rem">Active ${LEAGUES[c.g].label} member club — not yet rated. A rating comes only from a published standings table or results feed, and this league's hasn't been connected yet. Until it is, the page carries league, location and official links, with no estimate standing in for a number.</p>`}
+    ${eaAgesHtml(eaAges, eaDb.season)}
     ${(() => {
       if (!hist) return '';
       const rows = [];
