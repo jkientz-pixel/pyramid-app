@@ -101,6 +101,12 @@ if [ -d og ]; then cp -R og "$STAGE/"; rm -f "$STAGE/og/.cards.json"; fi
 # local editor/backup droppings must not reach production
 find "$STAGE/js" "$STAGE/css" \( -name '*.bak' -o -name '*.tmp' \) -delete
 
+# Proof-of-copying mark on the published club coordinates. Staged copy only: the
+# repo keeps clean 3-4 decimal pins, production serves them with two keyed digits
+# appended (<= ~15 m). No key (a fork, a fresh machine) ships unmarked with a
+# warning rather than failing. See scripts/fingerprint.py.
+python3 scripts/fingerprint.py --stage "$STAGE"
+
 # The one place a real cache-bust token exists. Every page and js module ships
 # with the placeholder swapped for $NEWV; the repo keeps the placeholder. This
 # aborts if the placeholder is missing, which would ship a build that returning
