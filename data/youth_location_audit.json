@@ -97,21 +97,6 @@
     "st": "WI",
     "source": "GA Aspire directory"
    },
-   "FC Stars": {
-    "city": "Lancaster",
-    "st": "MA",
-    "source": "ECNL Boys directory (TGS)"
-   },
-   "Manitou FC": {
-    "city": "White Bear Lake",
-    "st": "MN",
-    "source": "ECNL RL Girls directory (TGS)"
-   },
-   "JB Marine Soccer Club": {
-    "city": "St. Louis",
-    "st": "MO",
-    "source": "GA Aspire directory"
-   },
    "ALBION SC Hawaii": {
     "city": "Wailuku",
     "st": "HI",
@@ -252,6 +237,11 @@
     "st": "IL",
     "source": "club website (Jahbat F.C. Premier) https://www.jahbatfc.org/"
    },
+   "Manitou FC": {
+    "city": "White Bear Lake",
+    "st": "MN",
+    "source": "club website about page (mailing address) https://manitoufc.org/about/"
+   },
    "North Shore United Soccer Club": {
     "city": "Cedarburg",
     "st": "WI",
@@ -266,6 +256,11 @@
     "city": "Noblesville",
     "st": "IN",
     "source": "club website https://www.hoosierfc.com/clubinfo"
+   },
+   "JB Marine Soccer Club": {
+    "city": "St. Louis",
+    "st": "MO",
+    "source": "club website https://www.jbmarinesc.com/who-we-are/"
    },
    "USA of Indiana": {
     "city": "Indianapolis",
@@ -819,6 +814,7 @@
    "Inter Utah SC",
    "Spartans FC",
    "Utah Athletic - North",
+   "FC Stars",
    "United Elite SC",
    "Global Foutbol Stras 11 Academy",
    "North East Reds Long Island",

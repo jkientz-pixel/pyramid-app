@@ -27,8 +27,9 @@ Folding: a youth club whose normalized name matches an existing NON-youth
 club IN THE SAME STATE folds into it (MLS academies collide with their first
 teams by design; a same-name club in another state is a different org and
 gets its own pin — 'AFC Lightning' GA vs 'Lightning SC' OH). Within the
-youth tier one entry per (name, sex): a club fielding both ECNL boys and
-girls appears once per sex, mirroring how adult clubs hold one entry per
+youth tier one entry per (name, sex, state): a club fielding both ECNL boys and
+girls appears once per sex, and a same-name club in another state is its own
+club, mirroring how adult clubs hold one entry per
 league membership.
 
 Outputs: clubs appended to js/data.js (unrated, hollow pins),
@@ -241,10 +242,10 @@ SOURCES = [('mlsnext', 'm', parse_mlsnext),
            ('pecnlg', 'w', lambda: parse_tgs(21))]
 
 
-def main():
-    dpath = os.path.join(ROOT, 'js', 'data.js')
-    cur = open(dpath).read()
-    clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', cur, re.S).group(1))
+def place_youth(sources, clubs, geocode):
+    """Decide which listed clubs become youth pins. Pure: `sources` is
+    [(league, sex, rows)], `geocode` is (city, st) -> (lat, lon) | None, and
+    nothing is read or written. Returns (new_youth, report)."""
     adults = [c for c in clubs if c['g'] not in YOUTH]
     # fold targets: same normalized name AND same state as an existing
     # non-youth club (cross-state matches are different orgs)
@@ -253,12 +254,14 @@ def main():
         adult_states.setdefault(norm(c['n']), set()).add(c.get('st'))
     taken_ids = {c['id'] for c in adults}
     youth_by_id = {c['id']: c for c in clubs if c['g'] in YOUTH and not c.get('h')}
-    cache = json.load(open(GEO_CACHE)) if os.path.exists(GEO_CACHE) else {}
 
     report, new_youth = {}, []
-    youth_taken = set()          # (norm name, sex) — one youth pin per sex
-    for g, x, parse in SOURCES:
-        rows = parse()
+    # (norm name, sex, state) — one youth pin per club per sex. The state is
+    # part of who a club is: keyed on name alone, 'Pride SC' of Colorado
+    # Springs was dropped as a duplicate of 'FC Pride' of Indianapolis, and
+    # which of the two survived depended on the order the directory listed them
+    youth_taken = set()
+    for g, x, rows in sources:
         log = {'listed': len(rows), 'folded': [], 'youth_dup': [],
                'second_teams': [], 'no_geocode': [], 'added': 0}
         rows = drop_second_teams(rows, log['second_teams'])
@@ -276,7 +279,7 @@ def main():
             if r['st'] in adult_states.get(key, ()):
                 log['folded'].append(r['name'])
                 continue
-            if (key, x) in youth_taken:
+            if (key, x, r['st']) in youth_taken:
                 log['youth_dup'].append(r['name'])
                 continue
             # EA publishes no locations: a club without a stated city is
@@ -284,7 +287,7 @@ def main():
             if not r.get('city') or not r.get('st'):
                 log['no_geocode'].append(f"{r['name']} (no league-stated city)")
                 continue
-            ll = geocode(r['city'], r['st'], cache)
+            ll = geocode(r['city'], r['st'])
             if not ll:
                 log['no_geocode'].append(f"{r['name']} ({r['city']}, {r['st']})")
                 continue
@@ -296,16 +299,30 @@ def main():
             prior = youth_by_id.get(cid)
             if cid in taken_ids or (prior is not None and prior.get('x') != x):
                 cid = f'{cid}-{g}'
+            # two clubs with the SAME name in different states, in one league
+            if cid in taken_ids and r.get('st'):
+                cid = f"{cid}-{r['st'].lower()}"
             if cid in taken_ids:
                 log['youth_dup'].append(r['name'] + ' (slug)')
                 continue
             taken_ids.add(cid)
-            youth_taken.add((key, x))
+            youth_taken.add((key, x, r['st']))
             new_youth.append({'n': r['name'], 'g': g, 'x': x,
                               'la': ll[0], 'lo': ll[1], 'st': r['st'],
                               'ct': r['city'], 'id': cid})
             log['added'] += 1
         report[g] = log
+    return new_youth, report
+
+
+def main():
+    dpath = os.path.join(ROOT, 'js', 'data.js')
+    cur = open(dpath).read()
+    clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', cur, re.S).group(1))
+    cache = json.load(open(GEO_CACHE)) if os.path.exists(GEO_CACHE) else {}
+    new_youth, report = place_youth(
+        [(g, x, parse()) for g, x, parse in SOURCES], clubs,
+        lambda city, st: geocode(city, st, cache))
     json.dump(cache, open(GEO_CACHE, 'w'))
 
     # array position is the legacy-URL map, and other layers may sit AFTER the
