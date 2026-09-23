@@ -137,7 +137,7 @@
   ],
   "second_teams": [],
   "no_geocode": [
-   "East Coast Surf (city == state code)"
+   "Dix Hills East Coast Surf (city == state code)"
   ],
   "added": 116
  },
@@ -501,7 +501,7 @@
   ],
   "second_teams": [],
   "no_geocode": [
-   "East Coast Surf (city == state code)",
+   "Dix Hills East Coast Surf (city == state code)",
    "Keliix-Intra Soccer Club (city == state code)",
    "Silicon Valley Eagles (Silicon Valley, CA)",
    "Test Club (placeholder row, skipped)"
@@ -509,7 +509,7 @@
   "added": 185
  },
  "ecrlg": {
-  "listed": 363,
+  "listed": 364,
   "folded": [
    "210 FC",
    "AC Connecticut",
@@ -529,6 +529,7 @@
    "Cosmos FC Academy",
    "Davis Legacy Soccer Club",
    "Detroit City FC",
+   "El Paso Locomotive FC",
    "FC Dayton",
    "FC Pride",
    "FC Tulsa Academy",
@@ -682,7 +683,7 @@
   ],
   "second_teams": [],
   "no_geocode": [
-   "East Coast Surf (city == state code)",
+   "Dix Hills East Coast Surf (city == state code)",
    "Keliix-Intra Soccer Club (city == state code)",
    "Test Club (placeholder row, skipped)"
   ],
@@ -1040,12 +1041,12 @@
   ],
   "second_teams": [],
   "no_geocode": [
-   "East Coast Surf (city == state code)"
+   "Dix Hills East Coast Surf (city == state code)"
   ],
   "added": 36
  },
  "pecnlg": {
-  "listed": 251,
+  "listed": 252,
   "folded": [
    "AC Connecticut",
    "Arizona Arsenal Soccer Club",
@@ -1062,6 +1063,7 @@
    "Davie United SC",
    "Davis Legacy Soccer Club",
    "Detroit City FC",
+   "El Paso Locomotive FC",
    "FC Dayton",
    "FC Pride",
    "FC Tulsa Academy",
@@ -1284,7 +1286,7 @@
   ],
   "second_teams": [],
   "no_geocode": [
-   "East Coast Surf (city == state code)"
+   "Dix Hills East Coast Surf (city == state code)"
   ],
   "added": 18
  },
