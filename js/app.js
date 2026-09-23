@@ -774,19 +774,31 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
       landRings = gj.geometry.coordinates.flat(1).map(r => {
         let x0 = 999, x1 = -999, y0 = 999, y1 = -999;
         for (const [x, y] of r) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
-        return { r, x0, x1, y0, y1 };
+        /* the lower-48 ring alone is ~10k vertices and every fan slot tested
+           all of them — the costliest function in the app's boot. A crossing
+           edge must span the query latitude, so file each edge under the
+           latitude bands it spans and test only that band's edges. */
+        const bands = new Map();
+        for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+          const lo = Math.floor(Math.min(r[i][1], r[j][1]) / LAND_BAND), hi = Math.floor(Math.max(r[i][1], r[j][1]) / LAND_BAND);
+          for (let b = lo; b <= hi; b++) (bands.get(b) || bands.set(b, []).get(b)).push(i, j);
+        }
+        return { r, x0, x1, y0, y1, bands };
       });
       refan();
     }).catch(() => {});
+    const LAND_BAND = 0.25; // degrees of latitude per edge bucket
     let landRings = null;
     let refan = () => {};
     const isLand = (lat, lng) => {
       if (!landRings) return true;
       let inside = false;
-      for (const { r, x0, x1, y0, y1 } of landRings) {
+      for (const { r, x0, x1, y0, y1, bands } of landRings) {
         if (lng < x0 || lng > x1 || lat < y0 || lat > y1) continue;
-        for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
-          const [xi, yi] = r[i], [xj, yj] = r[j];
+        const edges = bands.get(Math.floor(lat / LAND_BAND));
+        if (!edges) continue;
+        for (let e = 0; e < edges.length; e += 2) {
+          const [xi, yi] = r[edges[e]], [xj, yj] = r[edges[e + 1]];
           if ((yi > lat) !== (yj > lat) && lng < (xj - xi) * (lat - yi) / (yj - yi) + xi) inside = !inside;
         }
       }
@@ -1089,7 +1101,9 @@ function screenMap() {
   wireSexToggle();
   wireLevelChips();
   wireMap(null, visible(clubs));
-  hydrateWireHook();
+  /* the card already carries static copy; its 68KB of feed must not compete
+     with the map's own requests on a slow connection */
+  (self.requestIdleCallback || (f => setTimeout(f, 1500)))(() => hydrateWireHook(), { timeout: 4000 });
   view.querySelector('#regionchips').addEventListener('click', e => {
     const b = e.target.closest('[data-region]'); if (!b) return;
     location.hash = b.dataset.region === 'all' ? '#/map' : `#/region/${b.dataset.region}`;
