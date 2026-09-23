@@ -36,6 +36,8 @@ jobs:
         run: python3 scripts/race_gate.py --fallback
       - name: Run preflight gate
         run: python3 scripts/preflight.py
+      - name: Coordinate fingerprint tests
+        run: python3 -m unittest scripts/test_fingerprint.py
 
   smoke:
     name: Playwright smoke suite
