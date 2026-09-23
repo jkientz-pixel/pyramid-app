@@ -118,6 +118,28 @@ def resolve(name, st, cand, fallback=None):
     return None
 
 
+def conference_states(members):
+    """EA conference -> the states its members state FOR THEMSELVES. Built from
+    the member list, not a map of the country: nobody here decides which states
+    'Mid-America' covers, the league's own members do."""
+    out = {}
+    for m in members:
+        if m.get('st'):
+            out.setdefault(m.get('conf'), set()).add(m['st'])
+    return out
+
+
+def within_conference(member, hit, footprint):
+    """A location joined in BY NAME must land inside the member's conference.
+    EA's 'FC Stars' is a Mid-America club; the one FC Stars in the ECNL
+    directory is in Massachusetts, and taking its address put a Mid-America
+    roll on a Massachusetts club's page. A member that states its own state
+    was already filtered on it and is not second-guessed."""
+    if member.get('st'):
+        return True
+    return hit['st'] in footprint.get(member.get('conf'), set())
+
+
 def main():
     cand = build_candidates()
     fallback = build_fallback()
@@ -125,10 +147,13 @@ def main():
 
     ea = json.load(open(os.path.join(ROOT, 'data', 'ea_clubs_2026.json')))
     resolved['ea'], unresolved['ea'] = {}, []
+    footprint = conference_states(ea['clubs'])
     for c in ea['clubs']:
         if c.get('city'):
             continue
         hit = resolve(c['n'], c.get('st'), cand, fallback)
+        if hit and not within_conference(c, hit, footprint):
+            hit = None
         (resolved['ea'].__setitem__(c['n'], hit) if hit
          else unresolved['ea'].append(c['n']))
 
