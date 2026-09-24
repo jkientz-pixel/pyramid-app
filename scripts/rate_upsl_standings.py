@@ -42,6 +42,8 @@ K = 6             # shrinkage constant, in games
 ALIASES = {
     'bellevue-athletic-fc': 'bellevueathletic',   # standings drop the "FC"
     'texas-havoc-fc': 'texashavocfc',             # rebranded Inter Nova Havoc FC
+    'tennessee-tempo': 'tennesseetempofc',        # standings add "FC"
+    'georgia-impact': 'georgiaimpactsc',          # standings add "SC"
 }
 
 
