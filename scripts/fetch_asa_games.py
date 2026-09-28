@@ -21,9 +21,12 @@ from _datajs import stored_nudges
 
 B = 'https://app.americansocceranalysis.com/api/v1'
 UA = {'User-Agent': 'RankXI/0.1 (jkientz@gmail.com; results wire)'}
-# app league key -> (ASA slug, season name); USLS runs fall-spring
-LEAGUES = {'mls': ('mls', '2026'), 'uslc': ('uslc', '2026'), 'usl1': ('usl1', '2026'),
-           'mnp': ('mlsnp', '2026'), 'nwsl': ('nwsl', '2026'), 'uslw': ('usls', '2025-26')}
+# app league key -> (ASA slug, seasons walked in order). The walk carries Elo
+# from one season into the next; only the LAST season feeds The Wire.
+# USLS runs fall-spring, but ASA names the 2026-27 season plain "2026" — the
+# old single '2025-26' entry kept USLS frozen at its May final (audit 9/23).
+LEAGUES = {'mls': ('mls', ['2026']), 'uslc': ('uslc', ['2026']), 'usl1': ('usl1', ['2026']),
+           'mnp': ('mlsnp', ['2026']), 'nwsl': ('nwsl', ['2026']), 'uslw': ('usls', ['2025-26', '2026'])}
 # band center each league's Elo is anchored to (display r = elo - 1500 + anchor).
 # Men's cup-anchored leagues use the measured Open Cup offsets (mls_mean 1886 +
 # offset from data/opencup_offsets.json) — these previously held stale
@@ -74,9 +77,14 @@ def main():
 
     wire = []
     K = 32  # backtested 2026-07-27: pro parity-league optimum (was 40)
-    for g, (asa, season) in LEAGUES.items():
+    for g, (asa, seasons) in LEAGUES.items():
         teams = get(f'/{asa}/teams'); time.sleep(1)
-        games = get(f'/{asa}/games?season_name={season}'); time.sleep(1)
+        games = []
+        for season in seasons:
+            got = get(f'/{asa}/games?season_name={season}'); time.sleep(1)
+            if got is None:
+                games = None; break
+            games += [{**x, '_cur': season == seasons[-1]} for x in got]
         if not teams or not games:
             print(f'{g}: ASA fetch failed', file=sys.stderr); continue
         tname = {t['team_id']: t['team_name'] for t in teams}
@@ -96,10 +104,11 @@ def main():
             delta = K * margin * (sh - eh)
             # gid: ASA game id — the join the post-match panel uses to pull
             # the shot map for this exact match (see js/postmatch.js)
-            wire.append({'d': (x.get('date_time_utc') or '')[:10], 'lg': g, 'gid': x.get('game_id'),
-                         't1': resolve(g, tname[h]), 't2': resolve(g, tname[a]),
-                         's1': hg, 's2': ag, 'dr': round(delta), 'ph': round(eh, 2),
-                         'gp': min(played.get(h, 0), played.get(a, 0))})
+            if x['_cur']:
+                wire.append({'d': (x.get('date_time_utc') or '')[:10], 'lg': g, 'gid': x.get('game_id'),
+                             't1': resolve(g, tname[h]), 't2': resolve(g, tname[a]),
+                             's1': hg, 's2': ag, 'dr': round(delta), 'ph': round(eh, 2),
+                             'gp': min(played.get(h, 0), played.get(a, 0))})
             elo[h] = rh + delta; elo[a] = ra - delta
             played[h] = played.get(h, 0) + 1; played[a] = played.get(a, 0) + 1
             n += 1

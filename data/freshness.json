@@ -1,0 +1,44 @@
+{
+ "leagues": {
+  "apsl": {
+   "source": "standings (apslsoccer.com)",
+   "stale": null,
+   "updated": "2026-09-28"
+  },
+  "mls": {
+   "source": "official table (ESPN)",
+   "stale": null,
+   "updated": "2026-09-28"
+  },
+  "mnp": {
+   "source": "results (ASA)",
+   "stale": null,
+   "updated": "2026-09-20"
+  },
+  "nwsl": {
+   "source": "results (ASA)",
+   "stale": null,
+   "updated": "2026-09-27"
+  },
+  "upsl": {
+   "source": "standings (upsl.com)",
+   "stale": null,
+   "updated": "2026-09-28"
+  },
+  "usl1": {
+   "source": "results (ASA)",
+   "stale": null,
+   "updated": "2026-09-27"
+  },
+  "uslc": {
+   "source": "results (ASA)",
+   "stale": null,
+   "updated": "2026-09-27"
+  },
+  "uslw": {
+   "source": "results (ASA)",
+   "stale": null,
+   "updated": "2026-09-26"
+  }
+ }
+}
