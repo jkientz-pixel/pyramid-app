@@ -140,18 +140,6 @@
   6
  ],
  [
-  "ncaa1: Bucknell Bison",
-  5
- ],
- [
-  "ncaa1: Stony Brook Seawolves",
-  5
- ],
- [
-  "ncaa1: Monmouth Hawks",
-  5
- ],
- [
   "ncaa1: Hofstra Pride",
   5
  ],
@@ -205,10 +193,6 @@
  ],
  [
   "ncaa1: Oakland Golden Grizzlies",
-  5
- ],
- [
-  "ncaa1: UAlbany Great Danes",
   5
  ],
  [
@@ -385,22 +369,6 @@
  ],
  [
   "ncaa1: Longwood Lancers",
-  5
- ],
- [
-  "ncaa1w: Iona Gaels",
-  5
- ],
- [
-  "ncaa1w: Canisius Griffins",
-  5
- ],
- [
-  "ncaa1w: Manhattan Jaspers",
-  5
- ],
- [
-  "ncaa1w: Quinnipiac Bobcats",
   5
  ],
  [
@@ -756,6 +724,14 @@
   5
  ],
  [
+  "ncaa1w: Little Rock Trojans",
+  5
+ ],
+ [
+  "ncaa1w: Tarleton State Texans",
+  5
+ ],
+ [
   "ncaa1w: North Alabama Lions",
   5
  ],
@@ -769,14 +745,6 @@
  ],
  [
   "ncaa1w: South Dakota Coyotes",
-  5
- ],
- [
-  "ncaa1w: Little Rock Trojans",
-  5
- ],
- [
-  "ncaa1w: Tarleton State Texans",
   5
  ],
  [
@@ -1004,6 +972,10 @@
   4
  ],
  [
+  "ncaa1: Bucknell Bison",
+  4
+ ],
+ [
   "ncaa1: Brown Bears",
   4
  ],
@@ -1080,6 +1052,10 @@
   4
  ],
  [
+  "ncaa1: UAlbany Great Danes",
+  4
+ ],
+ [
   "ncaa1: Cleveland State Vikings",
   4
  ],
@@ -1105,6 +1081,10 @@
  ],
  [
   "ncaa1: Duquesne Dukes",
+  4
+ ],
+ [
+  "ncaa1: Stony Brook Seawolves",
   4
  ],
  [
@@ -1608,6 +1588,10 @@
   4
  ],
  [
+  "ncaa1w: Manhattan Jaspers",
+  4
+ ],
+ [
   "ncaa1w: Mount St. Mary's Mountaineers",
   4
  ],
@@ -1621,6 +1605,14 @@
  ],
  [
   "ncaa1w: Siena Saints",
+  4
+ ],
+ [
+  "ncaa1w: Canisius Griffins",
+  4
+ ],
+ [
+  "ncaa1w: Quinnipiac Bobcats",
   4
  ],
  [
@@ -1673,6 +1665,10 @@
  ],
  [
   "ncaa1w: Northwestern Wildcats",
+  4
+ ],
+ [
+  "ncaa1w: Iona Gaels",
   4
  ],
  [
@@ -2053,6 +2049,10 @@
  ],
  [
   "ncaa1: Evansville Purple Aces",
+  3
+ ],
+ [
+  "ncaa1: Monmouth Hawks",
   3
  ],
  [
