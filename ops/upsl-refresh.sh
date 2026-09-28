@@ -13,7 +13,7 @@
 # challenge page and that division keeps its last good tables.
 # One-time install on the mini:
 #   git clone https://github.com/jkientz-pixel/pyramid-app.git ~/rankxi-upsl-runner
-#   /opt/homebrew/bin/python3 -m venv ~/.venvs/rankxi-upsl
+#   /usr/bin/python3 -m venv ~/.venvs/rankxi-upsl
 #   ~/.venvs/rankxi-upsl/bin/pip install playwright && ~/.venvs/rankxi-upsl/bin/python -m playwright install chromium
 #   cp ~/rankxi-upsl-runner/ops/com.rankedxi.upsl-refresh.plist ~/Library/LaunchAgents/
 #   launchctl load ~/Library/LaunchAgents/com.rankedxi.upsl-refresh.plist
