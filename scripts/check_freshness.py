@@ -33,7 +33,11 @@ IN_SEASON = {
     'uslw': {9, 10, 11, 3, 4, 5},
     'upsl': {3, 4, 5, 9, 10, 11},
     'apsl': {9, 10, 11, 3, 4, 5},
+    # college soccer: late Aug through the Dec tournaments
+    **{lg: {9, 10, 11} for lg in ('ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w')},
 }
+# college layer -> scope key in data/massey_meta.json
+MASSEY = {'ncaa1': 'd1', 'ncaa2': 'd2', 'ncaa3': 'd3', 'naia': 'naia', 'ncaa1w': 'd1w', 'ncaa2w': 'd2w'}
 MAX_GAME_GAP = 21     # days since the newest rated result, results-walk leagues
 MAX_SCRAPE_AGE = 4    # days since a standings scrape (UPSL, APSL)
 MAX_TABLE_AGE = 2     # days since data/standings.json (ESPN, twice daily)
@@ -67,7 +71,7 @@ def age(today, iso):
     return (today - date.fromisoformat(iso[:10])).days if iso else 10 ** 6
 
 
-def check(today, wire, standings, upsl, apsl, mls_clubs):
+def check(today, wire, standings, upsl, apsl, mls_clubs, massey=None):
     """Returns {league: {'updated', 'source', 'stale': reason or None}}."""
     out = {}
 
@@ -109,6 +113,13 @@ def check(today, wire, standings, upsl, apsl, mls_clubs):
     a_upd = apsl.get('fetched', '')
     put('apsl', a_upd, 'standings (apslsoccer.com)',
         f'APSL standings last fetched {a_upd or "never"}' if age(today, a_upd) > MAX_SCRAPE_AGE else None)
+
+    for lg, key in MASSEY.items():
+        m = (massey or {}).get(key, {})
+        season_ok = m.get('season') == str(today.year)
+        put(lg, m.get('fetched', ''), 'Massey Ratings',
+            None if season_ok and age(today, m.get('fetched', '')) <= MAX_SCRAPE_AGE
+            else f'Massey {key} last fetched {m.get("fetched") or "never"} (season {m.get("season") or "?"})')
     return out
 
 
@@ -125,7 +136,8 @@ def main():
     clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', src, re.S).group(1))
     mls = [c for c in clubs if c.get('g') == 'mls' and not c.get('h') and c.get('r')]
     res = check(today, load('wire_asa.json', []), load('standings.json', {}),
-                load('upsl.json', []), load('apsl_current.json', {}), mls)
+                load('upsl.json', []), load('apsl_current.json', {}), mls,
+                load('massey_meta.json', {}))
     # no run timestamp in the file: it only changes when a league's data does,
     # so an idle refresh stays an empty diff and doesn't trigger a deploy
     json.dump({'leagues': res}, open(ROOT / 'data' / 'freshness.json', 'w'), indent=1, sort_keys=True)

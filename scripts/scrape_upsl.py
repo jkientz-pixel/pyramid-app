@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """UPSL standings scraper. Cloudflare blocks plain HTTP clients, so this
 drives a real Chromium via Playwright — it runs on the Mac mini (residential
-IP) from ops/upsl-refresh.sh on a launchd schedule, which commits only
+IP) from ops/residential-scrapes.sh on a launchd schedule, which commits only
 data/upsl.json; the scheduled GitHub refresh turns it into ratings with
 rate_upsl_standings.py. Writes data/upsl.json.
 

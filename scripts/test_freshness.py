@@ -24,6 +24,7 @@ def fresh_inputs(**over):
         upsl=[{'division': d, 'fetched': '2026-09-28'} for d in ('Premier', 'Division 1')],
         apsl={'fetched': '2026-09-28'},
         mls_clubs=[{'id': cid, 'r': 2000 - 10 * i} for i, cid in enumerate(ids)],
+        massey={k: {'season': '2026', 'fetched': '2026-09-28'} for k in ('d1', 'd2', 'd3', 'naia', 'd1w', 'd2w')},
     )
     base.update(over)
     return base
@@ -53,6 +54,11 @@ class FreshnessGate(unittest.TestCase):
 
     def test_apsl_never_fetched_is_flagged(self):
         self.assertEqual(self.stale(apsl={}), {'apsl'})
+
+    def test_college_pinned_to_last_season_is_flagged(self):
+        massey = {k: {'season': '2026', 'fetched': '2026-09-28'} for k in ('d1', 'd2', 'd3', 'naia', 'd1w')}
+        massey['d2w'] = {'season': '2025', 'fetched': '2026-09-28'}
+        self.assertEqual(self.stale(massey=massey), {'ncaa2w'})
 
     def test_offseason_quiet_is_not_flagged(self):
         wire = [{'lg': lg, 'd': '2026-05-17'} for lg in ('uslc', 'usl1', 'mnp', 'nwsl', 'uslw')]

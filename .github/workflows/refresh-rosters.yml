@@ -66,8 +66,10 @@ jobs:
       # MLS: reorders MLS by the table fetch_race.py just wrote (mean held).
       - run: python scripts/rate_mls_table.py
       # UPSL: data/upsl.json is scraped on the Mac mini (upsl.com challenges
-      # datacenter IPs; ops/upsl-refresh.sh) and pushed here; this only rates it.
+      # datacenter IPs; ops/residential-scrapes.sh) and pushed here; this only rates it.
       - run: python scripts/rate_upsl_standings.py
+      # College (six layers): data/massey_*.json comes from the same mini job.
+      - run: python scripts/apply_massey.py
       # APSL: tables are rendered by a TeamPass widget, so this needs Chromium.
       # Soft-fails: a broken render keeps the last ratings, and the freshness
       # gate at the end of the job reports APSL as stale.

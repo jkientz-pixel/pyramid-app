@@ -15,6 +15,36 @@
    "stale": null,
    "updated": "2026-09-20"
   },
+  "naia": {
+   "source": "Massey Ratings",
+   "stale": null,
+   "updated": "2026-09-28"
+  },
+  "ncaa1": {
+   "source": "Massey Ratings",
+   "stale": null,
+   "updated": "2026-09-28"
+  },
+  "ncaa1w": {
+   "source": "Massey Ratings",
+   "stale": null,
+   "updated": "2026-09-28"
+  },
+  "ncaa2": {
+   "source": "Massey Ratings",
+   "stale": null,
+   "updated": "2026-09-28"
+  },
+  "ncaa2w": {
+   "source": "Massey Ratings",
+   "stale": null,
+   "updated": "2026-09-28"
+  },
+  "ncaa3": {
+   "source": "Massey Ratings",
+   "stale": null,
+   "updated": "2026-09-28"
+  },
   "nwsl": {
    "source": "results (ASA)",
    "stale": null,

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!-- Install on the Mac mini: see the header of ops/upsl-refresh.sh.
+<!-- Install on the Mac mini: see the header of ops/residential-scrapes.sh.
      Runs 05:40 and 17:40 local, ahead of the GitHub refresh (02:17/14:17 UTC).
      Logs outside ~/Documents on purpose (launchd + TCC). -->
 <plist version="1.0">
 <dict>
-  <key>Label</key><string>com.rankedxi.upsl-refresh</string>
+  <key>Label</key><string>com.rankedxi.residential-scrapes</string>
   <key>ProgramArguments</key>
-  <array><string>/bin/bash</string><string>/Users/jeremykientz/rankxi-upsl-runner/ops/upsl-refresh.sh</string></array>
+  <array><string>/bin/bash</string><string>/Users/jeremykientz/rankxi-upsl-runner/ops/residential-scrapes.sh</string></array>
   <key>StartCalendarInterval</key>
   <array>
     <dict><key>Hour</key><integer>5</integer><key>Minute</key><integer>40</integer></dict>
     <dict><key>Hour</key><integer>17</integer><key>Minute</key><integer>40</integer></dict>
   </array>
-  <key>StandardOutPath</key><string>/Users/jeremykientz/Library/Logs/rankxi-upsl-refresh.log</string>
-  <key>StandardErrorPath</key><string>/Users/jeremykientz/Library/Logs/rankxi-upsl-refresh.log</string>
+  <key>StandardOutPath</key><string>/Users/jeremykientz/Library/Logs/rankxi-residential-scrapes.log</string>
+  <key>StandardErrorPath</key><string>/Users/jeremykientz/Library/Logs/rankxi-residential-scrapes.log</string>
 </dict>
 </plist>
