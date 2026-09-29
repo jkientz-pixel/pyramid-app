@@ -60,6 +60,35 @@ jobs:
       - run: python scripts/fetch_race.py || echo "::warning title=Season race::fetch_race.py failed, keeping the last committed race data"
       - name: Season race gate (fallback to last good)
         run: python scripts/race_gate.py --fallback
+      # Standings-derived ratings. Each of these was missing from this job
+      # until 2026-09-28, which is how MLS sat on a May snapshot, and UPSL and
+      # APSL on last season's tables, while every run reported success.
+      # MLS: reorders MLS by the table fetch_race.py just wrote (mean held).
+      - run: python scripts/rate_mls_table.py
+      # UPSL: data/upsl.json is scraped on the Mac mini (upsl.com challenges
+      # datacenter IPs; ops/residential-scrapes.sh) and pushed here; this only rates it.
+      - run: python scripts/rate_upsl_standings.py
+      # College (six layers): data/massey_*.json comes from the same mini job.
+      - run: python scripts/apply_massey.py
+      # APSL: tables are rendered by a TeamPass widget, so this needs Chromium.
+      # Soft-fails: a broken render keeps the last ratings, and the freshness
+      # gate at the end of the job reports APSL as stale.
+      - name: APSL standings
+        run: |
+          pip install --quiet playwright beautifulsoup4
+          python -m playwright install --with-deps chromium
+          python scripts/rate_apsl_standings.py || echo "::warning title=APSL::rate_apsl_standings.py failed, keeping the last APSL ratings"
+      # re-run after the standings writers so cup nudges and league anchors
+      # apply to the new numbers (idempotent, sub-second)
+      - run: python scripts/recalibrate2.py
+      # Public prediction record (/accuracy): freeze the odds for pro games in
+      # the next 36h at the ratings this run deploys, score finished ones.
+      # Frozen entries are never rewritten, so data/predictions.json must be
+      # committed every run or the record loses its history.
+      - run: python scripts/prediction_ledger.py
+      # per-league "updated" dates for the site; never fails here (the gate
+      # proper runs after the deploy)
+      - run: python scripts/check_freshness.py --report-only
       # a broken scrape must never silently publish stale or empty data:
       # the gate diffs the fresh files against HEAD and fails on collapse
       - name: Gate — refuse empty or shrunken data
@@ -85,7 +114,7 @@ jobs:
           # push once committed schedule_rest.json fixtures slip into the past
           # (bit master on 2026-09-01 — race data regenerated every run but was
           # never committed, frozen at 8/27)
-          git add js/rosters.js js/data.js data/recal2_state.json data/cup_receipts.json data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/opencup_live.json data/match_stats.json data/match_stats_archive.json data/rank_snapshot.json data/rank_history.json data/standings.json data/seasons.json data/schedule_rest.json
+          git add js/rosters.js js/data.js data/recal2_state.json data/cup_receipts.json data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/opencup_live.json data/match_stats.json data/match_stats_archive.json data/rank_snapshot.json data/rank_history.json data/standings.json data/seasons.json data/schedule_rest.json data/apsl_current.json data/freshness.json data/predictions.json data/accuracy.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
@@ -112,6 +141,11 @@ jobs:
           git config user.name "roster-bot"
           git config user.email "actions@github.com"
           git commit -m "chore: scheduled roster refresh" && git push
+      # The freshness gate proper. After the deploy on purpose: the leagues that
+      # did refresh are already live, and a stale league fails the job so the
+      # alert below opens (or comments on) a scrape-failure issue.
+      - name: Freshness gate — every in-season league must be current
+        run: python scripts/check_freshness.py
       - name: Alert on failure
         if: failure()
         env:
@@ -126,5 +160,5 @@ jobs:
             gh issue create -R "${{ github.repository }}" \
               --title "Roster refresh failed $(date -u +%F)" \
               --label scrape-failure \
-              --body "The scheduled roster refresh failed. Run: $url — nothing was committed (the commit runs only after deploy.sh passes); the site keeps serving the last good deploy. Check scripts/refresh_rosters.py / fetch_asa.py / fetch_asa_games.py / fetch_fixtures.py and the verify_refresh.py gate output in the run log."
+              --body "The scheduled roster refresh failed. Run: $url — nothing was committed (the commit runs only after deploy.sh passes); the site keeps serving the last good deploy. If the failed step is the freshness gate, its ::error lines name the stale league and why. Otherwise check scripts/refresh_rosters.py / fetch_asa.py / fetch_asa_games.py / fetch_fixtures.py and the verify_refresh.py gate output in the run log."
           fi

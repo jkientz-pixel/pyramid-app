@@ -52,21 +52,41 @@ def norm(x):
     return re.sub(r'[^a-z0-9]', '', s)
 
 
-def standings_rows():
-    """{normalised team name: row} for every UPSL row with games actually played."""
-    tables = json.load(open(ROOT / 'data' / 'upsl.json'))
+# Earlier seasons folded in at reduced weight, so an early-season table (six
+# or seven games in) doesn't erase a full spring of evidence, and a club with
+# no fall row yet keeps a rating instead of dropping to unrated. Add the old
+# season here when data/upsl.json rolls over to a new one.
+PRIOR_SEASONS = [('upsl_2026_spring.json', 0.5)]
+
+
+def _rows(path, weight):
+    """{normalised team name: weighted record} for rows with games played."""
     rows = {}
-    for t in tables:
+    for t in json.load(open(path)):
         for r in t.get('rows', []):
             gp = int(r.get('gp') or 0)
             if gp <= 0:
                 continue            # a 0-game row is a fixture list, not a record
             rows[norm(r['team'])] = {
-                'gp': gp,
-                'pts': int(r.get('pts') or 0),
-                'gd': int(r.get('gd') or 0),
+                'gp': gp * weight,
+                'pts': int(r.get('pts') or 0) * weight,
+                'gd': int(r.get('gd') or 0) * weight,
                 'div': t.get('label', ''),
             }
+    return rows
+
+
+def standings_rows():
+    """Current-season records plus down-weighted prior seasons, summed per team."""
+    rows = _rows(ROOT / 'data' / 'upsl.json', 1.0)
+    for name, weight in PRIOR_SEASONS:
+        for k, r in _rows(ROOT / 'data' / name, weight).items():
+            if k in rows:
+                cur = rows[k]
+                rows[k] = {**cur, 'gp': cur['gp'] + r['gp'], 'pts': cur['pts'] + r['pts'],
+                           'gd': cur['gd'] + r['gd']}
+            else:
+                rows[k] = r
     return rows
 
 

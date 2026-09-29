@@ -80,7 +80,7 @@ trap 'rm -rf "$STAGE"' EXIT
 # so bad URLs return a real 404 instead of the homepage with HTTP 200
 cp -R app.html index.html 404.html npsl-rankings.html upsl-rankings.html \
       methodology.html privacy.html player-simulator.html shots.html radar.html \
-      about.html faq.html terms.html us-soccer-pyramid.html \
+      about.html faq.html terms.html us-soccer-pyramid.html accuracy.html \
       club league state .well-known \
       manifest.webmanifest sw.js robots.txt llms.txt _headers _redirects \
       js css crests fonts \

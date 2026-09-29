@@ -1,0 +1,121 @@
+[
+{
+"k":"usl1:2026-09-30T23:00:chattanooga-red-wolves:spokane-velocity",
+"lg":"usl1",
+"start":"2026-09-30T23:00:00.000Z",
+"id1":"chattanooga-red-wolves",
+"id2":"spokane-velocity",
+"n1":"Chattanooga Red Wolves",
+"n2":"Spokane Velocity",
+"r1":1595,
+"r2":1660,
+"p":[
+0.3709,
+0.2582,
+0.3709
+],
+"frozen":"2026-09-29T18:51Z"
+},
+{
+"k":"uslc:2026-09-30T23:00:brooklyn-fc-uslc:detroit-city-fc",
+"lg":"uslc",
+"start":"2026-09-30T23:00:00.000Z",
+"id1":"brooklyn-fc-uslc",
+"id2":"detroit-city-fc",
+"n1":"Brooklyn FC",
+"n2":"Detroit City FC",
+"r1":1576,
+"r2":1751,
+"p":[
+0.2277,
+0.2368,
+0.5355
+],
+"frozen":"2026-09-29T18:51Z"
+},
+{
+"k":"uslc:2026-09-30T23:00:miami-fc:sporting-club-jacksonville",
+"lg":"uslc",
+"start":"2026-09-30T23:00:00.000Z",
+"id1":"miami-fc",
+"id2":"sporting-club-jacksonville",
+"n1":"Miami FC",
+"n2":"Sporting Club Jacksonville",
+"r1":1658,
+"r2":1511,
+"p":[
+0.6858,
+0.1863,
+0.1279
+],
+"frozen":"2026-09-29T18:51Z"
+},
+{
+"k":"mls:2026-09-30T23:30:new-york-red-bulls:st-louis-city-sc",
+"lg":"mls",
+"start":"2026-09-30T23:30:00.000Z",
+"id1":"new-york-red-bulls",
+"id2":"st-louis-city-sc",
+"n1":"New York Red Bulls",
+"n2":"St. Louis City SC",
+"r1":1870,
+"r2":1913,
+"p":[
+0.4028,
+0.2573,
+0.3399
+],
+"frozen":"2026-09-29T18:51Z"
+},
+{
+"k":"uslc:2026-09-30T23:30:rhode-island-fc:indy-eleven",
+"lg":"uslc",
+"start":"2026-09-30T23:30:00.000Z",
+"id1":"rhode-island-fc",
+"id2":"indy-eleven",
+"n1":"Rhode Island FC",
+"n2":"Indy Eleven",
+"r1":1727,
+"r2":1684,
+"p":[
+0.5325,
+0.2375,
+0.23
+],
+"frozen":"2026-09-29T18:51Z"
+},
+{
+"k":"uslc:2026-10-01T00:00:fc-tulsa:new-mexico-united",
+"lg":"uslc",
+"start":"2026-10-01T00:00:00.000Z",
+"id1":"fc-tulsa",
+"id2":"new-mexico-united",
+"n1":"FC Tulsa",
+"n2":"New Mexico United",
+"r1":1751,
+"r2":1744,
+"p":[
+0.4776,
+0.2488,
+0.2735
+],
+"frozen":"2026-09-29T18:51Z"
+},
+{
+"k":"uslc:2026-10-01T02:00:sacramento-republic:las-vegas-lights",
+"lg":"uslc",
+"start":"2026-10-01T02:00:00.000Z",
+"id1":"sacramento-republic",
+"id2":"las-vegas-lights",
+"n1":"Sacramento Republic",
+"n2":"Las Vegas Lights",
+"r1":1781,
+"r2":1668,
+"p":[
+0.6374,
+0.2054,
+0.1573
+],
+"frozen":"2026-09-29T18:51Z"
+}
+]

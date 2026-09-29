@@ -40,6 +40,7 @@ og/
 # index.html, app.html and methodology.html are NOT here — those are
 # hand-written pages the generator patches counts into, not files it owns.
 about.html
+accuracy.html
 faq.html
 npsl-rankings.html
 terms.html
