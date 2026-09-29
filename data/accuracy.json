@@ -1,0 +1,285 @@
+{
+ "backtest": {
+  "brier": 0.622,
+  "cal": [
+   {
+    "actual": 0.361,
+    "band": "30-40%",
+    "n": 183,
+    "predicted": 0.386
+   },
+   {
+    "actual": 0.465,
+    "band": "40-50%",
+    "n": 738,
+    "predicted": 0.451
+   },
+   {
+    "actual": 0.521,
+    "band": "50-60%",
+    "n": 447,
+    "predicted": 0.541
+   },
+   {
+    "actual": 0.629,
+    "band": "60-70%",
+    "n": 132,
+    "predicted": 0.637
+   },
+   {
+    "actual": 0.625,
+    "band": "70-80%",
+    "n": 32,
+    "predicted": 0.728
+   },
+   {
+    "actual": 1.0,
+    "band": "80-90%",
+    "n": 4,
+    "predicted": 0.828
+   }
+  ],
+  "hit": 0.488,
+  "leagues": {
+   "mls": {
+    "brier": 0.642,
+    "cal": [
+     {
+      "actual": 0.38,
+      "band": "30-40%",
+      "n": 50,
+      "predicted": 0.386
+     },
+     {
+      "actual": 0.445,
+      "band": "40-50%",
+      "n": 173,
+      "predicted": 0.451
+     },
+     {
+      "actual": 0.439,
+      "band": "50-60%",
+      "n": 123,
+      "predicted": 0.538
+     },
+     {
+      "actual": 0.677,
+      "band": "60-70%",
+      "n": 31,
+      "predicted": 0.633
+     },
+     {
+      "actual": 0.6,
+      "band": "70-80%",
+      "n": 10,
+      "predicted": 0.723
+     }
+    ],
+    "hit": 0.457,
+    "logloss": 1.064,
+    "n": 387
+   },
+   "mnp": {
+    "brier": 0.608,
+    "cal": [
+     {
+      "actual": 0.405,
+      "band": "30-40%",
+      "n": 42,
+      "predicted": 0.386
+     },
+     {
+      "actual": 0.474,
+      "band": "40-50%",
+      "n": 190,
+      "predicted": 0.451
+     },
+     {
+      "actual": 0.548,
+      "band": "50-60%",
+      "n": 115,
+      "predicted": 0.544
+     },
+     {
+      "actual": 0.622,
+      "band": "60-70%",
+      "n": 37,
+      "predicted": 0.636
+     },
+     {
+      "actual": 0.615,
+      "band": "70-80%",
+      "n": 13,
+      "predicted": 0.735
+     },
+     {
+      "actual": 1.0,
+      "band": "80-90%",
+      "n": 3,
+      "predicted": 0.823
+     }
+    ],
+    "hit": 0.51,
+    "logloss": 1.016,
+    "n": 400
+   },
+   "nwsl": {
+    "brier": 0.614,
+    "cal": [
+     {
+      "actual": 0.48,
+      "band": "30-40%",
+      "n": 25,
+      "predicted": 0.387
+     },
+     {
+      "actual": 0.458,
+      "band": "40-50%",
+      "n": 96,
+      "predicted": 0.45
+     },
+     {
+      "actual": 0.603,
+      "band": "50-60%",
+      "n": 63,
+      "predicted": 0.546
+     },
+     {
+      "actual": 0.6,
+      "band": "60-70%",
+      "n": 15,
+      "predicted": 0.641
+     },
+     {
+      "actual": 0.0,
+      "band": "70-80%",
+      "n": 1,
+      "predicted": 0.757
+     },
+     {
+      "actual": 1.0,
+      "band": "80-90%",
+      "n": 1,
+      "predicted": 0.843
+     }
+    ],
+    "hit": 0.517,
+    "logloss": 1.025,
+    "n": 201
+   },
+   "usl1": {
+    "brier": 0.597,
+    "cal": [
+     {
+      "actual": 0.241,
+      "band": "30-40%",
+      "n": 29,
+      "predicted": 0.386
+     },
+     {
+      "actual": 0.482,
+      "band": "40-50%",
+      "n": 112,
+      "predicted": 0.448
+     },
+     {
+      "actual": 0.66,
+      "band": "50-60%",
+      "n": 47,
+      "predicted": 0.543
+     },
+     {
+      "actual": 0.621,
+      "band": "60-70%",
+      "n": 29,
+      "predicted": 0.649
+     },
+     {
+      "actual": 0.6,
+      "band": "70-80%",
+      "n": 5,
+      "predicted": 0.715
+     }
+    ],
+    "hit": 0.509,
+    "logloss": 0.998,
+    "n": 222
+   },
+   "uslc": {
+    "brier": 0.641,
+    "cal": [
+     {
+      "actual": 0.297,
+      "band": "30-40%",
+      "n": 37,
+      "predicted": 0.387
+     },
+     {
+      "actual": 0.477,
+      "band": "40-50%",
+      "n": 155,
+      "predicted": 0.453
+     },
+     {
+      "actual": 0.462,
+      "band": "50-60%",
+      "n": 91,
+      "predicted": 0.538
+     },
+     {
+      "actual": 0.579,
+      "band": "60-70%",
+      "n": 19,
+      "predicted": 0.626
+     },
+     {
+      "actual": 1.0,
+      "band": "70-80%",
+      "n": 3,
+      "predicted": 0.727
+     }
+    ],
+    "hit": 0.462,
+    "logloss": 1.064,
+    "n": 305
+   },
+   "uslw": {
+    "brier": 0.6,
+    "cal": [
+     {
+      "actual": 0.333,
+      "band": "40-50%",
+      "n": 12,
+      "predicted": 0.452
+     },
+     {
+      "actual": 0.625,
+      "band": "50-60%",
+      "n": 8,
+      "predicted": 0.523
+     },
+     {
+      "actual": 1.0,
+      "band": "60-70%",
+      "n": 1,
+      "predicted": 0.625
+     }
+    ],
+    "hit": 0.476,
+    "logloss": 1.002,
+    "n": 21
+   }
+  },
+  "logloss": 1.036,
+  "n": 1536
+ },
+ "baseline_brier": 0.667,
+ "live": {
+  "leagues": {},
+  "n": 0,
+  "pending": 0,
+  "since": "",
+  "void": 0
+ },
+ "recent": []
+}

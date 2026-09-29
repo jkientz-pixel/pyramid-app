@@ -386,7 +386,7 @@ try:
 
     gen_dirs_present = [d for d in ('club', 'league', 'state') if (ROOT / d).is_dir()]
     top_pages = [f for f in ('index.html', 'app.html', 'methodology.html', 'privacy.html',
-                             'about.html', 'faq.html', 'terms.html', 'us-soccer-pyramid.html',
+                             'about.html', 'faq.html', 'terms.html', 'us-soccer-pyramid.html', 'accuracy.html',
                              'upsl-rankings.html', 'npsl-rankings.html', 'shots.html',
                              'radar.html', 'player-simulator.html') if (ROOT / f).exists()]
 

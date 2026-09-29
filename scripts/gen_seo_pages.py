@@ -7,6 +7,7 @@
   faq.html                the questions AI engines currently answer badly
   about.html              who makes this, and the independence claim
   terms.html              a crawlable copy of the app's legal screen
+  accuracy.html           the public prediction record (gen_accuracy_page.py)
 
 and bake the landing page's headline counts into index.html / app.html.
 
@@ -133,7 +134,8 @@ DOC_HEADER = ('<header><a class="mark disp" href="/">Ranked XI</a>'
 DOC_FOOTER = ('</main>\n<footer>Independent project by Jeremy Kientz &middot; 2026 &middot; '
               '<a href="/">Home</a> &middot; <a href="/app">App</a> &middot; '
               '<a href="/about">About</a> &middot; <a href="/faq">FAQ</a> &middot; '
-              '<a href="/methodology">Methodology</a> &middot; <a href="/privacy">Privacy</a> '
+              '<a href="/methodology">Methodology</a> &middot; <a href="/accuracy">Accuracy</a> &middot; '
+              '<a href="/privacy">Privacy</a> '
               '&middot; <a href="/terms">Terms &amp; notices</a></footer>\n</body></html>')
 
 
@@ -620,6 +622,13 @@ the page and what got in the way; accessibility reports get fixed like any other
 usually within days.</p>
 <p><a href="{MAILTO}RankedXI%20Accessibility%20barrier"><b>Report an accessibility barrier</b></a></p></section>
 {DOC_FOOTER}""")
+
+# ================================================================= /accuracy
+# The public prediction record (data/accuracy.json, from prediction_ledger.py).
+# Its own module to keep this file under the size limit; same page shell.
+import gen_accuracy_page
+gen_accuracy_page.build(ROOT, page_head, DOC_STYLE, DOC_HEADER, DOC_FOOTER, write, S, SITE,
+                        today, today_h, leagues)
 
 # ---- bake headline counts into index.html / app.html (external audit #6) ----
 # The landing page used to import data.js + rosters.js at runtime — 240KB over

@@ -81,6 +81,11 @@ jobs:
       # re-run after the standings writers so cup nudges and league anchors
       # apply to the new numbers (idempotent, sub-second)
       - run: python scripts/recalibrate2.py
+      # Public prediction record (/accuracy): freeze the odds for pro games in
+      # the next 36h at the ratings this run deploys, score finished ones.
+      # Frozen entries are never rewritten, so data/predictions.json must be
+      # committed every run or the record loses its history.
+      - run: python scripts/prediction_ledger.py
       # per-league "updated" dates for the site; never fails here (the gate
       # proper runs after the deploy)
       - run: python scripts/check_freshness.py --report-only
@@ -109,7 +114,7 @@ jobs:
           # push once committed schedule_rest.json fixtures slip into the past
           # (bit master on 2026-09-01 — race data regenerated every run but was
           # never committed, frozen at 8/27)
-          git add js/rosters.js js/data.js data/recal2_state.json data/cup_receipts.json data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/opencup_live.json data/match_stats.json data/match_stats_archive.json data/rank_snapshot.json data/rank_history.json data/standings.json data/seasons.json data/schedule_rest.json data/apsl_current.json data/freshness.json
+          git add js/rosters.js js/data.js data/recal2_state.json data/cup_receipts.json data/wire_asa.json data/fixtures.json data/fixtures_unmatched.json data/opencup_live.json data/match_stats.json data/match_stats_archive.json data/rank_snapshot.json data/rank_history.json data/standings.json data/seasons.json data/schedule_rest.json data/apsl_current.json data/freshness.json data/predictions.json data/accuracy.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
