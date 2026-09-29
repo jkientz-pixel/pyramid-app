@@ -16,6 +16,10 @@
   6
  ],
  [
+  "ncaa1: Saint Joseph's Hawks",
+  6
+ ],
+ [
   "ncaa1: East Tennessee State Buccaneers",
   6
  ],
@@ -200,10 +204,6 @@
   5
  ],
  [
-  "ncaa1: Saint Joseph's Hawks",
-  5
- ],
- [
   "ncaa1: Wake Forest Demon Deacons",
   5
  ],
@@ -349,6 +349,10 @@
  ],
  [
   "ncaa1: Mercer Bears",
+  5
+ ],
+ [
+  "ncaa1: George Washington Revolutionaries",
   5
  ],
  [
@@ -972,10 +976,6 @@
   4
  ],
  [
-  "ncaa1: George Washington Revolutionaries",
-  4
- ],
- [
   "ncaa1: Northern Illinois Huskies",
   4
  ],
@@ -1364,14 +1364,6 @@
   4
  ],
  [
-  "ncaa1w: UTSA Roadrunners",
-  4
- ],
- [
-  "ncaa1w: Rice Owls",
-  4
- ],
- [
   "ncaa1w: East Texas A&M Lions",
   4
  ],
@@ -1557,6 +1549,14 @@
  ],
  [
   "ncaa1w: Arizona State Sun Devils",
+  4
+ ],
+ [
+  "ncaa1w: UTSA Roadrunners",
+  4
+ ],
+ [
+  "ncaa1w: Rice Owls",
   4
  ],
  [
