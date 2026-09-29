@@ -104,7 +104,7 @@ h2{{font-family:{DISP_STACK};text-transform:uppercase;letter-spacing:.05em;font-
 a{{color:#7FD1A8}}table{{border-collapse:collapse;width:100%;max-width:720px;margin:18px 0}}
 td,th{{padding:7px 10px;border-bottom:1px solid #24352C;text-align:left;font-size:.92rem}}
 th{{color:#8FA598;text-transform:uppercase;font-size:.72rem;letter-spacing:.06em}}
-.cta{{display:inline-block;background:#C77F1E;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;margin:10px 0}}
+.cta{{display:inline-block;background:#C77F1E;color:#1D1509;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;margin:10px 0}}
 p.note{{color:#8FA598;font-size:.85rem;max-width:60em}}
 .lead{{font-size:1.06rem;max-width:44em;line-height:1.6}}
 .crumbs{{font-size:.82rem;color:#8FA598;margin:0 0 4px}}.crumbs a{{color:#8FA598}}
@@ -114,6 +114,7 @@ dl.faq dd{{margin:0;color:#B8C7BD}}"""
 
 def page_head(title, desc, path, ld, style, og_alt=None):
     S.check_title(title, path)
+    desc = S.fit_desc(desc)
     return f"""<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -476,7 +477,7 @@ write('faq.html', page_head(faq_title, faq_desc, '/faq', faq_ld, DOC_STYLE,
 come up most, answered in full — including the ones with awkward answers.</p>
 {S.faq_html(faq_pairs, 'Questions')}
 <section><h2>Still stuck?</h2>
-<p>Email <a href="mailto:{S.CONTACT}">{S.CONTACT}</a>. A person reads every one.
+<p>Email <!--email_off--><a href="mailto:{S.CONTACT}">{S.CONTACT}</a><!--/email_off-->. A person reads every one.
 See also <a href="/methodology">the full methodology</a>,
 <a href="/us-soccer-pyramid">the ranked pyramid</a> and <a href="/about">about this project</a>.</p></section>
 {DOC_FOOTER}""")
@@ -524,7 +525,7 @@ Southern California, and published by {S.LEGAL_NAME}. It is a solo independent p
 league product and not a media company's side project. The method is published in full at
 <a href="/methodology">Methodology &amp; Disclaimer</a>, including the parts that are estimates
 rather than measurements — because a rating you cannot audit is not worth quoting.</p>
-<p>Reach a person at <a href="mailto:{S.CONTACT}">{S.CONTACT}</a>.</p></section>
+<p>Reach a person at <!--email_off--><a href="mailto:{S.CONTACT}">{S.CONTACT}</a><!--/email_off-->.</p></section>
 <section><h2>What Ranked XI is not</h2>
 <ul>
 <li><strong>Not official.</strong> Not affiliated with, endorsed by, or sponsored by any league,
@@ -583,13 +584,13 @@ or endorsement. If you'd rather your club, crest, or player info not appear on R
 email does it. We confirm the request actually comes from the club or the player — a reply from
 an official club account or league contact is enough — then take it down, usually within the
 week. Crests and images come down first.</p>
-<p><a href="{MAILTO}RankedXI%20Removal:%20club%20/%20crest"><b>Remove my club or crest</b></a> ·
-<a href="{MAILTO}RankedXI%20Removal:%20player"><b>Remove my player info</b></a></p></section>
+<p><!--email_off--><a href="{MAILTO}RankedXI%20Removal:%20club%20/%20crest"><b>Remove my club or crest</b></a><!--/email_off--> ·
+<!--email_off--><a href="{MAILTO}RankedXI%20Removal:%20player"><b>Remove my player info</b></a><!--/email_off--></p></section>
 <section><h2>Corrections &amp; missing info</h2>
 <p>See something wrong, or something that should be here and isn't? File a notice. A person
 reads every one, and most data corrections ship within a couple of days. A link to a source we
 can check speeds it up.</p>
-<p><a href="{MAILTO}RankedXI%20Notice:%20correction"><b>File a correction notice</b></a></p></section>
+<p><!--email_off--><a href="{MAILTO}RankedXI%20Notice:%20correction"><b>File a correction notice</b></a><!--/email_off--></p></section>
 <section><h2>Privacy</h2>
 <p>No tracking cookies, no third-party trackers and no advertising pixels. We count pageviews on
 our own servers without recording who you are, and we honor Do Not Track. Your favorites live in
@@ -620,7 +621,7 @@ every club is reachable through search, the National Table, and the Tiers pages 
 through the map — and anything the map does has a text equivalent. If you hit a barrier, tell us
 the page and what got in the way; accessibility reports get fixed like any other correction,
 usually within days.</p>
-<p><a href="{MAILTO}RankedXI%20Accessibility%20barrier"><b>Report an accessibility barrier</b></a></p></section>
+<p><!--email_off--><a href="{MAILTO}RankedXI%20Accessibility%20barrier"><b>Report an accessibility barrier</b></a><!--/email_off--></p></section>
 {DOC_FOOTER}""")
 
 # ================================================================= /accuracy

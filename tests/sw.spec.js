@@ -26,3 +26,12 @@ test('the shell precache lists the code the app needs to boot', async ({ page })
     expect(body).toContain(asset);
   }
 });
+
+test('the landing page does not register a service worker', async ({ page }) => {
+  /* registering here precached the whole app shell (~800 KB) for visitors who
+     never open /app; the app registers it on its own */
+  await page.goto('/');
+  await page.waitForLoadState('load');
+  const regs = await page.evaluate(() => navigator.serviceWorker.getRegistrations().then(r => r.length));
+  expect(regs).toBe(0);
+});

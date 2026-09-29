@@ -14,6 +14,7 @@ BreadcrumbList and FAQPage builders, and the answer-first lead helper.
 """
 import html
 import json
+import re
 
 SITE = 'https://www.rankedxi.com'
 # Leagues whose rankings page is a hand-written landing page, not a generated
@@ -182,3 +183,22 @@ def check_title(title, where):
     if len(title) > TITLE_MAX:
         raise SystemExit(f'title too long ({len(title)} > {TITLE_MAX}) on {where}: {title}')
     return title
+
+
+DESC_MAX = 160   # Google cuts meta descriptions around here; preflight fails the build
+# a full stop followed by a space, unless it closes a place-name abbreviation
+# ("St. Louis", "Ft. Lauderdale", "U.S. Open") that is not a sentence end
+_SENTENCE_END = re.compile(r'(?<!\bSt)(?<!\bMt)(?<!\bFt)(?<!\bJr)(?<!\bSr)(?<!\bvs)(?<!\bU\.S)\.(?= )')
+
+
+def fit_desc(desc):
+    """Trim a meta description to DESC_MAX. Drops whole trailing sentences first
+    (the "Updated <date>." tail is the usual casualty), and only cuts mid-sentence
+    at a word boundary when the first sentence alone is too long."""
+    if len(desc) <= DESC_MAX:
+        return desc
+    cut = desc[:DESC_MAX + 1]
+    ends = [m.end() for m in _SENTENCE_END.finditer(cut)]
+    if ends:
+        return cut[:ends[-1]]
+    return cut[:DESC_MAX - 1].rsplit(' ', 1)[0].rstrip(' ,–—-:;') + '…'

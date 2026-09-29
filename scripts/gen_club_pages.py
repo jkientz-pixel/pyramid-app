@@ -170,7 +170,7 @@ h1{font-family:"Barlow Condensed","Avenir Next Condensed","Arial Narrow",sans-se
 h2{font-family:"Barlow Condensed","Avenir Next Condensed","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:1.1rem;color:#8FA598;margin:1.8em 0 .5em}
 a{color:#7FD1A8}.stats{display:flex;gap:26px;flex-wrap:wrap;margin:16px 0}
 .stats b{display:block;font-size:1.5rem}.stats span{color:#8FA598;font-size:.85rem}
-.cta{display:inline-block;background:#C77F1E;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;margin:12px 0}
+.cta{display:inline-block;background:#C77F1E;color:#1D1509;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;margin:12px 0}
 ul{padding-left:20px;line-height:1.9}p.note{color:#8FA598;font-size:.85rem;max-width:60em}
 table{border-collapse:collapse;width:100%;max-width:52em;margin:8px 0 18px;font-size:.94rem}
 th,td{text-align:left;padding:7px 10px;border-bottom:1px solid #1D2A24}
@@ -193,6 +193,7 @@ def head(title, desc, path, ld, og_img=S.OG_DEFAULT, og_alt=None, robots=None):
     redirect (external audit #5). OG/Twitter and the favicon come from
     seo_common so all 4,400 pages describe the same entity."""
     S.check_title(title, path)
+    desc = S.fit_desc(desc)
     robots_tag = f'<meta name="robots" content="{robots}">' if robots else ''
     return f"""<!doctype html>
 <html lang="en"><head>
