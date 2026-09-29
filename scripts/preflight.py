@@ -404,6 +404,7 @@ try:
         produced |= {f'/{d}/{x.stem}' for x in (ROOT / d).glob('*.html')}
 
     long_titles, no_desc, no_canon, no_og, bad_ld, brand, bad_href = [], [], [], [], [], [], []
+    long_descs = []
     _HREF = re.compile(r'href="(/(?:club|league|state)/[^"#?]+)')
     _TITLE = re.compile(r'<title>(.*?)</title>', re.S)
     _DESC = re.compile(r'<meta name="description" content="(.*?)">', re.S)
@@ -423,6 +424,8 @@ try:
         d = _DESC.search(body)
         if not d or not d.group(1).strip():
             no_desc.append(rel)
+        elif len(html_mod.unescape(d.group(1))) > _S.DESC_MAX:
+            long_descs.append(f'{rel}: {len(html_mod.unescape(d.group(1)))} chars')
         if '<link rel="canonical"' not in body:
             no_canon.append(rel)
         if 'property="og:url"' not in body:
@@ -466,6 +469,8 @@ try:
         fail.append(f'titles over {_S.TITLE_MAX} chars (Google truncates): {_cap(long_titles)}')
     if no_desc:
         fail.append(f'pages with an empty meta description: {_cap(no_desc)}')
+    if long_descs:
+        fail.append(f'meta descriptions over {_S.DESC_MAX} chars (Google truncates): {_cap(long_descs)}')
     if no_canon:
         fail.append(f'pages with no canonical: {_cap(no_canon)}')
     if no_og:
@@ -477,7 +482,7 @@ try:
     if bad_href:
         fail.append(f'{len(bad_href)} club/league/state links point at pages this build did not '
                     f'produce: {_cap(sorted(set(bad_href)))}')
-    if checked and not (long_titles or no_desc or no_canon or no_og or brand or bad_ld or bad_href):
+    if checked and not (long_titles or long_descs or no_desc or no_canon or no_og or brand or bad_ld or bad_href):
         print(f'  SEO: {checked} pages — titles fit, descriptions set, canonical + og:url '
               f'present, one brand name, no 404s in JSON-LD or club/league/state links')
     if not gen_dirs_present:
