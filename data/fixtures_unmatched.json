@@ -1,9 +1,5 @@
 [
  [
-  "ncaa1: Northeastern Huskies",
-  6
- ],
- [
   "ncaa1: Western Michigan Broncos",
   6
  ],
@@ -138,14 +134,6 @@
  [
   "ncaa1w: Weber State Wildcats",
   6
- ],
- [
-  "ncaa1: Hofstra Pride",
-  5
- ],
- [
-  "ncaa1: UCLA Bruins",
-  5
  ],
  [
   "ncaa1: American University Eagles",
@@ -344,6 +332,10 @@
   5
  ],
  [
+  "ncaa1: Pittsburgh Panthers",
+  5
+ ],
+ [
   "ncaa1: Virginia Cavaliers",
   5
  ],
@@ -364,6 +356,10 @@
   5
  ],
  [
+  "ncaa1: Northeastern Huskies",
+  5
+ ],
+ [
   "ncaa1: North Florida Ospreys",
   5
  ],
@@ -372,11 +368,7 @@
   5
  ],
  [
-  "ncaa1w: BYU Cougars",
-  5
- ],
- [
-  "ncaa1w: TCU Horned Frogs",
+  "ncaa1: UCLA Bruins",
   5
  ],
  [
@@ -748,19 +740,11 @@
   5
  ],
  [
-  "ncaa1: Penn State Nittany Lions",
-  4
- ],
- [
   "ncaa1: Delaware Fightin' Blue Hens",
   4
  ],
  [
   "ncaa1: New Hampshire Wildcats",
-  4
- ],
- [
-  "ncaa1: Harvard Crimson",
   4
  ],
  [
@@ -904,6 +888,10 @@
   4
  ],
  [
+  "ncaa1: Georgetown Hoyas",
+  4
+ ],
+ [
   "ncaa1: Georgia Southern Eagles",
   4
  ],
@@ -936,11 +924,11 @@
   4
  ],
  [
-  "ncaa1: Syracuse Orange",
+  "ncaa1: Northwestern Wildcats",
   4
  ],
  [
-  "ncaa1: Pittsburgh Panthers",
+  "ncaa1: Syracuse Orange",
   4
  ],
  [
@@ -1016,6 +1004,10 @@
   4
  ],
  [
+  "ncaa1: Harvard Crimson",
+  4
+ ],
+ [
   "ncaa1: Columbia Lions",
   4
  ],
@@ -1081,6 +1073,10 @@
  ],
  [
   "ncaa1: Duquesne Dukes",
+  4
+ ],
+ [
+  "ncaa1: Hofstra Pride",
   4
  ],
  [
@@ -1408,10 +1404,6 @@
   4
  ],
  [
-  "ncaa1w: SMU Mustangs",
-  4
- ],
- [
   "ncaa1w: Florida Gators",
   4
  ],
@@ -1429,6 +1421,10 @@
  ],
  [
   "ncaa1w: Texas A&M Aggies",
+  4
+ ],
+ [
+  "ncaa1w: SMU Mustangs",
   4
  ],
  [
@@ -1548,6 +1544,10 @@
   4
  ],
  [
+  "ncaa1w: TCU Horned Frogs",
+  4
+ ],
+ [
   "ncaa1w: Cincinnati Bearcats",
   4
  ],
@@ -1557,6 +1557,10 @@
  ],
  [
   "ncaa1w: Arizona State Sun Devils",
+  4
+ ],
+ [
+  "ncaa1w: BYU Cougars",
   4
  ],
  [
@@ -1824,6 +1828,14 @@
   4
  ],
  [
+  "ncaa1w: Rhode Island Rams",
+  4
+ ],
+ [
+  "ncaa1w: Loyola Chicago Ramblers",
+  4
+ ],
+ [
   "ncaa1w: St. Bonaventure Bonnies",
   4
  ],
@@ -1904,27 +1916,11 @@
   4
  ],
  [
-  "ncaa1w: Rhode Island Rams",
-  4
- ],
- [
-  "ncaa1w: Loyola Chicago Ramblers",
-  4
- ],
- [
   "ncaa1w: Southeast Missouri State Redhawks",
   4
  ],
  [
   "ncaa1w: Southern Indiana Screaming Eagles",
-  4
- ],
- [
-  "ncaa1w: Texas Southern Tigers",
-  4
- ],
- [
-  "ncaa1w: Prairie View A&M Lady Panthers",
   4
  ],
  [
@@ -1949,6 +1945,14 @@
  ],
  [
   "ncaa1w: Wake Forest Demon Deacons",
+  4
+ ],
+ [
+  "ncaa1w: Texas Southern Tigers",
+  4
+ ],
+ [
+  "ncaa1w: Prairie View A&M Lady Panthers",
   4
  ],
  [
@@ -1988,10 +1992,6 @@
   3
  ],
  [
-  "ncaa1: Georgetown Hoyas",
-  3
- ],
- [
   "ncaa1: Providence Friars",
   3
  ],
@@ -2000,11 +2000,11 @@
   3
  ],
  [
-  "ncaa1: Ohio State Buckeyes",
+  "ncaa1: Penn State Nittany Lions",
   3
  ],
  [
-  "ncaa1: Northwestern Wildcats",
+  "ncaa1: Ohio State Buckeyes",
   3
  ],
  [
