@@ -1,17 +1,5 @@
 [
  [
-  "ncaa1: Fairfield Stags",
-  7
- ],
- [
-  "ncaa1: East Tennessee State Buccaneers",
-  6
- ],
- [
-  "ncaa1: Mount St. Mary's Mountaineers",
-  6
- ],
- [
   "ncaa1: Utah Valley Wolverines",
   6
  ],
@@ -116,15 +104,15 @@
   6
  ],
  [
+  "ncaa1: Fairfield Stags",
+  6
+ ],
+ [
   "ncaa1: North Florida Ospreys",
   6
  ],
  [
   "ncaa1: Western Michigan Broncos",
-  6
- ],
- [
-  "ncaa1w: Hampton Pirates",
   6
  ],
  [
@@ -142,26 +130,6 @@
  [
   "ncaa1w: Weber State Wildcats",
   6
- ],
- [
-  "ncaa1: Iona Gaels",
-  5
- ],
- [
-  "ncaa1: Rider Broncs",
-  5
- ],
- [
-  "ncaa1: Radford Highlanders",
-  5
- ],
- [
-  "ncaa1: Canisius Griffins",
-  5
- ],
- [
-  "ncaa1: Saint Peter's Peacocks",
-  5
  ],
  [
   "ncaa1: Manhattan Jaspers",
@@ -296,6 +264,10 @@
   5
  ],
  [
+  "ncaa1: East Tennessee State Buccaneers",
+  5
+ ],
+ [
   "ncaa1: Bucknell Bison",
   5
  ],
@@ -313,6 +285,10 @@
  ],
  [
   "ncaa1: Kansas City Kangaroos",
+  5
+ ],
+ [
+  "ncaa1: Mount St. Mary's Mountaineers",
   5
  ],
  [
@@ -389,10 +365,6 @@
  ],
  [
   "ncaa1: Jacksonville Dolphins",
-  5
- ],
- [
-  "ncaa1w: Creighton Bluejays",
   5
  ],
  [
@@ -680,6 +652,10 @@
   5
  ],
  [
+  "ncaa1w: Marist Red Foxes",
+  5
+ ],
+ [
   "ncaa1w: Saint Peter's Peacocks",
   5
  ],
@@ -693,6 +669,10 @@
  ],
  [
   "ncaa1w: Kansas City Kangaroos",
+  5
+ ],
+ [
+  "ncaa1w: Iona Gaels",
   5
  ],
  [
@@ -717,6 +697,10 @@
  ],
  [
   "ncaa1w: UNLV Rebels",
+  5
+ ],
+ [
+  "ncaa1w: Hampton Pirates",
   5
  ],
  [
@@ -928,6 +912,14 @@
   4
  ],
  [
+  "ncaa1: Canisius Griffins",
+  4
+ ],
+ [
+  "ncaa1: Rider Broncs",
+  4
+ ],
+ [
   "ncaa1: Wofford Terriers",
   4
  ],
@@ -965,6 +957,10 @@
  ],
  [
   "ncaa1: Colgate Raiders",
+  4
+ ],
+ [
+  "ncaa1: Saint Peter's Peacocks",
   4
  ],
  [
@@ -1012,7 +1008,15 @@
   4
  ],
  [
+  "ncaa1: Iona Gaels",
+  4
+ ],
+ [
   "ncaa1: South Carolina Upstate Spartans",
+  4
+ ],
+ [
+  "ncaa1: Radford Highlanders",
   4
  ],
  [
@@ -1133,14 +1137,6 @@
  ],
  [
   "ncaa1: Wright State Raiders",
-  4
- ],
- [
-  "ncaa1w: Villanova Wildcats",
-  4
- ],
- [
-  "ncaa1w: South Carolina State Bulldogs",
   4
  ],
  [
@@ -1600,10 +1596,6 @@
   4
  ],
  [
-  "ncaa1w: Marist Red Foxes",
-  4
- ],
- [
   "ncaa1w: Niagara Purple Eagles",
   4
  ],
@@ -1669,10 +1661,6 @@
  ],
  [
   "ncaa1w: Northwestern Wildcats",
-  4
- ],
- [
-  "ncaa1w: Iona Gaels",
   4
  ],
  [
@@ -1757,6 +1745,10 @@
  ],
  [
   "ncaa1w: Pittsburgh Panthers",
+  4
+ ],
+ [
+  "ncaa1w: Creighton Bluejays",
   4
  ],
  [
@@ -2116,6 +2108,10 @@
   3
  ],
  [
+  "ncaa1w: Villanova Wildcats",
+  3
+ ],
+ [
   "ncaa1w: Duke Blue Devils",
   3
  ],
@@ -2177,6 +2173,10 @@
  ],
  [
   "ncaa1w: NC State Wolfpack",
+  3
+ ],
+ [
+  "ncaa1w: South Carolina State Bulldogs",
   3
  ],
  [

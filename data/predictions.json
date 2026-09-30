@@ -117,5 +117,22 @@
 0.1573
 ],
 "frozen":"2026-09-29T18:51Z"
+},
+{
+"k":"mls:2026-10-02T01:30:seattle-sounders:sporting-kansas-city",
+"lg":"mls",
+"start":"2026-10-02T01:30:00.000Z",
+"id1":"seattle-sounders",
+"id2":"sporting-kansas-city",
+"n1":"Seattle Sounders",
+"n2":"Sporting Kansas City",
+"r1":1884,
+"r2":1828,
+"p":[
+0.5522,
+0.2325,
+0.2153
+],
+"frozen":"2026-09-30T19:25Z"
 }
 ]
