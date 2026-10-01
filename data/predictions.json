@@ -162,5 +162,39 @@
 0.2153
 ],
 "frozen":"2026-09-30T19:25Z"
+},
+{
+"k":"nwsl:2026-10-03T00:00:orlando-pride:san-diego-wave",
+"lg":"nwsl",
+"start":"2026-10-03T00:00:00.000Z",
+"id1":"orlando-pride",
+"id2":"san-diego-wave",
+"n1":"Orlando Pride",
+"n2":"San Diego Wave",
+"r1":1845,
+"r2":1986,
+"p":[
+0.2441,
+0.2417,
+0.5142
+],
+"frozen":"2026-10-01T19:37Z"
+},
+{
+"k":"nwsl:2026-10-03T02:00:seattle-reign:north-carolina-courage",
+"lg":"nwsl",
+"start":"2026-10-03T02:00:00.000Z",
+"id1":"seattle-reign",
+"id2":"north-carolina-courage",
+"n1":"Seattle Reign",
+"n2":"North Carolina Courage",
+"r1":1891,
+"r2":1959,
+"p":[
+0.3385,
+0.2572,
+0.4043
+],
+"frozen":"2026-10-01T19:37Z"
 }
 ]
