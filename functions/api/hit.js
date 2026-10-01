@@ -145,3 +145,6 @@ export async function onRequestPost({ request, env }) {
 
   return NO_CONTENT();
 }
+
+/* Shared with functions/api/friction.js, which holds itself to the same rules. */
+export { platformOf, cleanPath, ID_RE };
