@@ -18,15 +18,19 @@ in the scheduled refresh and in deploy.sh, recovers the bare walk as
 `r minus nudge`. Writing the bare walk would cancel every cup result."""
 import json, re, urllib.request, time, os, sys, math, unicodedata
 from _datajs import stored_nudges
+import _elo_pro as ELO
 
 B = 'https://app.americansocceranalysis.com/api/v1'
 UA = {'User-Agent': 'RankXI/0.1 (jkientz@gmail.com; results wire)'}
 # app league key -> (ASA slug, seasons walked in order). The walk carries Elo
-# from one season into the next; only the LAST season feeds The Wire.
+# from one season into the next, regressed halfway to 1500 at each break
+# (_elo_pro.CARRY); only the LAST season feeds The Wire. Walking the previous
+# season means opening-day odds are no longer a coin flip between equals.
 # USLS runs fall-spring, but ASA names the 2026-27 season plain "2026" — the
 # old single '2025-26' entry kept USLS frozen at its May final (audit 9/23).
-LEAGUES = {'mls': ('mls', ['2026']), 'uslc': ('uslc', ['2026']), 'usl1': ('usl1', ['2026']),
-           'mnp': ('mlsnp', ['2026']), 'nwsl': ('nwsl', ['2026']), 'uslw': ('usls', ['2025-26', '2026'])}
+LEAGUES = {'mls': ('mls', ['2025', '2026']), 'uslc': ('uslc', ['2025', '2026']),
+           'usl1': ('usl1', ['2025', '2026']), 'mnp': ('mlsnp', ['2025', '2026']),
+           'nwsl': ('nwsl', ['2025', '2026']), 'uslw': ('usls', ['2024-25', '2025-26', '2026'])}
 # band center each league's Elo is anchored to (display r = elo - 1500 + anchor).
 # Men's cup-anchored leagues use the measured Open Cup offsets (mls_mean 1886 +
 # offset from data/opencup_offsets.json) — these previously held stale
@@ -76,39 +80,45 @@ def main():
         return club['n'] if club else asa_name
 
     wire = []
-    K = 32  # backtested 2026-07-27: pro parity-league optimum (was 40)
     for g, (asa, seasons) in LEAGUES.items():
         teams = get(f'/{asa}/teams'); time.sleep(1)
-        games = []
-        for season in seasons:
+        games, xg = [], {}
+        for si, season in enumerate(seasons):
             got = get(f'/{asa}/games?season_name={season}'); time.sleep(1)
-            if got is None:
+            # xG drives most of each rating update; a league whose xG feed fails
+            # keeps its current ratings rather than silently reverting to results-only
+            gx = get(f'/{asa}/games/xgoals?season_name={season}'); time.sleep(1)
+            if got is None or gx is None:
                 games = None; break
-            games += [{**x, '_cur': season == seasons[-1]} for x in got]
+            games += [{**x, '_season': si, '_cur': season == seasons[-1]} for x in got]
+            xg.update({r['game_id']: (r.get('home_team_xgoals'), r.get('away_team_xgoals')) for r in gx})
         if not teams or not games:
             print(f'{g}: ASA fetch failed', file=sys.stderr); continue
         tname = {t['team_id']: t['team_name'] for t in teams}
         rows = [x for x in games if x.get('status') == 'FullTime'
                 and isinstance(x.get('home_score'), int) and isinstance(x.get('away_score'), int)]
         rows.sort(key=lambda x: x.get('date_time_utc') or '')
-        elo, played = {}, {}
+        elo, played, cur_season, season = {}, {}, set(), 0
         n = 0
         for x in rows:
             h, a = x['home_team_id'], x['away_team_id']
             if h not in tname or a not in tname: continue
+            if x['_season'] != season:
+                elo, season = ELO.regress(elo), x['_season']
             hg, ag = x['home_score'], x['away_score']
             rh, ra = elo.get(h, 1500), elo.get(a, 1500)
-            eh = 1 / (1 + 10 ** ((ra - (rh + 65)) / 400))  # +65 home edge, backtested
-            sh = 1.0 if hg > ag else 0.0 if hg < ag else 0.5
-            margin = math.log(abs(hg - ag) + 1) or 1
-            delta = K * margin * (sh - eh)
+            hx, ax = xg.get(x.get('game_id'), (None, None))
+            delta, eh = ELO.update(rh, ra, hg, ag, hx, ax)
             # gid: ASA game id — the join the post-match panel uses to pull
             # the shot map for this exact match (see js/postmatch.js)
             if x['_cur']:
                 wire.append({'d': (x.get('date_time_utc') or '')[:10], 'lg': g, 'gid': x.get('game_id'),
                              't1': resolve(g, tname[h]), 't2': resolve(g, tname[a]),
                              's1': hg, 's2': ag, 'dr': round(delta), 'ph': round(eh, 2),
+                             'x1': None if hx is None else round(hx, 2),
+                             'x2': None if ax is None else round(ax, 2),
                              'gp': min(played.get(h, 0), played.get(a, 0))})
+                cur_season |= {h, a}
             elo[h] = rh + delta; elo[a] = ra - delta
             played[h] = played.get(h, 0) + 1; played[a] = played.get(a, 0) + 1
             n += 1
@@ -117,7 +127,9 @@ def main():
         # record) and carries the results-Elo as a secondary 're' field instead
         applied = 0
         for t, r in elo.items():
-            if played.get(t, 0) < MIN_GAMES: continue
+            # only clubs still in this league this season: a side that folded or
+            # moved league keeps no rating from a walk it no longer plays in
+            if played.get(t, 0) < MIN_GAMES or t not in cur_season: continue
             club = resolve_club(g, tname[t])
             if not club: continue
             disp = max(1400, min(2080, round(r - 1500 + ANCHOR[g])))

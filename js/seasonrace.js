@@ -192,7 +192,7 @@ function drawer() {
     '<input type="range" id="rcCut" min="1" max="12" step="1" value="' + S.cut + '" aria-label="Playoff places per group"></div>' +
     (n ? '<button class="rc-clear" id="rcClear">Clear ' + n + ' what-if result' + (n > 1 ? 's' : '') + '</button>' : '') +
     '<p class="rc-hint">Home advantage is the live parameter behind every prediction on the site: ' +
-    '+65 Elo in the pro leagues, +30 in the amateur ones. Playoff places set where the dashed line sits.</p>' +
+    '+45 Elo in the pro leagues, +30 in the amateur ones. Playoff places set where the dashed line sits.</p>' +
     '</div></details>';
 }
 
@@ -366,7 +366,7 @@ export function render(view, data, ctx) {
     oddsFor: ctx.oddsFor, clubById: ctx.club, crest: ctx.crest, LEAGUES: ctx.LEAGUES,
     lg: leagues.includes('mls') ? 'mls' : leagues[0],
     club: null, sim: null, base: null, forced: {}, drawer: false,
-    ha: 65, cut: 0
+    ha: 45, cut: 0
   };
   S.cut = seasons[S.lg].cut;
   run(view);
