@@ -18,7 +18,7 @@ jobs:
       # Stdlib unittest, no network: which listed clubs become youth pins, and
       # where a name-joined location is allowed to land.
       - name: Youth directory placement tests
-        run: python3 -m unittest scripts/test_youth_dedupe.py scripts/test_freshness.py scripts/test_prediction_ledger.py
+        run: python3 -m unittest scripts/test_youth_dedupe.py scripts/test_freshness.py scripts/test_prediction_ledger.py scripts/test_elo_pro.py
       # about/faq/terms/us-soccer-pyramid and the two rankings pages are
       # generated, not committed (see .gitignore), and preflight asserts on
       # them. deploy.sh generates before it runs preflight for the same reason.

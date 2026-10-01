@@ -1208,8 +1208,8 @@ function screenTable() {
       `<button class="chip solid" data-pos="${pp}" aria-pressed="${posFilter === pp}">${pp === 'all' ? 'All positions' : pp}</button>`).join('')}</div>
     ${leagueChips()}
     <details class="how"><summary>How are these numbers made?</summary>
-      <p><b>Clubs.</b> Where we hold real results — USL Championship, USL League One, MLS Next Pro, NWSL, USL Super League (via American Soccer Analysis) and NPSL (league match reports), 1,470+ matches — ratings are Elo: everyone starts at 1500, winners take points from losers, more for upsets and big margins (log goal-margin; tier-tuned K and home edge — K=64/+30 amateur, K=32/+65 pro, set by backtest, not taste), each league anchored to its tier band. MLS ranks by the official league table, with an experimental results-Elo published on each club page. Where we hold standings but not results (UPSL), ratings derive from points and goal difference. Everywhere else the rating is an illustrative placeholder and says so.</p>
-      <p><b>Calibration — the receipts.</b> Backtested walk-forward on 1,377 real 2026 matches (310 NPSL + 1,067 pro): weighted Brier 0.600 vs 0.667 uniform. On NPSL the tuned engine scores 0.531 and the buckets are honest — teams we called 40&ndash;49% won 52%, 50&ndash;59% won 67%, 60&ndash;69% won 69%, 70&ndash;79% won 71%, 80&ndash;89% won 86%. Pro parity leagues carry a thinner edge (that's real, we publish it anyway). Calibration re-runs as every league's results land.</p>
+      <p><b>Clubs.</b> Where we hold real results — USL Championship, USL League One, MLS Next Pro, NWSL, USL Super League (via American Soccer Analysis) and NPSL (league match reports), 1,470+ matches — ratings are Elo: everyone starts at 1500, winners take points from losers, more for upsets and big margins (log goal-margin; tier-tuned K and home edge — K=64/+30 amateur, K=48/+45 pro, set by backtest, not taste). In the pro leagues each update also counts the quality of the chances (expected goals, 70%) alongside the score (30%), and last season carries in at half strength so opening day isn't a coin flip between equals, each league anchored to its tier band. MLS ranks by the official league table, with an experimental results-Elo published on each club page. Where we hold standings but not results (UPSL), ratings derive from points and goal difference. Everywhere else the rating is an illustrative placeholder and says so.</p>
+      <p><b>Calibration — the receipts.</b> Backtested walk-forward on 1,377 real 2026 matches (310 NPSL + 1,067 pro): weighted Brier 0.600 vs 0.667 uniform. On NPSL the tuned engine scores 0.531 and the buckets are honest — teams we called 40&ndash;49% won 52%, 50&ndash;59% won 67%, 60&ndash;69% won 69%, 70&ndash;79% won 71%, 80&ndash;89% won 86%. Pro parity leagues carry a thinner edge (that's real, we publish it anyway): tuned on the 2025 season and then tested once on 1,635 2026 pro games, the engine scores Brier 0.620 against 0.641 for each league's usual home/draw/away rates and 0.667 for a coin flip, the top pick lands 49% of the time, and the bands hold up — results we called 60&ndash;69% happened 65% of the time. Calibration re-runs as every league's results land.</p>
       <p><b>Across leagues.</b> Within a league, ratings are evidence. Between leagues, they're measured: league anchors come from ~600 cross-league U.S. Open Cup results across the last five editions (extra-time wins weighted 0.75, shootout wins 0.6, home edge fitted at +31 Elo). On top of that anchor, a club's own Cup results move its rating — beat a side from a higher tier and the points are yours, itemized on your club page. MLS ranks stay with the official league table.</p>
       <p><b>Players.</b> The value rating weights production — goals ×4, assists ×3, appearances ×0.6, keeper clean sheets and saves — scaled by the strength of the club's opposition. Player stats are illustrative until verified reporting is live; each profile's badge says which.</p>
     </details>
@@ -1250,7 +1250,9 @@ function neighbors(c, count) {
 const FACT = [1, 1, 2, 6, 24, 120, 720, 5040];
 /* Tier-tuned engine — backtested 2026-07-27 on 1,377 real matches (310 NPSL
    + 1,067 pro): amateur football wants a bigger K and smaller home edge than
-   pro parity leagues, so params split by tier instead of one-size-fits-all. */
+   pro parity leagues, so params split by tier instead of one-size-fits-all.
+   Pro home edge 65 -> 45 on 2026-10-01 with the xG-weighted pro walk
+   (scripts/_elo_pro.py HOME_ADV, fitted on 2025, tested on 2026). */
 /* Published win percentages are gated to SENIOR PRO leagues. Amateur, college
    and (one day) youth clubs get the same engine re-skinned as a projection —
    favourite, likely score, confidence — with no percentages. Odds on amateur
@@ -1262,7 +1264,7 @@ const oddsAllowed = (h, a) => ODDS_TIER.has(h.g) && ODDS_TIER.has(a.g);
 const AMATEUR_TIER = new Set(['npsl', 'upsl', 'usl2', 'apsl', 'gcpl', 'loc', 'csl', 'sfsfl', 'eplwa', 'lisfl', 'uslwl', 'wpsl', 'uws', 'nisa', 'ncaa1', 'ncaa2', 'ncaa3', 'naia', 'ncaa1w', 'ncaa2w']);
 function oddsFor(h, a, homeAdv, wantCells) {
   const amateur = AMATEUR_TIER.has(h.g) && AMATEUR_TIER.has(a.g);
-  const ha = homeAdv != null ? homeAdv : (amateur ? 30 : 65);
+  const ha = homeAdv != null ? homeAdv : (amateur ? 30 : 45);
   const lam0 = amateur ? 1.45 : 1.35;
   const d = h.r + ha - a.r;
   const lamH = lam0 * Math.pow(10, d / 1000);
@@ -1752,7 +1754,7 @@ function screenPredict(preH) {
     <button class="backbtn" onclick="history.length>1?history.back():location.hash='#/tools'">&larr; Back</button>
     ${sexToggle()}
     ${matchupMachineHtml(rated, preH)}
-    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Predictions, not betting advice. Win percentages appear only for senior pro leagues.</p>
+    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +45 pro). Predictions, not betting advice. Win percentages appear only for senior pro leagues.</p>
     <a class="fa-card" href="#/matches"><b>&#128197; Matches &amp; Rivalry Radar</b><span>Verified fixtures and the nearest-rival matchups the model finds on its own.</span></a>
     <p class="note">Every rated club page has a &#9876; Predict Result button that starts from that club.</p>`;
   wireSexToggle();
@@ -1992,7 +1994,7 @@ function screenMatches(preH) {
     <h2 class="disp">Rivalry Radar</h2>
     <p class="note" style="margin:2px 0 10px">Who's closest to whom — and how the model thinks it would go. A discovery feature, not a schedule: these games aren't scheduled, so there are no dates. The real ones are above.</p>
     ${pairs.map(([h, a]) => matchCard(h, a, `${milesApart(h, a)} MI APART`)).join('')}
-    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +65 pro). Predictions, not betting advice. Win percentages appear only for senior pro leagues.</p>`;
+    <p class="note">Odds from Elo gap via Poisson expected goals, home edge tuned per tier (+30 amateur, +45 pro). Predictions, not betting advice. Win percentages appear only for senior pro leagues.</p>`;
   wireSexToggle();
   wireMatchupMachine(rated);
   /* Sex is captured before the await: a reader who toggles to the women's
@@ -2706,7 +2708,7 @@ async function screenClub(ref) {
     <p class="note" style="margin:2px 0 8px">Who's nearby, and how the model thinks it would go — a discovery feature, not a schedule. Verified fixtures appear when this league's feed connects.</p>
     ${opps.slice(0, 2).map((o, i) => matchCard(i === 0 ? c : o, i === 0 ? o : c, `${milesApart(c, o)} MI APART`)).join('') || '<p class="note">No rated opponents in the dataset yet.</p>'}
     <details class="how"><summary>How is this club's rating made?</summary><p>${c.rr === 1
-      ? "From real results: Elo over this season's matches — everyone starts at 1500, winners take points from losers, weighted by upset size and goal margin, with a backtested tier-tuned home edge (+30 amateur, +65 pro)." + (c.rt ? ` The league-table-only version of this club's rating was <b>${c.rt}</b>; the match-by-match walk replaced it.` : '')
+      ? "From real results: an Elo walk over the matches — winners take points from losers, weighted by upset size and goal margin, with a backtested tier-tuned home edge (+30 amateur, +45 pro). In the pro leagues each game also counts the quality of the chances (expected goals), and last season carries in at half strength." + (c.rt ? ` The league-table-only version of this club's rating was <b>${c.rt}</b>; the match-by-match walk replaced it.` : '')
       : c.rr === 2
       ? 'From real league standings: points and goal difference set the rating band.'
       : c.rr === 3

@@ -26,9 +26,10 @@ from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from _datajs import load_clubs, ROOT
+import _elo_pro as ELO
 
 PRO = ('mls', 'uslc', 'usl1', 'mnp', 'nwsl', 'uslw')  # js/app.js ODDS_TIER
-HOME_ADV, LAMBDA = 65, 1.35                           # js/app.js oddsFor, pro
+HOME_ADV, LAMBDA = ELO.HOME_ADV, 1.35                 # js/app.js oddsFor, pro
 FREEZE_HOURS = 36   # refresh runs every 12h: every game is frozen 24-36h before kickoff
 VOID_DAYS = 7
 MATCH_DAYS = 1      # ESPN kickoff (UTC) vs ASA date can differ by a day
@@ -127,10 +128,11 @@ def summarize(games):
 
 
 def backtest(wire):
-    """Walk-forward over this season's results with the production engine:
-    every game predicted from only the games before it. Teams start the season
-    level (no carried rating), so this understates the live model early on."""
-    K = 32
+    """Walk-forward over this season's results with the production engine
+    (_elo_pro, xG-weighted updates from the wire's x1/x2): every game predicted
+    from only the games before it. Teams start the season level here, while the
+    live walk carries half of last season, so this understates the live model
+    early on."""
     games, by_lg = [], {}
     for w in sorted(wire, key=lambda w: w['d']):
         if w['lg'] not in PRO:
@@ -140,9 +142,7 @@ def backtest(wire):
         rh, ra = elo.get(h, 1500), elo.get(a, 1500)
         if h in elo and a in elo:
             games.append((w['lg'], odds(rh, ra), outcome(w['s1'], w['s2'])))
-        eh = 1 / (1 + 10 ** ((ra - (rh + HOME_ADV)) / 400))
-        sh = 1.0 if w['s1'] > w['s2'] else 0.0 if w['s1'] < w['s2'] else 0.5
-        delta = K * (math.log(abs(w['s1'] - w['s2']) + 1) or 1) * (sh - eh)
+        delta, _ = ELO.update(rh, ra, w['s1'], w['s2'], w.get('x1'), w.get('x2'))
         elo[h], elo[a] = rh + delta, ra - delta
     return games
 
