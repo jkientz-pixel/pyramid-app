@@ -161,7 +161,11 @@
 0.2325,
 0.2153
 ],
-"frozen":"2026-09-30T19:25Z"
+"frozen":"2026-09-30T19:25Z",
+"res":[
+2,
+1
+]
 },
 {
 "k":"nwsl:2026-10-03T00:00:orlando-pride:san-diego-wave",
@@ -196,5 +200,39 @@
 0.4043
 ],
 "frozen":"2026-10-01T19:37Z"
+},
+{
+"k":"usl1:2026-10-03T19:00:athletic-club-boise:greenville-triumph",
+"lg":"usl1",
+"start":"2026-10-03T19:00:00.000Z",
+"id1":"athletic-club-boise",
+"id2":"greenville-triumph",
+"n1":"Athletic Club Boise",
+"n2":"Greenville Triumph",
+"r1":1655,
+"r2":1539,
+"p":[
+0.6124,
+0.2142,
+0.1734
+],
+"frozen":"2026-10-02T08:38Z"
+},
+{
+"k":"nwsl:2026-10-03T20:00:racing-louisville:utah-royals",
+"lg":"nwsl",
+"start":"2026-10-03T20:00:00.000Z",
+"id1":"racing-louisville",
+"id2":"utah-royals",
+"n1":"Racing Louisville",
+"n2":"Utah Royals",
+"r1":1807,
+"r2":1891,
+"p":[
+0.3166,
+0.2554,
+0.428
+],
+"frozen":"2026-10-02T08:38Z"
 }
 ]

@@ -15,9 +15,9 @@
     "predicted": 0.445
    },
    {
-    "actual": 0.599,
+    "actual": 0.601,
     "band": "50-60%",
-    "n": 312,
+    "n": 313,
     "predicted": 0.537
    },
    {
@@ -39,10 +39,10 @@
     "predicted": 0.805
    }
   ],
-  "hit": 0.507,
+  "hit": 0.508,
   "leagues": {
    "mls": {
-    "brier": 0.635,
+    "brier": 0.634,
     "cal": [
      {
       "actual": 0.338,
@@ -57,10 +57,10 @@
       "predicted": 0.448
      },
      {
-      "actual": 0.566,
+      "actual": 0.571,
       "band": "50-60%",
-      "n": 83,
-      "predicted": 0.536
+      "n": 84,
+      "predicted": 0.537
      },
      {
       "actual": 0.643,
@@ -75,9 +75,9 @@
       "predicted": 0.73
      }
     ],
-    "hit": 0.461,
-    "logloss": 1.055,
-    "n": 388
+    "hit": 0.463,
+    "logloss": 1.053,
+    "n": 389
    },
    "mnp": {
     "brier": 0.608,
@@ -253,11 +253,11 @@
    }
   },
   "logloss": 1.029,
-  "n": 1543
+  "n": 1544
  },
  "baseline_brier": 0.667,
  "live": {
-  "brier": 0.382,
+  "brier": 0.372,
   "cal": [
    {
     "actual": 0.0,
@@ -274,8 +274,8 @@
    {
     "actual": 1.0,
     "band": "50-60%",
-    "n": 2,
-    "predicted": 0.534
+    "n": 3,
+    "predicted": 0.54
    },
    {
     "actual": 1.0,
@@ -284,21 +284,27 @@
     "predicted": 0.662
    }
   ],
-  "hit": 0.714,
+  "hit": 0.75,
   "leagues": {
    "mls": {
-    "brier": 0.664,
+    "brier": 0.483,
     "cal": [
      {
       "actual": 0.0,
       "band": "40-50%",
       "n": 1,
       "predicted": 0.403
+     },
+     {
+      "actual": 1.0,
+      "band": "50-60%",
+      "n": 1,
+      "predicted": 0.552
      }
     ],
-    "hit": 0.0,
-    "logloss": 1.079,
-    "n": 1
+    "hit": 0.5,
+    "logloss": 0.836,
+    "n": 2
    },
    "usl1": {
     "brier": 0.6,
@@ -341,13 +347,29 @@
     "n": 5
    }
   },
-  "logloss": 0.699,
-  "n": 7,
-  "pending": 3,
+  "logloss": 0.686,
+  "n": 8,
+  "pending": 4,
   "since": "2026-09-29T18:51Z",
   "void": 0
  },
  "recent": [
+  {
+   "frozen": "2026-09-30T19:25Z",
+   "lg": "mls",
+   "n1": "Seattle Sounders",
+   "n2": "Sporting Kansas City",
+   "p": [
+    0.5522,
+    0.2325,
+    0.2153
+   ],
+   "res": [
+    2,
+    1
+   ],
+   "start": "2026-10-02T01:30:00.000Z"
+  },
   {
    "frozen": "2026-09-29T18:51Z",
    "lg": "uslc",
