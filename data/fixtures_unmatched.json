@@ -404,10 +404,6 @@
   5
  ],
  [
-  "ncaa1w: East Texas A&M Lions",
-  5
- ],
- [
   "ncaa1w: Grambling Tigers",
   5
  ],
@@ -1004,14 +1000,6 @@
   5
  ],
  [
-  "ncaa1: Villanova Wildcats",
-  4
- ],
- [
-  "ncaa1: UConn Huskies",
-  4
- ],
- [
   "ncaa1: Marquette Golden Eagles",
   4
  ],
@@ -1069,6 +1057,14 @@
  ],
  [
   "ncaa1: UAB Blazers",
+  4
+ ],
+ [
+  "ncaa1: South Carolina Upstate Spartans",
+  4
+ ],
+ [
+  "ncaa1: Radford Highlanders",
   4
  ],
  [
@@ -1177,14 +1173,6 @@
  ],
  [
   "ncaa1: Iona Gaels",
-  4
- ],
- [
-  "ncaa1: South Carolina Upstate Spartans",
-  4
- ],
- [
-  "ncaa1: Radford Highlanders",
   4
  ],
  [
@@ -1364,10 +1352,6 @@
   4
  ],
  [
-  "ncaa1w: Lamar Cardinals",
-  4
- ],
- [
   "ncaa1w: Alcorn State Braves",
   4
  ],
@@ -1492,15 +1476,15 @@
   4
  ],
  [
+  "ncaa1w: South Carolina Upstate Spartans",
+  4
+ ],
+ [
   "ncaa1w: Pepperdine Waves",
   4
  ],
  [
   "ncaa1w: Seattle U Redhawks",
-  4
- ],
- [
-  "ncaa1w: South Carolina Upstate Spartans",
   4
  ],
  [
@@ -1924,6 +1908,10 @@
   4
  ],
  [
+  "ncaa1w: East Texas A&M Lions",
+  4
+ ],
+ [
   "ncaa1w: Texas A&M-Corpus Christi Islanders",
   4
  ],
@@ -2024,7 +2012,15 @@
   3
  ],
  [
+  "ncaa1: Villanova Wildcats",
+  3
+ ],
+ [
   "ncaa1: New Haven Chargers",
+  3
+ ],
+ [
+  "ncaa1: UConn Huskies",
   3
  ],
  [
@@ -2197,6 +2193,10 @@
  ],
  [
   "ncaa1w: Central Connecticut Blue Devils",
+  3
+ ],
+ [
+  "ncaa1w: Lamar Cardinals",
   3
  ],
  [
