@@ -17,33 +17,33 @@
   },
   "naia": {
    "source": "Massey Ratings",
-   "stale": "Massey naia last fetched 2026-09-28 (season 2026)",
-   "updated": "2026-09-28"
+   "stale": null,
+   "updated": "2026-10-03"
   },
   "ncaa1": {
    "source": "Massey Ratings",
-   "stale": "Massey d1 last fetched 2026-09-28 (season 2026)",
-   "updated": "2026-09-28"
+   "stale": null,
+   "updated": "2026-10-03"
   },
   "ncaa1w": {
    "source": "Massey Ratings",
-   "stale": "Massey d1w last fetched 2026-09-28 (season 2026)",
-   "updated": "2026-09-28"
+   "stale": null,
+   "updated": "2026-10-03"
   },
   "ncaa2": {
    "source": "Massey Ratings",
-   "stale": "Massey d2 last fetched 2026-09-28 (season 2026)",
-   "updated": "2026-09-28"
+   "stale": null,
+   "updated": "2026-10-03"
   },
   "ncaa2w": {
    "source": "Massey Ratings",
-   "stale": "Massey d2w last fetched 2026-09-28 (season 2026)",
-   "updated": "2026-09-28"
+   "stale": null,
+   "updated": "2026-10-03"
   },
   "ncaa3": {
    "source": "Massey Ratings",
-   "stale": "Massey d3 last fetched 2026-09-28 (season 2026)",
-   "updated": "2026-09-28"
+   "stale": null,
+   "updated": "2026-10-03"
   },
   "nwsl": {
    "source": "results (ASA)",
@@ -52,13 +52,13 @@
   },
   "upsl": {
    "source": "standings (upsl.com)",
-   "stale": "UPSL Division 1, Division 2, Premier standings last fetched 2026-09-28",
-   "updated": "2026-09-28"
+   "stale": null,
+   "updated": "2026-10-03"
   },
   "usl1": {
    "source": "results (ASA)",
    "stale": null,
-   "updated": "2026-09-30"
+   "updated": "2026-10-03"
   },
   "uslc": {
    "source": "results (ASA)",

@@ -21,10 +21,10 @@
     "predicted": 0.537
    },
    {
-    "actual": 0.685,
+    "actual": 0.689,
     "band": "60-70%",
-    "n": 73,
-    "predicted": 0.637
+    "n": 74,
+    "predicted": 0.636
    },
    {
     "actual": 0.667,
@@ -156,7 +156,7 @@
     "n": 203
    },
    "usl1": {
-    "brier": 0.596,
+    "brier": 0.594,
     "cal": [
      {
       "actual": 0.548,
@@ -177,10 +177,10 @@
       "predicted": 0.537
      },
      {
-      "actual": 0.667,
+      "actual": 0.7,
       "band": "60-70%",
-      "n": 9,
-      "predicted": 0.627
+      "n": 10,
+      "predicted": 0.626
      },
      {
       "actual": 1.0,
@@ -189,9 +189,9 @@
       "predicted": 0.736
      }
     ],
-    "hit": 0.57,
-    "logloss": 0.997,
-    "n": 223
+    "hit": 0.571,
+    "logloss": 0.995,
+    "n": 224
    },
    "uslc": {
     "brier": 0.632,
@@ -259,11 +259,11 @@
    }
   },
   "logloss": 1.028,
-  "n": 1547
+  "n": 1548
  },
  "baseline_brier": 0.667,
  "live": {
-  "brier": 0.386,
+  "brier": 0.372,
   "cal": [
    {
     "actual": 0.0,
@@ -286,11 +286,11 @@
    {
     "actual": 1.0,
     "band": "60-70%",
-    "n": 2,
-    "predicted": 0.662
+    "n": 3,
+    "predicted": 0.645
    }
   ],
-  "hit": 0.8,
+  "hit": 0.818,
   "leagues": {
    "mls": {
     "brier": 0.483,
@@ -333,18 +333,24 @@
     "n": 2
    },
    "usl1": {
-    "brier": 0.6,
+    "brier": 0.413,
     "cal": [
      {
       "actual": 0.0,
       "band": "30-40%",
       "n": 1,
       "predicted": 0.371
+     },
+     {
+      "actual": 1.0,
+      "band": "60-70%",
+      "n": 1,
+      "predicted": 0.612
      }
     ],
-    "hit": 0.0,
-    "logloss": 0.992,
-    "n": 1
+    "hit": 0.5,
+    "logloss": 0.741,
+    "n": 2
    },
    "uslc": {
     "brier": 0.282,
@@ -373,13 +379,29 @@
     "n": 5
    }
   },
-  "logloss": 0.706,
-  "n": 10,
-  "pending": 24,
+  "logloss": 0.686,
+  "n": 11,
+  "pending": 23,
   "since": "2026-09-29T18:51Z",
   "void": 0
  },
  "recent": [
+  {
+   "frozen": "2026-10-02T08:38Z",
+   "lg": "usl1",
+   "n1": "Athletic Club Boise",
+   "n2": "Greenville Triumph",
+   "p": [
+    0.6124,
+    0.2142,
+    0.1734
+   ],
+   "res": [
+    1,
+    0
+   ],
+   "start": "2026-10-03T19:00:00.000Z"
+  },
   {
    "frozen": "2026-10-01T19:37Z",
    "lg": "nwsl",
