@@ -1,11 +1,11 @@
 {
  "backtest": {
-  "brier": 0.617,
+  "brier": 0.616,
   "cal": [
    {
-    "actual": 0.416,
+    "actual": 0.417,
     "band": "30-40%",
-    "n": 262,
+    "n": 264,
     "predicted": 0.386
    },
    {
@@ -15,9 +15,9 @@
     "predicted": 0.445
    },
    {
-    "actual": 0.601,
+    "actual": 0.602,
     "band": "50-60%",
-    "n": 313,
+    "n": 314,
     "predicted": 0.537
    },
    {
@@ -36,7 +36,7 @@
     "actual": 1.0,
     "band": "80-90%",
     "n": 1,
-    "predicted": 0.805
+    "predicted": 0.807
    }
   ],
   "hit": 0.508,
@@ -112,24 +112,24 @@
     "n": 400
    },
    "nwsl": {
-    "brier": 0.601,
+    "brier": 0.6,
     "cal": [
      {
-      "actual": 0.483,
+      "actual": 0.5,
       "band": "30-40%",
-      "n": 29,
+      "n": 30,
       "predicted": 0.387
      },
      {
       "actual": 0.509,
       "band": "40-50%",
       "n": 114,
-      "predicted": 0.444
+      "predicted": 0.443
      },
      {
-      "actual": 0.535,
+      "actual": 0.545,
       "band": "50-60%",
-      "n": 43,
+      "n": 44,
       "predicted": 0.539
      },
      {
@@ -148,12 +148,12 @@
       "actual": 1.0,
       "band": "80-90%",
       "n": 1,
-      "predicted": 0.805
+      "predicted": 0.807
      }
     ],
-    "hit": 0.527,
-    "logloss": 1.006,
-    "n": 201
+    "hit": 0.532,
+    "logloss": 1.003,
+    "n": 203
    },
    "usl1": {
     "brier": 0.596,
@@ -232,8 +232,14 @@
     "n": 310
    },
    "uslw": {
-    "brier": 0.598,
+    "brier": 0.599,
     "cal": [
+     {
+      "actual": 0.0,
+      "band": "30-40%",
+      "n": 1,
+      "predicted": 0.375
+     },
      {
       "actual": 0.45,
       "band": "40-50%",
@@ -247,17 +253,17 @@
       "predicted": 0.528
      }
     ],
-    "hit": 0.476,
+    "hit": 0.455,
     "logloss": 0.998,
-    "n": 21
+    "n": 22
    }
   },
-  "logloss": 1.029,
-  "n": 1544
+  "logloss": 1.028,
+  "n": 1547
  },
  "baseline_brier": 0.667,
  "live": {
-  "brier": 0.372,
+  "brier": 0.386,
   "cal": [
    {
     "actual": 0.0,
@@ -266,16 +272,16 @@
     "predicted": 0.371
    },
    {
-    "actual": 0.5,
+    "actual": 0.667,
     "band": "40-50%",
-    "n": 2,
-    "predicted": 0.44
+    "n": 3,
+    "predicted": 0.428
    },
    {
     "actual": 1.0,
     "band": "50-60%",
-    "n": 3,
-    "predicted": 0.54
+    "n": 4,
+    "predicted": 0.534
    },
    {
     "actual": 1.0,
@@ -284,7 +290,7 @@
     "predicted": 0.662
    }
   ],
-  "hit": 0.75,
+  "hit": 0.8,
   "leagues": {
    "mls": {
     "brier": 0.483,
@@ -304,6 +310,26 @@
     ],
     "hit": 0.5,
     "logloss": 0.836,
+    "n": 2
+   },
+   "nwsl": {
+    "brier": 0.445,
+    "cal": [
+     {
+      "actual": 1.0,
+      "band": "40-50%",
+      "n": 1,
+      "predicted": 0.404
+     },
+     {
+      "actual": 1.0,
+      "band": "50-60%",
+      "n": 1,
+      "predicted": 0.514
+     }
+    ],
+    "hit": 1.0,
+    "logloss": 0.785,
     "n": 2
    },
    "usl1": {
@@ -347,13 +373,45 @@
     "n": 5
    }
   },
-  "logloss": 0.686,
-  "n": 8,
+  "logloss": 0.706,
+  "n": 10,
   "pending": 22,
   "since": "2026-09-29T18:51Z",
   "void": 0
  },
  "recent": [
+  {
+   "frozen": "2026-10-01T19:37Z",
+   "lg": "nwsl",
+   "n1": "Seattle Reign",
+   "n2": "North Carolina Courage",
+   "p": [
+    0.3385,
+    0.2572,
+    0.4043
+   ],
+   "res": [
+    0,
+    1
+   ],
+   "start": "2026-10-03T02:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-01T19:37Z",
+   "lg": "nwsl",
+   "n1": "Orlando Pride",
+   "n2": "San Diego Wave",
+   "p": [
+    0.2441,
+    0.2417,
+    0.5142
+   ],
+   "res": [
+    1,
+    2
+   ],
+   "start": "2026-10-03T00:00:00.000Z"
+  },
   {
    "frozen": "2026-09-30T19:25Z",
    "lg": "mls",

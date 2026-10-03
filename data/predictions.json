@@ -182,7 +182,11 @@
 0.2417,
 0.5142
 ],
-"frozen":"2026-10-01T19:37Z"
+"frozen":"2026-10-01T19:37Z",
+"res":[
+1,
+2
+]
 },
 {
 "k":"nwsl:2026-10-03T02:00:seattle-reign:north-carolina-courage",
@@ -199,7 +203,11 @@
 0.2572,
 0.4043
 ],
-"frozen":"2026-10-01T19:37Z"
+"frozen":"2026-10-01T19:37Z",
+"res":[
+0,
+1
+]
 },
 {
 "k":"usl1:2026-10-03T19:00:athletic-club-boise:greenville-triumph",
@@ -540,5 +548,39 @@
 0.351
 ],
 "frozen":"2026-10-02T19:23Z"
+},
+{
+"k":"nwsl:2026-10-04T17:00:nj-ny-gotham:angel-city",
+"lg":"nwsl",
+"start":"2026-10-04T17:00:00.000Z",
+"id1":"nj-ny-gotham",
+"id2":"angel-city",
+"n1":"NJ/NY Gotham",
+"n2":"Angel City",
+"r1":1963,
+"r2":1979,
+"p":[
+0.4131,
+0.2567,
+0.3302
+],
+"frozen":"2026-10-03T08:11Z"
+},
+{
+"k":"nwsl:2026-10-04T20:00:chicago-red-stars:denver-summit-fc",
+"lg":"nwsl",
+"start":"2026-10-04T20:00:00.000Z",
+"id1":"chicago-red-stars",
+"id2":"denver-summit-fc",
+"n1":"Chicago Red Stars",
+"n2":"Denver Summit FC",
+"r1":1683,
+"r2":1882,
+"p":[
+0.1804,
+0.2177,
+0.602
+],
+"frozen":"2026-10-03T08:11Z"
 }
 ]
