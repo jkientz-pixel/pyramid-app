@@ -582,5 +582,39 @@
 0.602
 ],
 "frozen":"2026-10-03T08:11Z"
+},
+{
+"k":"uslc:2026-10-04T22:00:new-mexico-united:phoenix-rising",
+"lg":"uslc",
+"start":"2026-10-04T22:00:00.000Z",
+"id1":"new-mexico-united",
+"id2":"phoenix-rising",
+"n1":"New Mexico United",
+"n2":"Phoenix Rising",
+"r1":1678,
+"r2":1696,
+"p":[
+0.4102,
+0.2569,
+0.333
+],
+"frozen":"2026-10-03T18:02Z"
+},
+{
+"k":"nwsl:2026-10-04T23:00:houston-dash:washington-spirit",
+"lg":"nwsl",
+"start":"2026-10-04T23:00:00.000Z",
+"id1":"houston-dash",
+"id2":"washington-spirit",
+"n1":"Houston Dash",
+"n2":"Washington Spirit",
+"r1":1800,
+"r2":1915,
+"p":[
+0.2761,
+0.2493,
+0.4746
+],
+"frozen":"2026-10-03T18:02Z"
 }
 ]
