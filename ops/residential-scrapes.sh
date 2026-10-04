@@ -29,7 +29,8 @@ git fetch -q origin master && git reset -q --hard origin/master || { log "git sy
 
 ok=0
 for div in "Premier" "Division 1" "Division 2"; do
-  if "$PY" scripts/scrape_upsl.py "$div"; then ok=$((ok + 1)); fi
+  # exit 2 = this division fresh, the other two kept (always true per-division)
+  "$PY" scripts/scrape_upsl.py "$div"; case $? in 0|2) ok=$((ok + 1)) ;; esac
   sleep 30
 done
 log "UPSL divisions refreshed: $ok/3"
