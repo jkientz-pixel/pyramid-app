@@ -8,7 +8,7 @@
   "mls": {
    "source": "official table (ESPN)",
    "stale": null,
-   "updated": "2026-10-03"
+   "updated": "2026-10-04"
   },
   "mnp": {
    "source": "results (ASA)",
@@ -48,7 +48,7 @@
   "nwsl": {
    "source": "results (ASA)",
    "stale": null,
-   "updated": "2026-10-03"
+   "updated": "2026-10-04"
   },
   "upsl": {
    "source": "standings (upsl.com)",
@@ -63,7 +63,7 @@
   "uslc": {
    "source": "results (ASA)",
    "stale": null,
-   "updated": "2026-10-01"
+   "updated": "2026-10-04"
   },
   "uslw": {
    "source": "results (ASA)",

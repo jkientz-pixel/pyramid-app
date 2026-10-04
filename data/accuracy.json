@@ -1,29 +1,29 @@
 {
  "backtest": {
-  "brier": 0.616,
+  "brier": 0.617,
   "cal": [
    {
-    "actual": 0.417,
+    "actual": 0.415,
     "band": "30-40%",
-    "n": 264,
+    "n": 265,
     "predicted": 0.386
    },
    {
-    "actual": 0.486,
+    "actual": 0.485,
     "band": "40-50%",
-    "n": 889,
+    "n": 894,
     "predicted": 0.445
    },
    {
-    "actual": 0.602,
+    "actual": 0.601,
     "band": "50-60%",
-    "n": 314,
+    "n": 318,
     "predicted": 0.537
    },
    {
-    "actual": 0.689,
+    "actual": 0.684,
     "band": "60-70%",
-    "n": 74,
+    "n": 76,
     "predicted": 0.636
    },
    {
@@ -112,7 +112,7 @@
     "n": 400
    },
    "nwsl": {
-    "brier": 0.6,
+    "brier": 0.601,
     "cal": [
      {
       "actual": 0.5,
@@ -121,21 +121,21 @@
       "predicted": 0.387
      },
      {
-      "actual": 0.509,
+      "actual": 0.504,
       "band": "40-50%",
-      "n": 114,
+      "n": 115,
       "predicted": 0.443
      },
      {
-      "actual": 0.545,
+      "actual": 0.533,
       "band": "50-60%",
-      "n": 44,
-      "predicted": 0.539
+      "n": 45,
+      "predicted": 0.538
      },
      {
-      "actual": 0.769,
+      "actual": 0.786,
       "band": "60-70%",
-      "n": 13,
+      "n": 14,
       "predicted": 0.628
      },
      {
@@ -151,9 +151,9 @@
       "predicted": 0.807
      }
     ],
-    "hit": 0.532,
-    "logloss": 1.003,
-    "n": 203
+    "hit": 0.529,
+    "logloss": 1.005,
+    "n": 206
    },
    "usl1": {
     "brier": 0.594,
@@ -194,31 +194,31 @@
     "n": 224
    },
    "uslc": {
-    "brier": 0.632,
+    "brier": 0.634,
     "cal": [
      {
-      "actual": 0.357,
+      "actual": 0.351,
       "band": "30-40%",
-      "n": 56,
+      "n": 57,
       "predicted": 0.386
      },
      {
-      "actual": 0.448,
+      "actual": 0.449,
       "band": "40-50%",
-      "n": 174,
+      "n": 178,
       "predicted": 0.443
      },
      {
-      "actual": 0.611,
+      "actual": 0.613,
       "band": "50-60%",
-      "n": 72,
+      "n": 75,
       "predicted": 0.536
      },
      {
-      "actual": 0.667,
+      "actual": 0.571,
       "band": "60-70%",
-      "n": 6,
-      "predicted": 0.637
+      "n": 7,
+      "predicted": 0.641
      },
      {
       "actual": 1.0,
@@ -227,9 +227,9 @@
       "predicted": 0.722
      }
     ],
-    "hit": 0.477,
-    "logloss": 1.052,
-    "n": 310
+    "hit": 0.476,
+    "logloss": 1.055,
+    "n": 319
    },
    "uslw": {
     "brier": 0.599,
@@ -258,39 +258,39 @@
     "n": 22
    }
   },
-  "logloss": 1.028,
-  "n": 1548
+  "logloss": 1.029,
+  "n": 1560
  },
  "baseline_brier": 0.667,
  "live": {
-  "brier": 0.372,
+  "brier": 0.536,
   "cal": [
    {
-    "actual": 0.0,
+    "actual": 0.5,
     "band": "30-40%",
-    "n": 1,
-    "predicted": 0.371
-   },
-   {
-    "actual": 0.667,
-    "band": "40-50%",
-    "n": 3,
-    "predicted": 0.428
-   },
-   {
-    "actual": 1.0,
-    "band": "50-60%",
     "n": 4,
-    "predicted": 0.534
+    "predicted": 0.385
    },
    {
-    "actual": 1.0,
+    "actual": 0.333,
+    "band": "40-50%",
+    "n": 6,
+    "predicted": 0.434
+   },
+   {
+    "actual": 0.75,
+    "band": "50-60%",
+    "n": 8,
+    "predicted": 0.547
+   },
+   {
+    "actual": 0.8,
     "band": "60-70%",
-    "n": 3,
-    "predicted": 0.645
+    "n": 5,
+    "predicted": 0.643
    }
   ],
-  "hit": 0.818,
+  "hit": 0.609,
   "leagues": {
    "mls": {
     "brier": 0.483,
@@ -313,24 +313,30 @@
     "n": 2
    },
    "nwsl": {
-    "brier": 0.445,
+    "brier": 0.566,
     "cal": [
      {
-      "actual": 1.0,
+      "actual": 0.5,
       "band": "40-50%",
-      "n": 1,
-      "predicted": 0.404
+      "n": 2,
+      "predicted": 0.416
+     },
+     {
+      "actual": 0.5,
+      "band": "50-60%",
+      "n": 2,
+      "predicted": 0.521
      },
      {
       "actual": 1.0,
-      "band": "50-60%",
+      "band": "60-70%",
       "n": 1,
-      "predicted": 0.514
+      "predicted": 0.653
      }
     ],
-    "hit": 1.0,
-    "logloss": 0.785,
-    "n": 2
+    "hit": 0.6,
+    "logloss": 0.963,
+    "n": 5
    },
    "usl1": {
     "brier": 0.413,
@@ -353,39 +359,237 @@
     "n": 2
    },
    "uslc": {
-    "brier": 0.282,
+    "brier": 0.55,
     "cal": [
      {
-      "actual": 1.0,
+      "actual": 0.667,
+      "band": "30-40%",
+      "n": 3,
+      "predicted": 0.39
+     },
+     {
+      "actual": 0.333,
       "band": "40-50%",
-      "n": 1,
-      "predicted": 0.478
+      "n": 3,
+      "predicted": 0.456
      },
      {
-      "actual": 1.0,
+      "actual": 0.8,
       "band": "50-60%",
-      "n": 2,
-      "predicted": 0.534
+      "n": 5,
+      "predicted": 0.557
      },
      {
-      "actual": 1.0,
+      "actual": 0.667,
       "band": "60-70%",
-      "n": 2,
-      "predicted": 0.662
+      "n": 3,
+      "predicted": 0.65
      }
     ],
-    "hit": 1.0,
-    "logloss": 0.564,
-    "n": 5
+    "hit": 0.643,
+    "logloss": 0.94,
+    "n": 14
    }
   },
-  "logloss": 0.686,
-  "n": 11,
-  "pending": 23,
+  "logloss": 0.919,
+  "n": 23,
+  "pending": 11,
   "since": "2026-09-29T18:51Z",
   "void": 0
  },
  "recent": [
+  {
+   "frozen": "2026-10-02T19:23Z",
+   "lg": "uslc",
+   "n1": "Las Vegas Lights",
+   "n2": "San Antonio FC",
+   "p": [
+    0.3911,
+    0.2579,
+    0.351
+   ],
+   "res": [
+    1,
+    0
+   ],
+   "start": "2026-10-04T02:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-02T19:23Z",
+   "lg": "uslc",
+   "n1": "Orange County SC",
+   "n2": "Monterey Bay FC",
+   "p": [
+    0.4655,
+    0.2508,
+    0.2837
+   ],
+   "res": [
+    1,
+    2
+   ],
+   "start": "2026-10-04T02:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-02T19:23Z",
+   "lg": "uslc",
+   "n1": "Colorado Springs Switchbacks",
+   "n2": "Oakland Roots",
+   "p": [
+    0.587,
+    0.2224,
+    0.1906
+   ],
+   "res": [
+    0,
+    0
+   ],
+   "start": "2026-10-04T01:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-02T19:23Z",
+   "lg": "nwsl",
+   "n1": "Portland Thorns",
+   "n2": "Boston Legacy FC",
+   "p": [
+    0.5279,
+    0.2386,
+    0.2335
+   ],
+   "res": [
+    2,
+    4
+   ],
+   "start": "2026-10-04T00:45:00.000Z"
+  },
+  {
+   "frozen": "2026-10-02T19:23Z",
+   "lg": "uslc",
+   "n1": "FC Tulsa",
+   "n2": "Sacramento Republic",
+   "p": [
+    0.3969,
+    0.2576,
+    0.3454
+   ],
+   "res": [
+    1,
+    1
+   ],
+   "start": "2026-10-04T00:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-02T19:23Z",
+   "lg": "uslc",
+   "n1": "Tampa Bay Rowdies",
+   "n2": "Miami FC",
+   "p": [
+    0.6271,
+    0.2091,
+    0.1638
+   ],
+   "res": [
+    1,
+    2
+   ],
+   "start": "2026-10-03T23:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-02T19:23Z",
+   "lg": "uslc",
+   "n1": "Brooklyn FC",
+   "n2": "Rhode Island FC",
+   "p": [
+    0.2209,
+    0.2345,
+    0.5446
+   ],
+   "res": [
+    1,
+    3
+   ],
+   "start": "2026-10-03T23:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-02T19:23Z",
+   "lg": "uslc",
+   "n1": "Detroit City FC",
+   "n2": "Birmingham Legion",
+   "p": [
+    0.584,
+    0.2234,
+    0.1927
+   ],
+   "res": [
+    1,
+    0
+   ],
+   "start": "2026-10-03T23:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-02T19:23Z",
+   "lg": "uslc",
+   "n1": "Lexington SC",
+   "n2": "El Paso Locomotive",
+   "p": [
+    0.3824,
+    0.2581,
+    0.3595
+   ],
+   "res": [
+    3,
+    1
+   ],
+   "start": "2026-10-03T23:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-02T19:23Z",
+   "lg": "nwsl",
+   "n1": "Kansas City Current",
+   "n2": "Bay FC",
+   "p": [
+    0.6533,
+    0.1994,
+    0.1473
+   ],
+   "res": [
+    5,
+    1
+   ],
+   "start": "2026-10-03T22:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-02T19:23Z",
+   "lg": "uslc",
+   "n1": "Loudoun United",
+   "n2": "Indy Eleven",
+   "p": [
+    0.3207,
+    0.2558,
+    0.4235
+   ],
+   "res": [
+    1,
+    1
+   ],
+   "start": "2026-10-03T22:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-02T08:38Z",
+   "lg": "nwsl",
+   "n1": "Racing Louisville",
+   "n2": "Utah Royals",
+   "p": [
+    0.3166,
+    0.2554,
+    0.428
+   ],
+   "res": [
+    1,
+    1
+   ],
+   "start": "2026-10-03T20:00:00.000Z"
+  },
   {
    "frozen": "2026-10-02T08:38Z",
    "lg": "usl1",
