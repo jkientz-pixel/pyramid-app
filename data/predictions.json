@@ -684,5 +684,22 @@
 2,
 3
 ]
+},
+{
+"k":"mls:2026-10-07T00:30:chicago-fire:vancouver-whitecaps",
+"lg":"mls",
+"start":"2026-10-07T00:30:00.000Z",
+"id1":"chicago-fire",
+"id2":"vancouver-whitecaps",
+"n1":"Chicago Fire",
+"n2":"Vancouver Whitecaps",
+"r1":1907,
+"r2":1943,
+"p":[
+0.3838,
+0.2581,
+0.3581
+],
+"frozen":"2026-10-05T21:34Z"
 }
 ]
