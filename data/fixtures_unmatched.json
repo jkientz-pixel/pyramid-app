@@ -376,6 +376,10 @@
   5
  ],
  [
+  "ncaa1: Michigan Wolverines",
+  5
+ ],
+ [
   "ncaa1: West Virginia Mountaineers",
   5
  ],
@@ -512,14 +516,6 @@
   5
  ],
  [
-  "ncaa1w: Prairie View A&M Lady Panthers",
-  5
- ],
- [
-  "ncaa1w: Alabama State Hornets",
-  5
- ],
- [
   "ncaa1w: Georgia Southern Eagles",
   5
  ],
@@ -569,6 +565,14 @@
  ],
  [
   "ncaa1w: Marshall Thundering Herd",
+  5
+ ],
+ [
+  "ncaa1w: Prairie View A&M Lady Panthers",
+  5
+ ],
+ [
+  "ncaa1w: Alabama State Hornets",
   5
  ],
  [
@@ -740,6 +744,10 @@
   5
  ],
  [
+  "ncaa1w: BYU Cougars",
+  5
+ ],
+ [
   "ncaa1w: Kansas State Wildcats",
   5
  ],
@@ -864,6 +872,10 @@
   5
  ],
  [
+  "ncaa1w: Iowa State Cyclones",
+  5
+ ],
+ [
   "ncaa1w: Fresno State Bulldogs",
   5
  ],
@@ -912,19 +924,19 @@
   5
  ],
  [
-  "ncaa1w: Milwaukee Panthers",
-  5
- ],
- [
-  "ncaa1w: Northern Illinois Huskies",
-  5
- ],
- [
   "ncaa1w: Robert Morris Colonials",
   5
  ],
  [
   "ncaa1w: Northern Kentucky Norse",
+  5
+ ],
+ [
+  "ncaa1w: Milwaukee Panthers",
+  5
+ ],
+ [
+  "ncaa1w: Northern Illinois Huskies",
   5
  ],
  [
@@ -1184,10 +1196,6 @@
   4
  ],
  [
-  "ncaa1: Michigan Wolverines",
-  4
- ],
- [
   "ncaa1: Penn State Nittany Lions",
   4
  ],
@@ -1260,10 +1268,6 @@
   4
  ],
  [
-  "ncaa1: South Carolina Gamecocks",
-  4
- ],
- [
   "ncaa1: UAlbany Great Danes",
   4
  ],
@@ -1289,6 +1293,10 @@
  ],
  [
   "ncaa1: SMU Mustangs",
+  4
+ ],
+ [
+  "ncaa1: South Carolina Gamecocks",
   4
  ],
  [
@@ -1341,6 +1349,10 @@
  ],
  [
   "ncaa1: Santa Clara Broncos",
+  4
+ ],
+ [
+  "ncaa1: Washington Huskies",
   4
  ],
  [
@@ -1500,6 +1512,14 @@
   4
  ],
  [
+  "ncaa1w: Towson Tigers",
+  4
+ ],
+ [
+  "ncaa1w: UNC Wilmington Seahawks",
+  4
+ ],
+ [
   "ncaa1w: Charlotte 49ers",
   4
  ],
@@ -1552,18 +1572,6 @@
   4
  ],
  [
-  "ncaa1w: Towson Tigers",
-  4
- ],
- [
-  "ncaa1w: UNC Wilmington Seahawks",
-  4
- ],
- [
-  "ncaa1w: BYU Cougars",
-  4
- ],
- [
   "ncaa1w: McNeese Cowboys",
   4
  ],
@@ -1605,10 +1613,6 @@
  ],
  [
   "ncaa1w: Weber State Wildcats",
-  4
- ],
- [
-  "ncaa1w: Iowa State Cyclones",
   4
  ],
  [
@@ -1972,15 +1976,15 @@
   3
  ],
  [
+  "ncaa1: Milwaukee Panthers",
+  3
+ ],
+ [
   "ncaa1: San Francisco Dons",
   3
  ],
  [
   "ncaa1: VMI Keydets",
-  3
- ],
- [
-  "ncaa1: Milwaukee Panthers",
   3
  ],
  [
@@ -2017,10 +2021,6 @@
  ],
  [
   "ncaa1: Loyola Marymount Lions",
-  3
- ],
- [
-  "ncaa1: Washington Huskies",
   3
  ],
  [
