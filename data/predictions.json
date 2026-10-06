@@ -701,5 +701,56 @@
 0.3581
 ],
 "frozen":"2026-10-05T21:34Z"
+},
+{
+"k":"usl1:2026-10-07T23:00:fc-naples:richmond-kickers",
+"lg":"usl1",
+"start":"2026-10-07T23:00:00.000Z",
+"id1":"fc-naples",
+"id2":"richmond-kickers",
+"n1":"FC Naples",
+"n2":"Richmond Kickers",
+"r1":1599,
+"r2":1496,
+"p":[
+0.593,
+0.2206,
+0.1865
+],
+"frozen":"2026-10-06T19:38Z"
+},
+{
+"k":"usl1:2026-10-07T23:00:one-knoxville:chattanooga-red-wolves",
+"lg":"usl1",
+"start":"2026-10-07T23:00:00.000Z",
+"id1":"one-knoxville",
+"id2":"chattanooga-red-wolves",
+"n1":"One Knoxville",
+"n2":"Chattanooga Red Wolves",
+"r1":1681,
+"r2":1571,
+"p":[
+0.6034,
+0.2172,
+0.1794
+],
+"frozen":"2026-10-06T19:38Z"
+},
+{
+"k":"usl1:2026-10-08T00:30:corpus-christi-fc:fort-wayne-fc",
+"lg":"usl1",
+"start":"2026-10-08T00:30:00.000Z",
+"id1":"corpus-christi-fc",
+"id2":"fort-wayne-fc",
+"n1":"Corpus Christi FC",
+"n2":"Fort Wayne FC",
+"r1":1591,
+"r2":1613,
+"p":[
+0.4043,
+0.2572,
+0.3385
+],
+"frozen":"2026-10-06T19:38Z"
 }
 ]
