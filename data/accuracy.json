@@ -1,6 +1,6 @@
 {
  "backtest": {
-  "brier": 0.616,
+  "brier": 0.617,
   "cal": [
    {
     "actual": 0.414,
@@ -11,7 +11,7 @@
    {
     "actual": 0.486,
     "band": "40-50%",
-    "n": 897,
+    "n": 898,
     "predicted": 0.445
    },
    {
@@ -51,9 +51,9 @@
       "predicted": 0.385
      },
      {
-      "actual": 0.45,
+      "actual": 0.447,
       "band": "40-50%",
-      "n": 218,
+      "n": 219,
       "predicted": 0.448
      },
      {
@@ -75,9 +75,9 @@
       "predicted": 0.73
      }
     ],
-    "hit": 0.463,
-    "logloss": 1.053,
-    "n": 389
+    "hit": 0.462,
+    "logloss": 1.054,
+    "n": 390
    },
    "mnp": {
     "brier": 0.608,
@@ -259,16 +259,16 @@
    }
   },
   "logloss": 1.029,
-  "n": 1565
+  "n": 1566
  },
  "baseline_brier": 0.667,
  "live": {
-  "brier": 0.531,
+  "brier": 0.532,
   "cal": [
    {
-    "actual": 0.5,
+    "actual": 0.6,
     "band": "30-40%",
-    "n": 4,
+    "n": 5,
     "predicted": 0.385
    },
    {
@@ -290,11 +290,17 @@
     "predicted": 0.636
    }
   ],
-  "hit": 0.63,
+  "hit": 0.643,
   "leagues": {
    "mls": {
-    "brier": 0.483,
+    "brier": 0.513,
     "cal": [
+     {
+      "actual": 1.0,
+      "band": "30-40%",
+      "n": 1,
+      "predicted": 0.384
+     },
      {
       "actual": 0.0,
       "band": "40-50%",
@@ -308,9 +314,9 @@
       "predicted": 0.552
      }
     ],
-    "hit": 0.5,
-    "logloss": 0.836,
-    "n": 2
+    "hit": 0.667,
+    "logloss": 0.877,
+    "n": 3
    },
    "nwsl": {
     "brier": 0.54,
@@ -391,13 +397,29 @@
     "n": 15
    }
   },
-  "logloss": 0.912,
-  "n": 27,
-  "pending": 11,
+  "logloss": 0.914,
+  "n": 28,
+  "pending": 10,
   "since": "2026-09-29T18:51Z",
   "void": 0
  },
  "recent": [
+  {
+   "frozen": "2026-10-05T21:34Z",
+   "lg": "mls",
+   "n1": "Chicago Fire",
+   "n2": "Vancouver Whitecaps",
+   "p": [
+    0.3838,
+    0.2581,
+    0.3581
+   ],
+   "res": [
+    3,
+    1
+   ],
+   "start": "2026-10-07T00:30:00.000Z"
+  },
   {
    "frozen": "2026-10-03T18:02Z",
    "lg": "nwsl",
