@@ -14,6 +14,9 @@ wraw_*
 npsl_geo.json
 __pycache__/
 js/*.js.bak
+# derived from js/data.js by scripts/gen_slim.py (deploy.sh, CI and the Playwright
+# webServer all regenerate it); never committed so it cannot drift from data.js
+js/data-slim.js
 js/*.js.tmp
 
 # no trailing slash: "node_modules/" matches directories only, so a node_modules
