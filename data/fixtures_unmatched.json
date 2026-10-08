@@ -28,15 +28,15 @@
   5
  ],
  [
+  "ncaa1: South Carolina",
+  5
+ ],
+ [
   "ncaa1: Sacramento State",
   5
  ],
  [
   "ncaa1: San Jos\u00e9 State",
-  5
- ],
- [
-  "ncaa1w: West Florida",
   5
  ],
  [
@@ -120,6 +120,14 @@
   5
  ],
  [
+  "ncaa1w: Massachusetts",
+  5
+ ],
+ [
+  "ncaa1w: Ohio",
+  5
+ ],
+ [
   "ncaa1w: San Jos\u00e9 State",
   5
  ],
@@ -165,10 +173,6 @@
  ],
  [
   "ncaa1: North Carolina",
-  4
- ],
- [
-  "ncaa1: South Carolina",
   4
  ],
  [
@@ -292,15 +296,11 @@
   4
  ],
  [
-  "ncaa1w: Massachusetts",
-  4
- ],
- [
-  "ncaa1w: Ohio",
-  4
- ],
- [
   "ncaa1w: Missouri State",
+  4
+ ],
+ [
+  "ncaa1w: West Florida",
   4
  ],
  [
@@ -365,6 +365,10 @@
  ],
  [
   "ncaa1: Richland",
+  1
+ ],
+ [
+  "ncaa1: Columbia (SC)",
   1
  ],
  [

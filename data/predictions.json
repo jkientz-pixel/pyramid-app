@@ -756,5 +756,22 @@
 0.3385
 ],
 "frozen":"2026-10-06T19:38Z"
+},
+{
+"k":"uslc:2026-10-09T23:30:lexington-sc:fc-tulsa",
+"lg":"uslc",
+"start":"2026-10-09T23:30:00.000Z",
+"id1":"lexington-sc",
+"id2":"fc-tulsa",
+"n1":"Lexington SC",
+"n2":"FC Tulsa",
+"r1":1736,
+"r2":1760,
+"p":[
+0.4013,
+0.2574,
+0.3413
+],
+"frozen":"2026-10-08T20:02Z"
 }
 ]
