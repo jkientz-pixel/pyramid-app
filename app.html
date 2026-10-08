@@ -23,10 +23,14 @@ try{document.documentElement.dataset.layout=localStorage.getItem('rxi-layout')==
 <!-- app.js imports these; without hints the browser only discovers them after
      app.js has downloaded, so the 200KB club list waited a full round trip.
      hrefs must match the import URLs exactly (same ?v=) or they download twice. -->
-<link rel="modulepreload" href="js/data.js?v=__RXIV__">
+<link rel="modulepreload" href="js/data-slim.js?v=__RXIV__">
 <link rel="modulepreload" href="js/usmap.js?v=__RXIV__">
 <link rel="modulepreload" href="js/native.js?v=__RXIV__">
 <link rel="modulepreload" href="js/ssel.js?v=__RXIV__">
+<script>/* the map paints from data-slim.js; any other route waits for the full data.js
+   that app.js only requests after it runs, so start it now for those deep links */
+(function(){var h=location.hash;if(!h||h==='#/'||/^#\/map(\/|$)/.test(h))return;
+var l=document.createElement('link');l.rel='modulepreload';l.href='js/data.js?v=__RXIV__';document.head.appendChild(l)})();</script>
 <script>/* map screens fetch leaflet only after app.js runs; start it now, but only
    where a map will draw so club/player routes don't pay for it */
 (function(){var h=location.hash;if(h&&h!=='#/'&&!/^#\/(map|region|state)(\/|$)/.test(h))return;
