@@ -1,5 +1,9 @@
 [
  [
+  "ncaa1: American University",
+  6
+ ],
+ [
   "ncaa1w: Sacramento State",
   6
  ],
@@ -13,10 +17,6 @@
  ],
  [
   "ncaa1: UCF",
-  5
- ],
- [
-  "ncaa1: American University",
   5
  ],
  [
@@ -89,6 +89,10 @@
  ],
  [
   "ncaa1: Maryland",
+  4
+ ],
+ [
+  "ncaa1: VMI",
   4
  ],
  [
@@ -208,6 +212,10 @@
   4
  ],
  [
+  "ncaa1w: Charlotte",
+  4
+ ],
+ [
   "ncaa1w: UCF",
   4
  ],
@@ -292,10 +300,6 @@
   4
  ],
  [
-  "ncaa1: VMI",
-  3
- ],
- [
   "ncaa1: West Florida",
   3
  ],
@@ -313,10 +317,6 @@
  ],
  [
   "ncaa1w: Lafayette",
-  3
- ],
- [
-  "ncaa1w: Charlotte",
   3
  ],
  [
