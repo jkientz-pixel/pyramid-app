@@ -773,5 +773,90 @@
 0.3413
 ],
 "frozen":"2026-10-08T20:02Z"
+},
+{
+"k":"mls:2026-10-10T17:00:toronto-fc:cf-montreal",
+"lg":"mls",
+"start":"2026-10-10T17:00:00.000Z",
+"id1":"toronto-fc",
+"id2":"cf-montreal",
+"n1":"Toronto FC",
+"n2":"CF Montreal",
+"r1":1859,
+"r2":1842,
+"p":[
+0.4625,
+0.2512,
+0.2863
+],
+"frozen":"2026-10-09T09:09Z"
+},
+{
+"k":"mls:2026-10-10T18:30:chicago-fire:nycfc",
+"lg":"mls",
+"start":"2026-10-10T18:30:00.000Z",
+"id1":"chicago-fire",
+"id2":"nycfc",
+"n1":"Chicago Fire",
+"n2":"NYCFC",
+"r1":1912,
+"r2":1879,
+"p":[
+0.4868,
+0.2472,
+0.266
+],
+"frozen":"2026-10-09T09:09Z"
+},
+{
+"k":"usl1:2026-10-10T21:00:portland-hearts-of-pine:athletic-club-boise",
+"lg":"usl1",
+"start":"2026-10-10T21:00:00.000Z",
+"id1":"portland-hearts-of-pine",
+"id2":"athletic-club-boise",
+"n1":"Portland Hearts of Pine",
+"n2":"Athletic Club Boise",
+"r1":1530,
+"r2":1656,
+"p":[
+0.2623,
+0.2464,
+0.4913
+],
+"frozen":"2026-10-09T09:09Z"
+},
+{
+"k":"usl1:2026-10-10T21:00:union-omaha:fort-wayne-fc",
+"lg":"usl1",
+"start":"2026-10-10T21:00:00.000Z",
+"id1":"union-omaha",
+"id2":"fort-wayne-fc",
+"n1":"Union Omaha",
+"n2":"Fort Wayne FC",
+"r1":1747,
+"r2":1613,
+"p":[
+0.6388,
+0.2049,
+0.1563
+],
+"frozen":"2026-10-09T09:09Z"
+},
+{
+"k":"uslc:2026-10-10T21:00:sporting-club-jacksonville:birmingham-legion",
+"lg":"uslc",
+"start":"2026-10-10T21:00:00.000Z",
+"id1":"sporting-club-jacksonville",
+"id2":"birmingham-legion",
+"n1":"Sporting Club Jacksonville",
+"n2":"Birmingham Legion",
+"r1":1533,
+"r2":1652,
+"p":[
+0.271,
+0.2483,
+0.4807
+],
+"frozen":"2026-10-09T09:09Z"
 }
 ]
