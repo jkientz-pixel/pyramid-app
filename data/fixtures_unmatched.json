@@ -1,6 +1,6 @@
 [
  [
-  "ncaa1: American University",
+  "ncaa1: South Carolina",
   6
  ],
  [
@@ -16,15 +16,19 @@
   6
  ],
  [
-  "ncaa1: UCF",
+  "ncaa1: UAlbany",
   5
  ],
  [
-  "ncaa1: Penn State",
+  "ncaa1: NJIT",
   5
  ],
  [
-  "ncaa1: South Carolina",
+  "ncaa1: North Carolina",
+  5
+ ],
+ [
+  "ncaa1: Georgetown",
   5
  ],
  [
@@ -32,11 +36,19 @@
   5
  ],
  [
+  "ncaa1: Wisconsin",
+  5
+ ],
+ [
   "ncaa1: San Jos\u00e9 State",
   5
  ],
  [
-  "ncaa1w: Tennessee Tech",
+  "ncaa1: NC State",
+  5
+ ],
+ [
+  "ncaa1: American University",
   5
  ],
  [
@@ -45,6 +57,18 @@
  ],
  [
   "ncaa1w: UConn",
+  5
+ ],
+ [
+  "ncaa1w: Maryland",
+  5
+ ],
+ [
+  "ncaa1w: Northwestern",
+  5
+ ],
+ [
+  "ncaa1w: UCF",
   5
  ],
  [
@@ -60,7 +84,19 @@
   5
  ],
  [
+  "ncaa1w: Wisconsin",
+  5
+ ],
+ [
   "ncaa1w: Ohio",
+  5
+ ],
+ [
+  "ncaa1w: Purdue",
+  5
+ ],
+ [
+  "ncaa1w: Nebraska",
   5
  ],
  [
@@ -72,24 +108,24 @@
   5
  ],
  [
+  "ncaa1w: Illinois",
+  5
+ ],
+ [
+  "ncaa1w: Indiana",
+  5
+ ],
+ [
+  "ncaa1w: Penn State",
+  5
+ ],
+ [
   "ncaa1w: Hawai'i",
   5
  ],
  [
-  "ncaa1: California",
-  4
- ],
- [
-  "ncaa1: Virginia Tech",
-  4
- ],
- [
-  "ncaa1: Indiana",
-  4
- ],
- [
-  "ncaa1: Maryland",
-  4
+  "ncaa1w: West Florida",
+  5
  ],
  [
   "ncaa1: VMI",
@@ -100,27 +136,7 @@
   4
  ],
  [
-  "ncaa1: UAlbany",
-  4
- ],
- [
   "ncaa1: UConn",
-  4
- ],
- [
-  "ncaa1: NJIT",
-  4
- ],
- [
-  "ncaa1: North Carolina",
-  4
- ],
- [
-  "ncaa1: Georgetown",
-  4
- ],
- [
-  "ncaa1: Wisconsin",
   4
  ],
  [
@@ -132,10 +148,6 @@
   4
  ],
  [
-  "ncaa1: NC State",
-  4
- ],
- [
   "ncaa1: UAB",
   4
  ],
@@ -144,35 +156,35 @@
   4
  ],
  [
+  "ncaa1: California",
+  4
+ ],
+ [
   "ncaa1: Seattle U",
   4
  ],
  [
-  "ncaa1w: Missouri",
+  "ncaa1: Virginia Tech",
   4
  ],
  [
-  "ncaa1w: South Carolina",
+  "ncaa1: Maryland",
   4
  ],
  [
-  "ncaa1w: Tennessee",
+  "ncaa1: Indiana",
   4
  ],
  [
-  "ncaa1w: Texas",
+  "ncaa1: Penn State",
   4
  ],
  [
-  "ncaa1w: LSU",
+  "ncaa1: UCF",
   4
  ],
  [
-  "ncaa1w: Arkansas",
-  4
- ],
- [
-  "ncaa1w: Texas A&M",
+  "ncaa1w: Lafayette",
   4
  ],
  [
@@ -204,19 +216,7 @@
   4
  ],
  [
-  "ncaa1w: Maryland",
-  4
- ],
- [
-  "ncaa1w: Northwestern",
-  4
- ],
- [
   "ncaa1w: Charlotte",
-  4
- ],
- [
-  "ncaa1w: UCF",
   4
  ],
  [
@@ -224,19 +224,7 @@
   4
  ],
  [
-  "ncaa1w: Wisconsin",
-  4
- ],
- [
-  "ncaa1w: Purdue",
-  4
- ],
- [
   "ncaa1w: St Bonaventure",
-  4
- ],
- [
-  "ncaa1w: Nebraska",
   4
  ],
  [
@@ -264,6 +252,10 @@
   4
  ],
  [
+  "ncaa1w: UAB",
+  4
+ ],
+ [
   "ncaa1w: UL Monroe",
   4
  ],
@@ -272,23 +264,11 @@
   4
  ],
  [
-  "ncaa1w: Illinois",
-  4
- ],
- [
-  "ncaa1w: Indiana",
-  4
- ],
- [
-  "ncaa1w: Penn State",
-  4
- ],
- [
-  "ncaa1w: West Florida",
-  4
- ],
- [
   "ncaa1w: North Carolina",
+  4
+ ],
+ [
+  "ncaa1w: Tennessee Tech",
   4
  ],
  [
@@ -316,10 +296,6 @@
   3
  ],
  [
-  "ncaa1w: Lafayette",
-  3
- ],
- [
   "ncaa1w: Charleston",
   3
  ],
@@ -336,10 +312,6 @@
   3
  ],
  [
-  "ncaa1w: UAB",
-  3
- ],
- [
   "ncaa1w: NC State",
   3
  ],
@@ -348,12 +320,36 @@
   3
  ],
  [
-  "ncaa1w: California",
+  "ncaa1w: Missouri",
   3
  ],
  [
-  "ncaa1: Hanover",
-  1
+  "ncaa1w: Tennessee",
+  3
+ ],
+ [
+  "ncaa1w: Arkansas",
+  3
+ ],
+ [
+  "ncaa1w: Texas",
+  3
+ ],
+ [
+  "ncaa1w: LSU",
+  3
+ ],
+ [
+  "ncaa1w: Texas A&M",
+  3
+ ],
+ [
+  "ncaa1w: South Carolina",
+  3
+ ],
+ [
+  "ncaa1w: California",
+  3
  ],
  [
   "ncaa1: Saint Xavier",
@@ -380,6 +376,10 @@
   1
  ],
  [
+  "ncaa1: Olivet",
+  1
+ ],
+ [
   "ncaa1: Pensacola Christian",
   1
  ],
@@ -392,11 +392,23 @@
   1
  ],
  [
+  "ncaa1: Florida College",
+  1
+ ],
+ [
+  "ncaa1: Maine Fort Kent",
+  1
+ ],
+ [
   "ncaa1w: Virginia State",
   1
  ],
  [
   "ncaa1w: Regent",
+  1
+ ],
+ [
+  "ncaa1w: Tuskegee",
   1
  ]
 ]

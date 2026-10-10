@@ -772,7 +772,11 @@
 0.2574,
 0.3413
 ],
-"frozen":"2026-10-08T20:02Z"
+"frozen":"2026-10-08T20:02Z",
+"res":[
+0,
+0
+]
 },
 {
 "k":"mls:2026-10-10T17:00:toronto-fc:cf-montreal",
@@ -1334,5 +1338,22 @@
 0.3496
 ],
 "frozen":"2026-10-09T19:37Z"
+},
+{
+"k":"usl1:2026-10-11T19:00:one-knoxville:spokane-velocity",
+"lg":"usl1",
+"start":"2026-10-11T19:00:00.000Z",
+"id1":"one-knoxville",
+"id2":"spokane-velocity",
+"n1":"One Knoxville",
+"n2":"Spokane Velocity",
+"r1":1682,
+"r2":1663,
+"p":[
+0.4655,
+0.2508,
+0.2837
+],
+"frozen":"2026-10-10T08:35Z"
 }
 ]

@@ -15,9 +15,9 @@
     "predicted": 0.445
    },
    {
-    "actual": 0.601,
+    "actual": 0.599,
     "band": "50-60%",
-    "n": 318,
+    "n": 319,
     "predicted": 0.537
    },
    {
@@ -209,9 +209,9 @@
       "predicted": 0.443
      },
      {
-      "actual": 0.613,
+      "actual": 0.605,
       "band": "50-60%",
-      "n": 75,
+      "n": 76,
       "predicted": 0.536
      },
      {
@@ -227,9 +227,9 @@
       "predicted": 0.722
      }
     ],
-    "hit": 0.478,
-    "logloss": 1.054,
-    "n": 320
+    "hit": 0.477,
+    "logloss": 1.055,
+    "n": 321
    },
    "uslw": {
     "brier": 0.609,
@@ -259,11 +259,11 @@
    }
   },
   "logloss": 1.029,
-  "n": 1564
+  "n": 1565
  },
  "baseline_brier": 0.667,
  "live": {
-  "brier": 0.532,
+  "brier": 0.543,
   "cal": [
    {
     "actual": 0.6,
@@ -272,10 +272,10 @@
     "predicted": 0.385
    },
    {
-    "actual": 0.444,
+    "actual": 0.4,
     "band": "40-50%",
-    "n": 9,
-    "predicted": 0.433
+    "n": 10,
+    "predicted": 0.43
    },
    {
     "actual": 0.75,
@@ -290,7 +290,7 @@
     "predicted": 0.636
    }
   ],
-  "hit": 0.643,
+  "hit": 0.621,
   "leagues": {
    "mls": {
     "brier": 0.513,
@@ -365,7 +365,7 @@
     "n": 2
    },
    "uslc": {
-    "brier": 0.548,
+    "brier": 0.566,
     "cal": [
      {
       "actual": 0.667,
@@ -374,10 +374,10 @@
       "predicted": 0.39
      },
      {
-      "actual": 0.5,
+      "actual": 0.4,
       "band": "40-50%",
-      "n": 4,
-      "predicted": 0.444
+      "n": 5,
+      "predicted": 0.436
      },
      {
       "actual": 0.8,
@@ -392,18 +392,34 @@
       "predicted": 0.65
      }
     ],
-    "hit": 0.667,
-    "logloss": 0.937,
-    "n": 15
+    "hit": 0.625,
+    "logloss": 0.963,
+    "n": 16
    }
   },
-  "logloss": 0.914,
-  "n": 28,
+  "logloss": 0.929,
+  "n": 29,
   "pending": 44,
   "since": "2026-09-29T18:51Z",
   "void": 0
  },
  "recent": [
+  {
+   "frozen": "2026-10-08T20:02Z",
+   "lg": "uslc",
+   "n1": "Lexington SC",
+   "n2": "FC Tulsa",
+   "p": [
+    0.4013,
+    0.2574,
+    0.3413
+   ],
+   "res": [
+    0,
+    0
+   ],
+   "start": "2026-10-09T23:30:00.000Z"
+  },
   {
    "frozen": "2026-10-05T21:34Z",
    "lg": "mls",
