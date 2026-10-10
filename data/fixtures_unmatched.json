@@ -4,6 +4,10 @@
   6
  ],
  [
+  "ncaa1w: Robert Morris",
+  6
+ ],
+ [
   "ncaa1w: Sacramento State",
   6
  ],
@@ -52,11 +56,15 @@
   5
  ],
  [
-  "ncaa1w: Robert Morris",
+  "ncaa1: George Washington",
   5
  ],
  [
   "ncaa1w: UConn",
+  5
+ ],
+ [
+  "ncaa1w: St. John's",
   5
  ],
  [
@@ -128,14 +136,6 @@
   5
  ],
  [
-  "ncaa1: VMI",
-  4
- ],
- [
-  "ncaa1: Massachusetts",
-  4
- ],
- [
   "ncaa1: UConn",
   4
  ],
@@ -152,7 +152,7 @@
   4
  ],
  [
-  "ncaa1: George Washington",
+  "ncaa1: Massachusetts",
   4
  ],
  [
@@ -184,19 +184,7 @@
   4
  ],
  [
-  "ncaa1w: Lafayette",
-  4
- ],
- [
-  "ncaa1w: Miami",
-  4
- ],
- [
   "ncaa1w: Seattle U",
-  4
- ],
- [
-  "ncaa1w: St. John's",
   4
  ],
  [
@@ -284,15 +272,7 @@
   3
  ],
  [
-  "ncaa1w: Mount St. Mary's",
-  3
- ],
- [
-  "ncaa1w: Quinnipiac",
-  3
- ],
- [
-  "ncaa1w: Columbia",
+  "ncaa1: VMI",
   3
  ],
  [
@@ -349,6 +329,26 @@
  ],
  [
   "ncaa1w: California",
+  3
+ ],
+ [
+  "ncaa1w: Columbia",
+  3
+ ],
+ [
+  "ncaa1w: Quinnipiac",
+  3
+ ],
+ [
+  "ncaa1w: Mount St. Mary's",
+  3
+ ],
+ [
+  "ncaa1w: Lafayette",
+  3
+ ],
+ [
+  "ncaa1w: Miami",
   3
  ],
  [

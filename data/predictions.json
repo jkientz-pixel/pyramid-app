@@ -1355,5 +1355,22 @@
 0.2837
 ],
 "frozen":"2026-10-10T08:35Z"
+},
+{
+"k":"mls:2026-10-11T23:00:st-louis-city-sc:la-galaxy",
+"lg":"mls",
+"start":"2026-10-11T23:00:00.000Z",
+"id1":"st-louis-city-sc",
+"id2":"la-galaxy",
+"n1":"St. Louis City SC",
+"n2":"LA Galaxy",
+"r1":1918,
+"r2":1876,
+"p":[
+0.5005,
+0.2446,
+0.2549
+],
+"frozen":"2026-10-10T18:41Z"
 }
 ]
