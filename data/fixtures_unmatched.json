@@ -1,18 +1,6 @@
 [
  [
-  "ncaa1: South Carolina",
-  6
- ],
- [
-  "ncaa1w: Robert Morris",
-  6
- ],
- [
-  "ncaa1w: Sacramento State",
-  6
- ],
- [
-  "ncaa1w: Cal State Fullerton",
+  "ncaa1w: Jacksonville",
   6
  ],
  [
@@ -20,32 +8,12 @@
   6
  ],
  [
-  "ncaa1: UAlbany",
-  5
+  "ncaa1w: Cal State Fullerton",
+  6
  ],
  [
-  "ncaa1: NJIT",
-  5
- ],
- [
-  "ncaa1: North Carolina",
-  5
- ],
- [
-  "ncaa1: Georgetown",
-  5
- ],
- [
-  "ncaa1: Sacramento State",
-  5
- ],
- [
-  "ncaa1: Wisconsin",
-  5
- ],
- [
-  "ncaa1: San Jos\u00e9 State",
-  5
+  "ncaa1w: Sacramento State",
+  6
  ],
  [
   "ncaa1: NC State",
@@ -56,15 +24,19 @@
   5
  ],
  [
+  "ncaa1: South Carolina",
+  5
+ ],
+ [
   "ncaa1: George Washington",
   5
  ],
  [
-  "ncaa1w: UConn",
+  "ncaa1: Sacramento State",
   5
  ],
  [
-  "ncaa1w: St. John's",
+  "ncaa1: Seattle U",
   5
  ],
  [
@@ -81,10 +53,6 @@
  ],
  [
   "ncaa1w: Miami (OH)",
-  5
- ],
- [
-  "ncaa1w: Jacksonville",
   5
  ],
  [
@@ -136,8 +104,12 @@
   5
  ],
  [
-  "ncaa1: UConn",
-  4
+  "ncaa1w: Robert Morris",
+  5
+ ],
+ [
+  "ncaa1w: UConn",
+  5
  ],
  [
   "ncaa1: Howard",
@@ -156,11 +128,23 @@
   4
  ],
  [
+  "ncaa1: NJIT",
+  4
+ ],
+ [
+  "ncaa1: UAlbany",
+  4
+ ],
+ [
   "ncaa1: California",
   4
  ],
  [
-  "ncaa1: Seattle U",
+  "ncaa1: San Jos\u00e9 State",
+  4
+ ],
+ [
+  "ncaa1: West Florida",
   4
  ],
  [
@@ -168,7 +152,19 @@
   4
  ],
  [
+  "ncaa1: Georgetown",
+  4
+ ],
+ [
+  "ncaa1: UConn",
+  4
+ ],
+ [
   "ncaa1: Maryland",
+  4
+ ],
+ [
+  "ncaa1: North Carolina",
   4
  ],
  [
@@ -180,23 +176,11 @@
   4
  ],
  [
+  "ncaa1: Wisconsin",
+  4
+ ],
+ [
   "ncaa1: UCF",
-  4
- ],
- [
-  "ncaa1w: Seattle U",
-  4
- ],
- [
-  "ncaa1w: UT Martin",
-  4
- ],
- [
-  "ncaa1w: Southern Illinois",
-  4
- ],
- [
-  "ncaa1w: Saint Mary's",
   4
  ],
  [
@@ -268,8 +252,16 @@
   4
  ],
  [
-  "ncaa1: West Florida",
-  3
+  "ncaa1w: Saint Mary's",
+  4
+ ],
+ [
+  "ncaa1w: St. John's",
+  4
+ ],
+ [
+  "ncaa1w: Seattle U",
+  4
  ],
  [
   "ncaa1: VMI",
@@ -312,6 +304,10 @@
   3
  ],
  [
+  "ncaa1w: UT Martin",
+  3
+ ],
+ [
   "ncaa1w: Texas",
   3
  ],
@@ -325,6 +321,10 @@
  ],
  [
   "ncaa1w: South Carolina",
+  3
+ ],
+ [
+  "ncaa1w: Southern Illinois",
   3
  ],
  [
@@ -352,15 +352,11 @@
   3
  ],
  [
-  "ncaa1: Saint Xavier",
+  "ncaa1: Richland",
   1
  ],
  [
   "ncaa1: Johnson & Wales-Charlotte",
-  1
- ],
- [
-  "ncaa1: Richland",
   1
  ],
  [
@@ -384,6 +380,10 @@
   1
  ],
  [
+  "ncaa1: Florida Polytechnic",
+  1
+ ],
+ [
   "ncaa1: Ohio Northern",
   1
  ],
@@ -397,6 +397,10 @@
  ],
  [
   "ncaa1: Maine Fort Kent",
+  1
+ ],
+ [
+  "ncaa1: Spring Hill",
   1
  ],
  [
