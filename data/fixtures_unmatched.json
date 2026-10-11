@@ -1,9 +1,5 @@
 [
  [
-  "ncaa1w: Jacksonville",
-  6
- ],
- [
   "ncaa1w: Long Beach State",
   6
  ],
@@ -40,46 +36,6 @@
   5
  ],
  [
-  "ncaa1w: Maryland",
-  5
- ],
- [
-  "ncaa1w: Northwestern",
-  5
- ],
- [
-  "ncaa1w: UCF",
-  5
- ],
- [
-  "ncaa1w: Miami (OH)",
-  5
- ],
- [
-  "ncaa1w: Massachusetts",
-  5
- ],
- [
-  "ncaa1w: Wisconsin",
-  5
- ],
- [
-  "ncaa1w: Ohio",
-  5
- ],
- [
-  "ncaa1w: Purdue",
-  5
- ],
- [
-  "ncaa1w: Nebraska",
-  5
- ],
- [
-  "ncaa1w: St. Thomas",
-  5
- ],
- [
   "ncaa1w: San Jos\u00e9 State",
   5
  ],
@@ -104,16 +60,28 @@
   5
  ],
  [
+  "ncaa1w: Jacksonville",
+  5
+ ],
+ [
+  "ncaa1w: Massachusetts",
+  5
+ ],
+ [
   "ncaa1w: Robert Morris",
+  5
+ ],
+ [
+  "ncaa1w: Miami (OH)",
+  5
+ ],
+ [
+  "ncaa1w: Ohio",
   5
  ],
  [
   "ncaa1w: UConn",
   5
- ],
- [
-  "ncaa1: Howard",
-  4
  ],
  [
   "ncaa1: Charlotte",
@@ -184,47 +152,7 @@
   4
  ],
  [
-  "ncaa1w: NJIT",
-  4
- ],
- [
-  "ncaa1w: Charlotte",
-  4
- ],
- [
-  "ncaa1w: Louisiana",
-  4
- ],
- [
-  "ncaa1w: St Bonaventure",
-  4
- ],
- [
-  "ncaa1w: VMI",
-  4
- ],
- [
-  "ncaa1w: Missouri State",
-  4
- ],
- [
-  "ncaa1w: East Texas A&M",
-  4
- ],
- [
-  "ncaa1w: SE Louisiana",
-  4
- ],
- [
-  "ncaa1w: UT Rio Grande Valley",
-  4
- ],
- [
-  "ncaa1w: Southern Miss",
-  4
- ],
- [
-  "ncaa1w: UAB",
+  "ncaa1: Howard",
   4
  ],
  [
@@ -236,7 +164,31 @@
   4
  ],
  [
+  "ncaa1w: St. Thomas",
+  4
+ ],
+ [
+  "ncaa1w: Alabama",
+  4
+ ],
+ [
+  "ncaa1w: Missouri",
+  4
+ ],
+ [
+  "ncaa1w: Arkansas",
+  4
+ ],
+ [
+  "ncaa1w: UT Rio Grande Valley",
+  4
+ ],
+ [
   "ncaa1w: North Carolina",
+  4
+ ],
+ [
+  "ncaa1w: East Texas A&M",
   4
  ],
  [
@@ -244,11 +196,43 @@
   4
  ],
  [
+  "ncaa1w: Texas",
+  4
+ ],
+ [
+  "ncaa1w: LSU",
+  4
+ ],
+ [
+  "ncaa1w: Texas A&M",
+  4
+ ],
+ [
+  "ncaa1w: South Carolina",
+  4
+ ],
+ [
   "ncaa1w: Nevada",
   4
  ],
  [
+  "ncaa1w: UCF",
+  4
+ ],
+ [
+  "ncaa1w: Maryland",
+  4
+ ],
+ [
   "ncaa1w: Virginia Tech",
+  4
+ ],
+ [
+  "ncaa1w: St Bonaventure",
+  4
+ ],
+ [
+  "ncaa1w: Northwestern",
   4
  ],
  [
@@ -264,15 +248,23 @@
   4
  ],
  [
+  "ncaa1w: Purdue",
+  4
+ ],
+ [
+  "ncaa1w: Nebraska",
+  4
+ ],
+ [
+  "ncaa1w: Wisconsin",
+  4
+ ],
+ [
+  "ncaa1w: Missouri State",
+  4
+ ],
+ [
   "ncaa1: VMI",
-  3
- ],
- [
-  "ncaa1w: Charleston",
-  3
- ],
- [
-  "ncaa1w: Southern",
   3
  ],
  [
@@ -280,7 +272,7 @@
   3
  ],
  [
-  "ncaa1w: UAlbany",
+  "ncaa1w: VMI",
   3
  ],
  [
@@ -288,11 +280,7 @@
   3
  ],
  [
-  "ncaa1w: Alabama",
-  3
- ],
- [
-  "ncaa1w: Missouri",
+  "ncaa1w: Charlotte",
   3
  ],
  [
@@ -300,31 +288,19 @@
   3
  ],
  [
-  "ncaa1w: Arkansas",
-  3
- ],
- [
   "ncaa1w: UT Martin",
   3
  ],
  [
-  "ncaa1w: Texas",
-  3
- ],
- [
-  "ncaa1w: LSU",
-  3
- ],
- [
-  "ncaa1w: Texas A&M",
-  3
- ],
- [
-  "ncaa1w: South Carolina",
+  "ncaa1w: SE Louisiana",
   3
  ],
  [
   "ncaa1w: Southern Illinois",
+  3
+ ],
+ [
+  "ncaa1w: Southern Miss",
   3
  ],
  [
@@ -348,8 +324,32 @@
   3
  ],
  [
+  "ncaa1w: Charleston",
+  3
+ ],
+ [
   "ncaa1w: Miami",
   3
+ ],
+ [
+  "ncaa1w: Louisiana",
+  3
+ ],
+ [
+  "ncaa1w: NJIT",
+  3
+ ],
+ [
+  "ncaa1w: UAB",
+  3
+ ],
+ [
+  "ncaa1w: Southern",
+  2
+ ],
+ [
+  "ncaa1w: UAlbany",
+  2
  ],
  [
   "ncaa1: Richland",
