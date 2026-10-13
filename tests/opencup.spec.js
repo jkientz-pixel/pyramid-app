@@ -83,3 +83,62 @@ test('the Trophy Room, Giant-Killings and Matches all point at the Cup page', as
     await expect(page.locator(`#view ${sel}`).first()).toBeVisible();
   }
 });
+
+/* ---- 2027 qualifying (ussoccer.com feed, data/opencup_qual.json) ---------- */
+const qual = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'opencup_qual.json'), 'utf8'));
+
+test('the current-edition view says 2027 qualifying is live and links to it', async ({ page }) => {
+  const errors = trackErrors(page);
+  await gotoRoute(page, '#/opencup');
+  await page.waitForSelector('.oc-round');
+  const v = page.locator('#view');
+  /* the default stays on the edition in play, not the qualifying edition */
+  await expect(v.locator('h2')).toContainText(`The ${live.year} Open Cup`);
+  const b = v.locator('.oc-qbanner');
+  await expect(b).toContainText(`${qual.year} qualifying is live`);
+  await b.click();
+  await expect(page).toHaveURL(new RegExp(`#/opencup/${qual.year}$`));
+  expect(errors).toEqual([]);
+});
+
+test('2027 qualifying renders every round, tiers, picks and stated venues', async ({ page }) => {
+  const errors = trackErrors(page);
+  await gotoRoute(page, `#/opencup/${qual.year}`);
+  await page.waitForSelector('.oc-round');
+  const v = page.locator('#view');
+  await expect(v.locator('h2')).toContainText(`The ${qual.year} Open Cup`);
+  const rounds = await v.locator('.oc-round h3').allTextContents();
+  expect(rounds[0]).toBe('Third Qualifying Round');
+  expect(rounds).toEqual(expect.arrayContaining(['Second Qualifying Round', 'First Qualifying Round']));
+  const third = qual.ties.filter(t => t.round === 'Third Qualifying Round');
+  const block = v.locator('.oc-round', { has: page.locator('h3', { hasText: 'Third Qualifying Round' }) });
+  expect(await block.locator('.oc-tie').count()).toBe(third.length);
+  /* venue and city exactly as U.S. Soccer prints them */
+  await expect(block).toContainText(`${third[0].venue}, ${third[0].city}`);
+  /* stated local kickoff, not the viewer's timezone */
+  await expect(block).toContainText(/\b\d{1,2}:\d{2} [AP]M (ET|CT|MT|PT)\b/);
+  /* at least some pending ties carry the model's pick, and some sides link to clubs */
+  expect(await block.locator('.oc-sub', { hasText: 'Our pick' }).count()).toBeGreaterThan(3);
+  expect(await v.locator('.oc-tie a[href^="#/club/"]').count()).toBeGreaterThan(20);
+  expect(await v.locator('.oc-tie .gk-tier').count()).toBeGreaterThan(20);
+  /* a small set of closest-call cards, not 32 */
+  const cards = await v.locator('.oc-next').count();
+  expect(cards).toBeGreaterThan(0);
+  expect(cards).toBeLessThanOrEqual(6);
+  /* unmatched names are plain text, never a link */
+  const un = third.find(t => !t.id1);
+  if (un) expect(await block.locator(`a:text-is("${un.t1}")`).count()).toBe(0);
+  expect(errors).toEqual([]);
+});
+
+test('2027 qualifying results show scores, extra time and forfeits', async ({ page }) => {
+  const errors = trackErrors(page);
+  await gotoRoute(page, `#/opencup/${qual.year}`);
+  await page.waitForSelector('.oc-round');
+  const v = page.locator('#view');
+  const pens = qual.ties.find(t => t.pens);
+  if (pens) await expect(v).toContainText(`${pens.pens[0]}–${pens.pens[1]} pens`);
+  if (qual.ties.some(t => t.forfeit)) await expect(v).toContainText('forfeit');
+  expect(await v.locator('.oc-score').filter({ hasText: /\d–\d/ }).count()).toBeGreaterThan(20);
+  expect(errors).toEqual([]);
+});

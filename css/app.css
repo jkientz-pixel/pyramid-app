@@ -1228,7 +1228,7 @@ select.ssel-native{position:absolute!important;width:1px!important;height:1px!im
 .oc-round h3{margin:0;font-size:1.25rem;letter-spacing:.04em}
 .oc-roundmeta{color:var(--ink-dim);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;margin:2px 0 6px}
 .oc-list{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--raise)}
-.oc-tie{display:grid;grid-template-columns:4.4em minmax(0,1fr) auto minmax(0,1fr);grid-template-areas:"date home score away" ". mark mark mark";
+.oc-tie{display:grid;grid-template-columns:4.4em minmax(0,1fr) auto minmax(0,1fr);grid-template-areas:"date home score away" ". sub sub sub" ". mark mark mark";
   align-items:center;column-gap:10px;row-gap:2px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:.86rem}
 .oc-tie:last-child{border-bottom:none}
 .oc-date{grid-area:date;color:var(--ink-dim);font-size:.72rem;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1254,11 +1254,15 @@ select.ssel-native{position:absolute!important;width:1px!important;height:1px!im
 .oc-elo{flex-basis:100%;color:var(--ink-dim);font-size:.72rem}
 .oc-tvrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px}
 .oc-tv{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:.72rem;font-weight:600;color:var(--ink-dim);letter-spacing:.04em}
+.oc-sub{grid-area:sub;color:var(--ink-dim);font-size:.72rem;line-height:1.35}
+.oc-sub b{color:var(--ink);font-weight:600}
+.oc-qbanner{display:block;margin:10px 0 2px;padding:10px 12px;border:1px solid var(--accent);border-radius:12px;background:color-mix(in srgb,var(--accent) 7%,var(--raise));color:var(--ink);text-decoration:none;font-size:.9rem}
+.oc-qbanner b{color:var(--accent)}
 .oc-qual{margin-top:18px}
 .oc-qual .oc-round{margin-top:10px}
 .oc-qual .oc-round h3{font-size:1.05rem}
 @media (max-width:560px){
-  .oc-tie{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-areas:"date date date" "home score away" "mark mark mark";row-gap:3px;font-size:.82rem}
+  .oc-tie{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-areas:"date date date" "home score away" "sub sub sub" "mark mark mark";row-gap:3px;font-size:.82rem}
   .oc-side,.oc-side.away{flex-direction:column;align-items:flex-start;text-align:left;gap:2px}
   .oc-side.away{align-items:flex-end;text-align:right}
 }

@@ -79,13 +79,14 @@ def round_name(slug):
     return (slug or '').replace('-', ' ').strip().capitalize() or 'Unknown round'
 
 
-def main():
-    year = int(os.environ.get('OPENCUP_YEAR') or time.gmtime().tm_year)
+def build_resolver(club_list=None):
+    """name -> club id (or None) with this module's matching rules; shared with
+    fetch_opencup_qual.py so both Cup feeds resolve names identically."""
     # men's senior clubs only: the Cup is a men's competition, the college
     # short names ("Georgetown") must never swallow a pro or amateur side, and
     # a youth academy that shares its parent's name ("El Paso Locomotive FC"
     # in ECNL) must not make the USL Championship club ambiguous
-    clubs = [c for c in load_clubs()
+    clubs = [c for c in (club_list if club_list is not None else load_clubs())
              if not c.get('h') and c.get('x') == 'm'
              and c.get('g') not in YOUTH
              and not str(c.get('g', '')).startswith(('ncaa', 'naia'))]
@@ -113,6 +114,12 @@ def main():
     def resolve(name):
         name = ALIAS.get((name or '').lower(), name)
         return pick(exact.get(deacc(name).lower())) or pick(loose.get(strip(name)))
+    return resolve
+
+
+def main():
+    year = int(os.environ.get('OPENCUP_YEAR') or time.gmtime().tm_year)
+    resolve = build_resolver()
 
     try:
         data = fetch(API % year)
