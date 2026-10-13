@@ -16,7 +16,14 @@
    ESPN (data/opencup_live.json, via fetch_opencup_live.py) carries only the
    current edition but knows kickoffs, venues, TV and scores within minutes.
    A round present in Wikipedia is rendered from Wikipedia; a round Wikipedia
-   has not written up yet is rendered from ESPN. Nothing is shown twice. */
+   has not written up yet is rendered from ESPN. Nothing is shown twice.
+
+   A third source covers the amateur QUALIFYING rounds, which ESPN does not
+   carry: data/opencup_qual.json (fetch_opencup_qual.py, ussoccer.com's own
+   schedule page). Qualifying for the 2027 Cup is played in autumn 2026, so it
+   is its own edition (#/opencup/2027) while the 2026 final is still to come;
+   the default view stays on the edition being played and links across. Venue
+   and city are shown exactly as U.S. Soccer prints them. */
 import { TIER, TIER_NAME, LEAGUE_NAME, normalise } from './opencup.js?v=__RXIV__';
 
 /* the Cup's rounds in playing order; anything unrecognised sorts last */
@@ -58,16 +65,24 @@ const shortDay = (txt, year) => {
   const d = parseDay(txt, year);
   return d ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }) : String(txt || '');
 };
-const fmtScore = (s, m) => `${s[0]}–${s[1]}${m.aet ? '<small>aet</small>' : ''}${
+const TZN = { ET: 'America/New_York', CT: 'America/Chicago', MT: 'America/Denver', PT: 'America/Los_Angeles' };
+/* the kickoff in the zone U.S. Soccer printed it in ("3:30 PM ET") */
+const fmtStated = t => t && t.start && TZN[t.tz]
+  ? `${new Date(t.start).toLocaleTimeString('en-US', { timeZone: TZN[t.tz], hour: 'numeric', minute: '2-digit' })} ${t.tz}` : '';
+const fmtScore = (s, m) => `${s[0]}–${s[1]}${m.forfeit ? '<small>forfeit</small>' : ''}${m.aet ? '<small>aet</small>' : ''}${
   m.pens ? `<small>${Array.isArray(m.pens) ? `${m.pens[0]}–${m.pens[1]} pens` : 'pens'}</small>` : ''}`;
 
-export function render(view, { data, live, receipts, finals, year }, h) {
+export function render(view, { data, live, qual: qualFeed, receipts, finals, year }, h) {
   const { esc, CLUBS, LEAGUES, mcrest, oddsFor, oddsAllowed, fmtKick, calBtn, initials, clubIdx } = h;
   const all = data.matches || [];
   const editions = [...new Set(all.map(m => m.year))].sort((a, b) => b - a);
   const liveYear = live && live.year;
   if (liveYear && !editions.includes(liveYear)) editions.unshift(liveYear);
   const current = editions[0];
+  /* qualifying for a not-yet-started edition is reachable and listed first,
+     but never becomes the default view: #/opencup stays on the Cup in play */
+  const qualYear = qualFeed && qualFeed.ties && qualFeed.ties.length ? qualFeed.year : null;
+  if (qualYear && !editions.includes(qualYear)) editions.unshift(qualYear);
   const yr = year && editions.includes(year) ? year : year ? null : current;
 
   /* ---- club resolution -------------------------------------------------
@@ -101,6 +116,18 @@ export function render(view, { data, live, receipts, finals, year }, h) {
   const wiki = all.filter(m => m.year === yr);
   const wikiRounds = new Set(wiki.map(m => m.round));
   const liveTies = (live && live.year === yr ? live.ties : []) || [];
+  /* qualifying ties: the date is the local calendar day U.S. Soccer prints, so
+     it is formatted from the date string, never from the UTC kickoff (a 6 p.m.
+     Pacific game is already tomorrow in UTC) */
+  const longDay = iso => iso ? new Date(iso + 'T00:00:00Z').toLocaleDateString('en-US',
+    { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '';
+  const fromQual = (qualFeed && qualFeed.year === yr ? qualFeed.ties : [])
+    .filter(t => !wikiRounds.has(t.round)).map(t => ({
+      year: yr, comp: 'usoc-q', round: t.round, date: longDay(t.date), t1: t.t1, t2: t.t2,
+      id1: t.id1, id2: t.id2, l1: '', l2: '', score: t.score || null, winner: t.winner || 0,
+      aet: !!t.aet, pens: t.pens || null, forfeit: !!t.forfeit, q: t,
+      live: t.state === 'pre' ? t : null,
+    }));
   const fromLive = liveTies.filter(t => !wikiRounds.has(t.round)).map(t => ({
     year: yr, comp: 'usoc', round: t.round, date: t.start ? fmtDay(t.start) : '',
     t1: t.t1, t2: t.t2, id1: t.id1, id2: t.id2, l1: '', l2: '',
@@ -111,7 +138,7 @@ export function render(view, { data, live, receipts, finals, year }, h) {
      Trophy Room list; borrow it so no edition ends at the semifinals */
   /* copies: the Wikipedia rows are cached in app.js and shared with
      Giant-Killings, so the day/club/tier annotations below stay local */
-  const rows = [...wiki.map(m => ({ ...m })), ...fromLive];
+  const rows = [...wiki.map(m => ({ ...m })), ...fromLive, ...fromQual];
   if (yr && !rows.some(m => /^final$/i.test(m.round)) && !liveTies.length) {
     const f = (finals || []).find(x => Number(x.y) === yr && x.ru && x.s);
     const sc = f && /^(\d+)\s*[–-]\s*(\d+)/.exec(f.s);
@@ -119,11 +146,12 @@ export function render(view, { data, live, receipts, finals, year }, h) {
       l1: '', l2: '', score: [+sc[1], +sc[2]], winner: 1, borrowed: true });
   }
   for (const m of rows) {
-    m.day = m.live && m.live.start ? new Date(m.live.start) : parseDay(m.date, m.year);
-    m.date = m.live && m.live.start ? fmtDay(m.live.start) : shortDay(m.date, m.year);
+    const espn = !m.q && m.live && m.live.start;
+    m.day = espn ? new Date(m.live.start) : parseDay(m.date, m.year);
+    m.date = espn ? fmtDay(m.live.start) : shortDay(m.date, m.year);
     m.c1 = clubFor(m.t1, m.id1); m.c2 = clubFor(m.t2, m.id2);
     m.k1 = codeFor(m.c1, m.l1); m.k2 = codeFor(m.c2, m.l2);
-    m.upset = m.winner ? normalise({ ...m, l1: m.k1, l2: m.k2 }) : null;
+    m.upset = m.winner && !m.forfeit ? normalise({ ...m, l1: m.k1, l2: m.k2 }) : null;
   }
 
   /* ---- receipts: the rating each side's own result moved --------------- */
@@ -146,21 +174,44 @@ export function render(view, { data, live, receipts, finals, year }, h) {
     const name = c ? `<a href="#/club/${c.id}">${esc(nm)}</a>` : `<span>${esc(nm)}</span>`;
     return `<span class="oc-side${away ? ' away' : ''}${won ? ' won' : ''}">${c ? mcrest(c) : ''}<span class="oc-nm">${name} ${badge(code)}${delta(d)}</span></span>`;
   };
+  /* one line under a qualifying tie: where (as printed by U.S. Soccer), when,
+     and — before kickoff, where both clubs are rated — the model's pick */
+  const pickLine = m => {
+    const hc = m.c1, ac = m.c2;
+    if (!hc || !ac || !hc.r || !ac.r) return '';
+    const o = oddsFor(hc, ac);
+    if (oddsAllowed(hc, ac)) {
+      const fav = o.pH >= o.pA ? [hc, o.pH] : [ac, o.pA];
+      return `Our pick <b>${esc(fav[0].n)} ${(fav[1] * 100).toFixed(0)}%</b> · Elo ${hc.r} v ${ac.r}`;
+    }
+    const fav = o.pH > o.pA ? hc : o.pA > o.pH ? ac : null;
+    return `Our pick <b>${fav ? esc(fav.n) : 'a toss-up'}</b> · Elo ${hc.r} v ${ac.r}`;
+  };
+  const qsub = m => {
+    if (!m.q) return '';
+    const t = m.q;
+    const where = [t.venue, t.city].filter(Boolean).map(esc).join(', ');
+    const parts = [m.live && fmtStated(t) ? `<b>${esc(fmtStated(t))}</b>` : '', where,
+      m.live ? pickLine(m) : ''].filter(Boolean);
+    return parts.length ? `<span class="oc-sub">${parts.join(' · ')}</span>` : '';
+  };
   const played = m => `
     <li class="oc-tie${m.upset ? ' oc-gk' : ''}">
       <span class="oc-date">${esc(m.date || '')}</span>
       ${side(m.c1, m.t1, m.k1, m.winner === 1, deltaFor(m.c1, m, 1), false)}
       <span class="oc-score">${m.score ? fmtScore(m.score, m) : '<small>v</small>'}</span>
       ${side(m.c2, m.t2, m.k2, m.winner === 2, deltaFor(m.c2, m, 2), true)}
+      ${qsub(m)}
       ${m.upset ? `<span class="oc-gkmark">Giant-killing${m.upset.gap > 1 ? ` · ${m.upset.gap} tiers up` : ''}</span>` : ''}
     </li>`;
   const pending = m => {
     const t = m.live;
     return `<li class="oc-tie oc-pending">
-      <span class="oc-date">${esc(t.start ? fmtDay(t.start) : '')}</span>
+      <span class="oc-date">${esc(m.date || '')}</span>
       ${side(m.c1, m.t1, m.k1, false, null, false)}
       <span class="oc-score"><small>${t.state === 'in' ? esc(t.clock || 'live') : 'v'}</small></span>
       ${side(m.c2, m.t2, m.k2, false, null, true)}
+      ${qsub(m)}
     </li>`;
   };
 
@@ -180,6 +231,12 @@ export function render(view, { data, live, receipts, finals, year }, h) {
     return `<div class="oc-call"><span class="kicker">Our call</span> ${fav ? `<b>${esc(fav)}</b> favoured` : 'Even'}
       <span class="oc-elo">Elo ${hc.r} v ${ac.r} · no percentages outside senior pro leagues</span></div>`;
   };
+  /* qualifying has 32 ties a round; a card each would bury the page, so the
+     cards are the closest rated calls and the full slate sits in the round
+     block below */
+  const isQualEdition = qualYear != null && yr === qualYear;
+  const watch = isQualEdition ? nextTies.filter(m => m.c1 && m.c2 && m.c1.r && m.c2.r)
+    .sort((a, b) => Math.abs(a.c1.r - a.c2.r) - Math.abs(b.c1.r - b.c2.r)).slice(0, 6) : [];
   const nextCard = m => {
     const t = m.live;
     const s = (c, nm, away) => c
@@ -191,9 +248,9 @@ export function render(view, { data, live, receipts, finals, year }, h) {
     const tv = (t.tv || []).map(x => `<span class="oc-tv">${esc(x)}</span>`).join('');
     return `<div class="match oc-next${t.state === 'in' ? ' oc-live' : ''}">
       <div class="mrow">${s(m.c1, m.t1, false)}${mid}${s(m.c2, m.t2, true)}</div>
-      <div class="meta"><span>${esc(m.round)}${t.venue ? ' · ' + esc(t.venue) : ''}</span><span>${t.start ? fmtKick(t.start) : ''}</span></div>
+      <div class="meta"><span>${esc(m.round)}${t.venue ? ' · ' + esc(t.venue) : ''}${m.q && t.city ? ', ' + esc(t.city) : ''}</span><span>${m.q ? esc(fmtStated(t)) : t.start ? fmtKick(t.start) : ''}</span></div>
       ${callFor(m)}
-      <div class="oc-tvrow">${tv}${t.state === 'pre' && t.start ? calBtn(`${m.t1} v ${m.t2} · U.S. Open Cup ${m.round}`, t.start, t.venue, 'U.S. Open Cup', false) : ''}</div>
+      <div class="oc-tvrow">${tv}${t.state === 'pre' && t.start ? calBtn(`${m.t1} v ${m.t2} · U.S. Open Cup ${m.round}`, t.start, [t.venue, m.q && t.city].filter(Boolean).join(', '), 'U.S. Open Cup', false) : ''}</div>
     </div>`;
   };
 
@@ -227,8 +284,23 @@ export function render(view, { data, live, receipts, finals, year }, h) {
   const champion = finalRow ? (finalRow.winner === 1 ? finalRow.t1 : finalRow.t2) : null;
   const champClub = champion ? clubFor(champion, finalRow.winner === 1 ? finalRow.id1 : finalRow.id2) : null;
 
+  /* on the edition in play, point at the qualifying edition that is already
+     under way — the amateur rounds ESPN's feed never carries */
+  const banner = () => {
+    if (!qualYear || yr === qualYear || yr !== current) return '';
+    const qt = qualFeed.ties, open = qt.filter(t => t.state === 'pre');
+    const rd = open.length ? open[0].round : qt[qt.length - 1].round;
+    const n = open.length ? open.filter(t => t.round === rd).length : qt.filter(t => t.round === rd).length;
+    return `<a class="oc-qbanner" href="#/opencup/${qualYear}"><b>${qualYear} qualifying is live.</b>
+      ${esc(rd)}: ${n} amateur ${n === 1 ? 'tie' : 'ties'}${open.length ? ' still to play' : ''}, with our picks &rarr;</a>`;
+  };
   const lead = () => {
     if (!yr) return '';
+    if (isQualEdition) {
+      if (!nextTies.length) return `<p class="oc-lead">The ${yr} qualifying rounds are under way: amateur clubs from every league playing for 16 places in the Tournament Proper.</p>`;
+      const rd = nextTies[0].round, n = nextTies.filter(m => m.round === rd).length;
+      return `<p class="oc-lead">Next: <b>${esc(rd)}</b> — ${n} ${n === 1 ? 'tie' : 'ties'}${nextTies[0].q && nextTies[0].q.date ? ', from ' + esc(shortDay(longDay(nextTies[0].q.date), yr)) : ''}. Sixteen clubs will reach the Tournament Proper.</p>`;
+    }
     if (champion) return `<p class="oc-lead"><b>Champions: ${champClub ? `<a href="#/club/${champClub.id}">${esc(champion)}</a>` : esc(champion)}</b> — ${esc(finalRow.t1)} ${finalRow.score[0]}–${finalRow.score[1]} ${esc(finalRow.t2)} in the final.</p>`;
     if (nextTies.length) {
       const n = nextTies[0];
@@ -242,7 +314,7 @@ export function render(view, { data, live, receipts, finals, year }, h) {
     <div class="kicker">Lamar Hunt U.S. Open Cup${yr ? ` &middot; ${yr} edition` : ''}</div>
     <h2 class="disp">${yr ? `The ${yr} Open Cup` : 'The Open Cup'}</h2>
     <div class="chips" id="oc-years">${editions.map(y =>
-      `<button class="chip solid" data-yr="${y}" aria-pressed="${y === yr}">${y}${y === liveYear && liveTies.some(t => t.state !== 'post') ? ' · live' : ''}</button>`).join('')}</div>
+      `<button class="chip solid" data-yr="${y}" aria-pressed="${y === yr}">${y}${y === liveYear && liveTies.some(t => t.state !== 'post') ? ' · live' : y === qualYear && y !== liveYear ? ' · qualifying' : ''}</button>`).join('')}</div>
     ${yr ? `
     ${lead()}
     <div class="statgrid">
@@ -250,9 +322,12 @@ export function render(view, { data, live, receipts, finals, year }, h) {
       <div class="stat"><b>${rows.length}</b><span>Ties</span></div>
       <div class="stat"><b>${upsets}</b><span>Giant-killings</span></div>
     </div>
-    ${nextTies.length ? `<div class="kicker" style="margin-top:14px">Next up &middot; live from the feed</div>${nextTies.map(nextCard).join('')}` : ''}
+    ${banner()}
+    ${isQualEdition ? (watch.length ? `<div class="kicker" style="margin-top:14px">Closest calls &middot; both clubs rated</div>${watch.map(nextCard).join('')}` : '')
+      : nextTies.length ? `<div class="kicker" style="margin-top:14px">Next up &middot; live from the feed</div>${nextTies.map(nextCard).join('')}` : ''}
     ${group(proper).map(roundBlock).join('')}
-    ${qual.length ? `<details class="how oc-qual"><summary>Qualifying rounds &middot; ${qual.length} ties</summary>${group(qual).map(roundBlock).join('')}</details>` : ''}
+    ${qual.length && !proper.length ? group(qual).map(roundBlock).join('') : ''}
+    ${qual.length && proper.length ? `<details class="how oc-qual"><summary>Qualifying rounds &middot; ${qual.length} ties</summary>${group(qual).map(roundBlock).join('')}</details>` : ''}
     ` : `<p class="note">No record of a ${esc(String(year))} edition. Editions on file: ${editions[editions.length - 1]}&ndash;${editions[0]}; the Cup was not played in 2020 or 2021.</p>`}
     <p class="note"><b>How to read it.</b> Latest round first.${crossTier ? ` ${crossTier} of this edition's ties crossed tiers.` : ''} The badge is the tier each club's league
       sat on that season, on the same ladder as the <a href="#/tiers">Tiers</a> view; a tie a
@@ -261,7 +336,9 @@ export function render(view, { data, live, receipts, finals, year }, h) {
       clubs rank by the league table, so their Cup results never move a rating here. Extra-time and
       shootout wins count at reduced weight. A club shown as plain text is one we could not match
       to a page with confidence. Historical ties from Wikipedia (CC BY-SA 4.0); this edition's
-      kickoffs, venues, broadcasters and live scores from ESPN's public scoreboard.
+      kickoffs, venues, broadcasters and live scores from ESPN's public scoreboard.${qualYear ? ` Qualifying-round
+      schedules, venues and results from U.S. Soccer (ussoccer.com); venues and cities are shown as U.S. Soccer
+      prints them, and clubs we have not matched to a page confidently appear as plain text.` : ''}
       <a href="#/upsets">Every giant-killing since 2016 &rarr;</a></p>`;
 
   view.querySelector('#oc-years').addEventListener('click', e => {

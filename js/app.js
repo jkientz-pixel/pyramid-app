@@ -3539,26 +3539,28 @@ async function screenUpsets() {
 }
 /* The Open Cup, edition by edition (#/opencup, #/opencup/<year>). Wikipedia
    rows (opencup_matches.json, shared with Giant-Killings) plus the current
-   edition's ties from ESPN (opencup_live.json) and each club's rating
+   edition's ties from ESPN (opencup_live.json), the amateur qualifying rounds
+   from ussoccer.com (opencup_qual.json) and each club's rating
    receipts. Module is lazy for the same reason as Giant-Killings. */
-let _oclive = null;
+let _oclive = null, _ocqual = null;
 async function screenOpenCup(yr) {
   const at = location.hash || '#/map';
   crumb.textContent = 'Open Cup';
   view.innerHTML = '<button class="backbtn" onclick="location.hash=\'#/cups\'">&larr; Trophy Room</button>'
     + '<p class="note">Loading the Open Cup&hellip;</p>';
   try {
-    const [data, live, receipts, cups, mod] = await Promise.all([
+    const [data, live, qual, receipts, cups, mod] = await Promise.all([
       _opencup || fetch('data/opencup_matches.json?v=__RXIV__').then(r => r.json()),
       _oclive || fetch('data/opencup_live.json?v=__RXIV__').then(r => r.ok ? r.json() : null).catch(() => null),
+      _ocqual || fetch('data/opencup_qual.json?v=__RXIV__').then(r => r.ok ? r.json() : null).catch(() => null),
       cupDb(),
       cupsDb(),
       import('./cupedition.js?v=__RXIV__'),
     ]);
-    _opencup = data; _oclive = live;
+    _opencup = data; _oclive = live; _ocqual = qual;
     if (routedAway(at)) return;
     const okMen = c => c.x === 'm' && !LEVELS.college.includes(c.g);
-    mod.render(view, { data, live, receipts, finals: (cups.opencup || {}).finals || [], year: yr ? Number(yr) : null }, {
+    mod.render(view, { data, live, qual, receipts, finals: (cups.opencup || {}).finals || [], year: yr ? Number(yr) : null }, {
       esc, CLUBS, LEAGUES, mcrest, oddsFor, oddsAllowed, fmtKick, calBtn, initials,
       clubIdx: nm => clubIdxByName(nm, okMen),
     });
