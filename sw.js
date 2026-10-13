@@ -18,7 +18,7 @@ const SHELL = [
   // offline navigation to /app would miss a cache that only holds /app.html
   '/', '/app', '/app.html', '/index.html', '/manifest.webmanifest',
   '/favicon.ico', '/icon-192.png', '/icon-512.png',
-  '/js/app.js', '/js/data.js', '/js/rosters.js', '/js/usmap.js', '/js/rxi-a.js',
+  '/js/app.js', '/js/data-slim.js', '/js/data.js', '/js/rosters.js', '/js/usmap.js', '/js/rxi-a.js',
   '/js/myxi.js', '/js/a2hs.js', '/js/push.js', '/js/native.js', '/js/ssel.js',
   '/css/app.css', '/fonts/barlow-condensed-latin-700.woff2',
 ];

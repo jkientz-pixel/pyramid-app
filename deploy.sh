@@ -107,6 +107,12 @@ find "$STAGE/js" "$STAGE/css" \( -name '*.bak' -o -name '*.tmp' \) -delete
 # warning rather than failing. See scripts/fingerprint.py.
 python3 scripts/fingerprint.py --stage "$STAGE"
 
+# First-paint slice of the club data (js/data-slim.js), derived from the STAGED
+# data.js so it carries the same fingerprint marks the line above just applied.
+# Order matters: generating from the repo copy would ship clean coordinates in
+# the one file the map reads first. Verifies itself against the staged data.js.
+python3 scripts/gen_slim.py --stage "$STAGE"
+
 # The one place a real cache-bust token exists. Every page and js module ships
 # with the placeholder swapped for $NEWV; the repo keeps the placeholder. This
 # aborts if the placeholder is missing, which would ship a build that returning

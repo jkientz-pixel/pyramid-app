@@ -115,6 +115,22 @@ if not _cb_literal and not _cb_missing:
     print(f'  cache-bust: {len(CB_FILES)} files carry {cachebust.PLACEHOLDER}, '
           f'no literal tokens')
 
+# js/data-slim.js is what the map paints from; it is generated, never committed,
+# and must stay a faithful slice of data.js. Check the generator's output against
+# data.js here (pure function, no file needed) and that the three places that
+# have to know the file exists still do. Missing any of them fails silently:
+# no modulepreload = a slower first load, no SHELL entry = blank PWA offline.
+import gen_slim
+_slim_bad = gen_slim.verify(gen_slim.build(src), src)
+for b in _slim_bad:
+    fail.append(f'data-slim: {b}')
+for _f, _needle in (('js/app.js', "./data-slim.js?v="), ('app.html', 'href="js/data-slim.js?v='),
+                    ('sw.js', "'/js/data-slim.js'")):
+    if _needle not in (ROOT / _f).read_text():
+        fail.append(f'data-slim: {_f} no longer references data-slim.js ({_needle})')
+if not _slim_bad:
+    print('  data-slim OK — generator output mirrors data.js; app.js, app.html, sw.js reference it')
+
 # lib/club_domains.json is the server-side truth /api/claim compares a
 # claimant's email domain against. It is generated from CLUBS (deploy.sh runs
 # scripts/gen_club_domains.py right before this) and must match the data that

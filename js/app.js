@@ -1,5 +1,23 @@
 import { PROJ, PROJ_AK, PROJ_HI, USMAP, INSETS } from './usmap.js?v=__RXIV__';
-import { CLUBS, REGIONS, LEAGUES, EURO_REFS, AFFIL, ROADMAP } from './data.js?v=__RXIV__';
+import { CLUBS, REGIONS, LEAGUES } from './data-slim.js?v=__RXIV__';
+/* data-slim.js (generated from data.js by scripts/gen_slim.py) carries only what
+   the national map paints: id, name, league, sex, coords, state, ratings, venue
+   accuracy, tombstone flags. The full 1.1MB data.js loads after first paint and
+   is merged onto the SAME club objects (so every held reference stays valid);
+   any route other than the map waits for it in route(). */
+let EURO_REFS = {}, AFFIL = {}, ROADMAP = [];
+let _fullReady = null, fullDone = false;
+const loadFull = () => _fullReady ||= import('./data.js?v=__RXIV__').then(m => {
+  /* array position is the identity contract (legacy /#/club/<i> URLs); a slim
+     and full file from different builds would silently cross-wire clubs */
+  if (m.CLUBS.length !== CLUBS.length || m.CLUBS.some((c, i) => c.id !== CLUBS[i].id)) throw new Error('slim/full club data out of sync');
+  m.CLUBS.forEach((c, i) => Object.assign(CLUBS[i], c));
+  ({ EURO_REFS, AFFIL, ROADMAP } = m);
+  fullDone = true;
+  dispatchEvent(new Event('rxi-full'));
+}).catch(e => { _fullReady = null; throw e; });
+/* run fn once the full club records are merged (immediately if they already are) */
+const whenFull = fn => fullDone ? fn() : addEventListener('rxi-full', fn, { once: true });
 import { share } from './native.js?v=__RXIV__';
 import './ssel.js?v=__RXIV__';
 /* rosters.js is ~79KB gzipped (a third of boot JS) but only club/player/roster
@@ -920,6 +938,9 @@ function wireBasemap(scopeStates, mapClubs, frameClubs) {
     };
     leafMap.on('zoomend moveend', refreshCrests);
     refreshCrests();
+    /* a restored zoom >= 8 can render before the full records (crest paths)
+       arrive; redraw the crest layer once they do */
+    whenFull(() => { if (leafEl.isConnected && leafMap) refreshCrests(); });
     /* High-school directory pins: their own pane BELOW the overlay pane so a
        club pin in the same town stays on top and clickable; viewport-scoped
        and capped like the crests, because 24k unconditional markers is the
@@ -1021,6 +1042,9 @@ function wireSearch() {
     res.hidden = false; setOpen(true);
     const n = clubs.length + players.length;
     live.textContent = `${n} result${n === 1 ? '' : 's'} — press down arrow to browse`;
+    /* before the full records land, rows show initials instead of crests; swap
+       them in once they do, but never yank focus from a row being arrowed through */
+    if (!fullDone) whenFull(() => { if (!res.hidden && document.activeElement === q) q.dispatchEvent(new Event('input')); });
   });
   res.addEventListener('click', () => { res.hidden = true; setOpen(false); q.value = ''; });
   q.addEventListener('keydown', e => {
@@ -1480,6 +1504,7 @@ const isUpset = w => w.gp >= 3 && ((w.s1 > w.s2 && w.ph <= 0.35) || (w.s2 > w.s1
    (latest upset, else biggest rating swing of the recent window) once the
    feed is in memory — the front door leads with live news, not a slogan */
 async function hydrateWireHook() {
+  await loadFull().catch(() => {}); // mcrest() reads crest paths
   const rows = (await wireDb()).slice(-60).reverse(); // newest first
   const card = document.getElementById('wirehook');
   if (!card) return;
@@ -4166,11 +4191,14 @@ function route() {
      chips, so a user with player favorites also waits for the module */
   const needsRosters = ['club', 'player', 'myxi', 'table', 'compare'].includes(parts[0])
     || favs().players.length > 0;
+  /* the national map paints from the slim slice; every other screen reads
+     crests, sites, socials, capacities... which only the full file has */
+  const needsFull = !fullDone && ((parts[0] !== 'map' && parts[0] !== '') || favs().players.length > 0);
   /* rosters arrive async, so the reader can route away before they land —
      the same overtaking routedAway() guards inside a screen, one level up. */
-  if (needsRosters) {
+  if (needsRosters || needsFull) {
     const fresh = () => { if (!routedAway(h)) dispatch(); };
-    loadRosters().then(fresh, fresh);
+    Promise.allSettled([needsRosters && loadRosters(), needsFull && loadFull()]).then(fresh);
     return;
   }
   dispatch();
@@ -4270,6 +4298,7 @@ wireSearch();
 { const cc = document.getElementById('clubcount'); if (cc) cc.textContent = CLUBS.filter(c => !c.h).length.toLocaleString(); }
 /* prefetch rosters once the first view has painted so club taps are instant */
 (self.requestIdleCallback || (f => setTimeout(f, 2000)))(() => {
+  loadFull().catch(() => {});
   loadRosters().catch(() => {});
   myxiMod().catch(() => {});
 });
