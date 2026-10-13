@@ -1,44 +1,7 @@
 {
- "fetched": "2026-10-12",
+ "fetched": "2026-10-13",
  "season": "2026/2027",
  "tables": [
-  {
-   "label": "APSL GREAT LAKES CUP",
-   "rows": [
-    {
-     "#": "1",
-     "TEAM": "Inter Detroit",
-     "MP": "1",
-     "W-D-L": "1-0-0",
-     "W": "1",
-     "D": "0",
-     "L": "0",
-     "GF:GA": "2:0",
-     "GF": "2",
-     "GA": "0",
-     "GD": "+2",
-     "PTS": "3",
-     "LAST 5": "W",
-     "": ""
-    },
-    {
-     "#": "2",
-     "TEAM": "Carpathia FC",
-     "MP": "1",
-     "W-D-L": "0-0-1",
-     "W": "0",
-     "D": "0",
-     "L": "1",
-     "GF:GA": "0:2",
-     "GF": "0",
-     "GA": "2",
-     "GD": "-2",
-     "PTS": "0",
-     "LAST 5": "L",
-     "": ""
-    }
-   ]
-  },
   {
    "label": "CONSTITUTION CONFERENCE (CONNECTICUT)",
    "rows": [
@@ -1413,6 +1376,43 @@
      "GD": "-6",
      "PTS": "1",
      "LAST 5": "DLL",
+     "": ""
+    }
+   ]
+  },
+  {
+   "label": "APSL GREAT LAKES CUP",
+   "rows": [
+    {
+     "#": "1",
+     "TEAM": "Inter Detroit",
+     "MP": "1",
+     "W-D-L": "1-0-0",
+     "W": "1",
+     "D": "0",
+     "L": "0",
+     "GF:GA": "2:0",
+     "GF": "2",
+     "GA": "0",
+     "GD": "+2",
+     "PTS": "3",
+     "LAST 5": "W",
+     "": ""
+    },
+    {
+     "#": "2",
+     "TEAM": "Carpathia FC",
+     "MP": "1",
+     "W-D-L": "0-0-1",
+     "W": "0",
+     "D": "0",
+     "L": "1",
+     "GF:GA": "0:2",
+     "GF": "0",
+     "GA": "2",
+     "GD": "-2",
+     "PTS": "0",
+     "LAST 5": "L",
      "": ""
     }
    ]
