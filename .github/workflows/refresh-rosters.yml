@@ -4,7 +4,23 @@ on:
     # twice daily; GitHub cron is best-effort, so odd minutes dodge the
     # top-of-hour rush where scheduled runs get delayed or dropped
     - cron: '17 2,14 * * *'
+  # The cron above lands 4-8h late every run (measured 9/28-10/13), and the
+  # Mac mini's residential scrape (ops/residential-scrapes.sh, 05:40 + 17:40
+  # Pacific) used to sit on master until the next late cron. Its push now
+  # starts this job directly, so scraped data goes live within minutes and the
+  # cron is only the fallback. The bot's own commit below is pushed with
+  # github.token, which never triggers workflows, so this cannot loop.
+  push:
+    branches: [master]
+    paths:
+      - 'data/upsl.json'
+      - 'data/massey_*.json'
   workflow_dispatch: {}
+# A late cron run and a scrape-triggered run must never deploy or push over
+# each other: queue the second one behind the first instead.
+concurrency:
+  group: refresh-rosters
+  cancel-in-progress: false
 permissions:
   contents: write
   issues: write
@@ -143,7 +159,10 @@ jobs:
         run: |
           git config user.name "roster-bot"
           git config user.email "actions@github.com"
-          git commit -m "chore: scheduled roster refresh" && git push
+          git commit -m "chore: scheduled roster refresh"
+          # the mini's scrape can land while this job runs; it only touches
+          # files this job reads, never ones it commits, so a rebase is clean
+          git pull --rebase origin master && git push
       # The freshness gate proper. After the deploy on purpose: the leagues that
       # did refresh are already live, and a stale league fails the job so the
       # alert below opens (or comments on) a scrape-failure issue.
