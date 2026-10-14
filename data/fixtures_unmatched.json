@@ -12,10 +12,6 @@
   6
  ],
  [
-  "ncaa1: George Washington",
-  5
- ],
- [
   "ncaa1: Sacramento State",
   5
  ],
@@ -25,6 +21,18 @@
  ],
  [
   "ncaa1: Seattle U",
+  5
+ ],
+ [
+  "ncaa1: South Carolina",
+  5
+ ],
+ [
+  "ncaa1: UCF",
+  5
+ ],
+ [
+  "ncaa1: American University",
   5
  ],
  [
@@ -72,14 +80,6 @@
   5
  ],
  [
-  "ncaa1: NJIT",
-  4
- ],
- [
-  "ncaa1: UAlbany",
-  4
- ],
- [
   "ncaa1: NC State",
   4
  ],
@@ -124,23 +124,23 @@
   4
  ],
  [
+  "ncaa1: NJIT",
+  4
+ ],
+ [
+  "ncaa1: UAlbany",
+  4
+ ],
+ [
   "ncaa1: Charlotte",
   4
  ],
  [
-  "ncaa1: South Carolina",
-  4
- ],
- [
-  "ncaa1: UCF",
+  "ncaa1: George Washington",
   4
  ],
  [
   "ncaa1: UAB",
-  4
- ],
- [
-  "ncaa1: American University",
   4
  ],
  [
@@ -157,6 +157,10 @@
  ],
  [
   "ncaa1w: Alabama",
+  4
+ ],
+ [
+  "ncaa1w: Charlotte",
   4
  ],
  [
@@ -292,15 +296,15 @@
   4
  ],
  [
+  "ncaa1w: UAB",
+  4
+ ],
+ [
   "ncaa1: Massachusetts",
   3
  ],
  [
   "ncaa1: VMI",
-  3
- ],
- [
-  "ncaa1w: Charlotte",
   3
  ],
  [
@@ -346,18 +350,6 @@
  [
   "ncaa1w: UAlbany",
   3
- ],
- [
-  "ncaa1w: UAB",
-  3
- ],
- [
-  "ncaa1: Greensboro",
-  1
- ],
- [
-  "ncaa1: Holy Cross (IN)",
-  1
  ],
  [
   "ncaa1: Olivet",
