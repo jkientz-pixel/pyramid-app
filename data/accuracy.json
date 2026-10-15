@@ -1,9 +1,9 @@
 {
  "backtest": {
-  "brier": 0.616,
+  "brier": 0.617,
   "cal": [
    {
-    "actual": 0.418,
+    "actual": 0.414,
     "band": "30-40%",
     "n": 273,
     "predicted": 0.386
@@ -11,19 +11,19 @@
    {
     "actual": 0.482,
     "band": "40-50%",
-    "n": 921,
+    "n": 920,
     "predicted": 0.445
    },
    {
     "actual": 0.607,
     "band": "50-60%",
-    "n": 333,
+    "n": 331,
     "predicted": 0.538
    },
    {
-    "actual": 0.684,
+    "actual": 0.679,
     "band": "60-70%",
-    "n": 79,
+    "n": 78,
     "predicted": 0.636
    },
    {
@@ -39,34 +39,34 @@
     "predicted": 0.807
    }
   ],
-  "hit": 0.508,
+  "hit": 0.507,
   "leagues": {
    "mls": {
-    "brier": 0.631,
+    "brier": 0.634,
     "cal": [
      {
-      "actual": 0.351,
+      "actual": 0.342,
       "band": "30-40%",
-      "n": 74,
-      "predicted": 0.386
+      "n": 73,
+      "predicted": 0.385
      },
      {
-      "actual": 0.444,
+      "actual": 0.442,
       "band": "40-50%",
-      "n": 225,
+      "n": 224,
       "predicted": 0.448
      },
      {
-      "actual": 0.584,
+      "actual": 0.581,
       "band": "50-60%",
-      "n": 89,
+      "n": 86,
       "predicted": 0.537
      },
      {
-      "actual": 0.667,
+      "actual": 0.643,
       "band": "60-70%",
-      "n": 15,
-      "predicted": 0.639
+      "n": 14,
+      "predicted": 0.638
      },
      {
       "actual": 0.5,
@@ -75,9 +75,9 @@
       "predicted": 0.73
      }
     ],
-    "hit": 0.467,
-    "logloss": 1.05,
-    "n": 405
+    "hit": 0.461,
+    "logloss": 1.054,
+    "n": 399
    },
    "mnp": {
     "brier": 0.608,
@@ -194,12 +194,12 @@
     "n": 241
    },
    "uslc": {
-    "brier": 0.632,
+    "brier": 0.631,
     "cal": [
      {
-      "actual": 0.362,
+      "actual": 0.356,
       "band": "30-40%",
-      "n": 58,
+      "n": 59,
       "predicted": 0.386
      },
      {
@@ -209,9 +209,9 @@
       "predicted": 0.443
      },
      {
-      "actual": 0.615,
+      "actual": 0.62,
       "band": "50-60%",
-      "n": 78,
+      "n": 79,
       "predicted": 0.537
      },
      {
@@ -228,8 +228,8 @@
      }
     ],
     "hit": 0.482,
-    "logloss": 1.052,
-    "n": 332
+    "logloss": 1.051,
+    "n": 334
    },
    "uslw": {
     "brier": 0.621,
@@ -258,17 +258,17 @@
     "n": 26
    }
   },
-  "logloss": 1.028,
-  "n": 1613
+  "logloss": 1.029,
+  "n": 1609
  },
  "baseline_brier": 0.667,
  "live": {
   "brier": 0.548,
   "cal": [
    {
-    "actual": 0.308,
+    "actual": 0.286,
     "band": "30-40%",
-    "n": 13,
+    "n": 14,
     "predicted": 0.382
    },
    {
@@ -278,10 +278,10 @@
     "predicted": 0.446
    },
    {
-    "actual": 0.857,
+    "actual": 0.867,
     "band": "50-60%",
-    "n": 14,
-    "predicted": 0.545
+    "n": 15,
+    "predicted": 0.548
    },
    {
     "actual": 0.8,
@@ -290,7 +290,7 @@
     "predicted": 0.629
    }
   ],
-  "hit": 0.597,
+  "hit": 0.594,
   "leagues": {
    "mls": {
     "brier": 0.568,
@@ -380,9 +380,9 @@
     "brier": 0.544,
     "cal": [
      {
-      "actual": 0.6,
+      "actual": 0.5,
       "band": "30-40%",
-      "n": 5,
+      "n": 6,
       "predicted": 0.384
      },
      {
@@ -392,10 +392,10 @@
       "predicted": 0.451
      },
      {
-      "actual": 0.857,
+      "actual": 0.875,
       "band": "50-60%",
-      "n": 7,
-      "predicted": 0.55
+      "n": 8,
+      "predicted": 0.556
      },
      {
       "actual": 0.75,
@@ -404,18 +404,50 @@
       "predicted": 0.643
      }
     ],
-    "hit": 0.643,
+    "hit": 0.633,
     "logloss": 0.931,
-    "n": 28
+    "n": 30
    }
   },
   "logloss": 0.937,
-  "n": 67,
-  "pending": 18,
+  "n": 69,
+  "pending": 16,
   "since": "2026-09-29T18:51Z",
   "void": 7
  },
  "recent": [
+  {
+   "frozen": "2026-10-13T20:21Z",
+   "lg": "uslc",
+   "n1": "Rhode Island FC",
+   "n2": "Loudoun United",
+   "p": [
+    0.596,
+    0.2196,
+    0.1844
+   ],
+   "res": [
+    1,
+    0
+   ],
+   "start": "2026-10-14T23:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-13T20:21Z",
+   "lg": "uslc",
+   "n1": "Hartford Athletic",
+   "n2": "Charleston Battery",
+   "p": [
+    0.3581,
+    0.2581,
+    0.3838
+   ],
+   "res": [
+    1,
+    1
+   ],
+   "start": "2026-10-14T23:00:00.000Z"
+  },
   {
    "frozen": "2026-10-10T18:41Z",
    "lg": "mls",
@@ -1023,38 +1055,6 @@
     0
    ],
    "start": "2026-10-07T23:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-06T19:38Z",
-   "lg": "usl1",
-   "n1": "One Knoxville",
-   "n2": "Chattanooga Red Wolves",
-   "p": [
-    0.6034,
-    0.2172,
-    0.1794
-   ],
-   "res": [
-    3,
-    0
-   ],
-   "start": "2026-10-07T23:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-05T21:34Z",
-   "lg": "mls",
-   "n1": "Chicago Fire",
-   "n2": "Vancouver Whitecaps",
-   "p": [
-    0.3838,
-    0.2581,
-    0.3581
-   ],
-   "res": [
-    3,
-    1
-   ],
-   "start": "2026-10-07T00:30:00.000Z"
   }
  ]
 }

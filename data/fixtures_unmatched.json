@@ -1,26 +1,26 @@
 [
  [
-  "ncaa1w: Long Beach State",
-  6
+  "ncaa1: TBD Home",
+  10
  ],
  [
-  "ncaa1w: Cal State Fullerton",
-  6
+  "ncaa1: TBD Away",
+  10
  ],
  [
-  "ncaa1w: Sacramento State",
-  6
- ],
- [
-  "ncaa1: Sacramento State",
+  "ncaa1: Maryland",
   5
  ],
  [
-  "ncaa1: San Jos\u00e9 State",
+  "ncaa1: Indiana",
   5
  ],
  [
-  "ncaa1: Seattle U",
+  "ncaa1: Penn State",
+  5
+ ],
+ [
+  "ncaa1: Wisconsin",
   5
  ],
  [
@@ -52,15 +52,15 @@
   5
  ],
  [
-  "ncaa1w: Robert Morris",
-  5
- ],
- [
   "ncaa1w: Miami (OH)",
   5
  ],
  [
   "ncaa1w: Ohio",
+  5
+ ],
+ [
+  "ncaa1w: Robert Morris",
   5
  ],
  [
@@ -76,16 +76,20 @@
   5
  ],
  [
+  "ncaa1w: Sacramento State",
+  5
+ ],
+ [
+  "ncaa1w: Cal State Fullerton",
+  5
+ ],
+ [
   "ncaa1w: UConn",
   5
  ],
  [
-  "ncaa1: NC State",
-  4
- ],
- [
-  "ncaa1: California",
-  4
+  "ncaa1w: Long Beach State",
+  5
  ],
  [
   "ncaa1: West Florida",
@@ -104,23 +108,7 @@
   4
  ],
  [
-  "ncaa1: Maryland",
-  4
- ],
- [
   "ncaa1: North Carolina",
-  4
- ],
- [
-  "ncaa1: Indiana",
-  4
- ],
- [
-  "ncaa1: Penn State",
-  4
- ],
- [
-  "ncaa1: Wisconsin",
   4
  ],
  [
@@ -140,11 +128,23 @@
   4
  ],
  [
+  "ncaa1: Sacramento State",
+  4
+ ],
+ [
   "ncaa1: UAB",
   4
  ],
  [
+  "ncaa1: Seattle U",
+  4
+ ],
+ [
   "ncaa1: Howard",
+  4
+ ],
+ [
+  "ncaa1: San Jos\u00e9 State",
   4
  ],
  [
@@ -240,6 +240,10 @@
   4
  ],
  [
+  "ncaa1w: Quinnipiac",
+  4
+ ],
+ [
   "ncaa1w: Mount St. Mary's",
   4
  ],
@@ -261,6 +265,10 @@
  ],
  [
   "ncaa1w: UL Monroe",
+  4
+ ],
+ [
+  "ncaa1w: Lafayette",
   4
  ],
  [
@@ -304,11 +312,27 @@
   4
  ],
  [
+  "ncaa1w: TBD Home",
+  4
+ ],
+ [
+  "ncaa1w: TBD Away",
+  4
+ ],
+ [
   "ncaa1: Massachusetts",
   3
  ],
  [
   "ncaa1: VMI",
+  3
+ ],
+ [
+  "ncaa1: California",
+  3
+ ],
+ [
+  "ncaa1: NC State",
   3
  ],
  [
@@ -325,14 +349,6 @@
  ],
  [
   "ncaa1w: Columbia",
-  3
- ],
- [
-  "ncaa1w: Quinnipiac",
-  3
- ],
- [
-  "ncaa1w: Lafayette",
   3
  ],
  [
@@ -381,18 +397,6 @@
  ],
  [
   "ncaa1: Spring Hill",
-  1
- ],
- [
-  "ncaa1: TBD Home",
-  1
- ],
- [
-  "ncaa1: TBD Away",
-  1
- ],
- [
-  "ncaa1w: Virginia State",
   1
  ],
  [
