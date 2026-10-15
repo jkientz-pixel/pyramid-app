@@ -36,14 +36,6 @@
   5
  ],
  [
-  "ncaa1w: West Florida",
-  5
- ],
- [
-  "ncaa1w: Jacksonville",
-  5
- ],
- [
   "ncaa1w: St. Thomas",
   5
  ],
@@ -61,6 +53,10 @@
  ],
  [
   "ncaa1w: Robert Morris",
+  5
+ ],
+ [
+  "ncaa1w: UT Rio Grande Valley",
   5
  ],
  [
@@ -180,10 +176,6 @@
   4
  ],
  [
-  "ncaa1w: UT Rio Grande Valley",
-  4
- ],
- [
   "ncaa1w: North Carolina",
   4
  ],
@@ -284,6 +276,10 @@
   4
  ],
  [
+  "ncaa1w: West Florida",
+  4
+ ],
+ [
   "ncaa1w: Miami",
   4
  ],
@@ -305,6 +301,10 @@
  ],
  [
   "ncaa1w: Missouri State",
+  4
+ ],
+ [
+  "ncaa1w: Jacksonville",
   4
  ],
  [
@@ -366,10 +366,6 @@
  [
   "ncaa1w: UAlbany",
   3
- ],
- [
-  "ncaa1: Olivet",
-  1
  ],
  [
   "ncaa1: Pensacola Christian",
