@@ -1922,5 +1922,39 @@
 0.2405
 ],
 "frozen":"2026-10-15T18:24Z"
+},
+{
+"k":"nwsl:2026-10-17T16:30:washington-spirit:nj-ny-gotham",
+"lg":"nwsl",
+"start":"2026-10-17T16:30:00.000Z",
+"id1":"washington-spirit",
+"id2":"nj-ny-gotham",
+"n1":"Washington Spirit",
+"n2":"NJ/NY Gotham",
+"r1":1926,
+"r2":1964,
+"p":[
+0.381,
+0.2581,
+0.3609
+],
+"frozen":"2026-10-16T07:14Z"
+},
+{
+"k":"mls:2026-10-17T18:30:philadelphia-union:charlotte-fc",
+"lg":"mls",
+"start":"2026-10-17T18:30:00.000Z",
+"id1":"philadelphia-union",
+"id2":"charlotte-fc",
+"n1":"Philadelphia Union",
+"n2":"Charlotte FC",
+"r1":1905,
+"r2":1904,
+"p":[
+0.4384,
+0.2543,
+0.3072
+],
+"frozen":"2026-10-16T07:14Z"
 }
 ]

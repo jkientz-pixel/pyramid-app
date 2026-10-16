@@ -1,11 +1,19 @@
 [
  [
+  "ncaa1w: TBD Home",
+  16
+ ],
+ [
+  "ncaa1w: TBD Away",
+  16
+ ],
+ [
   "ncaa1: TBD Home",
-  10
+  14
  ],
  [
   "ncaa1: TBD Away",
-  10
+  14
  ],
  [
   "ncaa1: Maryland",
@@ -36,39 +44,15 @@
   5
  ],
  [
-  "ncaa1w: St. Thomas",
+  "ncaa1w: UCF",
   5
  ],
  [
-  "ncaa1w: Massachusetts",
+  "ncaa1w: Virginia Tech",
   5
  ],
  [
-  "ncaa1w: Miami (OH)",
-  5
- ],
- [
-  "ncaa1w: Ohio",
-  5
- ],
- [
-  "ncaa1w: Robert Morris",
-  5
- ],
- [
-  "ncaa1w: UT Rio Grande Valley",
-  5
- ],
- [
-  "ncaa1w: Nevada",
-  5
- ],
- [
-  "ncaa1w: San Jos\u00e9 State",
-  5
- ],
- [
-  "ncaa1w: Hawai'i",
+  "ncaa1w: California",
   5
  ],
  [
@@ -88,15 +72,15 @@
   5
  ],
  [
-  "ncaa1: West Florida",
+  "ncaa1w: Miami",
+  5
+ ],
+ [
+  "ncaa1: Georgetown",
   4
  ],
  [
   "ncaa1: Virginia Tech",
-  4
- ],
- [
-  "ncaa1: Georgetown",
   4
  ],
  [
@@ -144,75 +128,11 @@
   4
  ],
  [
-  "ncaa1w: VMI",
-  4
- ],
- [
-  "ncaa1w: NC State",
-  4
- ],
- [
-  "ncaa1w: Alabama",
-  4
- ],
- [
-  "ncaa1w: Charlotte",
-  4
- ],
- [
-  "ncaa1w: Missouri",
-  4
- ],
- [
-  "ncaa1w: Tennessee",
-  4
- ],
- [
-  "ncaa1w: Arkansas",
-  4
- ],
- [
-  "ncaa1w: UT Martin",
-  4
- ],
- [
-  "ncaa1w: North Carolina",
-  4
- ],
- [
-  "ncaa1w: East Texas A&M",
-  4
- ],
- [
-  "ncaa1w: Tennessee Tech",
-  4
- ],
- [
-  "ncaa1w: Texas",
-  4
- ],
- [
-  "ncaa1w: LSU",
-  4
- ],
- [
-  "ncaa1w: Texas A&M",
-  4
- ],
- [
-  "ncaa1w: South Carolina",
-  4
- ],
- [
-  "ncaa1w: Southern Illinois",
-  4
- ],
- [
-  "ncaa1w: UCF",
-  4
- ],
- [
   "ncaa1w: Maryland",
+  4
+ ],
+ [
+  "ncaa1w: Southern",
   4
  ],
  [
@@ -220,15 +140,7 @@
   4
  ],
  [
-  "ncaa1w: Virginia Tech",
-  4
- ],
- [
   "ncaa1w: Indiana",
-  4
- ],
- [
-  "ncaa1w: California",
   4
  ],
  [
@@ -272,6 +184,10 @@
   4
  ],
  [
+  "ncaa1w: Fresno State",
+  4
+ ],
+ [
   "ncaa1w: Purdue",
   4
  ],
@@ -280,7 +196,19 @@
   4
  ],
  [
-  "ncaa1w: Miami",
+  "ncaa1w: Massachusetts",
+  4
+ ],
+ [
+  "ncaa1w: Miami (OH)",
+  4
+ ],
+ [
+  "ncaa1w: Robert Morris",
+  4
+ ],
+ [
+  "ncaa1w: Ohio",
   4
  ],
  [
@@ -296,6 +224,10 @@
   4
  ],
  [
+  "ncaa1w: St. Thomas",
+  4
+ ],
+ [
   "ncaa1w: Wisconsin",
   4
  ],
@@ -304,19 +236,39 @@
   4
  ],
  [
+  "ncaa1w: Southern Illinois",
+  4
+ ],
+ [
+  "ncaa1w: North Carolina",
+  4
+ ],
+ [
+  "ncaa1w: San Jos\u00e9 State",
+  4
+ ],
+ [
+  "ncaa1w: Hawai'i",
+  4
+ ],
+ [
   "ncaa1w: Jacksonville",
   4
  ],
  [
+  "ncaa1w: Nevada",
+  4
+ ],
+ [
+  "ncaa1w: East Texas A&M",
+  4
+ ],
+ [
+  "ncaa1w: UT Rio Grande Valley",
+  4
+ ],
+ [
   "ncaa1w: UAB",
-  4
- ],
- [
-  "ncaa1w: TBD Home",
-  4
- ],
- [
-  "ncaa1w: TBD Away",
   4
  ],
  [
@@ -328,11 +280,75 @@
   3
  ],
  [
+  "ncaa1: West Florida",
+  3
+ ],
+ [
   "ncaa1: California",
   3
  ],
  [
   "ncaa1: NC State",
+  3
+ ],
+ [
+  "ncaa1w: Columbia",
+  3
+ ],
+ [
+  "ncaa1w: Charleston",
+  3
+ ],
+ [
+  "ncaa1w: Texas",
+  3
+ ],
+ [
+  "ncaa1w: South Carolina",
+  3
+ ],
+ [
+  "ncaa1w: VMI",
+  3
+ ],
+ [
+  "ncaa1w: NJIT",
+  3
+ ],
+ [
+  "ncaa1w: Tennessee Tech",
+  3
+ ],
+ [
+  "ncaa1w: Tennessee",
+  3
+ ],
+ [
+  "ncaa1w: Arkansas",
+  3
+ ],
+ [
+  "ncaa1w: Texas A&M",
+  3
+ ],
+ [
+  "ncaa1w: LSU",
+  3
+ ],
+ [
+  "ncaa1w: UAlbany",
+  3
+ ],
+ [
+  "ncaa1w: UT Martin",
+  3
+ ],
+ [
+  "ncaa1w: Missouri",
+  3
+ ],
+ [
+  "ncaa1w: Alabama",
   3
  ],
  [
@@ -344,32 +360,12 @@
   3
  ],
  [
-  "ncaa1w: Southern",
+  "ncaa1w: NC State",
   3
  ],
  [
-  "ncaa1w: Columbia",
+  "ncaa1w: Charlotte",
   3
- ],
- [
-  "ncaa1w: Fresno State",
-  3
- ],
- [
-  "ncaa1w: Charleston",
-  3
- ],
- [
-  "ncaa1w: NJIT",
-  3
- ],
- [
-  "ncaa1w: UAlbany",
-  3
- ],
- [
-  "ncaa1: Pensacola Christian",
-  1
  ],
  [
   "ncaa1: Florida Polytechnic",
