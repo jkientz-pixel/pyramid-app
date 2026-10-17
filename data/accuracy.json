@@ -1,6 +1,6 @@
 {
  "backtest": {
-  "brier": 0.616,
+  "brier": 0.615,
   "cal": [
    {
     "actual": 0.414,
@@ -11,13 +11,13 @@
    {
     "actual": 0.481,
     "band": "40-50%",
-    "n": 928,
+    "n": 929,
     "predicted": 0.445
    },
    {
-    "actual": 0.61,
+    "actual": 0.612,
     "band": "50-60%",
-    "n": 336,
+    "n": 338,
     "predicted": 0.538
    },
    {
@@ -39,7 +39,7 @@
     "predicted": 0.807
    }
   ],
-  "hit": 0.507,
+  "hit": 0.508,
   "leagues": {
    "mls": {
     "brier": 0.63,
@@ -112,7 +112,7 @@
     "n": 400
    },
    "nwsl": {
-    "brier": 0.6,
+    "brier": 0.598,
     "cal": [
      {
       "actual": 0.484,
@@ -127,10 +127,10 @@
       "predicted": 0.444
      },
      {
-      "actual": 0.543,
+      "actual": 0.553,
       "band": "50-60%",
-      "n": 46,
-      "predicted": 0.54
+      "n": 47,
+      "predicted": 0.539
      },
      {
       "actual": 0.786,
@@ -151,9 +151,9 @@
       "predicted": 0.807
      }
     ],
-    "hit": 0.531,
-    "logloss": 1.003,
-    "n": 209
+    "hit": 0.533,
+    "logloss": 1.002,
+    "n": 210
    },
    "usl1": {
     "brier": 0.596,
@@ -232,7 +232,7 @@
     "n": 334
    },
    "uslw": {
-    "brier": 0.621,
+    "brier": 0.606,
     "cal": [
      {
       "actual": 0.5,
@@ -241,29 +241,29 @@
       "predicted": 0.376
      },
      {
-      "actual": 0.391,
+      "actual": 0.417,
       "band": "40-50%",
-      "n": 23,
-      "predicted": 0.443
+      "n": 24,
+      "predicted": 0.444
      },
      {
       "actual": 1.0,
       "band": "50-60%",
-      "n": 1,
-      "predicted": 0.528
+      "n": 2,
+      "predicted": 0.515
      }
     ],
-    "hit": 0.423,
-    "logloss": 1.032,
-    "n": 26
+    "hit": 0.464,
+    "logloss": 1.01,
+    "n": 28
    }
   },
-  "logloss": 1.028,
-  "n": 1630
+  "logloss": 1.027,
+  "n": 1633
  },
  "baseline_brier": 0.667,
  "live": {
-  "brier": 0.561,
+  "brier": 0.558,
   "cal": [
    {
     "actual": 0.222,
@@ -278,10 +278,10 @@
     "predicted": 0.446
    },
    {
-    "actual": 0.875,
+    "actual": 0.882,
     "band": "50-60%",
-    "n": 16,
-    "predicted": 0.546
+    "n": 17,
+    "predicted": 0.544
    },
    {
     "actual": 0.818,
@@ -290,7 +290,7 @@
     "predicted": 0.63
    }
   ],
-  "hit": 0.56,
+  "hit": 0.565,
   "leagues": {
    "mls": {
     "brier": 0.591,
@@ -325,7 +325,7 @@
     "n": 33
    },
    "nwsl": {
-    "brier": 0.54,
+    "brier": 0.518,
     "cal": [
      {
       "actual": 0.5,
@@ -334,10 +334,10 @@
       "predicted": 0.43
      },
      {
-      "actual": 0.5,
+      "actual": 0.667,
       "band": "50-60%",
-      "n": 2,
-      "predicted": 0.521
+      "n": 3,
+      "predicted": 0.52
      },
      {
       "actual": 1.0,
@@ -346,9 +346,9 @@
       "predicted": 0.628
      }
     ],
-    "hit": 0.625,
-    "logloss": 0.929,
-    "n": 8
+    "hit": 0.667,
+    "logloss": 0.898,
+    "n": 9
    },
    "usl1": {
     "brier": 0.536,
@@ -415,13 +415,29 @@
     "n": 30
    }
   },
-  "logloss": 0.955,
-  "n": 84,
+  "logloss": 0.952,
+  "n": 85,
   "pending": 39,
   "since": "2026-09-29T18:51Z",
   "void": 7
  },
  "recent": [
+  {
+   "frozen": "2026-10-15T18:24Z",
+   "lg": "nwsl",
+   "n1": "Boston Legacy FC",
+   "n2": "Racing Louisville",
+   "p": [
+    0.5188,
+    0.2407,
+    0.2405
+   ],
+   "res": [
+    2,
+    1
+   ],
+   "start": "2026-10-17T00:00:00.000Z"
+  },
   {
    "frozen": "2026-10-13T20:21Z",
    "lg": "mls",
@@ -1045,22 +1061,6 @@
     2
    ],
    "start": "2026-10-10T23:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "usl1",
-   "n1": "Charlotte Independence",
-   "n2": "New York Cosmos",
-   "p": [
-    0.578,
-    0.2252,
-    0.1969
-   ],
-   "res": [
-    3,
-    0
-   ],
-   "start": "2026-10-10T23:00:00.000Z"
   }
  ]
 }

@@ -1921,7 +1921,11 @@
 0.2407,
 0.2405
 ],
-"frozen":"2026-10-15T18:24Z"
+"frozen":"2026-10-15T18:24Z",
+"res":[
+2,
+1
+]
 },
 {
 "k":"nwsl:2026-10-17T16:30:washington-spirit:nj-ny-gotham",
@@ -2551,5 +2555,22 @@
 0.4565
 ],
 "frozen":"2026-10-16T18:10Z"
+},
+{
+"k":"nwsl:2026-10-18T17:00:houston-dash:orlando-pride",
+"lg":"nwsl",
+"start":"2026-10-18T17:00:00.000Z",
+"id1":"houston-dash",
+"id2":"orlando-pride",
+"n1":"Houston Dash",
+"n2":"Orlando Pride",
+"r1":1789,
+"r2":1846,
+"p":[
+0.3538,
+0.258,
+0.3882
+],
+"frozen":"2026-10-17T07:03Z"
 }
 ]

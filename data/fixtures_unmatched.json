@@ -1,35 +1,19 @@
 [
  [
-  "ncaa1w: TBD Home",
-  16
- ],
- [
-  "ncaa1w: TBD Away",
-  16
- ],
- [
   "ncaa1: TBD Home",
-  14
+  22
  ],
  [
   "ncaa1: TBD Away",
-  14
+  22
  ],
  [
-  "ncaa1: Maryland",
-  5
+  "ncaa1w: TBD Home",
+  20
  ],
  [
-  "ncaa1: Indiana",
-  5
- ],
- [
-  "ncaa1: Penn State",
-  5
- ],
- [
-  "ncaa1: Wisconsin",
-  5
+  "ncaa1w: TBD Away",
+  20
  ],
  [
   "ncaa1: South Carolina",
@@ -40,19 +24,15 @@
   5
  ],
  [
+  "ncaa1: Seattle U",
+  5
+ ],
+ [
   "ncaa1: American University",
   5
  ],
  [
-  "ncaa1w: UCF",
-  5
- ],
- [
-  "ncaa1w: Virginia Tech",
-  5
- ],
- [
-  "ncaa1w: California",
+  "ncaa1: San Jos\u00e9 State",
   5
  ],
  [
@@ -74,22 +54,6 @@
  [
   "ncaa1w: Miami",
   5
- ],
- [
-  "ncaa1: Georgetown",
-  4
- ],
- [
-  "ncaa1: Virginia Tech",
-  4
- ],
- [
-  "ncaa1: UConn",
-  4
- ],
- [
-  "ncaa1: North Carolina",
-  4
  ],
  [
   "ncaa1: NJIT",
@@ -116,31 +80,31 @@
   4
  ],
  [
-  "ncaa1: Seattle U",
-  4
- ],
- [
   "ncaa1: Howard",
   4
  ],
  [
-  "ncaa1: San Jos\u00e9 State",
+  "ncaa1: Georgetown",
   4
  ],
  [
-  "ncaa1w: Maryland",
+  "ncaa1: Maryland",
   4
  ],
  [
-  "ncaa1w: Southern",
+  "ncaa1: Indiana",
   4
  ],
  [
-  "ncaa1w: Southern Miss",
+  "ncaa1: Penn State",
   4
  ],
  [
-  "ncaa1w: Indiana",
+  "ncaa1: Wisconsin",
+  4
+ ],
+ [
+  "ncaa1: UConn",
   4
  ],
  [
@@ -260,11 +224,23 @@
   4
  ],
  [
-  "ncaa1w: East Texas A&M",
+  "ncaa1w: California",
+  4
+ ],
+ [
+  "ncaa1w: UCF",
+  4
+ ],
+ [
+  "ncaa1w: Virginia Tech",
   4
  ],
  [
   "ncaa1w: UT Rio Grande Valley",
+  4
+ ],
+ [
+  "ncaa1w: East Texas A&M",
   4
  ],
  [
@@ -289,6 +265,14 @@
  ],
  [
   "ncaa1: NC State",
+  3
+ ],
+ [
+  "ncaa1: Virginia Tech",
+  3
+ ],
+ [
+  "ncaa1: North Carolina",
   3
  ],
  [
@@ -352,6 +336,18 @@
   3
  ],
  [
+  "ncaa1w: Southern Miss",
+  3
+ ],
+ [
+  "ncaa1w: Indiana",
+  3
+ ],
+ [
+  "ncaa1w: Maryland",
+  3
+ ],
+ [
   "ncaa1w: Stephen F. Austin",
   3
  ],
@@ -364,12 +360,12 @@
   3
  ],
  [
-  "ncaa1w: Charlotte",
+  "ncaa1w: Southern",
   3
  ],
  [
-  "ncaa1: Florida Polytechnic",
-  1
+  "ncaa1w: Charlotte",
+  3
  ],
  [
   "ncaa1: Ohio Northern",
