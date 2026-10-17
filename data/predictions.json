@@ -2572,5 +2572,73 @@
 0.3882
 ],
 "frozen":"2026-10-17T07:03Z"
+},
+{
+"k":"mls:2026-10-18T21:00:fc-cincinnati:columbus-crew",
+"lg":"mls",
+"start":"2026-10-18T21:00:00.000Z",
+"id1":"fc-cincinnati",
+"id2":"columbus-crew",
+"n1":"FC Cincinnati",
+"n2":"Columbus Crew",
+"r1":1876,
+"r2":1867,
+"p":[
+0.4504,
+0.2529,
+0.2967
+],
+"frozen":"2026-10-17T17:15Z"
+},
+{
+"k":"nwsl:2026-10-18T21:00:bay-fc:portland-thorns",
+"lg":"nwsl",
+"start":"2026-10-18T21:00:00.000Z",
+"id1":"bay-fc",
+"id2":"portland-thorns",
+"n1":"Bay FC",
+"n2":"Portland Thorns",
+"r1":1815,
+"r2":1909,
+"p":[
+0.3033,
+0.2538,
+0.4429
+],
+"frozen":"2026-10-17T17:15Z"
+},
+{
+"k":"uslc:2026-10-18T21:00:birmingham-legion:loudoun-united",
+"lg":"uslc",
+"start":"2026-10-18T21:00:00.000Z",
+"id1":"birmingham-legion",
+"id2":"loudoun-united",
+"n1":"Birmingham Legion",
+"n2":"Loudoun United",
+"r1":1656,
+"r2":1639,
+"p":[
+0.4625,
+0.2512,
+0.2863
+],
+"frozen":"2026-10-17T17:15Z"
+},
+{
+"k":"nwsl:2026-10-18T23:00:chicago-red-stars:seattle-reign",
+"lg":"nwsl",
+"start":"2026-10-18T23:00:00.000Z",
+"id1":"chicago-red-stars",
+"id2":"seattle-reign",
+"n1":"Chicago Red Stars",
+"n2":"Seattle Reign",
+"r1":1672,
+"r2":1890,
+"p":[
+0.1619,
+0.208,
+0.63
+],
+"frozen":"2026-10-17T17:15Z"
 }
 ]

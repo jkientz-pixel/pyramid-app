@@ -108,18 +108,6 @@
   4
  ],
  [
-  "ncaa1w: Quinnipiac",
-  4
- ],
- [
-  "ncaa1w: Mount St. Mary's",
-  4
- ],
- [
-  "ncaa1w: St Bonaventure",
-  4
- ],
- [
   "ncaa1w: Northwestern",
   4
  ],
@@ -248,10 +236,6 @@
   4
  ],
  [
-  "ncaa1: Massachusetts",
-  3
- ],
- [
   "ncaa1: VMI",
   3
  ],
@@ -273,10 +257,6 @@
  ],
  [
   "ncaa1: North Carolina",
-  3
- ],
- [
-  "ncaa1w: Columbia",
   3
  ],
  [
@@ -340,6 +320,10 @@
   3
  ],
  [
+  "ncaa1w: Quinnipiac",
+  3
+ ],
+ [
   "ncaa1w: Indiana",
   3
  ],
@@ -348,11 +332,19 @@
   3
  ],
  [
+  "ncaa1w: St Bonaventure",
+  3
+ ],
+ [
   "ncaa1w: Stephen F. Austin",
   3
  ],
  [
   "ncaa1w: SE Louisiana",
+  3
+ ],
+ [
+  "ncaa1w: Mount St. Mary's",
   3
  ],
  [
@@ -366,6 +358,14 @@
  [
   "ncaa1w: Charlotte",
   3
+ ],
+ [
+  "ncaa1: Massachusetts",
+  2
+ ],
+ [
+  "ncaa1w: Columbia",
+  2
  ],
  [
   "ncaa1: Ohio Northern",
