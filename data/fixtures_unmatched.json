@@ -16,15 +16,7 @@
   26
  ],
  [
-  "ncaa1: American University",
-  5
- ],
- [
   "ncaa1: San Jos\u00e9 State",
-  5
- ],
- [
-  "ncaa1w: Miami",
   5
  ],
  [
@@ -38,10 +30,6 @@
  [
   "ncaa1w: UConn",
   5
- ],
- [
-  "ncaa1: Howard",
-  4
  ],
  [
   "ncaa1: Georgetown",
@@ -64,6 +52,10 @@
   4
  ],
  [
+  "ncaa1: American University",
+  4
+ ],
+ [
   "ncaa1: South Carolina",
   4
  ],
@@ -80,27 +72,7 @@
   4
  ],
  [
-  "ncaa1w: Purdue",
-  4
- ],
- [
-  "ncaa1w: West Florida",
-  4
- ],
- [
-  "ncaa1w: Massachusetts",
-  4
- ],
- [
-  "ncaa1w: Miami (OH)",
-  4
- ],
- [
-  "ncaa1w: Robert Morris",
-  4
- ],
- [
-  "ncaa1w: Ohio",
+  "ncaa1: Howard",
   4
  ],
  [
@@ -184,6 +156,10 @@
   4
  ],
  [
+  "ncaa1w: Miami",
+  4
+ ],
+ [
   "ncaa1w: Saint Mary's",
   4
  ],
@@ -229,18 +205,6 @@
  ],
  [
   "ncaa1: NJIT",
-  3
- ],
- [
-  "ncaa1w: Charleston",
-  3
- ],
- [
-  "ncaa1w: Texas",
-  3
- ],
- [
-  "ncaa1w: South Carolina",
   3
  ],
  [
@@ -296,7 +260,15 @@
   3
  ],
  [
+  "ncaa1w: Robert Morris",
+  3
+ ],
+ [
   "ncaa1w: Penn State",
+  3
+ ],
+ [
+  "ncaa1w: West Florida",
   3
  ],
  [
@@ -305,6 +277,10 @@
  ],
  [
   "ncaa1w: Indiana",
+  3
+ ],
+ [
+  "ncaa1w: Purdue",
   3
  ],
  [
@@ -332,6 +308,10 @@
   3
  ],
  [
+  "ncaa1w: Massachusetts",
+  3
+ ],
+ [
   "ncaa1w: Mount St. Mary's",
   3
  ],
@@ -345,6 +325,14 @@
  ],
  [
   "ncaa1w: NC State",
+  3
+ ],
+ [
+  "ncaa1w: Ohio",
+  3
+ ],
+ [
+  "ncaa1w: Miami (OH)",
   3
  ],
  [
@@ -365,6 +353,18 @@
  ],
  [
   "ncaa1: Massachusetts",
+  2
+ ],
+ [
+  "ncaa1w: South Carolina",
+  2
+ ],
+ [
+  "ncaa1w: Texas",
+  2
+ ],
+ [
+  "ncaa1w: Charleston",
   2
  ],
  [
