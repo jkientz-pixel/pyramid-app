@@ -3,28 +3,28 @@
   "brier": 0.615,
   "cal": [
    {
-    "actual": 0.414,
+    "actual": 0.41,
     "band": "30-40%",
-    "n": 278,
+    "n": 283,
     "predicted": 0.386
    },
    {
-    "actual": 0.481,
+    "actual": 0.486,
     "band": "40-50%",
-    "n": 929,
+    "n": 941,
     "predicted": 0.445
    },
    {
     "actual": 0.612,
     "band": "50-60%",
-    "n": 338,
+    "n": 343,
     "predicted": 0.538
    },
    {
-    "actual": 0.688,
+    "actual": 0.675,
     "band": "60-70%",
-    "n": 80,
-    "predicted": 0.636
+    "n": 83,
+    "predicted": 0.635
    },
    {
     "actual": 0.714,
@@ -39,21 +39,21 @@
     "predicted": 0.807
    }
   ],
-  "hit": 0.508,
+  "hit": 0.51,
   "leagues": {
    "mls": {
     "brier": 0.63,
     "cal": [
      {
-      "actual": 0.346,
+      "actual": 0.338,
       "band": "30-40%",
-      "n": 78,
-      "predicted": 0.386
+      "n": 80,
+      "predicted": 0.385
      },
      {
-      "actual": 0.44,
+      "actual": 0.443,
       "band": "40-50%",
-      "n": 232,
+      "n": 237,
       "predicted": 0.447
      },
      {
@@ -63,10 +63,10 @@
       "predicted": 0.537
      },
      {
-      "actual": 0.688,
+      "actual": 0.667,
       "band": "60-70%",
-      "n": 16,
-      "predicted": 0.637
+      "n": 18,
+      "predicted": 0.634
      },
      {
       "actual": 0.667,
@@ -75,9 +75,9 @@
       "predicted": 0.721
      }
     ],
-    "hit": 0.467,
+    "hit": 0.466,
     "logloss": 1.048,
-    "n": 420
+    "n": 429
    },
    "mnp": {
     "brier": 0.608,
@@ -115,16 +115,16 @@
     "brier": 0.598,
     "cal": [
      {
-      "actual": 0.484,
+      "actual": 0.485,
       "band": "30-40%",
-      "n": 31,
+      "n": 33,
       "predicted": 0.387
      },
      {
-      "actual": 0.509,
+      "actual": 0.517,
       "band": "40-50%",
-      "n": 116,
-      "predicted": 0.444
+      "n": 118,
+      "predicted": 0.443
      },
      {
       "actual": 0.553,
@@ -151,9 +151,9 @@
       "predicted": 0.807
      }
     ],
-    "hit": 0.533,
-    "logloss": 1.002,
-    "n": 210
+    "hit": 0.537,
+    "logloss": 1.0,
+    "n": 214
    },
    "usl1": {
     "brier": 0.596,
@@ -194,30 +194,30 @@
     "n": 241
    },
    "uslc": {
-    "brier": 0.631,
+    "brier": 0.629,
     "cal": [
      {
-      "actual": 0.356,
+      "actual": 0.35,
       "band": "30-40%",
-      "n": 59,
+      "n": 60,
       "predicted": 0.386
      },
      {
-      "actual": 0.455,
+      "actual": 0.466,
       "band": "40-50%",
-      "n": 187,
+      "n": 191,
       "predicted": 0.443
      },
      {
-      "actual": 0.62,
+      "actual": 0.619,
       "band": "50-60%",
-      "n": 79,
-      "predicted": 0.537
+      "n": 84,
+      "predicted": 0.536
      },
      {
-      "actual": 0.571,
+      "actual": 0.5,
       "band": "60-70%",
-      "n": 7,
+      "n": 8,
       "predicted": 0.641
      },
      {
@@ -227,12 +227,12 @@
       "predicted": 0.722
      }
     ],
-    "hit": 0.482,
-    "logloss": 1.051,
-    "n": 334
+    "hit": 0.487,
+    "logloss": 1.049,
+    "n": 345
    },
    "uslw": {
-    "brier": 0.606,
+    "brier": 0.599,
     "cal": [
      {
       "actual": 0.5,
@@ -241,10 +241,10 @@
       "predicted": 0.376
      },
      {
-      "actual": 0.417,
+      "actual": 0.44,
       "band": "40-50%",
-      "n": 24,
-      "predicted": 0.444
+      "n": 25,
+      "predicted": 0.445
      },
      {
       "actual": 1.0,
@@ -253,59 +253,59 @@
       "predicted": 0.515
      }
     ],
-    "hit": 0.464,
-    "logloss": 1.01,
-    "n": 28
+    "hit": 0.483,
+    "logloss": 1.001,
+    "n": 29
    }
   },
-  "logloss": 1.027,
-  "n": 1633
+  "logloss": 1.026,
+  "n": 1658
  },
  "baseline_brier": 0.667,
  "live": {
-  "brier": 0.558,
+  "brier": 0.57,
   "cal": [
    {
-    "actual": 0.222,
+    "actual": 0.25,
     "band": "30-40%",
-    "n": 18,
-    "predicted": 0.382
+    "n": 24,
+    "predicted": 0.384
    },
    {
-    "actual": 0.513,
+    "actual": 0.566,
     "band": "40-50%",
-    "n": 39,
-    "predicted": 0.446
+    "n": 53,
+    "predicted": 0.444
    },
    {
-    "actual": 0.882,
+    "actual": 0.895,
     "band": "50-60%",
-    "n": 17,
-    "predicted": 0.544
+    "n": 19,
+    "predicted": 0.546
    },
    {
-    "actual": 0.818,
+    "actual": 0.692,
     "band": "60-70%",
-    "n": 11,
-    "predicted": 0.63
+    "n": 13,
+    "predicted": 0.627
    }
   ],
-  "hit": 0.565,
+  "hit": 0.569,
   "leagues": {
    "mls": {
-    "brier": 0.591,
+    "brier": 0.608,
     "cal": [
      {
-      "actual": 0.111,
+      "actual": 0.083,
       "band": "30-40%",
-      "n": 9,
-      "predicted": 0.382
+      "n": 12,
+      "predicted": 0.383
      },
      {
-      "actual": 0.579,
+      "actual": 0.56,
       "band": "40-50%",
-      "n": 19,
-      "predicted": 0.445
+      "n": 25,
+      "predicted": 0.441
      },
      {
       "actual": 1.0,
@@ -320,18 +320,24 @@
       "predicted": 0.64
      }
     ],
-    "hit": 0.515,
-    "logloss": 0.997,
-    "n": 33
+    "hit": 0.476,
+    "logloss": 1.02,
+    "n": 42
    },
    "nwsl": {
-    "brier": 0.518,
+    "brier": 0.527,
     "cal": [
      {
       "actual": 0.5,
+      "band": "30-40%",
+      "n": 2,
+      "predicted": 0.39
+     },
+     {
+      "actual": 0.667,
       "band": "40-50%",
-      "n": 4,
-      "predicted": 0.43
+      "n": 6,
+      "predicted": 0.433
      },
      {
       "actual": 0.667,
@@ -346,9 +352,9 @@
       "predicted": 0.628
      }
     ],
-    "hit": 0.667,
-    "logloss": 0.898,
-    "n": 9
+    "hit": 0.692,
+    "logloss": 0.905,
+    "n": 13
    },
    "usl1": {
     "brier": 0.536,
@@ -383,45 +389,429 @@
     "n": 13
    },
    "uslc": {
-    "brier": 0.544,
+    "brier": 0.556,
     "cal": [
      {
-      "actual": 0.5,
+      "actual": 0.571,
       "band": "30-40%",
-      "n": 6,
-      "predicted": 0.384
+      "n": 7,
+      "predicted": 0.386
+     },
+     {
+      "actual": 0.611,
+      "band": "40-50%",
+      "n": 18,
+      "predicted": 0.452
+     },
+     {
+      "actual": 0.9,
+      "band": "50-60%",
+      "n": 10,
+      "predicted": 0.557
      },
      {
       "actual": 0.5,
-      "band": "40-50%",
-      "n": 12,
-      "predicted": 0.451
-     },
-     {
-      "actual": 0.875,
-      "band": "50-60%",
-      "n": 8,
-      "predicted": 0.556
-     },
-     {
-      "actual": 0.75,
       "band": "60-70%",
-      "n": 4,
-      "predicted": 0.643
+      "n": 6,
+      "predicted": 0.633
      }
     ],
-    "hit": 0.633,
-    "logloss": 0.931,
-    "n": 30
+    "hit": 0.659,
+    "logloss": 0.949,
+    "n": 41
    }
   },
-  "logloss": 0.952,
-  "n": 85,
-  "pending": 43,
+  "logloss": 0.968,
+  "n": 109,
+  "pending": 19,
   "since": "2026-09-29T18:51Z",
   "void": 7
  },
  "recent": [
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "uslc",
+   "n1": "Las Vegas Lights",
+   "n2": "Lexington SC",
+   "p": [
+    0.2915,
+    0.2521,
+    0.4565
+   ],
+   "res": [
+    3,
+    5
+   ],
+   "start": "2026-10-18T02:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "uslc",
+   "n1": "Monterey Bay FC",
+   "n2": "Colorado Springs Switchbacks",
+   "p": [
+    0.2243,
+    0.2356,
+    0.5401
+   ],
+   "res": [
+    0,
+    1
+   ],
+   "start": "2026-10-18T02:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "uslc",
+   "n1": "Orange County SC",
+   "n2": "Phoenix Rising",
+   "p": [
+    0.2863,
+    0.2512,
+    0.4625
+   ],
+   "res": [
+    1,
+    3
+   ],
+   "start": "2026-10-18T02:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "uslc",
+   "n1": "El Paso Locomotive",
+   "n2": "Sacramento Republic",
+   "p": [
+    0.3468,
+    0.2577,
+    0.3955
+   ],
+   "res": [
+    0,
+    1
+   ],
+   "start": "2026-10-18T01:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "nwsl",
+   "n1": "Denver Summit FC",
+   "n2": "Angel City",
+   "p": [
+    0.3153,
+    0.2553,
+    0.4294
+   ],
+   "res": [
+    2,
+    3
+   ],
+   "start": "2026-10-18T00:45:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "mls",
+   "n1": "Austin FC",
+   "n2": "Vancouver Whitecaps",
+   "p": [
+    0.3316,
+    0.2568,
+    0.4116
+   ],
+   "res": [
+    1,
+    2
+   ],
+   "start": "2026-10-18T00:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "mls",
+   "n1": "Houston Dynamo",
+   "n2": "FC Dallas",
+   "p": [
+    0.419,
+    0.2562,
+    0.3247
+   ],
+   "res": [
+    2,
+    2
+   ],
+   "start": "2026-10-18T00:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "mls",
+   "n1": "Sporting Kansas City",
+   "n2": "Real Salt Lake",
+   "p": [
+    0.3766,
+    0.2582,
+    0.3652
+   ],
+   "res": [
+    1,
+    3
+   ],
+   "start": "2026-10-18T00:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "uslc",
+   "n1": "San Antonio FC",
+   "n2": "New Mexico United",
+   "p": [
+    0.4265,
+    0.2556,
+    0.318
+   ],
+   "res": [
+    1,
+    0
+   ],
+   "start": "2026-10-18T00:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "uslc",
+   "n1": "FC Tulsa",
+   "n2": "Oakland Roots",
+   "p": [
+    0.602,
+    0.2177,
+    0.1804
+   ],
+   "res": [
+    2,
+    4
+   ],
+   "start": "2026-10-18T00:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "mls",
+   "n1": "Atlanta United",
+   "n2": "Inter Miami",
+   "p": [
+    0.3413,
+    0.2574,
+    0.4013
+   ],
+   "res": [
+    1,
+    3
+   ],
+   "start": "2026-10-17T23:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "mls",
+   "n1": "NYCFC",
+   "n2": "LAFC",
+   "p": [
+    0.3926,
+    0.2578,
+    0.3496
+   ],
+   "res": [
+    1,
+    1
+   ],
+   "start": "2026-10-17T23:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "mls",
+   "n1": "Orlando City",
+   "n2": "DC United",
+   "p": [
+    0.4474,
+    0.2533,
+    0.2993
+   ],
+   "res": [
+    4,
+    1
+   ],
+   "start": "2026-10-17T23:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "mls",
+   "n1": "New York Red Bulls",
+   "n2": "Toronto FC",
+   "p": [
+    0.4429,
+    0.2538,
+    0.3033
+   ],
+   "res": [
+    0,
+    2
+   ],
+   "start": "2026-10-17T23:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "uslc",
+   "n1": "Rhode Island FC",
+   "n2": "Pittsburgh Riverhounds",
+   "p": [
+    0.467,
+    0.2505,
+    0.2824
+   ],
+   "res": [
+    1,
+    1
+   ],
+   "start": "2026-10-17T23:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "uslc",
+   "n1": "Tampa Bay Rowdies",
+   "n2": "Detroit City FC",
+   "p": [
+    0.4414,
+    0.254,
+    0.3046
+   ],
+   "res": [
+    1,
+    0
+   ],
+   "start": "2026-10-17T23:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "nwsl",
+   "n1": "North Carolina Courage",
+   "n2": "San Diego Wave",
+   "p": [
+    0.3999,
+    0.2575,
+    0.3426
+   ],
+   "res": [
+    1,
+    2
+   ],
+   "start": "2026-10-17T23:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "uslc",
+   "n1": "Hartford Athletic",
+   "n2": "Brooklyn FC",
+   "p": [
+    0.6212,
+    0.2112,
+    0.1676
+   ],
+   "res": [
+    2,
+    3
+   ],
+   "start": "2026-10-17T23:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "uslc",
+   "n1": "Louisville City",
+   "n2": "Indy Eleven",
+   "p": [
+    0.5765,
+    0.2256,
+    0.1979
+   ],
+   "res": [
+    4,
+    1
+   ],
+   "start": "2026-10-17T23:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "uslc",
+   "n1": "Miami FC",
+   "n2": "Charleston Battery",
+   "p": [
+    0.2863,
+    0.2512,
+    0.4625
+   ],
+   "res": [
+    1,
+    2
+   ],
+   "start": "2026-10-17T23:00:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "nwsl",
+   "n1": "Utah Royals",
+   "n2": "Kansas City Current",
+   "p": [
+    0.2967,
+    0.2529,
+    0.4504
+   ],
+   "res": [
+    0,
+    2
+   ],
+   "start": "2026-10-17T22:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T18:10Z",
+   "lg": "mls",
+   "n1": "Minnesota United",
+   "n2": "St. Louis City SC",
+   "p": [
+    0.3524,
+    0.2579,
+    0.3896
+   ],
+   "res": [
+    3,
+    2
+   ],
+   "start": "2026-10-17T20:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T07:14Z",
+   "lg": "mls",
+   "n1": "Philadelphia Union",
+   "n2": "Charlotte FC",
+   "p": [
+    0.4384,
+    0.2543,
+    0.3072
+   ],
+   "res": [
+    2,
+    2
+   ],
+   "start": "2026-10-17T18:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-16T07:14Z",
+   "lg": "nwsl",
+   "n1": "Washington Spirit",
+   "n2": "NJ/NY Gotham",
+   "p": [
+    0.381,
+    0.2581,
+    0.3609
+   ],
+   "res": [
+    1,
+    0
+   ],
+   "start": "2026-10-17T16:30:00.000Z"
+  },
   {
    "frozen": "2026-10-15T18:24Z",
    "lg": "nwsl",
@@ -677,390 +1067,6 @@
     3
    ],
    "start": "2026-10-14T23:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-13T20:21Z",
-   "lg": "uslc",
-   "n1": "Rhode Island FC",
-   "n2": "Loudoun United",
-   "p": [
-    0.596,
-    0.2196,
-    0.1844
-   ],
-   "res": [
-    1,
-    0
-   ],
-   "start": "2026-10-14T23:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-13T20:21Z",
-   "lg": "uslc",
-   "n1": "Hartford Athletic",
-   "n2": "Charleston Battery",
-   "p": [
-    0.3581,
-    0.2581,
-    0.3838
-   ],
-   "res": [
-    1,
-    1
-   ],
-   "start": "2026-10-14T23:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-10T18:41Z",
-   "lg": "mls",
-   "n1": "St. Louis City SC",
-   "n2": "LA Galaxy",
-   "p": [
-    0.5005,
-    0.2446,
-    0.2549
-   ],
-   "res": [
-    6,
-    2
-   ],
-   "start": "2026-10-11T23:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-10T08:35Z",
-   "lg": "usl1",
-   "n1": "One Knoxville",
-   "n2": "Spokane Velocity",
-   "p": [
-    0.4655,
-    0.2508,
-    0.2837
-   ],
-   "res": [
-    0,
-    2
-   ],
-   "start": "2026-10-11T19:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "mls",
-   "n1": "LAFC",
-   "n2": "Vancouver Whitecaps",
-   "p": [
-    0.3824,
-    0.2581,
-    0.3595
-   ],
-   "res": [
-    1,
-    1
-   ],
-   "start": "2026-10-11T02:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "usl1",
-   "n1": "AV Alta FC",
-   "n2": "Greenville Triumph",
-   "p": [
-    0.3926,
-    0.2578,
-    0.3496
-   ],
-   "res": [
-    2,
-    2
-   ],
-   "start": "2026-10-11T02:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "uslc",
-   "n1": "Oakland Roots",
-   "n2": "San Antonio FC",
-   "p": [
-    0.4087,
-    0.257,
-    0.3343
-   ],
-   "res": [
-    0,
-    0
-   ],
-   "start": "2026-10-11T02:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "uslc",
-   "n1": "Phoenix Rising",
-   "n2": "Las Vegas Lights",
-   "p": [
-    0.5111,
-    0.2424,
-    0.2465
-   ],
-   "res": [
-    3,
-    2
-   ],
-   "start": "2026-10-11T02:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "uslc",
-   "n1": "Sacramento Republic",
-   "n2": "Colorado Springs Switchbacks",
-   "p": [
-    0.4959,
-    0.2455,
-    0.2586
-   ],
-   "res": [
-    1,
-    1
-   ],
-   "start": "2026-10-11T02:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "mls",
-   "n1": "Colorado Rapids",
-   "n2": "San Jose Earthquakes",
-   "p": [
-    0.394,
-    0.2578,
-    0.3482
-   ],
-   "res": [
-    1,
-    1
-   ],
-   "start": "2026-10-11T01:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "uslc",
-   "n1": "El Paso Locomotive",
-   "n2": "Orange County SC",
-   "p": [
-    0.6227,
-    0.2106,
-    0.1667
-   ],
-   "res": [
-    2,
-    1
-   ],
-   "start": "2026-10-11T01:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "uslc",
-   "n1": "New Mexico United",
-   "n2": "Monterey Bay FC",
-   "p": [
-    0.5583,
-    0.2308,
-    0.2109
-   ],
-   "res": [
-    3,
-    1
-   ],
-   "start": "2026-10-11T01:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "mls",
-   "n1": "Austin FC",
-   "n2": "Nashville SC",
-   "p": [
-    0.2967,
-    0.2529,
-    0.4504
-   ],
-   "res": [
-    1,
-    4
-   ],
-   "start": "2026-10-11T00:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "mls",
-   "n1": "Minnesota United",
-   "n2": "Houston Dynamo",
-   "p": [
-    0.3738,
-    0.2582,
-    0.368
-   ],
-   "res": [
-    2,
-    2
-   ],
-   "start": "2026-10-11T00:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "mls",
-   "n1": "Sporting Kansas City",
-   "n2": "Portland Timbers",
-   "p": [
-    0.3709,
-    0.2582,
-    0.3709
-   ],
-   "res": [
-    3,
-    3
-   ],
-   "start": "2026-10-11T00:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "usl1",
-   "n1": "Corpus Christi FC",
-   "n2": "FC Naples",
-   "p": [
-    0.4265,
-    0.2556,
-    0.318
-   ],
-   "res": [
-    0,
-    1
-   ],
-   "start": "2026-10-11T00:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "mls",
-   "n1": "Atlanta United",
-   "n2": "FC Cincinnati",
-   "p": [
-    0.4072,
-    0.2571,
-    0.3357
-   ],
-   "res": [
-    1,
-    3
-   ],
-   "start": "2026-10-10T23:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "mls",
-   "n1": "Charlotte FC",
-   "n2": "FC Dallas",
-   "p": [
-    0.4235,
-    0.2558,
-    0.3207
-   ],
-   "res": [
-    3,
-    2
-   ],
-   "start": "2026-10-10T23:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "mls",
-   "n1": "Inter Miami",
-   "n2": "DC United",
-   "p": [
-    0.5127,
-    0.2421,
-    0.2453
-   ],
-   "res": [
-    4,
-    0
-   ],
-   "start": "2026-10-10T23:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "mls",
-   "n1": "New England Revolution",
-   "n2": "Seattle Sounders",
-   "p": [
-    0.4746,
-    0.2493,
-    0.2761
-   ],
-   "res": [
-    0,
-    3
-   ],
-   "start": "2026-10-10T23:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "mls",
-   "n1": "Orlando City",
-   "n2": "Columbus Crew",
-   "p": [
-    0.4444,
-    0.2537,
-    0.3019
-   ],
-   "res": [
-    3,
-    2
-   ],
-   "start": "2026-10-10T23:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "mls",
-   "n1": "Philadelphia Union",
-   "n2": "Real Salt Lake",
-   "p": [
-    0.4761,
-    0.2491,
-    0.2748
-   ],
-   "res": [
-    2,
-    1
-   ],
-   "start": "2026-10-10T23:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "mls",
-   "n1": "New York Red Bulls",
-   "n2": "San Diego FC",
-   "p": [
-    0.425,
-    0.2557,
-    0.3193
-   ],
-   "res": [
-    4,
-    1
-   ],
-   "start": "2026-10-10T23:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-09T19:37Z",
-   "lg": "usl1",
-   "n1": "Sarasota Paradise",
-   "n2": "Richmond Kickers",
-   "p": [
-    0.6049,
-    0.2167,
-    0.1784
-   ],
-   "res": [
-    3,
-    2
-   ],
-   "start": "2026-10-10T23:30:00.000Z"
   }
  ]
 }
