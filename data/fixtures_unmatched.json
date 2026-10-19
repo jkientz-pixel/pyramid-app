@@ -1,31 +1,19 @@
 [
  [
   "ncaa1: TBD Home",
-  34
+  54
  ],
  [
   "ncaa1: TBD Away",
-  34
+  54
  ],
  [
   "ncaa1w: TBD Home",
-  26
+  53
  ],
  [
   "ncaa1w: TBD Away",
-  26
- ],
- [
-  "ncaa1: San Jos\u00e9 State",
-  5
- ],
- [
-  "ncaa1w: Hawai'i",
-  5
- ],
- [
-  "ncaa1w: Nevada",
-  5
+  53
  ],
  [
   "ncaa1w: UConn",
@@ -72,47 +60,11 @@
   4
  ],
  [
+  "ncaa1: San Jos\u00e9 State",
+  4
+ ],
+ [
   "ncaa1: Howard",
-  4
- ],
- [
-  "ncaa1w: Louisiana",
-  4
- ],
- [
-  "ncaa1w: Nebraska",
-  4
- ],
- [
-  "ncaa1w: Illinois",
-  4
- ],
- [
-  "ncaa1w: St. Thomas",
-  4
- ],
- [
-  "ncaa1w: Wisconsin",
-  4
- ],
- [
-  "ncaa1w: Missouri State",
-  4
- ],
- [
-  "ncaa1w: Southern Illinois",
-  4
- ],
- [
-  "ncaa1w: North Carolina",
-  4
- ],
- [
-  "ncaa1w: San Jos\u00e9 State",
-  4
- ],
- [
-  "ncaa1w: Jacksonville",
   4
  ],
  [
@@ -168,12 +120,12 @@
   4
  ],
  [
-  "ncaa1: California",
-  3
+  "ncaa1w: Nevada",
+  4
  ],
  [
-  "ncaa1: NC State",
-  3
+  "ncaa1w: Hawai'i",
+  4
  ],
  [
   "ncaa1: George Washington",
@@ -208,50 +160,6 @@
   3
  ],
  [
-  "ncaa1w: VMI",
-  3
- ],
- [
-  "ncaa1w: NJIT",
-  3
- ],
- [
-  "ncaa1w: Tennessee Tech",
-  3
- ],
- [
-  "ncaa1w: Tennessee",
-  3
- ],
- [
-  "ncaa1w: Arkansas",
-  3
- ],
- [
-  "ncaa1w: Texas A&M",
-  3
- ],
- [
-  "ncaa1w: LSU",
-  3
- ],
- [
-  "ncaa1w: UAlbany",
-  3
- ],
- [
-  "ncaa1w: UT Martin",
-  3
- ],
- [
-  "ncaa1w: Missouri",
-  3
- ],
- [
-  "ncaa1w: Alabama",
-  3
- ],
- [
   "ncaa1w: Southern Miss",
   3
  ],
@@ -264,11 +172,23 @@
   3
  ],
  [
+  "ncaa1w: Jacksonville",
+  3
+ ],
+ [
+  "ncaa1w: Missouri State",
+  3
+ ],
+ [
   "ncaa1w: Penn State",
   3
  ],
  [
   "ncaa1w: West Florida",
+  3
+ ],
+ [
+  "ncaa1w: Illinois",
   3
  ],
  [
@@ -304,7 +224,23 @@
   3
  ],
  [
+  "ncaa1w: Louisiana",
+  3
+ ],
+ [
+  "ncaa1w: Wisconsin",
+  3
+ ],
+ [
+  "ncaa1w: Nebraska",
+  3
+ ],
+ [
   "ncaa1w: Fresno State",
+  3
+ ],
+ [
+  "ncaa1w: North Carolina",
   3
  ],
  [
@@ -324,7 +260,15 @@
   3
  ],
  [
+  "ncaa1w: St. Thomas",
+  3
+ ],
+ [
   "ncaa1w: NC State",
+  3
+ ],
+ [
+  "ncaa1w: San Jos\u00e9 State",
   3
  ],
  [
@@ -340,11 +284,23 @@
   3
  ],
  [
+  "ncaa1w: Southern Illinois",
+  3
+ ],
+ [
   "ncaa1w: Charlotte",
   3
  ],
  [
   "ncaa1: VMI",
+  2
+ ],
+ [
+  "ncaa1: California",
+  2
+ ],
+ [
+  "ncaa1: NC State",
   2
  ],
  [
@@ -356,7 +312,35 @@
   2
  ],
  [
+  "ncaa1w: NJIT",
+  2
+ ],
+ [
+  "ncaa1w: UAlbany",
+  2
+ ],
+ [
+  "ncaa1w: Missouri",
+  2
+ ],
+ [
+  "ncaa1w: Texas A&M",
+  2
+ ],
+ [
   "ncaa1w: South Carolina",
+  2
+ ],
+ [
+  "ncaa1w: Alabama",
+  2
+ ],
+ [
+  "ncaa1w: Tennessee",
+  2
+ ],
+ [
+  "ncaa1w: Arkansas",
   2
  ],
  [
@@ -364,7 +348,23 @@
   2
  ],
  [
+  "ncaa1w: Tennessee Tech",
+  2
+ ],
+ [
+  "ncaa1w: UT Martin",
+  2
+ ],
+ [
   "ncaa1w: Charleston",
+  2
+ ],
+ [
+  "ncaa1w: LSU",
+  2
+ ],
+ [
+  "ncaa1w: VMI",
   2
  ],
  [
