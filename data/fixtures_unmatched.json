@@ -1,26 +1,26 @@
 [
  [
-  "ncaa1: TBD Home",
-  54
- ],
- [
-  "ncaa1: TBD Away",
-  54
- ],
- [
   "ncaa1w: TBD Home",
-  53
+  57
  ],
  [
   "ncaa1w: TBD Away",
-  53
+  57
+ ],
+ [
+  "ncaa1: TBD Home",
+  56
+ ],
+ [
+  "ncaa1: TBD Away",
+  56
  ],
  [
   "ncaa1w: UConn",
   5
  ],
  [
-  "ncaa1: Georgetown",
+  "ncaa1: Wisconsin",
   4
  ],
  [
@@ -33,10 +33,6 @@
  ],
  [
   "ncaa1: Penn State",
-  4
- ],
- [
-  "ncaa1: Wisconsin",
   4
  ],
  [
@@ -149,6 +145,10 @@
  ],
  [
   "ncaa1: UAB",
+  3
+ ],
+ [
+  "ncaa1: Georgetown",
   3
  ],
  [
@@ -296,15 +296,15 @@
   2
  ],
  [
+  "ncaa1: West Florida",
+  2
+ ],
+ [
   "ncaa1: California",
   2
  ],
  [
   "ncaa1: NC State",
-  2
- ],
- [
-  "ncaa1: West Florida",
   2
  ],
  [
