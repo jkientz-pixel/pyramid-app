@@ -2776,5 +2776,90 @@
 1,
 3
 ]
+},
+{
+"k":"usl1:2026-10-21T22:30:sarasota-paradise-usl1:fc-naples",
+"lg":"usl1",
+"start":"2026-10-21T22:30:00.000Z",
+"id1":"sarasota-paradise-usl1",
+"id2":"fc-naples",
+"n1":"Sarasota Paradise",
+"n2":"FC Naples",
+"r1":1607,
+"r2":1610,
+"p":[
+0.4324,
+0.255,
+0.3126
+],
+"frozen":"2026-10-20T18:33Z"
+},
+{
+"k":"uslc:2026-10-21T22:30:brooklyn-fc-uslc:birmingham-legion",
+"lg":"uslc",
+"start":"2026-10-21T22:30:00.000Z",
+"id1":"brooklyn-fc-uslc",
+"id2":"birmingham-legion",
+"n1":"Brooklyn FC",
+"n2":"Birmingham Legion",
+"r1":1578,
+"r2":1659,
+"p":[
+0.3207,
+0.2558,
+0.4235
+],
+"frozen":"2026-10-20T18:33Z"
+},
+{
+"k":"mls:2026-10-21T23:00:fc-cincinnati:dc-united",
+"lg":"mls",
+"start":"2026-10-21T23:00:00.000Z",
+"id1":"fc-cincinnati",
+"id2":"dc-united",
+"n1":"FC Cincinnati",
+"n2":"DC United",
+"r1":1872,
+"r2":1863,
+"p":[
+0.4504,
+0.2529,
+0.2967
+],
+"frozen":"2026-10-20T18:33Z"
+},
+{
+"k":"usl1:2026-10-21T23:00:new-york-cosmos:spokane-velocity",
+"lg":"usl1",
+"start":"2026-10-21T23:00:00.000Z",
+"id1":"new-york-cosmos",
+"id2":"spokane-velocity",
+"n1":"New York Cosmos",
+"n2":"Spokane Velocity",
+"r1":1552,
+"r2":1670,
+"p":[
+0.2723,
+0.2486,
+0.4792
+],
+"frozen":"2026-10-20T18:33Z"
+},
+{
+"k":"uslc:2026-10-21T23:30:sporting-club-jacksonville:louisville-city",
+"lg":"uslc",
+"start":"2026-10-21T23:30:00.000Z",
+"id1":"sporting-club-jacksonville",
+"id2":"louisville-city",
+"n1":"Sporting Club Jacksonville",
+"n2":"Louisville City",
+"r1":1526,
+"r2":1804,
+"p":[
+0.1117,
+0.1739,
+0.7145
+],
+"frozen":"2026-10-20T18:33Z"
 }
 ]

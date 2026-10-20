@@ -71,7 +71,7 @@
     },
     {
      "#": "5",
-     "TEAM": "United Holyoke FC",
+     "TEAM": "Caribbean FCA",
      "MP": "0",
      "W-D-L": "0-0-0",
      "W": "0",
@@ -87,7 +87,7 @@
     },
     {
      "#": "6",
-     "TEAM": "Caribbean FCA",
+     "TEAM": "United Holyoke FC",
      "MP": "0",
      "W-D-L": "0-0-0",
      "W": "0",
@@ -97,7 +97,7 @@
      "GF": "0",
      "GA": "0",
      "GD": "0",
-     "PTS": "-3",
+     "PTS": "0",
      "LAST 5": "\u2014",
      "": ""
     }
@@ -496,7 +496,7 @@
      "GF": "5",
      "GA": "22",
      "GD": "-17",
-     "PTS": "4",
+     "PTS": "1*",
      "LAST 5": "WLLLL",
      "": ""
     },
