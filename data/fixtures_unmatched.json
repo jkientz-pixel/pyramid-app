@@ -1,39 +1,23 @@
 [
  [
   "ncaa1w: TBD Home",
-  57
+  63
  ],
  [
   "ncaa1w: TBD Away",
-  57
+  63
  ],
  [
   "ncaa1: TBD Home",
-  56
+  62
  ],
  [
   "ncaa1: TBD Away",
-  56
+  62
  ],
  [
   "ncaa1w: UConn",
   5
- ],
- [
-  "ncaa1: Wisconsin",
-  4
- ],
- [
-  "ncaa1: Maryland",
-  4
- ],
- [
-  "ncaa1: Indiana",
-  4
- ],
- [
-  "ncaa1: Penn State",
-  4
  ],
  [
   "ncaa1: American University",
@@ -136,6 +120,10 @@
   3
  ],
  [
+  "ncaa1: Indiana",
+  3
+ ],
+ [
   "ncaa1: North Carolina",
   3
  ],
@@ -153,6 +141,18 @@
  ],
  [
   "ncaa1: NJIT",
+  3
+ ],
+ [
+  "ncaa1: Maryland",
+  3
+ ],
+ [
+  "ncaa1: Penn State",
+  3
+ ],
+ [
+  "ncaa1: Wisconsin",
   3
  ],
  [
@@ -366,10 +366,6 @@
  [
   "ncaa1w: VMI",
   2
- ],
- [
-  "ncaa1: Ohio Northern",
-  1
  ],
  [
   "ncaa1: Wilmington (OH)",
