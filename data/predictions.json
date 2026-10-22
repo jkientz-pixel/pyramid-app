@@ -2874,5 +2874,56 @@
 0,
 2
 ]
+},
+{
+"k":"nwsl:2026-10-24T00:00:chicago-red-stars:houston-dash",
+"lg":"nwsl",
+"start":"2026-10-24T00:00:00.000Z",
+"id1":"chicago-red-stars",
+"id2":"houston-dash",
+"n1":"Chicago Red Stars",
+"n2":"Houston Dash",
+"r1":1670,
+"r2":1778,
+"p":[
+0.285,
+0.251,
+0.464
+],
+"frozen":"2026-10-22T18:39Z"
+},
+{
+"k":"nwsl:2026-10-24T01:30:utah-royals:seattle-reign",
+"lg":"nwsl",
+"start":"2026-10-24T01:30:00.000Z",
+"id1":"utah-royals",
+"id2":"seattle-reign",
+"n1":"Utah Royals",
+"n2":"Seattle Reign",
+"r1":1881,
+"r2":1892,
+"p":[
+0.4205,
+0.2561,
+0.3234
+],
+"frozen":"2026-10-22T18:39Z"
+},
+{
+"k":"nwsl:2026-10-24T02:00:portland-thorns:north-carolina-courage",
+"lg":"nwsl",
+"start":"2026-10-24T02:00:00.000Z",
+"id1":"portland-thorns",
+"id2":"north-carolina-courage",
+"n1":"Portland Thorns",
+"n2":"North Carolina Courage",
+"r1":1908,
+"r2":1956,
+"p":[
+0.3666,
+0.2582,
+0.3752
+],
+"frozen":"2026-10-22T18:39Z"
 }
 ]
