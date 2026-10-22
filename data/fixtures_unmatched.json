@@ -1,35 +1,19 @@
 [
  [
-  "ncaa1w: TBD Home",
-  63
- ],
- [
-  "ncaa1w: TBD Away",
-  63
- ],
- [
   "ncaa1: TBD Home",
-  62
+  80
  ],
  [
   "ncaa1: TBD Away",
-  62
+  80
  ],
  [
-  "ncaa1w: UConn",
-  5
+  "ncaa1w: TBD Home",
+  79
  ],
  [
-  "ncaa1: South Carolina",
-  4
- ],
- [
-  "ncaa1: UCF",
-  4
- ],
- [
-  "ncaa1: Seattle U",
-  4
+  "ncaa1w: TBD Away",
+  79
  ],
  [
   "ncaa1: UConn",
@@ -41,22 +25,6 @@
  ],
  [
   "ncaa1: Howard",
-  4
- ],
- [
-  "ncaa1w: St. John's",
-  4
- ],
- [
-  "ncaa1w: Sacramento State",
-  4
- ],
- [
-  "ncaa1w: Cal State Fullerton",
-  4
- ],
- [
-  "ncaa1w: Long Beach State",
   4
  ],
  [
@@ -88,6 +56,10 @@
   4
  ],
  [
+  "ncaa1w: UConn",
+  4
+ ],
+ [
   "ncaa1w: Saint Mary's",
   4
  ],
@@ -102,14 +74,6 @@
  [
   "ncaa1w: Nevada",
   4
- ],
- [
-  "ncaa1: Virginia Tech",
-  3
- ],
- [
-  "ncaa1: Sacramento State",
-  3
  ],
  [
   "ncaa1: Charlotte",
@@ -160,11 +124,15 @@
   3
  ],
  [
-  "ncaa1w: Southern Miss",
+  "ncaa1: Seattle U",
   3
  ],
  [
-  "ncaa1w: Quinnipiac",
+  "ncaa1: UCF",
+  3
+ ],
+ [
+  "ncaa1: South Carolina",
   3
  ],
  [
@@ -252,6 +220,10 @@
   3
  ],
  [
+  "ncaa1w: St. John's",
+  3
+ ],
+ [
   "ncaa1w: Columbia",
   3
  ],
@@ -269,6 +241,18 @@
  ],
  [
   "ncaa1w: San Jos\u00e9 State",
+  3
+ ],
+ [
+  "ncaa1w: Sacramento State",
+  3
+ ],
+ [
+  "ncaa1w: Cal State Fullerton",
+  3
+ ],
+ [
+  "ncaa1w: Long Beach State",
   3
  ],
  [
@@ -308,7 +292,15 @@
   2
  ],
  [
+  "ncaa1: Sacramento State",
+  2
+ ],
+ [
   "ncaa1: Massachusetts",
+  2
+ ],
+ [
+  "ncaa1: Virginia Tech",
   2
  ],
  [
@@ -356,6 +348,10 @@
   2
  ],
  [
+  "ncaa1w: Southern Miss",
+  2
+ ],
+ [
   "ncaa1w: Charleston",
   2
  ],
@@ -365,6 +361,10 @@
  ],
  [
   "ncaa1w: VMI",
+  2
+ ],
+ [
+  "ncaa1w: Quinnipiac",
   2
  ],
  [
