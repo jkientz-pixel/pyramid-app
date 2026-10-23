@@ -2959,5 +2959,583 @@
 0.3059
 ],
 "frozen":"2026-10-23T07:44Z"
+},
+{
+"k":"usl1:2026-10-24T20:00:new-york-cosmos:chattanooga-red-wolves",
+"lg":"usl1",
+"start":"2026-10-24T20:00:00.000Z",
+"id1":"new-york-cosmos",
+"id2":"chattanooga-red-wolves",
+"n1":"New York Cosmos",
+"n2":"Chattanooga Red Wolves",
+"r1":1552,
+"r2":1561,
+"p":[
+0.4235,
+0.2558,
+0.3207
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"usl1:2026-10-24T21:00:portland-hearts-of-pine:charlotte-independence",
+"lg":"usl1",
+"start":"2026-10-24T21:00:00.000Z",
+"id1":"portland-hearts-of-pine",
+"id2":"charlotte-independence",
+"n1":"Portland Hearts of Pine",
+"n2":"Charlotte Independence",
+"r1":1527,
+"r2":1664,
+"p":[
+0.2489,
+0.243,
+0.5081
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"uslc:2026-10-24T21:00:loudoun-united:brooklyn-fc-uslc",
+"lg":"uslc",
+"start":"2026-10-24T21:00:00.000Z",
+"id1":"loudoun-united",
+"id2":"brooklyn-fc-uslc",
+"n1":"Loudoun United",
+"n2":"Brooklyn FC",
+"r1":1635,
+"r2":1577,
+"p":[
+0.5249,
+0.2393,
+0.2358
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"mls:2026-10-24T21:30:new-york-red-bulls:inter-miami",
+"lg":"mls",
+"start":"2026-10-24T21:30:00.000Z",
+"id1":"new-york-red-bulls",
+"id2":"inter-miami",
+"n1":"New York Red Bulls",
+"n2":"Inter Miami",
+"r1":1866,
+"r2":1928,
+"p":[
+0.3468,
+0.2577,
+0.3955
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"usl1:2026-10-24T22:00:forward-madison:union-omaha",
+"lg":"usl1",
+"start":"2026-10-24T22:00:00.000Z",
+"id1":"forward-madison",
+"id2":"union-omaha",
+"n1":"Forward Madison",
+"n2":"Union Omaha",
+"r1":1636,
+"r2":1746,
+"p":[
+0.2824,
+0.2505,
+0.467
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"usl1:2026-10-24T22:00:richmond-kickers:greenville-triumph",
+"lg":"usl1",
+"start":"2026-10-24T22:00:00.000Z",
+"id1":"richmond-kickers",
+"id2":"greenville-triumph",
+"n1":"Richmond Kickers",
+"n2":"Greenville Triumph",
+"r1":1495,
+"r2":1542,
+"p":[
+0.368,
+0.2582,
+0.3738
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"uslc:2026-10-24T22:00:charleston-battery:indy-eleven",
+"lg":"uslc",
+"start":"2026-10-24T22:00:00.000Z",
+"id1":"charleston-battery",
+"id2":"indy-eleven",
+"n1":"Charleston Battery",
+"n2":"Indy Eleven",
+"r1":1751,
+"r2":1704,
+"p":[
+0.5081,
+0.243,
+0.2489
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"nwsl:2026-10-24T22:30:denver-summit-fc:racing-louisville",
+"lg":"nwsl",
+"start":"2026-10-24T22:30:00.000Z",
+"id1":"denver-summit-fc",
+"id2":"racing-louisville",
+"n1":"Denver Summit FC",
+"n2":"Racing Louisville",
+"r1":1886,
+"r2":1805,
+"p":[
+0.5598,
+0.2304,
+0.2098
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"usl1:2026-10-24T23:00:fc-naples:spokane-velocity",
+"lg":"usl1",
+"start":"2026-10-24T23:00:00.000Z",
+"id1":"fc-naples",
+"id2":"spokane-velocity",
+"n1":"FC Naples",
+"n2":"Spokane Velocity",
+"r1":1610,
+"r2":1670,
+"p":[
+0.3496,
+0.2578,
+0.3926
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"uslc:2026-10-24T23:00:hartford-athletic:rhode-island-fc",
+"lg":"uslc",
+"start":"2026-10-24T23:00:00.000Z",
+"id1":"hartford-athletic",
+"id2":"rhode-island-fc",
+"n1":"Hartford Athletic",
+"n2":"Rhode Island FC",
+"r1":1694,
+"r2":1764,
+"p":[
+0.3357,
+0.2571,
+0.4072
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"uslc:2026-10-24T23:00:louisville-city:detroit-city-fc",
+"lg":"uslc",
+"start":"2026-10-24T23:00:00.000Z",
+"id1":"louisville-city",
+"id2":"detroit-city-fc",
+"n1":"Louisville City",
+"n2":"Detroit City FC",
+"r1":1807,
+"r2":1751,
+"p":[
+0.5218,
+0.24,
+0.2382
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"uslc:2026-10-24T23:00:pittsburgh-riverhounds:birmingham-legion",
+"lg":"uslc",
+"start":"2026-10-24T23:00:00.000Z",
+"id1":"pittsburgh-riverhounds",
+"id2":"birmingham-legion",
+"n1":"Pittsburgh Riverhounds",
+"n2":"Birmingham Legion",
+"r1":1735,
+"r2":1660,
+"p":[
+0.5507,
+0.2329,
+0.2164
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"mls:2026-10-24T23:30:atlanta-united:chicago-fire",
+"lg":"mls",
+"start":"2026-10-24T23:30:00.000Z",
+"id1":"atlanta-united",
+"id2":"chicago-fire",
+"n1":"Atlanta United",
+"n2":"Chicago Fire",
+"r1":1855,
+"r2":1905,
+"p":[
+0.3638,
+0.2582,
+0.3781
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"mls:2026-10-24T23:30:dc-united:fc-cincinnati",
+"lg":"mls",
+"start":"2026-10-24T23:30:00.000Z",
+"id1":"dc-united",
+"id2":"fc-cincinnati",
+"n1":"DC United",
+"n2":"FC Cincinnati",
+"r1":1861,
+"r2":1877,
+"p":[
+0.4131,
+0.2567,
+0.3302
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"mls:2026-10-24T23:30:orlando-city:nycfc",
+"lg":"mls",
+"start":"2026-10-24T23:30:00.000Z",
+"id1":"orlando-city",
+"id2":"nycfc",
+"n1":"Orlando City",
+"n2":"NYCFC",
+"r1":1879,
+"r2":1872,
+"p":[
+0.4474,
+0.2533,
+0.2993
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"mls:2026-10-24T23:30:philadelphia-union:new-england-revolution",
+"lg":"mls",
+"start":"2026-10-24T23:30:00.000Z",
+"id1":"philadelphia-union",
+"id2":"new-england-revolution",
+"n1":"Philadelphia Union",
+"n2":"New England Revolution",
+"r1":1904,
+"r2":1914,
+"p":[
+0.422,
+0.256,
+0.322
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"usl1:2026-10-24T23:30:fort-wayne-fc:athletic-club-boise",
+"lg":"usl1",
+"start":"2026-10-24T23:30:00.000Z",
+"id1":"fort-wayne-fc",
+"id2":"athletic-club-boise",
+"n1":"Fort Wayne FC",
+"n2":"Athletic Club Boise",
+"r1":1623,
+"r2":1665,
+"p":[
+0.3752,
+0.2582,
+0.3666
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"usl1:2026-10-24T23:30:sarasota-paradise-usl1:westchester-sc",
+"lg":"usl1",
+"start":"2026-10-24T23:30:00.000Z",
+"id1":"sarasota-paradise-usl1",
+"id2":"westchester-sc",
+"n1":"Sarasota Paradise",
+"n2":"Westchester SC",
+"r1":1607,
+"r2":1593,
+"p":[
+0.458,
+0.2519,
+0.2902
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"uslc:2026-10-24T23:30:tampa-bay-rowdies:sporting-club-jacksonville",
+"lg":"uslc",
+"start":"2026-10-24T23:30:00.000Z",
+"id1":"tampa-bay-rowdies",
+"id2":"sporting-club-jacksonville",
+"n1":"Tampa Bay Rowdies",
+"n2":"Sporting Club Jacksonville",
+"r1":1759,
+"r2":1523,
+"p":[
+0.7754,
+0.1445,
+0.0801
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"mls:2026-10-25T00:30:fc-dallas:san-jose-earthquakes",
+"lg":"mls",
+"start":"2026-10-25T00:30:00.000Z",
+"id1":"fc-dallas",
+"id2":"san-jose-earthquakes",
+"n1":"FC Dallas",
+"n2":"San Jose Earthquakes",
+"r1":1912,
+"r2":1906,
+"p":[
+0.4459,
+0.2535,
+0.3006
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"mls:2026-10-25T00:30:houston-dynamo:minnesota-united",
+"lg":"mls",
+"start":"2026-10-25T00:30:00.000Z",
+"id1":"houston-dynamo",
+"id2":"minnesota-united",
+"n1":"Houston Dynamo",
+"n2":"Minnesota United",
+"r1":1900,
+"r2":1866,
+"p":[
+0.4883,
+0.2469,
+0.2648
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"mls:2026-10-25T00:30:sporting-kansas-city:austin-fc",
+"lg":"mls",
+"start":"2026-10-25T00:30:00.000Z",
+"id1":"sporting-kansas-city",
+"id2":"austin-fc",
+"n1":"Sporting Kansas City",
+"n2":"Austin FC",
+"r1":1824,
+"r2":1855,
+"p":[
+0.3911,
+0.2579,
+0.351
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"uslc:2026-10-25T00:30:san-antonio-fc:orange-county-sc",
+"lg":"uslc",
+"start":"2026-10-25T00:30:00.000Z",
+"id1":"san-antonio-fc",
+"id2":"orange-county-sc",
+"n1":"San Antonio FC",
+"n2":"Orange County SC",
+"r1":1675,
+"r2":1593,
+"p":[
+0.5613,
+0.23,
+0.2087
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"nwsl:2026-10-25T00:45:angel-city:bay-fc",
+"lg":"nwsl",
+"start":"2026-10-25T00:45:00.000Z",
+"id1":"angel-city",
+"id2":"bay-fc",
+"n1":"Angel City",
+"n2":"Bay FC",
+"r1":1984,
+"r2":1817,
+"p":[
+0.6858,
+0.1863,
+0.1279
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"uslc:2026-10-25T01:00:colorado-springs-switchbacks:fc-tulsa",
+"lg":"uslc",
+"start":"2026-10-25T01:00:00.000Z",
+"id1":"colorado-springs-switchbacks",
+"id2":"fc-tulsa",
+"n1":"Colorado Springs Switchbacks",
+"n2":"FC Tulsa",
+"r1":1760,
+"r2":1752,
+"p":[
+0.4489,
+0.2531,
+0.298
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"uslc:2026-10-25T01:00:el-paso-locomotive:new-mexico-united",
+"lg":"uslc",
+"start":"2026-10-25T01:00:00.000Z",
+"id1":"el-paso-locomotive",
+"id2":"new-mexico-united",
+"n1":"El Paso Locomotive",
+"n2":"New Mexico United",
+"r1":1719,
+"r2":1669,
+"p":[
+0.5127,
+0.2421,
+0.2453
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"mls:2026-10-25T01:30:colorado-rapids:vancouver-whitecaps",
+"lg":"mls",
+"start":"2026-10-25T01:30:00.000Z",
+"id1":"colorado-rapids",
+"id2":"vancouver-whitecaps",
+"n1":"Colorado Rapids",
+"n2":"Vancouver Whitecaps",
+"r1":1882,
+"r2":1933,
+"p":[
+0.3623,
+0.2582,
+0.3795
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"mls:2026-10-25T01:30:real-salt-lake:st-louis-city-sc",
+"lg":"mls",
+"start":"2026-10-25T01:30:00.000Z",
+"id1":"real-salt-lake",
+"id2":"st-louis-city-sc",
+"n1":"Real Salt Lake",
+"n2":"St. Louis City SC",
+"r1":1873,
+"r2":1915,
+"p":[
+0.3752,
+0.2582,
+0.3666
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"uslc:2026-10-25T02:00:monterey-bay-fc:las-vegas-lights",
+"lg":"uslc",
+"start":"2026-10-25T02:00:00.000Z",
+"id1":"monterey-bay-fc",
+"id2":"las-vegas-lights",
+"n1":"Monterey Bay FC",
+"n2":"Las Vegas Lights",
+"r1":1585,
+"r2":1617,
+"p":[
+0.3896,
+0.2579,
+0.3524
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"uslc:2026-10-25T02:00:phoenix-rising:lexington-sc",
+"lg":"uslc",
+"start":"2026-10-25T02:00:00.000Z",
+"id1":"phoenix-rising",
+"id2":"lexington-sc",
+"n1":"Phoenix Rising",
+"n2":"Lexington SC",
+"r1":1714,
+"r2":1755,
+"p":[
+0.3766,
+0.2582,
+0.3652
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"uslc:2026-10-25T02:00:sacramento-republic:oakland-roots",
+"lg":"uslc",
+"start":"2026-10-25T02:00:00.000Z",
+"id1":"sacramento-republic",
+"id2":"oakland-roots",
+"n1":"Sacramento Republic",
+"n2":"Oakland Roots",
+"r1":1798,
+"r2":1658,
+"p":[
+0.6475,
+0.2016,
+0.1509
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"mls:2026-10-25T02:30:portland-timbers:charlotte-fc",
+"lg":"mls",
+"start":"2026-10-25T02:30:00.000Z",
+"id1":"portland-timbers",
+"id2":"charlotte-fc",
+"n1":"Portland Timbers",
+"n2":"Charlotte FC",
+"r1":1868,
+"r2":1903,
+"p":[
+0.3853,
+0.258,
+0.3567
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"mls:2026-10-25T02:30:san-diego-fc:seattle-sounders",
+"lg":"mls",
+"start":"2026-10-25T02:30:00.000Z",
+"id1":"san-diego-fc",
+"id2":"seattle-sounders",
+"n1":"San Diego FC",
+"n2":"Seattle Sounders",
+"r1":1869,
+"r2":1889,
+"p":[
+0.4072,
+0.2571,
+0.3357
+],
+"frozen":"2026-10-23T18:26Z"
+},
+{
+"k":"usl1:2026-10-25T02:30:av-alta-fc:corpus-christi-fc",
+"lg":"usl1",
+"start":"2026-10-25T02:30:00.000Z",
+"id1":"av-alta-fc",
+"id2":"corpus-christi-fc",
+"n1":"AV Alta FC",
+"n2":"Corpus Christi FC",
+"r1":1510,
+"r2":1574,
+"p":[
+0.344,
+0.2576,
+0.3984
+],
+"frozen":"2026-10-23T18:26Z"
 }
 ]
