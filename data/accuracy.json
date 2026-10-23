@@ -1,6 +1,6 @@
 {
  "backtest": {
-  "brier": 0.614,
+  "brier": 0.615,
   "cal": [
    {
     "actual": 0.413,
@@ -11,7 +11,7 @@
    {
     "actual": 0.484,
     "band": "40-50%",
-    "n": 954,
+    "n": 955,
     "predicted": 0.445
    },
    {
@@ -232,7 +232,7 @@
     "n": 348
    },
    "uslw": {
-    "brier": 0.599,
+    "brier": 0.607,
     "cal": [
      {
       "actual": 0.5,
@@ -241,9 +241,9 @@
       "predicted": 0.376
      },
      {
-      "actual": 0.44,
+      "actual": 0.423,
       "band": "40-50%",
-      "n": 25,
+      "n": 26,
       "predicted": 0.445
      },
      {
@@ -253,13 +253,13 @@
       "predicted": 0.515
      }
     ],
-    "hit": 0.483,
-    "logloss": 1.001,
-    "n": 29
+    "hit": 0.467,
+    "logloss": 1.013,
+    "n": 30
    }
   },
   "logloss": 1.026,
-  "n": 1681
+  "n": 1682
  },
  "baseline_brier": 0.667,
  "live": {
@@ -435,7 +435,7 @@
   },
   "logloss": 0.977,
   "n": 122,
-  "pending": 13,
+  "pending": 15,
   "since": "2026-09-29T18:51Z",
   "void": 8
  },

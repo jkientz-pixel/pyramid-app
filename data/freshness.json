@@ -3,12 +3,12 @@
   "apsl": {
    "source": "standings (apslsoccer.com)",
    "stale": null,
-   "updated": "2026-10-22"
+   "updated": "2026-10-23"
   },
   "mls": {
    "source": "official table (ESPN)",
    "stale": null,
-   "updated": "2026-10-22"
+   "updated": "2026-10-23"
   },
   "mnp": {
    "source": "results (ASA)",
@@ -68,7 +68,7 @@
   "uslw": {
    "source": "results (ASA)",
    "stale": null,
-   "updated": "2026-10-17"
+   "updated": "2026-10-22"
   }
  }
 }

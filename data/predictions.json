@@ -2925,5 +2925,39 @@
 0.3752
 ],
 "frozen":"2026-10-22T18:39Z"
+},
+{
+"k":"mls:2026-10-24T17:30:cf-montreal:nashville-sc",
+"lg":"mls",
+"start":"2026-10-24T17:30:00.000Z",
+"id1":"cf-montreal",
+"id2":"nashville-sc",
+"n1":"CF Montreal",
+"n2":"Nashville SC",
+"r1":1839,
+"r2":1964,
+"p":[
+0.2635,
+0.2467,
+0.4898
+],
+"frozen":"2026-10-23T07:44Z"
+},
+{
+"k":"mls:2026-10-24T19:30:columbus-crew:toronto-fc",
+"lg":"mls",
+"start":"2026-10-24T19:30:00.000Z",
+"id1":"columbus-crew",
+"id2":"toronto-fc",
+"n1":"Columbus Crew",
+"n2":"Toronto FC",
+"r1":1872,
+"r2":1870,
+"p":[
+0.4399,
+0.2542,
+0.3059
+],
+"frozen":"2026-10-23T07:44Z"
 }
 ]
