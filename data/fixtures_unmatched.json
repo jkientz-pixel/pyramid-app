@@ -48,14 +48,6 @@
   4
  ],
  [
-  "ncaa1: Georgetown",
-  3
- ],
- [
-  "ncaa1: American University",
-  3
- ],
- [
   "ncaa1: West Florida",
   3
  ],
@@ -89,18 +81,6 @@
  ],
  [
   "ncaa1: South Carolina",
-  3
- ],
- [
-  "ncaa1w: Massachusetts",
-  3
- ],
- [
-  "ncaa1w: Mount St. Mary's",
-  3
- ],
- [
-  "ncaa1w: St. John's",
   3
  ],
  [
@@ -188,10 +168,6 @@
   3
  ],
  [
-  "ncaa1: VMI",
-  2
- ],
- [
   "ncaa1: California",
   2
  ],
@@ -228,6 +204,14 @@
   2
  ],
  [
+  "ncaa1: American University",
+  2
+ ],
+ [
+  "ncaa1: Georgetown",
+  2
+ ],
+ [
   "ncaa1: Indiana",
   2
  ],
@@ -241,10 +225,6 @@
  ],
  [
   "ncaa1w: Illinois",
-  2
- ],
- [
-  "ncaa1w: Southern Miss",
   2
  ],
  [
@@ -288,6 +268,10 @@
   2
  ],
  [
+  "ncaa1w: Southern Miss",
+  2
+ ],
+ [
   "ncaa1w: Wisconsin",
   2
  ],
@@ -316,6 +300,10 @@
   2
  ],
  [
+  "ncaa1w: Massachusetts",
+  2
+ ],
+ [
   "ncaa1w: VMI",
   2
  ],
@@ -324,7 +312,15 @@
   2
  ],
  [
+  "ncaa1w: Mount St. Mary's",
+  2
+ ],
+ [
   "ncaa1w: Quinnipiac",
+  2
+ ],
+ [
+  "ncaa1w: St. John's",
   2
  ],
  [
@@ -333,6 +329,10 @@
  ],
  [
   "ncaa1: Wilmington (OH)",
+  1
+ ],
+ [
+  "ncaa1: VMI",
   1
  ],
  [

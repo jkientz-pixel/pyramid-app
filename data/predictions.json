@@ -3566,5 +3566,56 @@
 0.4519
 ],
 "frozen":"2026-10-24T07:23Z"
+},
+{
+"k":"nwsl:2026-10-25T21:00:kansas-city-current:washington-spirit",
+"lg":"nwsl",
+"start":"2026-10-25T21:00:00.000Z",
+"id1":"kansas-city-current",
+"id2":"washington-spirit",
+"n1":"Kansas City Current",
+"n2":"Washington Spirit",
+"r1":1996,
+"r2":1936,
+"p":[
+0.5279,
+0.2386,
+0.2335
+],
+"frozen":"2026-10-24T17:33Z"
+},
+{
+"k":"nwsl:2026-10-25T23:00:san-diego-wave:boston-legacy-fc",
+"lg":"nwsl",
+"start":"2026-10-25T23:00:00.000Z",
+"id1":"san-diego-wave",
+"id2":"boston-legacy-fc",
+"n1":"San Diego Wave",
+"n2":"Boston Legacy FC",
+"r1":1991,
+"r2":1865,
+"p":[
+0.6271,
+0.2091,
+0.1638
+],
+"frozen":"2026-10-24T17:33Z"
+},
+{
+"k":"mls:2026-10-26T01:00:lafc:la-galaxy",
+"lg":"mls",
+"start":"2026-10-26T01:00:00.000Z",
+"id1":"lafc",
+"id2":"la-galaxy",
+"n1":"LAFC",
+"n2":"LA Galaxy",
+"r1":1901,
+"r2":1876,
+"p":[
+0.4746,
+0.2493,
+0.2761
+],
+"frozen":"2026-10-24T17:33Z"
 }
 ]
