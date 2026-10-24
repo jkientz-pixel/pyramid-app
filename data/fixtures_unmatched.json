@@ -1,19 +1,19 @@
 [
  [
   "ncaa1w: TBD Home",
-  135
+  145
  ],
  [
   "ncaa1w: TBD Away",
-  135
+  145
  ],
  [
   "ncaa1: TBD Home",
-  92
+  94
  ],
  [
   "ncaa1: TBD Away",
-  92
+  94
  ],
  [
   "ncaa1: UConn",
@@ -25,10 +25,6 @@
  ],
  [
   "ncaa1: Howard",
-  4
- ],
- [
-  "ncaa1w: Miami",
   4
  ],
  [
@@ -52,23 +48,15 @@
   4
  ],
  [
-  "ncaa1: Indiana",
-  3
- ],
- [
-  "ncaa1: North Carolina",
-  3
- ],
- [
-  "ncaa1: UAB",
-  3
- ],
- [
   "ncaa1: Georgetown",
   3
  ],
  [
   "ncaa1: American University",
+  3
+ ],
+ [
+  "ncaa1: West Florida",
   3
  ],
  [
@@ -92,10 +80,6 @@
   3
  ],
  [
-  "ncaa1: West Florida",
-  3
- ],
- [
   "ncaa1: Seattle U",
   3
  ],
@@ -105,10 +89,6 @@
  ],
  [
   "ncaa1: South Carolina",
-  3
- ],
- [
-  "ncaa1w: North Carolina",
   3
  ],
  [
@@ -204,6 +184,10 @@
   3
  ],
  [
+  "ncaa1w: Miami",
+  3
+ ],
+ [
   "ncaa1: VMI",
   2
  ],
@@ -232,27 +216,19 @@
   2
  ],
  [
+  "ncaa1: North Carolina",
+  2
+ ],
+ [
   "ncaa1: Charlotte",
   2
  ],
  [
-  "ncaa1w: South Carolina",
+  "ncaa1: UAB",
   2
  ],
  [
-  "ncaa1w: Alabama",
-  2
- ],
- [
-  "ncaa1w: Tennessee",
-  2
- ],
- [
-  "ncaa1w: Arkansas",
-  2
- ],
- [
-  "ncaa1w: Texas",
+  "ncaa1: Indiana",
   2
  ],
  [
@@ -344,6 +320,10 @@
   2
  ],
  [
+  "ncaa1w: North Carolina",
+  2
+ ],
+ [
   "ncaa1w: Quinnipiac",
   2
  ],
@@ -380,11 +360,31 @@
   1
  ],
  [
+  "ncaa1w: Arkansas",
+  1
+ ],
+ [
+  "ncaa1w: Alabama",
+  1
+ ],
+ [
   "ncaa1w: Missouri",
   1
  ],
  [
+  "ncaa1w: Tennessee",
+  1
+ ],
+ [
+  "ncaa1w: Texas",
+  1
+ ],
+ [
   "ncaa1w: Texas A&M",
+  1
+ ],
+ [
+  "ncaa1w: South Carolina",
   1
  ],
  [
