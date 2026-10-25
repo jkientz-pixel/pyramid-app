@@ -16,10 +16,6 @@
   108
  ],
  [
-  "ncaa1: Howard",
-  4
- ],
- [
   "ncaa1: UCF",
   3
  ],
@@ -32,19 +28,11 @@
   3
  ],
  [
+  "ncaa1: Howard",
+  3
+ ],
+ [
   "ncaa1: San Jos\u00e9 State",
-  3
- ],
- [
-  "ncaa1w: Ohio",
-  3
- ],
- [
-  "ncaa1w: UCF",
-  3
- ],
- [
-  "ncaa1w: Miami (OH)",
   3
  ],
  [
@@ -108,10 +96,6 @@
   3
  ],
  [
-  "ncaa1: Massachusetts",
-  2
- ],
- [
   "ncaa1: Virginia Tech",
   2
  ],
@@ -165,38 +149,6 @@
  ],
  [
   "ncaa1: Seattle U",
-  2
- ],
- [
-  "ncaa1w: Illinois",
-  2
- ],
- [
-  "ncaa1w: St Bonaventure",
-  2
- ],
- [
-  "ncaa1w: Charleston",
-  2
- ],
- [
-  "ncaa1w: Indiana",
-  2
- ],
- [
-  "ncaa1w: Jacksonville",
-  2
- ],
- [
-  "ncaa1w: Penn State",
-  2
- ],
- [
-  "ncaa1w: Maryland",
-  2
- ],
- [
-  "ncaa1w: Robert Morris",
   2
  ],
  [
@@ -264,11 +216,19 @@
   2
  ],
  [
+  "ncaa1w: Ohio",
+  2
+ ],
+ [
   "ncaa1w: VMI",
   2
  ],
  [
   "ncaa1w: St. Thomas",
+  2
+ ],
+ [
+  "ncaa1w: Miami (OH)",
   2
  ],
  [
@@ -281,6 +241,10 @@
  ],
  [
   "ncaa1w: Lafayette",
+  2
+ ],
+ [
+  "ncaa1w: UCF",
   2
  ],
  [
@@ -328,6 +292,10 @@
   1
  ],
  [
+  "ncaa1: Massachusetts",
+  1
+ ],
+ [
   "ncaa1: George Washington",
   1
  ],
@@ -340,10 +308,6 @@
   1
  ],
  [
-  "ncaa1w: NJIT",
-  1
- ],
- [
   "ncaa1w: Regent",
   1
  ],
@@ -352,7 +316,39 @@
   1
  ],
  [
+  "ncaa1w: Illinois",
+  1
+ ],
+ [
+  "ncaa1w: Penn State",
+  1
+ ],
+ [
+  "ncaa1w: Indiana",
+  1
+ ],
+ [
+  "ncaa1w: Maryland",
+  1
+ ],
+ [
   "ncaa1w: Tuskegee",
+  1
+ ],
+ [
+  "ncaa1w: Robert Morris",
+  1
+ ],
+ [
+  "ncaa1w: Jacksonville",
+  1
+ ],
+ [
+  "ncaa1w: Charleston",
+  1
+ ],
+ [
+  "ncaa1w: St Bonaventure",
   1
  ],
  [
