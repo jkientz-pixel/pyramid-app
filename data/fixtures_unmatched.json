@@ -1,79 +1,23 @@
 [
  [
   "ncaa1w: TBD Home",
-  145
+  157
  ],
  [
   "ncaa1w: TBD Away",
-  145
+  157
  ],
  [
   "ncaa1: TBD Home",
-  94
+  108
  ],
  [
   "ncaa1: TBD Away",
-  94
- ],
- [
-  "ncaa1: UConn",
-  4
- ],
- [
-  "ncaa1: San Jos\u00e9 State",
-  4
+  108
  ],
  [
   "ncaa1: Howard",
   4
- ],
- [
-  "ncaa1w: UConn",
-  4
- ],
- [
-  "ncaa1w: Saint Mary's",
-  4
- ],
- [
-  "ncaa1w: Hawai'i",
-  4
- ],
- [
-  "ncaa1w: Seattle U",
-  4
- ],
- [
-  "ncaa1w: Nevada",
-  4
- ],
- [
-  "ncaa1: West Florida",
-  3
- ],
- [
-  "ncaa1: UAlbany",
-  3
- ],
- [
-  "ncaa1: NJIT",
-  3
- ],
- [
-  "ncaa1: Maryland",
-  3
- ],
- [
-  "ncaa1: Penn State",
-  3
- ],
- [
-  "ncaa1: Wisconsin",
-  3
- ],
- [
-  "ncaa1: Seattle U",
-  3
  ],
  [
   "ncaa1: UCF",
@@ -84,35 +28,11 @@
   3
  ],
  [
-  "ncaa1w: Columbia",
+  "ncaa1: UConn",
   3
  ],
  [
-  "ncaa1w: Lafayette",
-  3
- ],
- [
-  "ncaa1w: St. Thomas",
-  3
- ],
- [
-  "ncaa1w: NC State",
-  3
- ],
- [
-  "ncaa1w: San Jos\u00e9 State",
-  3
- ],
- [
-  "ncaa1w: Sacramento State",
-  3
- ],
- [
-  "ncaa1w: Cal State Fullerton",
-  3
- ],
- [
-  "ncaa1w: Long Beach State",
+  "ncaa1: San Jos\u00e9 State",
   3
  ],
  [
@@ -160,28 +80,32 @@
   3
  ],
  [
+  "ncaa1w: UConn",
+  3
+ ],
+ [
+  "ncaa1w: Hawai'i",
+  3
+ ],
+ [
+  "ncaa1w: Nevada",
+  3
+ ],
+ [
+  "ncaa1w: Saint Mary's",
+  3
+ ],
+ [
+  "ncaa1w: Seattle U",
+  3
+ ],
+ [
   "ncaa1w: California",
   3
  ],
  [
   "ncaa1w: Miami",
   3
- ],
- [
-  "ncaa1: California",
-  2
- ],
- [
-  "ncaa1: NC State",
-  2
- ],
- [
-  "ncaa1: George Washington",
-  2
- ],
- [
-  "ncaa1: Sacramento State",
-  2
  ],
  [
   "ncaa1: Massachusetts",
@@ -196,6 +120,10 @@
   2
  ],
  [
+  "ncaa1: Penn State",
+  2
+ ],
+ [
   "ncaa1: Charlotte",
   2
  ],
@@ -204,7 +132,15 @@
   2
  ],
  [
+  "ncaa1: West Florida",
+  2
+ ],
+ [
   "ncaa1: American University",
+  2
+ ],
+ [
+  "ncaa1: NJIT",
   2
  ],
  [
@@ -212,15 +148,23 @@
   2
  ],
  [
+  "ncaa1: UAlbany",
+  2
+ ],
+ [
+  "ncaa1: Maryland",
+  2
+ ],
+ [
+  "ncaa1: Wisconsin",
+  2
+ ],
+ [
   "ncaa1: Indiana",
   2
  ],
  [
-  "ncaa1w: Tennessee Tech",
-  2
- ],
- [
-  "ncaa1w: UT Martin",
+  "ncaa1: Seattle U",
   2
  ],
  [
@@ -300,6 +244,22 @@
   2
  ],
  [
+  "ncaa1w: Sacramento State",
+  2
+ ],
+ [
+  "ncaa1w: San Jos\u00e9 State",
+  2
+ ],
+ [
+  "ncaa1w: Long Beach State",
+  2
+ ],
+ [
+  "ncaa1w: Cal State Fullerton",
+  2
+ ],
+ [
   "ncaa1w: Massachusetts",
   2
  ],
@@ -308,7 +268,19 @@
   2
  ],
  [
+  "ncaa1w: St. Thomas",
+  2
+ ],
+ [
   "ncaa1w: North Carolina",
+  2
+ ],
+ [
+  "ncaa1w: NC State",
+  2
+ ],
+ [
+  "ncaa1w: Lafayette",
   2
  ],
  [
@@ -321,6 +293,10 @@
  ],
  [
   "ncaa1w: St. John's",
+  2
+ ],
+ [
+  "ncaa1w: Columbia",
   2
  ],
  [
@@ -340,7 +316,23 @@
   1
  ],
  [
+  "ncaa1: NC State",
+  1
+ ],
+ [
   "ncaa1: Maine Fort Kent",
+  1
+ ],
+ [
+  "ncaa1: California",
+  1
+ ],
+ [
+  "ncaa1: George Washington",
+  1
+ ],
+ [
+  "ncaa1: Sacramento State",
   1
  ],
  [
@@ -353,6 +345,10 @@
  ],
  [
   "ncaa1w: Regent",
+  1
+ ],
+ [
+  "ncaa1w: Tennessee Tech",
   1
  ],
  [
@@ -385,6 +381,10 @@
  ],
  [
   "ncaa1w: South Carolina",
+  1
+ ],
+ [
+  "ncaa1w: UT Martin",
   1
  ],
  [
