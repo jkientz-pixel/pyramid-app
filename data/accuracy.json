@@ -3,27 +3,27 @@
   "brier": 0.614,
   "cal": [
    {
-    "actual": 0.417,
+    "actual": 0.416,
     "band": "30-40%",
-    "n": 295,
-    "predicted": 0.386
+    "n": 296,
+    "predicted": 0.385
    },
    {
     "actual": 0.477,
     "band": "40-50%",
-    "n": 987,
+    "n": 995,
     "predicted": 0.445
    },
    {
-    "actual": 0.62,
+    "actual": 0.619,
     "band": "50-60%",
-    "n": 363,
+    "n": 367,
     "predicted": 0.538
    },
    {
-    "actual": 0.685,
+    "actual": 0.689,
     "band": "60-70%",
-    "n": 89,
+    "n": 90,
     "predicted": 0.636
    },
    {
@@ -42,31 +42,31 @@
   "hit": 0.509,
   "leagues": {
    "mls": {
-    "brier": 0.633,
+    "brier": 0.632,
     "cal": [
      {
-      "actual": 0.349,
+      "actual": 0.345,
       "band": "30-40%",
-      "n": 83,
+      "n": 84,
       "predicted": 0.385
      },
      {
-      "actual": 0.432,
+      "actual": 0.434,
       "band": "40-50%",
-      "n": 250,
+      "n": 258,
       "predicted": 0.446
      },
      {
-      "actual": 0.588,
+      "actual": 0.584,
       "band": "50-60%",
-      "n": 97,
+      "n": 101,
       "predicted": 0.537
      },
      {
-      "actual": 0.667,
+      "actual": 0.684,
       "band": "60-70%",
-      "n": 18,
-      "predicted": 0.634
+      "n": 19,
+      "predicted": 0.633
      },
      {
       "actual": 0.667,
@@ -75,9 +75,9 @@
       "predicted": 0.721
      }
     ],
-    "hit": 0.461,
-    "logloss": 1.052,
-    "n": 451
+    "hit": 0.462,
+    "logloss": 1.051,
+    "n": 465
    },
    "mnp": {
     "brier": 0.607,
@@ -265,11 +265,11 @@
    }
   },
   "logloss": 1.026,
-  "n": 1743
+  "n": 1757
  },
  "baseline_brier": 0.667,
  "live": {
-  "brier": 0.586,
+  "brier": 0.59,
   "cal": [
    {
     "actual": 0.308,
@@ -278,16 +278,16 @@
     "predicted": 0.384
    },
    {
-    "actual": 0.487,
+    "actual": 0.466,
     "band": "40-50%",
-    "n": 80,
-    "predicted": 0.444
+    "n": 88,
+    "predicted": 0.446
    },
    {
-    "actual": 0.793,
+    "actual": 0.771,
     "band": "50-60%",
-    "n": 29,
-    "predicted": 0.54
+    "n": 35,
+    "predicted": 0.536
    },
    {
     "actual": 0.706,
@@ -302,10 +302,10 @@
     "predicted": 0.745
    }
   ],
-  "hit": 0.527,
+  "hit": 0.519,
   "leagues": {
    "mls": {
-    "brier": 0.631,
+    "brier": 0.632,
     "cal": [
      {
       "actual": 0.211,
@@ -314,16 +314,16 @@
       "predicted": 0.384
      },
      {
-      "actual": 0.487,
+      "actual": 0.447,
       "band": "40-50%",
-      "n": 39,
-      "predicted": 0.442
+      "n": 47,
+      "predicted": 0.445
      },
      {
-      "actual": 0.8,
+      "actual": 0.727,
       "band": "50-60%",
-      "n": 5,
-      "predicted": 0.517
+      "n": 11,
+      "predicted": 0.518
      },
      {
       "actual": 1.0,
@@ -332,9 +332,9 @@
       "predicted": 0.64
      }
     ],
-    "hit": 0.438,
+    "hit": 0.436,
     "logloss": 1.052,
-    "n": 64
+    "n": 78
    },
    "nwsl": {
     "brier": 0.525,
@@ -439,13 +439,237 @@
     "n": 56
    }
   },
-  "logloss": 0.988,
-  "n": 167,
-  "pending": 14,
+  "logloss": 0.993,
+  "n": 181,
+  "pending": 0,
   "since": "2026-09-29T18:51Z",
   "void": 16
  },
  "recent": [
+  {
+   "frozen": "2026-10-27T19:39Z",
+   "lg": "mls",
+   "n1": "San Jose Earthquakes",
+   "n2": "Colorado Rapids",
+   "p": [
+    0.4595,
+    0.2517,
+    0.2889
+   ],
+   "res": [
+    2,
+    2
+   ],
+   "start": "2026-10-29T02:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-27T19:39Z",
+   "lg": "mls",
+   "n1": "Seattle Sounders",
+   "n2": "Houston Dynamo",
+   "p": [
+    0.4205,
+    0.2561,
+    0.3234
+   ],
+   "res": [
+    0,
+    1
+   ],
+   "start": "2026-10-29T02:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-27T19:39Z",
+   "lg": "mls",
+   "n1": "Vancouver Whitecaps",
+   "n2": "San Diego FC",
+   "p": [
+    0.5279,
+    0.2386,
+    0.2335
+   ],
+   "res": [
+    4,
+    1
+   ],
+   "start": "2026-10-29T02:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-27T19:39Z",
+   "lg": "mls",
+   "n1": "Austin FC",
+   "n2": "Real Salt Lake",
+   "p": [
+    0.4072,
+    0.2571,
+    0.3357
+   ],
+   "res": [
+    1,
+    2
+   ],
+   "start": "2026-10-29T00:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-27T19:39Z",
+   "lg": "mls",
+   "n1": "Chicago Fire",
+   "n2": "Orlando City",
+   "p": [
+    0.4822,
+    0.248,
+    0.2698
+   ],
+   "res": [
+    2,
+    2
+   ],
+   "start": "2026-10-29T00:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-27T19:39Z",
+   "lg": "mls",
+   "n1": "FC Dallas",
+   "n2": "Columbus Crew",
+   "p": [
+    0.4959,
+    0.2455,
+    0.2586
+   ],
+   "res": [
+    0,
+    2
+   ],
+   "start": "2026-10-29T00:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-27T19:39Z",
+   "lg": "mls",
+   "n1": "Minnesota United",
+   "n2": "Sporting Kansas City",
+   "p": [
+    0.5035,
+    0.244,
+    0.2525
+   ],
+   "res": [
+    3,
+    1
+   ],
+   "start": "2026-10-29T00:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-27T19:39Z",
+   "lg": "mls",
+   "n1": "Nashville SC",
+   "n2": "Philadelphia Union",
+   "p": [
+    0.5386,
+    0.236,
+    0.2254
+   ],
+   "res": [
+    0,
+    0
+   ],
+   "start": "2026-10-29T00:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-27T19:39Z",
+   "lg": "mls",
+   "n1": "St. Louis City SC",
+   "n2": "Portland Timbers",
+   "p": [
+    0.4944,
+    0.2458,
+    0.2598
+   ],
+   "res": [
+    2,
+    3
+   ],
+   "start": "2026-10-29T00:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-27T19:39Z",
+   "lg": "mls",
+   "n1": "Charlotte FC",
+   "n2": "CF Montreal",
+   "p": [
+    0.534,
+    0.2371,
+    0.2289
+   ],
+   "res": [
+    4,
+    0
+   ],
+   "start": "2026-10-28T23:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-27T19:39Z",
+   "lg": "mls",
+   "n1": "Inter Miami",
+   "n2": "FC Cincinnati",
+   "p": [
+    0.5005,
+    0.2446,
+    0.2549
+   ],
+   "res": [
+    2,
+    2
+   ],
+   "start": "2026-10-28T23:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-27T19:39Z",
+   "lg": "mls",
+   "n1": "New England Revolution",
+   "n2": "New York Red Bulls",
+   "p": [
+    0.5066,
+    0.2434,
+    0.2501
+   ],
+   "res": [
+    3,
+    2
+   ],
+   "start": "2026-10-28T23:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-27T19:39Z",
+   "lg": "mls",
+   "n1": "NYCFC",
+   "n2": "Atlanta United",
+   "p": [
+    0.4655,
+    0.2508,
+    0.2837
+   ],
+   "res": [
+    2,
+    1
+   ],
+   "start": "2026-10-28T23:30:00.000Z"
+  },
+  {
+   "frozen": "2026-10-27T19:39Z",
+   "lg": "mls",
+   "n1": "Toronto FC",
+   "n2": "DC United",
+   "p": [
+    0.4519,
+    0.2527,
+    0.2954
+   ],
+   "res": [
+    2,
+    1
+   ],
+   "start": "2026-10-28T23:30:00.000Z"
+  },
   {
    "frozen": "2026-10-24T17:33Z",
    "lg": "mls",
@@ -861,230 +1085,6 @@
     0
    ],
    "start": "2026-10-24T23:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-23T18:26Z",
-   "lg": "usl1",
-   "n1": "FC Naples",
-   "n2": "Spokane Velocity",
-   "p": [
-    0.3496,
-    0.2578,
-    0.3926
-   ],
-   "res": [
-    1,
-    0
-   ],
-   "start": "2026-10-24T23:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-23T18:26Z",
-   "lg": "uslc",
-   "n1": "Hartford Athletic",
-   "n2": "Rhode Island FC",
-   "p": [
-    0.3357,
-    0.2571,
-    0.4072
-   ],
-   "res": [
-    2,
-    1
-   ],
-   "start": "2026-10-24T23:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-23T18:26Z",
-   "lg": "uslc",
-   "n1": "Louisville City",
-   "n2": "Detroit City FC",
-   "p": [
-    0.5218,
-    0.24,
-    0.2382
-   ],
-   "res": [
-    0,
-    0
-   ],
-   "start": "2026-10-24T23:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-23T18:26Z",
-   "lg": "uslc",
-   "n1": "Pittsburgh Riverhounds",
-   "n2": "Birmingham Legion",
-   "p": [
-    0.5507,
-    0.2329,
-    0.2164
-   ],
-   "res": [
-    2,
-    1
-   ],
-   "start": "2026-10-24T23:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-23T18:26Z",
-   "lg": "nwsl",
-   "n1": "Denver Summit FC",
-   "n2": "Racing Louisville",
-   "p": [
-    0.5598,
-    0.2304,
-    0.2098
-   ],
-   "res": [
-    6,
-    1
-   ],
-   "start": "2026-10-24T22:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-23T18:26Z",
-   "lg": "usl1",
-   "n1": "Forward Madison",
-   "n2": "Union Omaha",
-   "p": [
-    0.2824,
-    0.2505,
-    0.467
-   ],
-   "res": [
-    0,
-    0
-   ],
-   "start": "2026-10-24T22:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-23T18:26Z",
-   "lg": "usl1",
-   "n1": "Richmond Kickers",
-   "n2": "Greenville Triumph",
-   "p": [
-    0.368,
-    0.2582,
-    0.3738
-   ],
-   "res": [
-    0,
-    1
-   ],
-   "start": "2026-10-24T22:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-23T18:26Z",
-   "lg": "uslc",
-   "n1": "Charleston Battery",
-   "n2": "Indy Eleven",
-   "p": [
-    0.5081,
-    0.243,
-    0.2489
-   ],
-   "res": [
-    1,
-    0
-   ],
-   "start": "2026-10-24T22:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-23T18:26Z",
-   "lg": "mls",
-   "n1": "New York Red Bulls",
-   "n2": "Inter Miami",
-   "p": [
-    0.3468,
-    0.2577,
-    0.3955
-   ],
-   "res": [
-    2,
-    0
-   ],
-   "start": "2026-10-24T21:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-23T18:26Z",
-   "lg": "usl1",
-   "n1": "Portland Hearts of Pine",
-   "n2": "Charlotte Independence",
-   "p": [
-    0.2489,
-    0.243,
-    0.5081
-   ],
-   "res": [
-    4,
-    1
-   ],
-   "start": "2026-10-24T21:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-23T18:26Z",
-   "lg": "uslc",
-   "n1": "Loudoun United",
-   "n2": "Brooklyn FC",
-   "p": [
-    0.5249,
-    0.2393,
-    0.2358
-   ],
-   "res": [
-    4,
-    3
-   ],
-   "start": "2026-10-24T21:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-23T18:26Z",
-   "lg": "usl1",
-   "n1": "New York Cosmos",
-   "n2": "Chattanooga Red Wolves",
-   "p": [
-    0.4235,
-    0.2558,
-    0.3207
-   ],
-   "res": [
-    1,
-    1
-   ],
-   "start": "2026-10-24T20:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-23T07:44Z",
-   "lg": "mls",
-   "n1": "Columbus Crew",
-   "n2": "Toronto FC",
-   "p": [
-    0.4399,
-    0.2542,
-    0.3059
-   ],
-   "res": [
-    4,
-    2
-   ],
-   "start": "2026-10-24T19:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-23T07:44Z",
-   "lg": "mls",
-   "n1": "CF Montreal",
-   "n2": "Nashville SC",
-   "p": [
-    0.2635,
-    0.2467,
-    0.4898
-   ],
-   "res": [
-    0,
-    2
-   ],
-   "start": "2026-10-24T17:30:00.000Z"
   }
  ]
 }

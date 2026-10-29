@@ -3,11 +3,11 @@
   "apsl": {
    "source": "standings (apslsoccer.com)",
    "stale": null,
-   "updated": "2026-10-28"
+   "updated": "2026-10-29"
   },
   "mls": {
    "source": "official table (ESPN)",
-   "stale": null,
+   "stale": "league table fetched 2026-10-26T20:01Z",
    "updated": "2026-10-26"
   },
   "mnp": {

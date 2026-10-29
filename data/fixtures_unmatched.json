@@ -16,56 +16,12 @@
   115
  ],
  [
-  "ncaa1: Howard",
-  3
- ],
- [
-  "ncaa1: San Jos\u00e9 State",
-  3
- ],
- [
-  "ncaa1w: UConn",
-  3
- ],
- [
-  "ncaa1w: Hawai'i",
-  3
- ],
- [
-  "ncaa1w: Nevada",
-  3
- ],
- [
-  "ncaa1w: Saint Mary's",
-  3
- ],
- [
-  "ncaa1w: Seattle U",
-  3
- ],
- [
   "ncaa1w: California",
   3
  ],
  [
   "ncaa1w: Miami",
   3
- ],
- [
-  "ncaa1: Penn State",
-  2
- ],
- [
-  "ncaa1: Charlotte",
-  2
- ],
- [
-  "ncaa1: UAB",
-  2
- ],
- [
-  "ncaa1: West Florida",
-  2
  ],
  [
   "ncaa1: UCF",
@@ -112,19 +68,11 @@
   2
  ],
  [
-  "ncaa1w: Sacramento State",
+  "ncaa1: Howard",
   2
  ],
  [
-  "ncaa1w: San Jos\u00e9 State",
-  2
- ],
- [
-  "ncaa1w: Long Beach State",
-  2
- ],
- [
-  "ncaa1w: Cal State Fullerton",
+  "ncaa1: San Jos\u00e9 State",
   2
  ],
  [
@@ -188,7 +136,19 @@
   2
  ],
  [
+  "ncaa1w: Saint Mary's",
+  2
+ ],
+ [
+  "ncaa1w: Seattle U",
+  2
+ ],
+ [
   "ncaa1w: Columbia",
+  2
+ ],
+ [
+  "ncaa1w: UConn",
   2
  ],
  [
@@ -212,8 +172,12 @@
   2
  ],
  [
-  "ncaa1: Wilmington (OH)",
-  1
+  "ncaa1w: Nevada",
+  2
+ ],
+ [
+  "ncaa1w: Hawai'i",
+  2
  ],
  [
   "ncaa1: VMI",
@@ -256,7 +220,23 @@
   1
  ],
  [
+  "ncaa1: West Florida",
+  1
+ ],
+ [
   "ncaa1: Spring Hill",
+  1
+ ],
+ [
+  "ncaa1: Charlotte",
+  1
+ ],
+ [
+  "ncaa1: UAB",
+  1
+ ],
+ [
+  "ncaa1: Penn State",
   1
  ],
  [
@@ -304,7 +284,19 @@
   1
  ],
  [
+  "ncaa1w: Sacramento State",
+  1
+ ],
+ [
+  "ncaa1w: Cal State Fullerton",
+  1
+ ],
+ [
   "ncaa1w: Jacksonville",
+  1
+ ],
+ [
+  "ncaa1w: Long Beach State",
   1
  ],
  [
@@ -373,6 +365,10 @@
  ],
  [
   "ncaa1w: Southern Miss",
+  1
+ ],
+ [
+  "ncaa1w: San Jos\u00e9 State",
   1
  ],
  [
