@@ -88,7 +88,9 @@ def check(today, wire, standings, upsl, apsl, mls_clubs, massey=None):
             f'newest rated result {d or "none"}, over {MAX_GAME_GAP} days old'
             if age(today, d) > MAX_GAME_GAP else None)
 
-    t_upd = standings.get('updated', '')
+    # A league restored by race_gate's per-league fallback carries its own,
+    # older stamp; the top-level one only says when the fetch ran.
+    t_upd = standings.get('leagues', {}).get('mls', {}).get('updated') or standings.get('updated', '')
     reason = None
     if age(today, t_upd) > MAX_TABLE_AGE:
         reason = f'league table fetched {t_upd or "never"}'
