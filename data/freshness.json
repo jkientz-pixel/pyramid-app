@@ -7,8 +7,8 @@
   },
   "mls": {
    "source": "official table (ESPN)",
-   "stale": "league table fetched 2026-10-26T20:01Z",
-   "updated": "2026-10-26"
+   "stale": null,
+   "updated": "2026-10-29"
   },
   "mnp": {
    "source": "results (ASA)",
