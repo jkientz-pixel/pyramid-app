@@ -75,6 +75,17 @@ def kicked_off_before(iso, cutoff):
         return False
 
 
+def is_postseason(ev):
+    """True for a playoff fixture. ESPN lists playoff games on the league's own
+    scoreboard (season.slug 'playoffs---quarterfinals', 'western-conference-
+    playoffs---...'); regular-season games carry 'regular-season'. 2026-10-29:
+    a USL1 quarterfinal counted as a game left put Charlotte at 32 + 1 of 32,
+    race_gate rejected the trio, and the restored 10/26 table failed the MLS
+    freshness gate. A missing slug is treated as regular season."""
+    slug = (ev.get('season') or {}).get('slug') or 'regular-season'
+    return slug != 'regular-season'
+
+
 def month_ranges(start, end):
     """ESPN caps a scoreboard call at limit=1000, so walk month by month.
     Bare YYYYMM: day ranges 400 since 2026-09-16 (see scripts/_espn.py); a
@@ -177,6 +188,8 @@ def main():
                 # deploy. A match in progress, or past its kickoff time, is
                 # therefore counted as played here too, never as remaining.
                 if st.get('completed') or st.get('state') == 'in':
+                    continue
+                if is_postseason(ev):
                     continue
                 if kicked_off_before(ev.get('date', ''), now):
                     continue
