@@ -4087,5 +4087,124 @@
 4,
 1
 ]
+},
+{
+"k":"uslc:2026-10-30T22:30:louisville-city:pittsburgh-riverhounds",
+"lg":"uslc",
+"start":"2026-10-30T22:30:00.000Z",
+"id1":"louisville-city",
+"id2":"pittsburgh-riverhounds",
+"n1":"Louisville City",
+"n2":"Pittsburgh Riverhounds",
+"r1":1803,
+"r2":1740,
+"p":[
+0.5325,
+0.2375,
+0.23
+],
+"frozen":"2026-10-29T19:43Z"
+},
+{
+"k":"usl1:2026-10-30T23:00:union-omaha:chattanooga-red-wolves",
+"lg":"usl1",
+"start":"2026-10-30T23:00:00.000Z",
+"id1":"union-omaha",
+"id2":"chattanooga-red-wolves",
+"n1":"Union Omaha",
+"n2":"Chattanooga Red Wolves",
+"r1":1740,
+"r2":1564,
+"p":[
+0.6982,
+0.181,
+0.1207
+],
+"frozen":"2026-10-29T19:43Z"
+},
+{
+"k":"uslc:2026-10-30T23:00:charleston-battery:rhode-island-fc",
+"lg":"uslc",
+"start":"2026-10-30T23:00:00.000Z",
+"id1":"charleston-battery",
+"id2":"rhode-island-fc",
+"n1":"Charleston Battery",
+"n2":"Rhode Island FC",
+"r1":1749,
+"r2":1761,
+"p":[
+0.419,
+0.2562,
+0.3247
+],
+"frozen":"2026-10-29T19:43Z"
+},
+{
+"k":"usl1:2026-10-30T23:30:forward-madison:spokane-velocity",
+"lg":"usl1",
+"start":"2026-10-30T23:30:00.000Z",
+"id1":"forward-madison",
+"id2":"spokane-velocity",
+"n1":"Forward Madison",
+"n2":"Spokane Velocity",
+"r1":1648,
+"r2":1660,
+"p":[
+0.419,
+0.2562,
+0.3247
+],
+"frozen":"2026-10-29T19:43Z"
+},
+{
+"k":"uslc:2026-10-30T23:30:tampa-bay-rowdies:miami-fc",
+"lg":"uslc",
+"start":"2026-10-30T23:30:00.000Z",
+"id1":"tampa-bay-rowdies",
+"id2":"miami-fc",
+"n1":"Tampa Bay Rowdies",
+"n2":"Miami FC",
+"r1":1761,
+"r2":1639,
+"p":[
+0.6212,
+0.2112,
+0.1676
+],
+"frozen":"2026-10-29T19:43Z"
+},
+{
+"k":"uslc:2026-10-31T00:00:detroit-city-fc:hartford-athletic",
+"lg":"uslc",
+"start":"2026-10-31T00:00:00.000Z",
+"id1":"detroit-city-fc",
+"id2":"hartford-athletic",
+"n1":"Detroit City FC",
+"n2":"Hartford Athletic",
+"r1":1756,
+"r2":1697,
+"p":[
+0.5264,
+0.239,
+0.2347
+],
+"frozen":"2026-10-29T19:43Z"
+},
+{
+"k":"uslc:2026-10-31T01:00:el-paso-locomotive:san-antonio-fc",
+"lg":"uslc",
+"start":"2026-10-31T01:00:00.000Z",
+"id1":"el-paso-locomotive",
+"id2":"san-antonio-fc",
+"n1":"El Paso Locomotive",
+"n2":"San Antonio FC",
+"r1":1716,
+"r2":1678,
+"p":[
+0.4944,
+0.2458,
+0.2598
+],
+"frozen":"2026-10-29T19:43Z"
 }
 ]
