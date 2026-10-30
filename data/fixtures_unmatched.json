@@ -16,10 +16,6 @@
   115
  ],
  [
-  "ncaa1: American University",
-  2
- ],
- [
   "ncaa1: NJIT",
   2
  ],
@@ -61,10 +57,6 @@
  ],
  [
   "ncaa1: San Jos\u00e9 State",
-  2
- ],
- [
-  "ncaa1w: Charlotte",
   2
  ],
  [
@@ -144,10 +136,6 @@
   2
  ],
  [
-  "ncaa1: VMI",
-  1
- ],
- [
   "ncaa1: Florida College",
   1
  ],
@@ -201,6 +189,10 @@
  ],
  [
   "ncaa1: UCF",
+  1
+ ],
+ [
+  "ncaa1: American University",
   1
  ],
  [
@@ -357,6 +349,10 @@
  ],
  [
   "ncaa1w: NC State",
+  1
+ ],
+ [
+  "ncaa1w: Charlotte",
   1
  ],
  [

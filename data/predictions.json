@@ -4308,5 +4308,56 @@
 0.2562
 ],
 "frozen":"2026-10-30T08:44Z"
+},
+{
+"k":"mls:2026-10-31T21:00:la-galaxy:austin-fc",
+"lg":"mls",
+"start":"2026-10-31T21:00:00.000Z",
+"id1":"la-galaxy",
+"id2":"austin-fc",
+"n1":"LA Galaxy",
+"n2":"Austin FC",
+"r1":1876,
+"r2":1857,
+"p":[
+0.4655,
+0.2508,
+0.2837
+],
+"frozen":"2026-10-30T19:27Z"
+},
+{
+"k":"mls:2026-10-31T21:00:san-jose-earthquakes:real-salt-lake",
+"lg":"mls",
+"start":"2026-10-31T21:00:00.000Z",
+"id1":"san-jose-earthquakes",
+"id2":"real-salt-lake",
+"n1":"San Jose Earthquakes",
+"n2":"Real Salt Lake",
+"r1":1900,
+"r2":1883,
+"p":[
+0.4625,
+0.2512,
+0.2863
+],
+"frozen":"2026-10-30T19:27Z"
+},
+{
+"k":"mls:2026-11-01T01:30:colorado-rapids:chicago-fire",
+"lg":"mls",
+"start":"2026-11-01T01:30:00.000Z",
+"id1":"colorado-rapids",
+"id2":"chicago-fire",
+"n1":"Colorado Rapids",
+"n2":"Chicago Fire",
+"r1":1885,
+"r2":1907,
+"p":[
+0.4043,
+0.2572,
+0.3385
+],
+"frozen":"2026-10-30T19:27Z"
 }
 ]
