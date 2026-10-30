@@ -16,18 +16,6 @@
   115
  ],
  [
-  "ncaa1w: California",
-  3
- ],
- [
-  "ncaa1w: Miami",
-  3
- ],
- [
-  "ncaa1: UCF",
-  2
- ],
- [
   "ncaa1: American University",
   2
  ],
@@ -73,30 +61,6 @@
  ],
  [
   "ncaa1: San Jos\u00e9 State",
-  2
- ],
- [
-  "ncaa1w: VMI",
-  2
- ],
- [
-  "ncaa1w: St. Thomas",
-  2
- ],
- [
-  "ncaa1w: Miami (OH)",
-  2
- ],
- [
-  "ncaa1w: North Carolina",
-  2
- ],
- [
-  "ncaa1w: Virginia Tech",
-  2
- ],
- [
-  "ncaa1w: NC State",
   2
  ],
  [
@@ -168,6 +132,14 @@
   2
  ],
  [
+  "ncaa1w: California",
+  2
+ ],
+ [
+  "ncaa1w: Miami",
+  2
+ ],
+ [
   "ncaa1w: Hawai'i",
   2
  ],
@@ -228,11 +200,11 @@
   1
  ],
  [
-  "ncaa1: Penn State",
+  "ncaa1: UCF",
   1
  ],
  [
-  "ncaa1w: Tennessee Tech",
+  "ncaa1: Penn State",
   1
  ],
  [
@@ -344,6 +316,10 @@
   1
  ],
  [
+  "ncaa1w: Miami (OH)",
+  1
+ ],
+ [
   "ncaa1w: South Carolina",
   1
  ],
@@ -360,6 +336,10 @@
   1
  ],
  [
+  "ncaa1w: St. Thomas",
+  1
+ ],
+ [
   "ncaa1w: UL Monroe",
   1
  ],
@@ -368,7 +348,23 @@
   1
  ],
  [
+  "ncaa1w: VMI",
+  1
+ ],
+ [
   "ncaa1w: San Jos\u00e9 State",
+  1
+ ],
+ [
+  "ncaa1w: NC State",
+  1
+ ],
+ [
+  "ncaa1w: North Carolina",
+  1
+ ],
+ [
+  "ncaa1w: Virginia Tech",
   1
  ],
  [

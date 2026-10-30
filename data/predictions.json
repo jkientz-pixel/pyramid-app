@@ -4206,5 +4206,107 @@
 0.2598
 ],
 "frozen":"2026-10-29T19:43Z"
+},
+{
+"k":"mls:2026-10-31T17:00:charlotte-fc:orlando-city",
+"lg":"mls",
+"start":"2026-10-31T17:00:00.000Z",
+"id1":"charlotte-fc",
+"id2":"orlando-city",
+"n1":"Charlotte FC",
+"n2":"Orlando City",
+"r1":1904,
+"r2":1878,
+"p":[
+0.4761,
+0.2491,
+0.2748
+],
+"frozen":"2026-10-30T08:44Z"
+},
+{
+"k":"mls:2026-10-31T18:00:columbus-crew:dc-united",
+"lg":"mls",
+"start":"2026-10-31T18:00:00.000Z",
+"id1":"columbus-crew",
+"id2":"dc-united",
+"n1":"Columbus Crew",
+"n2":"DC United",
+"r1":1882,
+"r2":1855,
+"p":[
+0.4776,
+0.2488,
+0.2735
+],
+"frozen":"2026-10-30T08:44Z"
+},
+{
+"k":"mls:2026-10-31T18:00:fc-cincinnati:philadelphia-union",
+"lg":"mls",
+"start":"2026-10-31T18:00:00.000Z",
+"id1":"fc-cincinnati",
+"id2":"philadelphia-union",
+"n1":"FC Cincinnati",
+"n2":"Philadelphia Union",
+"r1":1881,
+"r2":1899,
+"p":[
+0.4102,
+0.2569,
+0.333
+],
+"frozen":"2026-10-30T08:44Z"
+},
+{
+"k":"mls:2026-10-31T18:00:nycfc:cf-montreal",
+"lg":"mls",
+"start":"2026-10-31T18:00:00.000Z",
+"id1":"nycfc",
+"id2":"cf-montreal",
+"n1":"NYCFC",
+"n2":"CF Montreal",
+"r1":1876,
+"r2":1832,
+"p":[
+0.5035,
+0.244,
+0.2525
+],
+"frozen":"2026-10-30T08:44Z"
+},
+{
+"k":"mls:2026-10-31T19:00:sporting-kansas-city:fc-dallas",
+"lg":"mls",
+"start":"2026-10-31T19:00:00.000Z",
+"id1":"sporting-kansas-city",
+"id2":"fc-dallas",
+"n1":"Sporting Kansas City",
+"n2":"FC Dallas",
+"r1":1820,
+"r2":1911,
+"p":[
+0.3072,
+0.2543,
+0.4384
+],
+"frozen":"2026-10-30T08:44Z"
+},
+{
+"k":"mls:2026-10-31T19:00:st-louis-city-sc:san-diego-fc",
+"lg":"mls",
+"start":"2026-10-31T19:00:00.000Z",
+"id1":"st-louis-city-sc",
+"id2":"san-diego-fc",
+"n1":"St. Louis City SC",
+"n2":"San Diego FC",
+"r1":1906,
+"r2":1865,
+"p":[
+0.4989,
+0.2449,
+0.2562
+],
+"frozen":"2026-10-30T08:44Z"
 }
 ]
