@@ -1,19 +1,19 @@
 [
  [
   "ncaa1w: TBD Home",
-  203
+  199
  ],
  [
   "ncaa1w: TBD Away",
-  203
+  199
  ],
  [
   "ncaa1: TBD Home",
-  124
+  123
  ],
  [
   "ncaa1: TBD Away",
-  124
+  123
  ],
  [
   "ncaa1: UConn",
@@ -29,18 +29,6 @@
  ],
  [
   "ncaa1: San Jos\u00e9 State",
-  2
- ],
- [
-  "ncaa1w: Mount St. Mary's",
-  2
- ],
- [
-  "ncaa1w: Quinnipiac",
-  2
- ],
- [
-  "ncaa1w: St. John's",
   2
  ],
  [
@@ -96,14 +84,6 @@
   2
  ],
  [
-  "ncaa1: Massachusetts",
-  1
- ],
- [
-  "ncaa1: George Washington",
-  1
- ],
- [
   "ncaa1: Sacramento State",
   1
  ],
@@ -121,6 +101,10 @@
  ],
  [
   "ncaa1: UAB",
+  1
+ ],
+ [
+  "ncaa1: VMI",
   1
  ],
  [
@@ -177,10 +161,6 @@
  ],
  [
   "ncaa1: Georgetown",
-  1
- ],
- [
-  "ncaa1w: Robert Morris",
   1
  ],
  [
@@ -304,7 +284,19 @@
   1
  ],
  [
+  "ncaa1w: Mount St. Mary's",
+  1
+ ],
+ [
+  "ncaa1w: Quinnipiac",
+  1
+ ],
+ [
   "ncaa1w: Lafayette",
+  1
+ ],
+ [
+  "ncaa1w: Wisconsin",
   1
  ],
  [
@@ -324,7 +316,19 @@
   1
  ],
  [
+  "ncaa1w: Purdue",
+  1
+ ],
+ [
+  "ncaa1w: Penn State",
+  1
+ ],
+ [
   "ncaa1w: Fresno State",
+  1
+ ],
+ [
+  "ncaa1w: St. John's",
   1
  ]
 ]

@@ -4393,5 +4393,294 @@
 0.2489
 ],
 "frozen":"2026-10-31T08:32Z"
+},
+{
+"k":"mls:2026-11-01T21:30:atlanta-united:toronto-fc",
+"lg":"mls",
+"start":"2026-11-01T21:30:00.000Z",
+"id1":"atlanta-united",
+"id2":"toronto-fc",
+"n1":"Atlanta United",
+"n2":"Toronto FC",
+"r1":1850,
+"r2":1871,
+"p":[
+0.4057,
+0.2572,
+0.3371
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"mls:2026-11-01T21:30:nashville-sc:new-york-red-bulls",
+"lg":"mls",
+"start":"2026-11-01T21:30:00.000Z",
+"id1":"nashville-sc",
+"id2":"new-york-red-bulls",
+"n1":"Nashville SC",
+"n2":"New York Red Bulls",
+"r1":1963,
+"r2":1868,
+"p":[
+0.581,
+0.2243,
+0.1947
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"nwsl:2026-11-01T22:00:angel-city:boston-legacy-fc",
+"lg":"nwsl",
+"start":"2026-11-01T22:00:00.000Z",
+"id1":"angel-city",
+"id2":"boston-legacy-fc",
+"n1":"Angel City",
+"n2":"Boston Legacy FC",
+"r1":1989,
+"r2":1871,
+"p":[
+0.6153,
+0.2132,
+0.1715
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"nwsl:2026-11-01T22:00:bay-fc:san-diego-wave",
+"lg":"nwsl",
+"start":"2026-11-01T22:00:00.000Z",
+"id1":"bay-fc",
+"id2":"san-diego-wave",
+"n1":"Bay FC",
+"n2":"San Diego Wave",
+"r1":1811,
+"r2":1986,
+"p":[
+0.2054,
+0.2287,
+0.5659
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"nwsl:2026-11-01T22:00:nj-ny-gotham:utah-royals",
+"lg":"nwsl",
+"start":"2026-11-01T22:00:00.000Z",
+"id1":"nj-ny-gotham",
+"id2":"utah-royals",
+"n1":"NJ/NY Gotham",
+"n2":"Utah Royals",
+"r1":1954,
+"r2":1881,
+"p":[
+0.5477,
+0.2337,
+0.2186
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"nwsl:2026-11-01T22:00:houston-dash:portland-thorns",
+"lg":"nwsl",
+"start":"2026-11-01T22:00:00.000Z",
+"id1":"houston-dash",
+"id2":"portland-thorns",
+"n1":"Houston Dash",
+"n2":"Portland Thorns",
+"r1":1785,
+"r2":1919,
+"p":[
+0.2525,
+0.244,
+0.5035
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"nwsl:2026-11-01T22:00:north-carolina-courage:denver-summit-fc",
+"lg":"nwsl",
+"start":"2026-11-01T22:00:00.000Z",
+"id1":"north-carolina-courage",
+"id2":"denver-summit-fc",
+"n1":"North Carolina Courage",
+"n2":"Denver Summit FC",
+"r1":1944,
+"r2":1903,
+"p":[
+0.4989,
+0.2449,
+0.2562
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"nwsl:2026-11-01T22:00:racing-louisville:kansas-city-current",
+"lg":"nwsl",
+"start":"2026-11-01T22:00:00.000Z",
+"id1":"racing-louisville",
+"id2":"kansas-city-current",
+"n1":"Racing Louisville",
+"n2":"Kansas City Current",
+"r1":1788,
+"r2":1992,
+"p":[
+0.1754,
+0.2152,
+0.6094
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"nwsl:2026-11-01T22:00:seattle-reign:orlando-pride",
+"lg":"nwsl",
+"start":"2026-11-01T22:00:00.000Z",
+"id1":"seattle-reign",
+"id2":"orlando-pride",
+"n1":"Seattle Reign",
+"n2":"Orlando Pride",
+"r1":1893,
+"r2":1857,
+"p":[
+0.4913,
+0.2464,
+0.2623
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"nwsl:2026-11-01T22:00:washington-spirit:chicago-red-stars",
+"lg":"nwsl",
+"start":"2026-11-01T22:00:00.000Z",
+"id1":"washington-spirit",
+"id2":"chicago-red-stars",
+"n1":"Washington Spirit",
+"n2":"Chicago Red Stars",
+"r1":1940,
+"r2":1663,
+"p":[
+0.8215,
+0.1198,
+0.0587
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"uslc:2026-11-01T23:00:new-mexico-united:phoenix-rising",
+"lg":"uslc",
+"start":"2026-11-01T23:00:00.000Z",
+"id1":"new-mexico-united",
+"id2":"phoenix-rising",
+"n1":"New Mexico United",
+"n2":"Phoenix Rising",
+"r1":1669,
+"r2":1709,
+"p":[
+0.3781,
+0.2582,
+0.3638
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"mls:2026-11-02T00:00:new-england-revolution:inter-miami",
+"lg":"mls",
+"start":"2026-11-02T00:00:00.000Z",
+"id1":"new-england-revolution",
+"id2":"inter-miami",
+"n1":"New England Revolution",
+"n2":"Inter Miami",
+"r1":1920,
+"r2":1921,
+"p":[
+0.4354,
+0.2547,
+0.3099
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"usl1:2026-11-02T00:00:charlotte-independence:fc-naples",
+"lg":"usl1",
+"start":"2026-11-02T00:00:00.000Z",
+"id1":"charlotte-independence",
+"id2":"fc-naples",
+"n1":"Charlotte Independence",
+"n2":"FC Naples",
+"r1":1637,
+"r2":1620,
+"p":[
+0.4625,
+0.2512,
+0.2863
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"usl1:2026-11-02T01:00:athletic-club-boise:one-knoxville",
+"lg":"usl1",
+"start":"2026-11-02T01:00:00.000Z",
+"id1":"athletic-club-boise",
+"id2":"one-knoxville",
+"n1":"Athletic Club Boise",
+"n2":"One Knoxville",
+"r1":1671,
+"r2":1684,
+"p":[
+0.4175,
+0.2563,
+0.3261
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"mls:2026-11-02T01:30:lafc:minnesota-united",
+"lg":"mls",
+"start":"2026-11-02T01:30:00.000Z",
+"id1":"lafc",
+"id2":"minnesota-united",
+"n1":"LAFC",
+"n2":"Minnesota United",
+"r1":1900,
+"r2":1871,
+"p":[
+0.4807,
+0.2483,
+0.271
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"uslc:2026-11-02T02:00:sacramento-republic:fc-tulsa",
+"lg":"uslc",
+"start":"2026-11-02T02:00:00.000Z",
+"id1":"sacramento-republic",
+"id2":"fc-tulsa",
+"n1":"Sacramento Republic",
+"n2":"FC Tulsa",
+"r1":1799,
+"r2":1747,
+"p":[
+0.5157,
+0.2414,
+0.2429
+],
+"frozen":"2026-10-31T18:38Z"
+},
+{
+"k":"mls:2026-11-02T02:45:portland-timbers:houston-dynamo",
+"lg":"mls",
+"start":"2026-11-02T02:45:00.000Z",
+"id1":"portland-timbers",
+"id2":"houston-dynamo",
+"n1":"Portland Timbers",
+"n2":"Houston Dynamo",
+"r1":1877,
+"r2":1902,
+"p":[
+0.3999,
+0.2575,
+0.3426
+],
+"frozen":"2026-10-31T18:38Z"
 }
 ]
