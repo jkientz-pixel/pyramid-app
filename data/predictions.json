@@ -4359,5 +4359,39 @@
 0.3385
 ],
 "frozen":"2026-10-30T19:27Z"
+},
+{
+"k":"uslc:2026-11-01T19:00:lexington-sc:colorado-springs-switchbacks",
+"lg":"uslc",
+"start":"2026-11-01T19:00:00.000Z",
+"id1":"lexington-sc",
+"id2":"colorado-springs-switchbacks",
+"n1":"Lexington SC",
+"n2":"Colorado Springs Switchbacks",
+"r1":1750,
+"r2":1763,
+"p":[
+0.4175,
+0.2563,
+0.3261
+],
+"frozen":"2026-10-31T08:32Z"
+},
+{
+"k":"mls:2026-11-01T20:30:vancouver-whitecaps:seattle-sounders",
+"lg":"mls",
+"start":"2026-11-01T20:30:00.000Z",
+"id1":"vancouver-whitecaps",
+"id2":"seattle-sounders",
+"n1":"Vancouver Whitecaps",
+"n2":"Seattle Sounders",
+"r1":1932,
+"r2":1885,
+"p":[
+0.5081,
+0.243,
+0.2489
+],
+"frozen":"2026-10-31T08:32Z"
 }
 ]

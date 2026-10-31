@@ -1,47 +1,19 @@
 [
  [
   "ncaa1w: TBD Home",
-  171
+  203
  ],
  [
   "ncaa1w: TBD Away",
-  171
+  203
  ],
  [
   "ncaa1: TBD Home",
-  115
+  124
  ],
  [
   "ncaa1: TBD Away",
-  115
- ],
- [
-  "ncaa1: NJIT",
-  2
- ],
- [
-  "ncaa1: Georgetown",
-  2
- ],
- [
-  "ncaa1: South Carolina",
-  2
- ],
- [
-  "ncaa1: UAlbany",
-  2
- ],
- [
-  "ncaa1: Maryland",
-  2
- ],
- [
-  "ncaa1: Wisconsin",
-  2
- ],
- [
-  "ncaa1: Indiana",
-  2
+  124
  ],
  [
   "ncaa1: UConn",
@@ -57,18 +29,6 @@
  ],
  [
   "ncaa1: San Jos\u00e9 State",
-  2
- ],
- [
-  "ncaa1w: Lafayette",
-  2
- ],
- [
-  "ncaa1w: UAB",
-  2
- ],
- [
-  "ncaa1w: UCF",
   2
  ],
  [
@@ -136,30 +96,6 @@
   2
  ],
  [
-  "ncaa1: Florida College",
-  1
- ],
- [
-  "ncaa1: Virginia Tech",
-  1
- ],
- [
-  "ncaa1: North Carolina",
-  1
- ],
- [
-  "ncaa1: NC State",
-  1
- ],
- [
-  "ncaa1: Maine Fort Kent",
-  1
- ],
- [
-  "ncaa1: California",
-  1
- ],
- [
   "ncaa1: Massachusetts",
   1
  ],
@@ -188,6 +124,14 @@
   1
  ],
  [
+  "ncaa1: South Carolina",
+  1
+ ],
+ [
+  "ncaa1: UAlbany",
+  1
+ ],
+ [
   "ncaa1: UCF",
   1
  ],
@@ -196,43 +140,43 @@
   1
  ],
  [
+  "ncaa1: NJIT",
+  1
+ ],
+ [
+  "ncaa1: North Carolina",
+  1
+ ],
+ [
+  "ncaa1: California",
+  1
+ ],
+ [
+  "ncaa1: Virginia Tech",
+  1
+ ],
+ [
+  "ncaa1: NC State",
+  1
+ ],
+ [
+  "ncaa1: Indiana",
+  1
+ ],
+ [
+  "ncaa1: Maryland",
+  1
+ ],
+ [
   "ncaa1: Penn State",
   1
  ],
  [
-  "ncaa1w: Illinois",
+  "ncaa1: Wisconsin",
   1
  ],
  [
-  "ncaa1w: Penn State",
-  1
- ],
- [
-  "ncaa1w: Indiana",
-  1
- ],
- [
-  "ncaa1w: Purdue",
-  1
- ],
- [
-  "ncaa1w: Nebraska",
-  1
- ],
- [
-  "ncaa1w: Maryland",
-  1
- ],
- [
-  "ncaa1w: Tuskegee",
-  1
- ],
- [
-  "ncaa1w: Northwestern",
-  1
- ],
- [
-  "ncaa1w: Wisconsin",
+  "ncaa1: Georgetown",
   1
  ],
  [
@@ -356,11 +300,23 @@
   1
  ],
  [
+  "ncaa1w: UAB",
+  1
+ ],
+ [
+  "ncaa1w: Lafayette",
+  1
+ ],
+ [
   "ncaa1w: North Carolina",
   1
  ],
  [
   "ncaa1w: Virginia Tech",
+  1
+ ],
+ [
+  "ncaa1w: UCF",
   1
  ],
  [
