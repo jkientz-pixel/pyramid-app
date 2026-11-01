@@ -1,27 +1,19 @@
 [
  [
-  "ncaa1w: TBD Home",
-  199
- ],
- [
   "ncaa1w: TBD Away",
-  199
+  193
  ],
  [
-  "ncaa1: TBD Home",
-  123
+  "ncaa1w: TBD Home",
+  187
  ],
  [
   "ncaa1: TBD Away",
-  123
+  115
  ],
  [
-  "ncaa1: UConn",
-  2
- ],
- [
-  "ncaa1: Seattle U",
-  2
+  "ncaa1: TBD Home",
+  111
  ],
  [
   "ncaa1: Howard",
@@ -29,22 +21,6 @@
  ],
  [
   "ncaa1: San Jos\u00e9 State",
-  2
- ],
- [
-  "ncaa1w: Saint Mary's",
-  2
- ],
- [
-  "ncaa1w: Seattle U",
-  2
- ],
- [
-  "ncaa1w: Columbia",
-  2
- ],
- [
-  "ncaa1w: UConn",
   2
  ],
  [
@@ -82,18 +58,6 @@
  [
   "ncaa1w: Hawai'i",
   2
- ],
- [
-  "ncaa1: Sacramento State",
-  1
- ],
- [
-  "ncaa1: West Florida",
-  1
- ],
- [
-  "ncaa1: Spring Hill",
-  1
  ],
  [
   "ncaa1: Charlotte",
@@ -160,27 +124,23 @@
   1
  ],
  [
+  "ncaa1: UConn",
+  1
+ ],
+ [
   "ncaa1: Georgetown",
   1
  ],
  [
-  "ncaa1w: Sacramento State",
+  "ncaa1: Seattle U",
   1
  ],
  [
-  "ncaa1w: Cal State Fullerton",
+  "ncaa1: Massachusetts",
   1
  ],
  [
-  "ncaa1w: Jacksonville",
-  1
- ],
- [
-  "ncaa1w: Long Beach State",
-  1
- ],
- [
-  "ncaa1w: West Florida",
+  "ncaa1: West Florida",
   1
  ],
  [
@@ -300,6 +260,10 @@
   1
  ],
  [
+  "ncaa1w: Cal State Fullerton",
+  1
+ ],
+ [
   "ncaa1w: North Carolina",
   1
  ],
@@ -309,6 +273,14 @@
  ],
  [
   "ncaa1w: UCF",
+  1
+ ],
+ [
+  "ncaa1w: West Florida",
+  1
+ ],
+ [
+  "ncaa1w: Jacksonville",
   1
  ],
  [
@@ -325,6 +297,22 @@
  ],
  [
   "ncaa1w: Fresno State",
+  1
+ ],
+ [
+  "ncaa1w: UConn",
+  1
+ ],
+ [
+  "ncaa1w: Saint Mary's",
+  1
+ ],
+ [
+  "ncaa1w: Seattle U",
+  1
+ ],
+ [
+  "ncaa1w: Columbia",
   1
  ],
  [
