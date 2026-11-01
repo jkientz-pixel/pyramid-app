@@ -9,30 +9,14 @@
  ],
  [
   "ncaa1: TBD Away",
-  115
- ],
- [
-  "ncaa1: TBD Home",
   111
  ],
  [
-  "ncaa1: Howard",
-  2
+  "ncaa1: TBD Home",
+  107
  ],
  [
   "ncaa1: San Jos\u00e9 State",
-  2
- ],
- [
-  "ncaa1w: UT Rio Grande Valley",
-  2
- ],
- [
-  "ncaa1w: East Texas A&M",
-  2
- ],
- [
-  "ncaa1w: Southern",
   2
  ],
  [
@@ -144,59 +128,7 @@
   1
  ],
  [
-  "ncaa1w: Massachusetts",
-  1
- ],
- [
-  "ncaa1w: Ohio",
-  1
- ],
- [
-  "ncaa1w: Charleston",
-  1
- ],
- [
-  "ncaa1w: St Bonaventure",
-  1
- ],
- [
-  "ncaa1w: Arkansas",
-  1
- ],
- [
-  "ncaa1w: Missouri State",
-  1
- ],
- [
-  "ncaa1w: Alabama",
-  1
- ],
- [
-  "ncaa1w: Missouri",
-  1
- ],
- [
-  "ncaa1w: LSU",
-  1
- ],
- [
-  "ncaa1w: Tennessee",
-  1
- ],
- [
-  "ncaa1w: Texas",
-  1
- ],
- [
-  "ncaa1w: Texas A&M",
-  1
- ],
- [
-  "ncaa1w: Miami (OH)",
-  1
- ],
- [
-  "ncaa1w: South Carolina",
+  "ncaa1: Howard",
   1
  ],
  [
@@ -264,6 +196,10 @@
   1
  ],
  [
+  "ncaa1w: UT Rio Grande Valley",
+  1
+ ],
+ [
   "ncaa1w: North Carolina",
   1
  ],
@@ -284,6 +220,10 @@
   1
  ],
  [
+  "ncaa1w: East Texas A&M",
+  1
+ ],
+ [
   "ncaa1w: SE Louisiana",
   1
  ],
@@ -293,6 +233,10 @@
  ],
  [
   "ncaa1w: Penn State",
+  1
+ ],
+ [
+  "ncaa1w: Southern",
   1
  ],
  [
