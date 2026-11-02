@@ -3,17 +3,17 @@
   "apsl": {
    "source": "standings (apslsoccer.com)",
    "stale": null,
-   "updated": "2026-11-01"
+   "updated": "2026-11-02"
   },
   "mls": {
    "source": "official table (ESPN)",
    "stale": null,
-   "updated": "2026-11-01"
+   "updated": "2026-11-02"
   },
   "mnp": {
    "source": "results (ASA)",
    "stale": null,
-   "updated": "2026-10-26"
+   "updated": "2026-11-01"
   },
   "naia": {
    "source": "Massey Ratings",
@@ -48,7 +48,7 @@
   "nwsl": {
    "source": "results (ASA)",
    "stale": null,
-   "updated": "2026-10-25"
+   "updated": "2026-11-01"
   },
   "upsl": {
    "source": "standings (upsl.com)",
@@ -58,17 +58,17 @@
   "usl1": {
    "source": "results (ASA)",
    "stale": null,
-   "updated": "2026-10-25"
+   "updated": "2026-11-02"
   },
   "uslc": {
    "source": "results (ASA)",
    "stale": null,
-   "updated": "2026-10-25"
+   "updated": "2026-11-02"
   },
   "uslw": {
    "source": "results (ASA)",
    "stale": null,
-   "updated": "2026-10-31"
+   "updated": "2026-11-01"
   }
  }
 }
