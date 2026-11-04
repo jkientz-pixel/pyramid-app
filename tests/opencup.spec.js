@@ -115,16 +115,29 @@ test('2027 qualifying renders every round, tiers, picks and stated venues', asyn
   expect(await block.locator('.oc-tie').count()).toBe(third.length);
   /* venue and city exactly as U.S. Soccer prints them */
   await expect(block).toContainText(`${third[0].venue}, ${third[0].city}`);
-  /* stated local kickoff, not the viewer's timezone */
-  await expect(block).toContainText(/\b\d{1,2}:\d{2} [AP]M (ET|CT|MT|PT)\b/);
-  /* at least some pending ties carry the model's pick, and some sides link to clubs */
-  expect(await block.locator('.oc-sub', { hasText: 'Our pick' }).count()).toBeGreaterThan(3);
+  /* some sides link to clubs and carry their tier */
   expect(await v.locator('.oc-tie a[href^="#/club/"]').count()).toBeGreaterThan(20);
   expect(await v.locator('.oc-tie .gk-tier').count()).toBeGreaterThan(20);
-  /* a small set of closest-call cards, not 32 */
+  const KICKOFF = /\b\d{1,2}:\d{2} [AP]M (ET|CT|MT|PT)\b/;
   const cards = await v.locator('.oc-next').count();
-  expect(cards).toBeGreaterThan(0);
-  expect(cards).toBeLessThanOrEqual(6);
+  /* the scrape flips ties to 'post' as they are played, so what the round
+     shows depends on whether any of it is still to come */
+  const pendingThird = third.filter(t => t.state !== 'post');
+  if (pendingThird.length) {
+    /* stated local kickoff, not the viewer's timezone */
+    await expect(block).toContainText(KICKOFF);
+    /* at least some pending ties carry the model's pick */
+    expect(await block.locator('.oc-sub', { hasText: 'Our pick' }).count()).toBeGreaterThan(Math.min(3, pendingThird.length - 1));
+    /* a small set of closest-call cards, not 32 */
+    expect(cards).toBeGreaterThan(0);
+    expect(cards).toBeLessThanOrEqual(6);
+  } else {
+    /* a finished round: every tie has a score, and nothing still reads as upcoming */
+    expect(await block.locator('.oc-pending').count()).toBe(0);
+    await expect(block).not.toContainText(KICKOFF);
+    expect(await block.locator('.oc-sub', { hasText: 'Our pick' }).count()).toBe(0);
+    expect(cards).toBe(0);
+  }
   /* unmatched names are plain text, never a link */
   const un = third.find(t => !t.id1);
   if (un) expect(await block.locator(`a:text-is("${un.t1}")`).count()).toBe(0);
