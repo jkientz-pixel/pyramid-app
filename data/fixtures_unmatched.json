@@ -1,39 +1,19 @@
 [
  [
   "ncaa1w: TBD Away",
-  159
+  155
  ],
  [
   "ncaa1w: TBD Home",
-  130
+  126
  ],
  [
   "ncaa1: TBD Away",
-  118
+  107
  ],
  [
   "ncaa1: TBD Home",
-  110
- ],
- [
-  "ncaa1: South Carolina",
-  1
- ],
- [
-  "ncaa1: UAlbany",
-  1
- ],
- [
-  "ncaa1: UCF",
-  1
- ],
- [
-  "ncaa1: American University",
-  1
- ],
- [
-  "ncaa1: NJIT",
-  1
+  93
  ],
  [
   "ncaa1: North Carolina",
@@ -68,6 +48,10 @@
   1
  ],
  [
+  "ncaa1: VMI",
+  1
+ ],
+ [
   "ncaa1: Charlotte",
   1
  ],
@@ -96,15 +80,27 @@
   1
  ],
  [
+  "ncaa1: NJIT",
+  1
+ ],
+ [
   "ncaa1: Howard",
   1
  ],
  [
-  "ncaa1w: Charlotte",
+  "ncaa1: UCF",
   1
  ],
  [
-  "ncaa1w: UAB",
+  "ncaa1: South Carolina",
+  1
+ ],
+ [
+  "ncaa1: American University",
+  1
+ ],
+ [
+  "ncaa1: UAlbany",
   1
  ],
  [
@@ -237,6 +233,14 @@
  ],
  [
   "ncaa1w: St. John's",
+  1
+ ],
+ [
+  "ncaa1w: UAB",
+  1
+ ],
+ [
+  "ncaa1w: Charlotte",
   1
  ],
  [
