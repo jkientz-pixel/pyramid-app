@@ -453,7 +453,7 @@
   },
   "logloss": 0.981,
   "n": 216,
-  "pending": 0,
+  "pending": 1,
   "since": "2026-09-29T18:51Z",
   "void": 16
  },

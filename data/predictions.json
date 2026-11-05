@@ -4822,5 +4822,22 @@
 3,
 1
 ]
+},
+{
+"k":"nwsl:2026-11-07T03:00:san-diego-wave:utah-royals",
+"lg":"nwsl",
+"start":"2026-11-07T03:00:00.000Z",
+"id1":"san-diego-wave",
+"id2":"utah-royals",
+"n1":"San Diego Wave",
+"n2":"Utah Royals",
+"r1":1988,
+"r2":1875,
+"p":[
+0.6079,
+0.2157,
+0.1764
+],
+"frozen":"2026-11-05T21:12Z"
 }
 ]
