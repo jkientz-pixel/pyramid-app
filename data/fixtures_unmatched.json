@@ -1,51 +1,19 @@
 [
  [
   "ncaa1w: TBD Away",
-  155
+  147
  ],
  [
   "ncaa1w: TBD Home",
-  126
+  118
  ],
  [
   "ncaa1: TBD Away",
-  107
+  94
  ],
  [
   "ncaa1: TBD Home",
-  93
- ],
- [
-  "ncaa1: North Carolina",
-  1
- ],
- [
-  "ncaa1: California",
-  1
- ],
- [
-  "ncaa1: Virginia Tech",
-  1
- ],
- [
-  "ncaa1: NC State",
-  1
- ],
- [
-  "ncaa1: Indiana",
-  1
- ],
- [
-  "ncaa1: Maryland",
-  1
- ],
- [
-  "ncaa1: Penn State",
-  1
- ],
- [
-  "ncaa1: Wisconsin",
-  1
+  76
  ],
  [
   "ncaa1: VMI",
@@ -84,7 +52,19 @@
   1
  ],
  [
+  "ncaa1: North Carolina",
+  1
+ ],
+ [
   "ncaa1: Howard",
+  1
+ ],
+ [
+  "ncaa1: Maryland",
+  1
+ ],
+ [
+  "ncaa1: NC State",
   1
  ],
  [
@@ -100,19 +80,11 @@
   1
  ],
  [
+  "ncaa1: Indiana",
+  1
+ ],
+ [
   "ncaa1: UAlbany",
-  1
- ],
- [
-  "ncaa1w: Lafayette",
-  1
- ],
- [
-  "ncaa1w: Wisconsin",
-  1
- ],
- [
-  "ncaa1w: Cal State Fullerton",
   1
  ],
  [
@@ -224,6 +196,10 @@
   1
  ],
  [
+  "ncaa1w: Cal State Fullerton",
+  1
+ ],
+ [
   "ncaa1w: UAB",
   1
  ],
@@ -233,6 +209,10 @@
  ],
  [
   "ncaa1w: LSU",
+  1
+ ],
+ [
+  "ncaa1w: Wisconsin",
   1
  ],
  [
@@ -265,6 +245,10 @@
  ],
  [
   "ncaa1w: South Carolina",
+  1
+ ],
+ [
+  "ncaa1w: Quinnipiac",
   1
  ],
  [
