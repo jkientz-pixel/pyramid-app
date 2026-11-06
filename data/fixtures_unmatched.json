@@ -1,23 +1,19 @@
 [
  [
   "ncaa1w: TBD Away",
-  146
+  125
  ],
  [
   "ncaa1w: TBD Home",
-  118
+  102
  ],
  [
   "ncaa1: TBD Away",
-  94
+  90
  ],
  [
   "ncaa1: TBD Home",
-  76
- ],
- [
-  "ncaa1: VMI",
-  1
+  74
  ],
  [
   "ncaa1: Charlotte",
@@ -88,66 +84,6 @@
   1
  ],
  [
-  "ncaa1w: North Carolina",
-  1
- ],
- [
-  "ncaa1w: Virginia Tech",
-  1
- ],
- [
-  "ncaa1w: UAlbany",
-  1
- ],
- [
-  "ncaa1w: Miami",
-  1
- ],
- [
-  "ncaa1w: California",
-  1
- ],
- [
-  "ncaa1w: UCF",
-  1
- ],
- [
-  "ncaa1w: West Florida",
-  1
- ],
- [
-  "ncaa1w: Jacksonville",
-  1
- ],
- [
-  "ncaa1w: East Texas A&M",
-  1
- ],
- [
-  "ncaa1w: Stephen F. Austin",
-  1
- ],
- [
-  "ncaa1w: SE Louisiana",
-  1
- ],
- [
-  "ncaa1w: Purdue",
-  1
- ],
- [
-  "ncaa1w: Penn State",
-  1
- ],
- [
-  "ncaa1w: Southern",
-  1
- ],
- [
-  "ncaa1w: Fresno State",
-  1
- ],
- [
   "ncaa1w: VMI",
   1
  ],
@@ -196,11 +132,19 @@
   1
  ],
  [
+  "ncaa1w: Jacksonville",
+  1
+ ],
+ [
   "ncaa1w: Charlotte",
   1
  ],
  [
   "ncaa1w: LSU",
+  1
+ ],
+ [
+  "ncaa1w: Purdue",
   1
  ],
  [
@@ -245,6 +189,10 @@
  ],
  [
   "ncaa1w: UT Martin",
+  1
+ ],
+ [
+  "ncaa1w: Southern",
   1
  ]
 ]
