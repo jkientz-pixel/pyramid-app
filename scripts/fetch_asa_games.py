@@ -54,8 +54,8 @@ def norm(n): return re.sub(r'\b(fc|sc|cf|afc|cd|club|the)\b', '', deacc(n).lower
 
 BRIDGE = {'losangeles': 'lafc', 'newyorkcity': 'nycfc', 'montreal': 'cfmontreal'}
 
-def main():
-    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+def main(root=None):
+    root = root or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     cur = open(os.path.join(root, 'js', 'data.js')).read()
     clubs = json.loads(re.search(r'export const CLUBS=(\[.*?\]);', cur, re.S).group(1))
     nudges = stored_nudges()
@@ -79,6 +79,8 @@ def main():
         club = resolve_club(g, asa_name)
         return club['n'] if club else asa_name
 
+    wire_path = os.path.join(root, 'data', 'wire_asa.json')
+    prior_wire = json.load(open(wire_path)) if os.path.exists(wire_path) else []
     wire = []
     for g, (asa, seasons) in LEAGUES.items():
         teams = get(f'/{asa}/teams'); time.sleep(1)
@@ -93,7 +95,13 @@ def main():
             games += [{**x, '_season': si, '_cur': season == seasons[-1]} for x in got]
             xg.update({r['game_id']: (r.get('home_team_xgoals'), r.get('away_team_xgoals')) for r in gx})
         if not teams or not games:
-            print(f'{g}: ASA fetch failed', file=sys.stderr); continue
+            # same rule as ratings below: a failed fetch keeps what we had. An
+            # ASA outage must not take a league's results off The Wire, or make
+            # the freshness gate read it as "no results" (2026-11-06, uslw).
+            kept = [r for r in prior_wire if r['lg'] == g]
+            wire += kept
+            print(f'{g}: ASA fetch failed, keeping {len(kept)} earlier wire rows', file=sys.stderr)
+            continue
         tname = {t['team_id']: t['team_name'] for t in teams}
         rows = [x for x in games if x.get('status') == 'FullTime'
                 and isinstance(x.get('home_score'), int) and isinstance(x.get('away_score'), int)]
@@ -140,7 +148,7 @@ def main():
                 club['rr'] = 1; club.pop('re', None)
             applied += 1
         print(f'{g}: {"secondary results-Elo (re)" if g == "mls" else "results-Elo ratings"} on {applied} clubs')
-    json.dump(wire, open(os.path.join(root, 'data', 'wire_asa.json'), 'w'), separators=(',', ':'))
+    json.dump(wire, open(wire_path, 'w'), separators=(',', ':'))
     print(f'wrote data/wire_asa.json: {len(wire)} rows')
     out = cur[:cur.index('export const CLUBS=')] + 'export const CLUBS=' + \
         json.dumps(clubs, ensure_ascii=False, separators=(',', ':')) + ';\n' + \
