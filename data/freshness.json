@@ -67,8 +67,8 @@
   },
   "uslw": {
    "source": "results (ASA)",
-   "stale": "newest rated result none, over 21 days old",
-   "updated": ""
+   "stale": null,
+   "updated": "2026-11-01"
   }
  }
 }
