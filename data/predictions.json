@@ -5234,5 +5234,22 @@
 0.2941
 ],
 "frozen":"2026-11-07T08:51Z"
+},
+{
+"k":"usl1:2026-11-09T00:00:charlotte-independence:forward-madison",
+"lg":"usl1",
+"start":"2026-11-09T00:00:00.000Z",
+"id1":"charlotte-independence",
+"id2":"forward-madison",
+"n1":"Charlotte Independence",
+"n2":"Forward Madison",
+"r1":1647,
+"r2":1651,
+"p":[
+0.4309,
+0.2551,
+0.3139
+],
+"frozen":"2026-11-07T18:52Z"
 }
 ]
