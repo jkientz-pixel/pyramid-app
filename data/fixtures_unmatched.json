@@ -1,39 +1,19 @@
 [
  [
   "ncaa1w: TBD Away",
-  134
+  126
  ],
  [
   "ncaa1w: TBD Home",
-  111
+  108
  ],
  [
   "ncaa1: TBD Away",
-  90
+  83
  ],
  [
   "ncaa1: TBD Home",
-  74
- ],
- [
-  "ncaa1: Charlotte",
-  1
- ],
- [
-  "ncaa1: UConn",
-  1
- ],
- [
-  "ncaa1: Georgetown",
-  1
- ],
- [
-  "ncaa1: Seattle U",
-  1
- ],
- [
-  "ncaa1: San Jos\u00e9 State",
-  1
+  70
  ],
  [
   "ncaa1: Massachusetts",
@@ -76,6 +56,10 @@
   1
  ],
  [
+  "ncaa1: San Jos\u00e9 State",
+  1
+ ],
+ [
   "ncaa1: Indiana",
   1
  ],
@@ -84,11 +68,11 @@
   1
  ],
  [
-  "ncaa1w: VMI",
+  "ncaa1: Charlotte",
   1
  ],
  [
-  "ncaa1w: St. Thomas",
+  "ncaa1: Georgetown",
   1
  ],
  [
@@ -201,6 +185,10 @@
  ],
  [
   "ncaa1w: Southern",
+  1
+ ],
+ [
+  "ncaa1w: St. Thomas",
   1
  ]
 ]
