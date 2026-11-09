@@ -1,19 +1,19 @@
 [
  [
   "ncaa1w: TBD Away",
-  86
+  94
  ],
  [
   "ncaa1w: TBD Home",
-  84
+  92
  ],
  [
   "ncaa1: TBD Home",
-  59
+  57
  ],
  [
   "ncaa1: TBD Away",
-  59
+  57
  ],
  [
   "mls: TBD Away",
@@ -56,19 +56,15 @@
   1
  ],
  [
-  "ncaa1: NC State",
-  1
- ],
- [
   "ncaa1: North Carolina",
   1
  ],
  [
-  "ncaa1: Georgetown",
+  "ncaa1: NC State",
   1
  ],
  [
-  "ncaa1w: Louisiana",
+  "ncaa1: Georgetown",
   1
  ],
  [
@@ -124,11 +120,19 @@
   1
  ],
  [
+  "ncaa1w: Seattle U",
+  1
+ ],
+ [
   "ncaa1w: Quinnipiac",
   1
  ],
  [
   "ncaa1w: North Carolina",
+  1
+ ],
+ [
+  "ncaa1w: Columbia",
   1
  ],
  [
@@ -141,10 +145,6 @@
  ],
  [
   "ncaa1w: Southern",
-  1
- ],
- [
-  "ncaa1w: Columbia",
   1
  ],
  [
