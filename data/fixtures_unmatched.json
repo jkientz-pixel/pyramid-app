@@ -1,47 +1,27 @@
 [
  [
   "ncaa1w: TBD Away",
-  126
+  92
  ],
  [
   "ncaa1w: TBD Home",
-  108
+  88
  ],
  [
   "ncaa1: TBD Away",
-  82
+  65
  ],
  [
   "ncaa1: TBD Home",
-  67
+  61
  ],
  [
-  "ncaa1: NJIT",
-  1
+  "mls: TBD Away",
+  2
  ],
  [
-  "ncaa1: North Carolina",
-  1
- ],
- [
-  "ncaa1: Howard",
-  1
- ],
- [
-  "ncaa1: Maryland",
-  1
- ],
- [
-  "ncaa1: NC State",
-  1
- ],
- [
-  "ncaa1: UCF",
-  1
- ],
- [
-  "ncaa1: South Carolina",
-  1
+  "mls: TBD Home",
+  2
  ],
  [
   "ncaa1: American University",
@@ -52,7 +32,15 @@
   1
  ],
  [
+  "ncaa1: Charlotte",
+  1
+ ],
+ [
   "ncaa1: Indiana",
+  1
+ ],
+ [
+  "ncaa1: Maryland",
   1
  ],
  [
@@ -60,83 +48,23 @@
   1
  ],
  [
-  "ncaa1: Charlotte",
+  "ncaa1: NJIT",
+  1
+ ],
+ [
+  "ncaa1: South Carolina",
+  1
+ ],
+ [
+  "ncaa1: NC State",
+  1
+ ],
+ [
+  "ncaa1: North Carolina",
   1
  ],
  [
   "ncaa1: Georgetown",
-  1
- ],
- [
-  "ncaa1w: UConn",
-  1
- ],
- [
-  "ncaa1w: Hawai'i",
-  1
- ],
- [
-  "ncaa1w: Saint Mary's",
-  1
- ],
- [
-  "ncaa1w: Seattle U",
-  1
- ],
- [
-  "ncaa1w: Miami (OH)",
-  1
- ],
- [
-  "ncaa1w: Nevada",
-  1
- ],
- [
-  "ncaa1w: Columbia",
-  1
- ],
- [
-  "ncaa1w: St. John's",
-  1
- ],
- [
-  "ncaa1w: Cal State Fullerton",
-  1
- ],
- [
-  "ncaa1w: UAB",
-  1
- ],
- [
-  "ncaa1w: Jacksonville",
-  1
- ],
- [
-  "ncaa1w: Charlotte",
-  1
- ],
- [
-  "ncaa1w: LSU",
-  1
- ],
- [
-  "ncaa1w: Purdue",
-  1
- ],
- [
-  "ncaa1w: Wisconsin",
-  1
- ],
- [
-  "ncaa1w: Texas",
-  1
- ],
- [
-  "ncaa1w: Arkansas",
-  1
- ],
- [
-  "ncaa1w: Tennessee Tech",
   1
  ],
  [
@@ -152,7 +80,7 @@
   1
  ],
  [
-  "ncaa1w: Alabama",
+  "ncaa1w: South Carolina",
   1
  ],
  [
@@ -160,7 +88,19 @@
   1
  ],
  [
-  "ncaa1w: South Carolina",
+  "ncaa1w: Alabama",
+  1
+ ],
+ [
+  "ncaa1w: LSU",
+  1
+ ],
+ [
+  "ncaa1w: Miami (OH)",
+  1
+ ],
+ [
+  "ncaa1w: Texas",
   1
  ],
  [
@@ -168,7 +108,19 @@
   1
  ],
  [
+  "ncaa1w: Hawai'i",
+  1
+ ],
+ [
   "ncaa1w: Quinnipiac",
+  1
+ ],
+ [
+  "ncaa1w: North Carolina",
+  1
+ ],
+ [
+  "ncaa1w: Southern Illinois",
   1
  ],
  [
@@ -180,7 +132,15 @@
   1
  ],
  [
+  "ncaa1w: Columbia",
+  1
+ ],
+ [
   "ncaa1w: St. Thomas",
+  1
+ ],
+ [
+  "ncaa1w: Purdue",
   1
  ]
 ]

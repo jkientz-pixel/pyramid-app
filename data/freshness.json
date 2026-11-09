@@ -3,57 +3,57 @@
   "apsl": {
    "source": "standings (apslsoccer.com)",
    "stale": null,
-   "updated": "2026-11-07"
+   "updated": "2026-11-09"
   },
   "mls": {
    "source": "official table (ESPN)",
    "stale": null,
-   "updated": "2026-11-07"
+   "updated": "2026-11-09"
   },
   "mnp": {
    "source": "results (ASA)",
    "stale": null,
-   "updated": "2026-11-01"
+   "updated": "2026-11-08"
   },
   "naia": {
    "source": "Massey Ratings",
    "stale": null,
-   "updated": "2026-11-07"
+   "updated": "2026-11-08"
   },
   "ncaa1": {
    "source": "Massey Ratings",
    "stale": null,
-   "updated": "2026-11-07"
+   "updated": "2026-11-08"
   },
   "ncaa1w": {
    "source": "Massey Ratings",
    "stale": null,
-   "updated": "2026-11-07"
+   "updated": "2026-11-08"
   },
   "ncaa2": {
    "source": "Massey Ratings",
    "stale": null,
-   "updated": "2026-11-07"
+   "updated": "2026-11-08"
   },
   "ncaa2w": {
    "source": "Massey Ratings",
    "stale": null,
-   "updated": "2026-11-07"
+   "updated": "2026-11-08"
   },
   "ncaa3": {
    "source": "Massey Ratings",
    "stale": null,
-   "updated": "2026-11-07"
+   "updated": "2026-11-08"
   },
   "nwsl": {
    "source": "results (ASA)",
    "stale": null,
-   "updated": "2026-11-07"
+   "updated": "2026-11-08"
   },
   "upsl": {
    "source": "standings (upsl.com)",
    "stale": null,
-   "updated": "2026-11-07"
+   "updated": "2026-11-08"
   },
   "usl1": {
    "source": "results (ASA)",
@@ -63,12 +63,12 @@
   "uslc": {
    "source": "results (ASA)",
    "stale": null,
-   "updated": "2026-11-02"
+   "updated": "2026-11-08"
   },
   "uslw": {
    "source": "results (ASA)",
    "stale": null,
-   "updated": "2026-11-07"
+   "updated": "2026-11-08"
   }
  }
 }
