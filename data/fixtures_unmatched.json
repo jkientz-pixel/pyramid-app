@@ -1,19 +1,19 @@
 [
  [
   "ncaa1w: TBD Away",
-  92
+  86
  ],
  [
   "ncaa1w: TBD Home",
-  88
- ],
- [
-  "ncaa1: TBD Away",
-  65
+  84
  ],
  [
   "ncaa1: TBD Home",
-  61
+  59
+ ],
+ [
+  "ncaa1: TBD Away",
+  59
  ],
  [
   "mls: TBD Away",
@@ -108,6 +108,18 @@
   1
  ],
  [
+  "ncaa1w: Arkansas",
+  1
+ ],
+ [
+  "ncaa1w: Charlotte",
+  1
+ ],
+ [
+  "ncaa1w: UAB",
+  1
+ ],
+ [
   "ncaa1w: Hawai'i",
   1
  ],
@@ -141,6 +153,10 @@
  ],
  [
   "ncaa1w: Purdue",
+  1
+ ],
+ [
+  "ncaa1w: Tennessee Tech",
   1
  ]
 ]
