@@ -108,13 +108,16 @@ test('2027 qualifying renders every round, tiers, picks and stated venues', asyn
   const v = page.locator('#view');
   await expect(v.locator('h2')).toContainText(`The ${qual.year} Open Cup`);
   const rounds = await v.locator('.oc-round h3').allTextContents();
-  expect(rounds[0]).toBe('Third Qualifying Round');
+  /* the scrape adds rounds as U.S. Soccer draws them, so the latest one comes from the data */
+  const latest = ['Final', 'Fourth', 'Third', 'Second', 'First'].map(n => `${n} Qualifying Round`)
+    .find(n => qual.ties.some(t => t.round === n));
+  expect(rounds[0]).toBe(latest);
   expect(rounds).toEqual(expect.arrayContaining(['Second Qualifying Round', 'First Qualifying Round']));
-  const third = qual.ties.filter(t => t.round === 'Third Qualifying Round');
-  const block = v.locator('.oc-round', { has: page.locator('h3', { hasText: 'Third Qualifying Round' }) });
-  expect(await block.locator('.oc-tie').count()).toBe(third.length);
+  const latestTies = qual.ties.filter(t => t.round === latest);
+  const block = v.locator('.oc-round', { has: page.locator('h3', { hasText: latest }) });
+  expect(await block.locator('.oc-tie').count()).toBe(latestTies.length);
   /* venue and city exactly as U.S. Soccer prints them */
-  await expect(block).toContainText(`${third[0].venue}, ${third[0].city}`);
+  await expect(block).toContainText(`${latestTies[0].venue}, ${latestTies[0].city}`);
   /* some sides link to clubs and carry their tier */
   expect(await v.locator('.oc-tie a[href^="#/club/"]').count()).toBeGreaterThan(20);
   expect(await v.locator('.oc-tie .gk-tier').count()).toBeGreaterThan(20);
@@ -122,12 +125,12 @@ test('2027 qualifying renders every round, tiers, picks and stated venues', asyn
   const cards = await v.locator('.oc-next').count();
   /* the scrape flips ties to 'post' as they are played, so what the round
      shows depends on whether any of it is still to come */
-  const pendingThird = third.filter(t => t.state !== 'post');
-  if (pendingThird.length) {
+  const pendingLatest = latestTies.filter(t => t.state !== 'post');
+  if (pendingLatest.length) {
     /* stated local kickoff, not the viewer's timezone */
     await expect(block).toContainText(KICKOFF);
     /* at least some pending ties carry the model's pick */
-    expect(await block.locator('.oc-sub', { hasText: 'Our pick' }).count()).toBeGreaterThan(Math.min(3, pendingThird.length - 1));
+    expect(await block.locator('.oc-sub', { hasText: 'Our pick' }).count()).toBeGreaterThan(Math.min(3, pendingLatest.length - 1));
     /* a small set of closest-call cards, not 32 */
     expect(cards).toBeGreaterThan(0);
     expect(cards).toBeLessThanOrEqual(6);
@@ -139,7 +142,7 @@ test('2027 qualifying renders every round, tiers, picks and stated venues', asyn
     expect(cards).toBe(0);
   }
   /* unmatched names are plain text, never a link */
-  const un = third.find(t => !t.id1);
+  const un = latestTies.find(t => !t.id1);
   if (un) expect(await block.locator(`a:text-is("${un.t1}")`).count()).toBe(0);
   expect(errors).toEqual([]);
 });

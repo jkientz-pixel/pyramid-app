@@ -10,6 +10,8 @@ import re
 import subprocess
 import sys
 
+from race_gate import pacific_today, schedule_may_be_empty
+
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SHRINK = 0.9  # new counts may not drop below 90% of the committed baseline
 
@@ -66,7 +68,7 @@ except Exception as e:
 # checks they did not COLLAPSE, which a partial ESPN outage would do silently
 # and consistently — half a schedule is still a self-consistent schedule.
 # The remaining-fixture count legitimately falls as a season is played, so it
-# is only guarded against emptying, not against shrinking.
+# is only guarded against emptying while the last commit still had games to come.
 try:
     for f, key in (('standings.json', 'leagues'), ('seasons.json', 'leagues')):
         new_n = len(json.loads((ROOT / 'data' / f).read_text()).get(key, {}))
@@ -77,7 +79,11 @@ try:
     n_fx = len(json.loads((ROOT / 'data' / 'schedule_rest.json').read_text()).get('fixtures', []))
     print(f'schedule_rest.json: {n_fx} fixtures still to play')
     if n_fx == 0:
-        fail.append('schedule_rest.json is empty — every league cannot be finished at once')
+        committed = json.loads(head('data/schedule_rest.json')).get('fixtures', [])
+        if schedule_may_be_empty(committed, pacific_today().isoformat()):
+            print('schedule_rest.json: empty and nothing committed was still to come — off-season')
+        else:
+            fail.append('schedule_rest.json is empty but the last commit had fixtures still to come')
 except subprocess.CalledProcessError:
     print('season race files: no committed baseline yet, skipping shrink check')
 except Exception as e:
