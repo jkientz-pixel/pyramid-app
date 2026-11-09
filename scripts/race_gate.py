@@ -151,6 +151,14 @@ def salvage(fresh, last, bad, today):
     return sea, {**f_std, 'leagues': std}, {**f_sch, 'fixtures': sch}
 
 
+def schedule_may_be_empty(committed_fixtures, today):
+    """True when an empty schedule_rest.json is believable: the last committed
+    schedule holds nothing dated after `today` (ISO string). Every league does
+    finish at once, in the off-season. A feed that collapses mid-season still
+    fails, because the committed copy has games to come."""
+    return not any(f['d'] > today for f in committed_fixtures)
+
+
 def prune_played(fixtures, today):
     """Drop fixtures dated before `today` (ISO string). A restored schedule is
     up to a day old, and preflight rejects any fixture already in the past."""

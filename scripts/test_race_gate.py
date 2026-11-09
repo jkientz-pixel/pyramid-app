@@ -4,7 +4,7 @@ league that fails and keeps every other league's fresh table (the
 import pathlib, sys, unittest
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from race_gate import league_failures, salvage
+from race_gate import league_failures, salvage, schedule_may_be_empty
 
 TODAY = '2026-10-29'
 CLUBS = {'m1', 'm2', 'u1', 'u2'}
@@ -50,6 +50,22 @@ class RaceGateFallback(unittest.TestCase):
         fx = FRESH[2]['fixtures'] + [{'lg': 'mls', 'd': '2026-11-03', 'h': 'm1', 'a': 'ghost'}]
         bad = {lg for lg, _ in league_failures(FRESH[0], FRESH[1]['leagues'], fx, CLUBS, TODAY)}
         self.assertIn('mls', bad)
+
+
+class EmptyScheduleTest(unittest.TestCase):
+    """2026-11-08: the last MLS round was played, every league was finished at
+    once, and the gate that assumed this was impossible blocked every deploy."""
+
+    def test_empty_is_allowed_once_every_committed_fixture_has_come_due(self):
+        committed = [{'lg': 'mls', 'd': '2026-11-07'}, {'lg': 'mls', 'd': '2026-11-08'}]
+        self.assertTrue(schedule_may_be_empty(committed, '2026-11-08'))
+
+    def test_empty_is_refused_while_a_committed_fixture_is_still_to_come(self):
+        committed = [{'lg': 'mls', 'd': '2026-11-07'}, {'lg': 'nwsl', 'd': '2026-11-09'}]
+        self.assertFalse(schedule_may_be_empty(committed, '2026-11-08'))
+
+    def test_empty_stays_allowed_through_the_off_season(self):
+        self.assertTrue(schedule_may_be_empty([], '2026-12-15'))
 
 
 if __name__ == '__main__':

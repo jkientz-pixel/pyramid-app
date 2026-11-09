@@ -1,6 +1,12 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
+const fs = require('fs');
+const path = require('path');
 const { trackErrors, gotoRoute } = require('./helpers');
+
+/* the screen opens on MLS; once its regular season is over nothing is left to force */
+const schedule = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'schedule_rest.json'), 'utf8'));
+const mlsGamesLeft = schedule.fixtures.some(f => f.lg === 'mls');
 
 /* Season Race is the only screen that turns the table into a probability, and
    the numbers it prints are easy to get subtly wrong in ways that still look
@@ -57,17 +63,20 @@ test('group odds across one group sum to about 100%', async ({ page }) => {
   for (const s of sums) expect(s).toBeLessThan(110);
 });
 
-test('a club opens its own view with remaining fixtures', async ({ page }) => {
+test('a club opens its own view, listing whatever fixtures remain', async ({ page }) => {
   const errors = trackErrors(page);
   await race(page);
   await page.click('.rc-tbl tbody tr');
-  await page.waitForSelector('.rc-fx li', { timeout: 20000 });
+  await page.waitForSelector('.rc-stat', { timeout: 20000 });
   expect(await page.locator('.rc-stat').count()).toBe(6);
-  expect(await page.locator('.rc-fx li').count()).toBeGreaterThan(0);
+  const rows = await page.locator('.rc-fx li').count();
+  if (mlsGamesLeft) expect(rows).toBeGreaterThan(0);
+  else expect(rows).toBe(0);
   expect(errors).toEqual([]);
 });
 
 test('forcing every remaining game to a win drives the club to the top', async ({ page }) => {
+  test.skip(!mlsGamesLeft, 'off-season: no fixtures left to force');
   await race(page);
   await page.click('.rc-tbl tbody tr');
   await page.waitForSelector('.rc-fx li', { timeout: 20000 });
