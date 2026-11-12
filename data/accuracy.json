@@ -3,9 +3,9 @@
   "brier": 0.612,
   "cal": [
    {
-    "actual": 0.417,
+    "actual": 0.416,
     "band": "30-40%",
-    "n": 302,
+    "n": 303,
     "predicted": 0.385
    },
    {
@@ -15,16 +15,16 @@
     "predicted": 0.446
    },
    {
-    "actual": 0.623,
+    "actual": 0.624,
     "band": "50-60%",
-    "n": 393,
+    "n": 394,
     "predicted": 0.539
    },
    {
-    "actual": 0.691,
+    "actual": 0.695,
     "band": "60-70%",
-    "n": 94,
-    "predicted": 0.636
+    "n": 95,
+    "predicted": 0.635
    },
    {
     "actual": 0.714,
@@ -156,12 +156,12 @@
     "n": 237
    },
    "usl1": {
-    "brier": 0.6,
+    "brier": 0.599,
     "cal": [
      {
-      "actual": 0.531,
+      "actual": 0.52,
       "band": "30-40%",
-      "n": 49,
+      "n": 50,
       "predicted": 0.386
      },
      {
@@ -177,10 +177,10 @@
       "predicted": 0.539
      },
      {
-      "actual": 0.714,
+      "actual": 0.733,
       "band": "60-70%",
-      "n": 14,
-      "predicted": 0.629
+      "n": 15,
+      "predicted": 0.627
      },
      {
       "actual": 1.0,
@@ -190,8 +190,8 @@
      }
     ],
     "hit": 0.553,
-    "logloss": 1.003,
-    "n": 264
+    "logloss": 1.001,
+    "n": 266
    },
    "uslc": {
     "brier": 0.624,
@@ -238,7 +238,7 @@
     "n": 372
    },
    "uslw": {
-    "brier": 0.619,
+    "brier": 0.612,
     "cal": [
      {
       "actual": 0.2,
@@ -253,23 +253,23 @@
       "predicted": 0.444
      },
      {
-      "actual": 0.8,
+      "actual": 0.833,
       "band": "50-60%",
-      "n": 5,
-      "predicted": 0.53
+      "n": 6,
+      "predicted": 0.533
      }
     ],
-    "hit": 0.439,
-    "logloss": 1.032,
-    "n": 41
+    "hit": 0.452,
+    "logloss": 1.021,
+    "n": 42
    }
   },
   "logloss": 1.022,
-  "n": 1826
+  "n": 1829
  },
  "baseline_brier": 0.667,
  "live": {
-  "brier": 0.581,
+  "brier": 0.58,
   "cal": [
    {
     "actual": 0.364,
@@ -278,10 +278,10 @@
     "predicted": 0.385
    },
    {
-    "actual": 0.512,
+    "actual": 0.516,
     "band": "40-50%",
-    "n": 121,
-    "predicted": 0.447
+    "n": 122,
+    "predicted": 0.446
    },
    {
     "actual": 0.75,
@@ -290,9 +290,9 @@
     "predicted": 0.534
    },
    {
-    "actual": 0.652,
+    "actual": 0.667,
     "band": "60-70%",
-    "n": 23,
+    "n": 24,
     "predicted": 0.634
    },
    {
@@ -308,7 +308,7 @@
     "predicted": 0.822
    }
   ],
-  "hit": 0.552,
+  "hit": 0.556,
   "leagues": {
    "mls": {
     "brier": 0.62,
@@ -381,7 +381,7 @@
     "n": 36
    },
    "usl1": {
-    "brier": 0.64,
+    "brier": 0.62,
     "cal": [
      {
       "actual": 0.143,
@@ -390,10 +390,10 @@
       "predicted": 0.382
      },
      {
-      "actual": 0.333,
+      "actual": 0.385,
       "band": "40-50%",
-      "n": 12,
-      "predicted": 0.446
+      "n": 13,
+      "predicted": 0.444
      },
      {
       "actual": 0.667,
@@ -402,15 +402,15 @@
       "predicted": 0.56
      },
      {
-      "actual": 0.6,
+      "actual": 0.667,
       "band": "60-70%",
-      "n": 5,
-      "predicted": 0.632
+      "n": 6,
+      "predicted": 0.631
      }
     ],
-    "hit": 0.37,
-    "logloss": 1.061,
-    "n": 27
+    "hit": 0.414,
+    "logloss": 1.033,
+    "n": 29
    },
    "uslc": {
     "brier": 0.551,
@@ -451,13 +451,29 @@
     "n": 68
    }
   },
-  "logloss": 0.98,
-  "n": 239,
-  "pending": 2,
+  "logloss": 0.978,
+  "n": 241,
+  "pending": 0,
   "since": "2026-09-29T18:51Z",
   "void": 16
  },
  "recent": [
+  {
+   "frozen": "2026-11-07T18:52Z",
+   "lg": "usl1",
+   "n1": "Charlotte Independence",
+   "n2": "Forward Madison",
+   "p": [
+    0.4309,
+    0.2551,
+    0.3139
+   ],
+   "res": [
+    2,
+    1
+   ],
+   "start": "2026-11-09T00:00:00.000Z"
+  },
   {
    "frozen": "2026-11-07T08:51Z",
    "lg": "nwsl",
@@ -521,6 +537,22 @@
     0
    ],
    "start": "2026-11-08T02:30:00.000Z"
+  },
+  {
+   "frozen": "2026-11-06T16:15Z",
+   "lg": "usl1",
+   "n1": "Athletic Club Boise",
+   "n2": "Chattanooga Red Wolves",
+   "p": [
+    0.6256,
+    0.2096,
+    0.1647
+   ],
+   "res": [
+    1,
+    0
+   ],
+   "start": "2026-11-08T02:00:00.000Z"
   },
   {
    "frozen": "2026-11-06T16:15Z",
@@ -1065,38 +1097,6 @@
     0
    ],
    "start": "2026-11-01T22:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-31T18:38Z",
-   "lg": "mls",
-   "n1": "Atlanta United",
-   "n2": "Toronto FC",
-   "p": [
-    0.4057,
-    0.2572,
-    0.3371
-   ],
-   "res": [
-    3,
-    1
-   ],
-   "start": "2026-11-01T21:30:00.000Z"
-  },
-  {
-   "frozen": "2026-10-31T18:38Z",
-   "lg": "mls",
-   "n1": "Nashville SC",
-   "n2": "New York Red Bulls",
-   "p": [
-    0.581,
-    0.2243,
-    0.1947
-   ],
-   "res": [
-    3,
-    2
-   ],
-   "start": "2026-11-01T21:30:00.000Z"
   }
  ]
 }
