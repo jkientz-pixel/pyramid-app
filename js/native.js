@@ -79,3 +79,30 @@ export const nativePush = {
     try { localStorage.removeItem(TOKEN_KEY); } catch { /* fine */ }
   },
 };
+
+/* Tapping a match-day notification opens the route it names. The APNs
+   payload carries `url` beside `aps` (scripts/_apns.py), and Capacitor hands
+   custom keys through as notification.data. Only same-site app routes are
+   followed: the payload is ours, but a link handler that would navigate to
+   any URL it is given is one bad send away from an open redirect.
+
+   Registered at import, and app.js imports this module at boot, so a tap that
+   cold-launches the app is still delivered -- Capacitor queues the action
+   until a listener exists. */
+export function routeFromPush(url) {
+  if (typeof url !== 'string') return null;
+  const m = url.match(/^\/app(#\/[A-Za-z0-9/_-]*)?$/);
+  return m ? (m[1] || '#/') : null;
+}
+
+if (isNative()) {
+  const P = plugin('PushNotifications');
+  if (P) {
+    try {
+      P.addListener('pushNotificationActionPerformed', a => {
+        const route = routeFromPush(a?.notification?.data?.url);
+        if (route && location.hash !== route) location.hash = route;
+      });
+    } catch { /* optional */ }
+  }
+}

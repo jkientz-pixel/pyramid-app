@@ -42,6 +42,8 @@ import subprocess
 import sys
 import zoneinfo
 
+import _apns
+
 REPO = pathlib.Path(__file__).resolve().parent.parent
 CONF = pathlib.Path.home() / '.config' / 'rankxi'
 VAPID_PEM = CONF / 'vapid_private.pem'
@@ -49,6 +51,7 @@ SENT_LOG = CONF / 'push_sent.json'
 PT = zoneinfo.ZoneInfo('America/Los_Angeles')
 CLAIMS = {'sub': 'mailto:hello@rankedxi.com'}
 MAX_LIST = 3   # clubs named in the body before "and N more"
+TTL = 12 * 3600   # a match-day ping is stale by evening
 
 
 def q(sql):
@@ -99,22 +102,28 @@ def main():
     ap.add_argument('--dry-run', action='store_true', help='print, send nothing, delete nothing')
     args = ap.parse_args()
 
-    if not VAPID_PEM.exists():
-        sys.exit(f'missing VAPID key: {VAPID_PEM}')
-
     fixtures = todays_fixtures()
     if not fixtures:
         print('no fixtures today — nothing to send')
         return
     print(f'{len(fixtures)} fixtures today')
 
-    # apns:// rows belong to the native iOS app and need the APNs sender
-    # (not built until the Apple developer account exists); pywebpush would
-    # choke on them, so select web-push rows only.
-    subs = q("SELECT id, endpoint, p256dh, auth, clubs FROM push_subs WHERE endpoint LIKE 'https://%'")
+    # Two channels, one table: https:// rows are web push (pywebpush + VAPID),
+    # apns:// rows are the native iOS app (scripts/_apns.py). Each channel is
+    # skipped -- not fatal -- when its key is missing, so a half-configured
+    # machine still serves the other one.
+    subs = q("SELECT id, endpoint, p256dh, auth, clubs FROM push_subs "
+             "WHERE endpoint LIKE 'https://%' OR endpoint LIKE 'apns://%'")
     if not subs:
         print('no subscribers')
         return
+    has_vapid = VAPID_PEM.exists()
+    apns_cfg = _apns.load_config()
+    if not has_vapid:
+        print(f'  no VAPID key at {VAPID_PEM} — skipping web-push rows', file=sys.stderr)
+    if not apns_cfg:
+        print(f'  no APNs config at {_apns.CONFIG_FILE} — skipping iOS rows', file=sys.stderr)
+    apns_jwt = None
 
     today = dt.datetime.now(PT).date().isoformat()
     sent_log = {}
@@ -155,6 +164,25 @@ def main():
             sent += 1
             continue
 
+        token = _apns.token_of(sub['endpoint'])
+        if token:
+            if not apns_cfg:
+                continue
+            if apns_jwt is None:
+                apns_jwt = _apns.make_jwt(apns_cfg['key_pem'], apns_cfg['key_id'], apns_cfg['team_id'])
+            outcome = _apns.send(token, _apns.payload(title, body, '/app#/myxi'), apns_jwt, TTL)
+            if outcome == 'sent':
+                sent += 1
+                sent_log[key] = today
+            elif outcome == 'dead':
+                q(f"DELETE FROM push_subs WHERE id = {int(sub['id'])}")
+                dead += 1
+            else:
+                print(f'  apns send failed sub#{sub["id"]}: {outcome}', file=sys.stderr)
+            continue
+        if not has_vapid:
+            continue
+
         try:
             webpush(
                 subscription_info={'endpoint': sub['endpoint'],
@@ -162,7 +190,7 @@ def main():
                 data=payload,
                 vapid_private_key=str(VAPID_PEM),
                 vapid_claims=dict(CLAIMS),   # pywebpush mutates the dict it is given
-                ttl=12 * 3600,               # a match-day ping is stale by evening
+                ttl=TTL,
             )
             sent += 1
             sent_log[key] = today

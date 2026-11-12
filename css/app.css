@@ -882,6 +882,8 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 .mx-linkbtn{display:inline-block;background:none;border:0;color:var(--ink-dim);font:inherit;font-size:.78rem;
   text-decoration:underline;cursor:pointer;padding:6px 0;margin-right:14px}
 .mx-linkbtn:hover,.mx-linkbtn:focus-visible{color:var(--accent)}
+.mx-danger{background:#b3261e;border-color:#b3261e}
+.mx-danger:hover,.mx-danger:focus-visible{background:#8c1d18}
 
 .mx-home,.mx-share,.mx-import{background:var(--raise);border:1px solid var(--line);border-radius:12px;
   padding:12px 14px;margin:8px 0 0}
