@@ -5364,5 +5364,39 @@
 0.2277
 ],
 "frozen":"2026-11-13T09:36Z"
+},
+{
+"k":"uslc:2026-11-14T23:00:charleston-battery:louisville-city",
+"lg":"uslc",
+"start":"2026-11-14T23:00:00.000Z",
+"id1":"charleston-battery",
+"id2":"louisville-city",
+"n1":"Charleston Battery",
+"n2":"Louisville City",
+"r1":1747,
+"r2":1816,
+"p":[
+0.3371,
+0.2572,
+0.4057
+],
+"frozen":"2026-11-13T21:01Z"
+},
+{
+"k":"usl1:2026-11-15T00:30:charlotte-independence:athletic-club-boise",
+"lg":"usl1",
+"start":"2026-11-15T00:30:00.000Z",
+"id1":"charlotte-independence",
+"id2":"athletic-club-boise",
+"n1":"Charlotte Independence",
+"n2":"Athletic Club Boise",
+"r1":1651,
+"r2":1698,
+"p":[
+0.368,
+0.2582,
+0.3738
+],
+"frozen":"2026-11-13T21:01Z"
 }
 ]
