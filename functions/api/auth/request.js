@@ -13,9 +13,10 @@
    and the message contains nothing but a code. */
 
 import {
-  json, sha256, sixDigitCode, normalizeEmail, sendMail, originOk,
+  json, sha256, sixDigitCode, normalizeEmail, sendMail, originOk, reviewCodeHash,
   CODE_TTL, RESEND_COOLDOWN, RESEND_MAX_PER_WINDOW,
 } from '../../../lib/auth.js';
+
 
 const body = (code) => ({
   subject: `${code} is your Ranked XI sign-in code`,
@@ -63,8 +64,9 @@ export async function onRequestPost({ request, env }) {
     }
   }
 
-  const code = sixDigitCode();
-  const hash = await sha256(code);
+  const reviewHash = reviewCodeHash(env, email);
+  const code = reviewHash ? null : sixDigitCode();
+  const hash = reviewHash || await sha256(code);
   const sentIso = new Date(nowMs).toISOString();
   const expiresIso = new Date(nowMs + CODE_TTL).toISOString();
   /* a fresh code always resets tries; a resend inside the same window keeps
@@ -78,6 +80,8 @@ export async function onRequestPost({ request, env }) {
        hash=excluded.hash, expires=excluded.expires, tries=0, sent=excluded.sent,
        sent_count=${keepCount ? 'login_codes.sent_count + 1' : '1'}`
   ).bind(email, hash, expiresIso, sentIso, 1).run();
+
+  if (reviewHash) return json({ ok: true });
 
   try {
     await sendMail(env, { to: email, ...body(code) });

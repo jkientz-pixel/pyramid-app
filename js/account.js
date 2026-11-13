@@ -38,6 +38,8 @@ const state = {
   codeEmail: null,
   busy: false,
   msg: '',
+  /* one-shot line shown on the resting panel after an account is deleted */
+  notice: '',
 };
 
 export const accountState = () => ({ ...state });
@@ -204,7 +206,34 @@ export async function signOut() {
      laptop would read as data loss. */
 }
 
-export function startSignIn() { state.step = 'email'; state.msg = ''; emit(); }
+/* Permanent account deletion (App Store Guideline 5.1.1(v) -- deletion must
+   be possible inside the app, not by emailing us). The server erases every
+   row tied to the account in one transaction (functions/api/auth/account.js).
+   The XI already on this device stays, for the same reason signOut keeps it:
+   it never left the device, and wiping the screen would read as data loss
+   the visitor did not ask for. */
+export async function deleteAccount() {
+  state.busy = true;
+  let d;
+  try {
+    d = await api('/api/auth/account', { method: 'DELETE', body: JSON.stringify({ confirm: 'delete' }) });
+  } catch { d = { ok: false, error: 'Could not reach the server — check your connection.' }; }
+  state.busy = false;
+  if (!d.ok) { state.msg = d.error || 'Could not delete your account right now — please try again.'; emit(); return d; }
+  state.signedIn = false;
+  state.email = null;
+  state.rev = 0;
+  state.pending = false;
+  state.step = 'idle';
+  state.msg = '';
+  state.notice = 'Your account is deleted. Everything saved to it on our side is gone.';
+  emit();
+  return { ok: true };
+}
+
+export function startDelete() { state.step = 'delete'; state.msg = ''; emit(); }
+
+export function startSignIn() { state.step = 'email'; state.msg = ''; state.notice = ''; emit(); }
 export function cancelSignIn() { state.step = 'idle'; state.codeEmail = null; state.msg = ''; emit(); }
 
 /* ---- the panel ------------------------------------------------------------
@@ -219,6 +248,19 @@ const esc = s => String(s).replace(/[&<>"']/g, c =>
 export function accountBlock() {
   const head = `<div class="kicker" style="margin-top:20px">Save your XI</div>`;
 
+  if (state.signedIn && state.step === 'delete') {
+    return head + `
+      <div class="mx-acct" id="mxacct">
+        <b>Delete your Ranked XI account?</b>
+        <p class="note" style="margin:.35em 0 .6em">This permanently erases the account for <b>${esc(state.email)}</b>:
+           your saved XI, your sign-ins on every device, club follow emails and any club claims.
+           It can't be undone. The XI on this device stays here until you clear it.</p>
+        <button type="button" class="joinbtn mx-danger" id="mxdelyes"${state.busy ? ' disabled' : ''}>Delete permanently</button>
+        <button type="button" class="mx-linkbtn" id="mxdelno">Keep my account</button>
+        <p class="join-msg" id="mxacctmsg" role="status" aria-live="polite">${esc(state.msg)}</p>
+      </div>`;
+  }
+
   if (state.signedIn) {
     return head + `
       <div class="mx-acct saved" id="mxacct">
@@ -226,6 +268,7 @@ export function accountBlock() {
         <p class="note" style="margin:.35em 0 .6em">Your XI syncs to every device you sign in on.
            ${state.pending ? 'One change is still waiting to save &mdash; it will retry on its own.' : 'Everything is backed up.'}</p>
         <button type="button" class="mx-linkbtn" id="mxsignout">Sign out on this device</button>
+        <button type="button" class="mx-linkbtn" id="mxdelete">Delete account</button>
       </div>`;
   }
 
@@ -278,6 +321,7 @@ export function accountBlock() {
       <p class="note" style="margin:.35em 0 .6em">Open Ranked XI on your phone and it starts empty.
          And iPhones clear this kind of storage after a week away, which takes your picks with it.
          Save your XI and it follows you to every device &mdash; and survives.</p>
+      ${state.notice ? `<p class="join-msg" role="status">${esc(state.notice)}</p>` : ''}
       <button type="button" class="joinbtn" id="mxsignin">Save my XI</button>
       <p class="note" style="margin:.5em 0 0;font-size:.78rem">Email only. No password, no profile,
          nothing public &mdash; your XI stays as private as it is now.</p>
@@ -338,6 +382,14 @@ export function wireAccount(root, refresh) {
   panel.querySelector('#mxsignout')?.addEventListener('click', async () => {
     await signOut();
     repaint();
+  });
+
+  panel.querySelector('#mxdelete')?.addEventListener('click', () => { startDelete(); repaint(); });
+  panel.querySelector('#mxdelno')?.addEventListener('click', () => { cancelSignIn(); repaint(); });
+  panel.querySelector('#mxdelyes')?.addEventListener('click', async () => {
+    say('Deleting…');
+    const d = await deleteAccount();
+    if (d.ok) repaint(); else say(d.error);
   });
 
   panel.querySelector('#mxemailform')?.addEventListener('submit', async e => {

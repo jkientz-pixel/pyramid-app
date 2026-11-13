@@ -882,6 +882,8 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 .mx-linkbtn{display:inline-block;background:none;border:0;color:var(--ink-dim);font:inherit;font-size:.78rem;
   text-decoration:underline;cursor:pointer;padding:6px 0;margin-right:14px}
 .mx-linkbtn:hover,.mx-linkbtn:focus-visible{color:var(--accent)}
+.mx-danger{background:#b3261e;border-color:#b3261e}
+.mx-danger:hover,.mx-danger:focus-visible{background:#8c1d18}
 
 .mx-home,.mx-share,.mx-import{background:var(--raise);border:1px solid var(--line);border-radius:12px;
   padding:12px 14px;margin:8px 0 0}
@@ -1275,3 +1277,16 @@ select.ssel-native{position:absolute!important;width:1px!important;height:1px!im
 .agerow[data-tier="ea2"] .age{font-weight:500;color:var(--ink-dim)}
 .agerow-d{grid-column:2;font-size:.75rem;color:var(--ink-dim)}
 @media (max-width:480px){.agerow{grid-template-columns:1fr}.agerow-d{grid-column:1}}
+
+/* iOS focus zoom (2026-11-12, TestFlight report "after a search it's off").
+   Safari and WKWebView zoom the page in whenever a text field under 16px
+   gets focus, and inside the native app shell nothing zooms back out, so the
+   whole app is left cropped. Every form control here is styled .82-.9rem for
+   desktop density, often through id selectors, hence one late, touch-only
+   override rather than editing a dozen rules. Desktop keeps the compact size.
+   The score box (.resscore, 1.3rem) is already larger and is left alone. */
+@media (hover: none) and (pointer: coarse) {
+  input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=button]):not([type=submit]):not(.resscore input),
+  select, textarea { font-size: 16px !important; }
+  .resform .resscore input { font-size: 1.3rem !important; }
+}

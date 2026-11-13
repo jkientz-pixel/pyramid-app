@@ -54,6 +54,17 @@ function mockApi(page, opts = {}) {
     return json(route, { ok: true, email: body.email, picks: state.picks, home: state.home, rev: 4 });
   });
 
+  page.route('**/api/auth/account', async route => {
+    const body = JSON.parse(route.request().postData() || '{}');
+    state.deletes = (state.deletes || 0) + 1;
+    if (opts.failDelete) {
+      return json(route, { ok: false, error: 'Could not delete your account right now — nothing was removed. Please try again.' }, 500);
+    }
+    if (body.confirm !== 'delete') return json(route, { ok: false, error: 'needs confirming' }, 400);
+    state.signedIn = false; state.email = null;
+    return json(route, { ok: true, deleted: true, signedIn: false });
+  });
+
   page.route('**/api/picks*', async route => {
     if (route.request().method() === 'GET') {
       return json(route, { ok: true, picks: state.picks, home: state.home, rev: 4 });
@@ -286,4 +297,44 @@ test('every account endpoint failing leaves My XI fully usable', async ({ page }
   await expect(page.locator('#view h2.disp')).toHaveText('My XI');
   await page.locator('#mxadd [data-add="league"]').first().click();
   await expect.poll(async () => (await readLocal(page)).myxi.picks?.length).toBeGreaterThan(0);
+});
+
+/* ---- account deletion (App Store Guideline 5.1.1(v)) --------------------- */
+
+test('a signed-in visitor can delete their account from My XI, after confirming', async ({ page }) => {
+  const api = mockApi(page, { signedIn: true, email: 'fan@example.com', picks: 'c:lafc' });
+  await seed(page, { clubs: ['lafc'], players: [] });
+  await gotoRoute(page, '#/myxi');
+  await expect(page.locator('#mxacct')).toContainText('Saved to');
+
+  await page.locator('#mxdelete').click();
+  await expect(page.locator('#mxacct')).toContainText("can't be undone");
+  expect(api.deletes || 0).toBe(0);   // opening the confirm step sends nothing
+
+  await page.locator('#mxdelyes').click();
+  await expect(page.locator('#mxacct')).toContainText('Your account is deleted');
+  await expect(page.locator('#mxsignin')).toBeVisible();
+  expect(api.deletes).toBe(1);
+  // the XI on this device is untouched
+  expect((await readLocal(page)).favs.clubs).toContain('lafc');
+});
+
+test('backing out of delete keeps the account and sends nothing', async ({ page }) => {
+  const api = mockApi(page, { signedIn: true, email: 'fan@example.com', picks: 'c:lafc' });
+  await seed(page, { clubs: ['lafc'], players: [] });
+  await gotoRoute(page, '#/myxi');
+  await page.locator('#mxdelete').click();
+  await page.locator('#mxdelno').click();
+  await expect(page.locator('#mxacct')).toContainText('Saved to fan@example.com');
+  expect(api.deletes || 0).toBe(0);
+});
+
+test('a failed delete says so and leaves the visitor signed in', async ({ page }) => {
+  mockApi(page, { signedIn: true, email: 'fan@example.com', picks: 'c:lafc', failDelete: true });
+  await seed(page, { clubs: ['lafc'], players: [] });
+  await gotoRoute(page, '#/myxi');
+  await page.locator('#mxdelete').click();
+  await page.locator('#mxdelyes').click();
+  await expect(page.locator('#mxacctmsg')).toContainText('nothing was removed');
+  await expect(page.locator('#mxdelyes')).toBeVisible();
 });
