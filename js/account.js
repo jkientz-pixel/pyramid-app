@@ -200,6 +200,7 @@ export async function signOut() {
   state.rev = 0;
   state.pending = false;
   state.step = 'idle';
+  state.notice = 'Signed out. Your XI stays on this device.';
   emit();
   /* Picks stay in this browser. Signing out is "stop syncing", not "delete my
      XI" -- wiping the visible page because somebody signed out of a shared
@@ -244,6 +245,22 @@ export function cancelSignIn() { state.step = 'idle'; state.codeEmail = null; st
 
 const esc = s => String(s).replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+/* One-line account status at the top of My XI. The full panel sits at the
+   bottom of a long page, and on a phone signing in or out was invisible
+   (TestFlight 2026-11-12: "it's hard to find the sign in or sign out", and
+   after signing out "everything is still there", which is by design but read
+   as broken). The bar states which one you are and offers the next action. */
+export function accountBar(hasPicks) {
+  if (state.signedIn) {
+    return `<div class="mx-acctbar" id="mxacctbar" data-picks="${hasPicks ? 1 : 0}"><span>Saved to <b>${esc(state.email)}</b></span>
+      <button type="button" class="mx-linkbtn" id="mxbarout">Sign out</button></div>`;
+  }
+  if (!hasPicks && !state.notice) return `<div id="mxacctbar" data-picks="0" hidden></div>`;
+  const line = state.notice ? esc(state.notice) : 'Only on this device';
+  return `<div class="mx-acctbar" id="mxacctbar" data-picks="${hasPicks ? 1 : 0}"><span>${line}</span>
+      <button type="button" class="mx-linkbtn" id="mxbarsave">Save my XI</button></div>`;
+}
 
 export function accountBlock() {
   const head = `<div class="kicker" style="margin-top:20px">Save your XI</div>`;
@@ -343,7 +360,30 @@ export function wireAccount(root, refresh) {
   const panel = root.querySelector('#mxacct');
   if (!panel) return;
 
+  const repaintBar = () => {
+    const bar = root.querySelector('#mxacctbar');
+    if (!bar) return;
+    const wrap = document.createElement('div');
+    wrap.innerHTML = accountBar(bar.dataset.picks === '1');
+    bar.replaceWith(wrap.firstElementChild);
+    wireBar();
+  };
+  /* wireAccount re-runs on every panel repaint; the flag keeps one handler
+     per bar element rather than stacking a new one each time. */
+  const wireBar = () => {
+    const bar = root.querySelector('#mxacctbar');
+    if (!bar || bar.dataset.wired) return;
+    bar.dataset.wired = '1';
+    root.querySelector('#mxbarout')?.addEventListener('click', async () => { await signOut(); repaint(); });
+    root.querySelector('#mxbarsave')?.addEventListener('click', () => {
+      startSignIn(); repaint();
+      root.querySelector('#mxacct')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      root.querySelector('#mx-email')?.focus({ preventScroll: true });
+    });
+  };
+
   const repaint = () => {
+    repaintBar();
     const host = root.querySelector('#mxacct');
     if (!host) return;
     const wrap = document.createElement('div');
@@ -351,6 +391,7 @@ export function wireAccount(root, refresh) {
     const next = wrap.querySelector('#mxacct');
     if (next) { host.replaceWith(next); wireAccount(root, refresh); }
   };
+  wireBar();
 
   /* The session lookup is a round trip and the screen paints before it lands,
      so a signed-in visitor's first render of this panel says "save your XI" to

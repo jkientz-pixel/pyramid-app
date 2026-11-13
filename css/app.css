@@ -888,6 +888,10 @@ circle.sh-ramp{fill:none;stroke:var(--ink-dim);stroke-width:1.6}
 .mx-linkbtn{display:inline-block;background:none;border:0;color:var(--ink-dim);font:inherit;font-size:.78rem;
   text-decoration:underline;cursor:pointer;padding:6px 0;margin-right:14px}
 .mx-linkbtn:hover,.mx-linkbtn:focus-visible{color:var(--accent)}
+/* account status line under the My XI counter (js/account.js accountBar) */
+.mx-acctbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 2px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--raise);font-size:.82rem;color:var(--ink-dim)}
+.mx-acctbar b{color:var(--ink);font-weight:600;overflow-wrap:anywhere}
+.mx-acctbar .mx-linkbtn{margin:0;flex:none;color:var(--accent);font-weight:600}
 .mx-danger{background:#b3261e;border-color:#b3261e}
 .mx-danger:hover,.mx-danger:focus-visible{background:#8c1d18}
 

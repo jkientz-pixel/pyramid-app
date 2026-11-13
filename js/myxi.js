@@ -26,7 +26,7 @@ import { share } from './native.js?v=__RXIV__';
 import {
   extras, setExtras, setHome, isHome, encodePicks, decodePicks,
 } from './picks.js?v=__RXIV__';
-import { accountBlock, wireAccount, accountState, touchAccount } from './account.js?v=__RXIV__';
+import { accountBlock, accountBar, wireAccount, accountState, touchAccount } from './account.js?v=__RXIV__';
 
 /* Ranked XI's own accounts. Facebook is deliberately absent: the page exists
    but its canonical URL was never recorded, and a dead social link on the
@@ -147,7 +147,8 @@ export async function render(view, ctx) {
   const head = `
     <div class="kicker">Your eleven · nobody else can see this page</div>
     <h2 class="disp" style="margin:2px 0 6px">My XI</h2>
-    <div class="mx-count">${meter}<span>${picked >= XI ? 'Your XI is full' : `${picked} of ${XI} picked`}</span></div>`;
+    <div class="mx-count">${meter}<span>${picked >= XI ? 'Your XI is full' : `${picked} of ${XI} picked`}</span></div>
+    ${accountBar(picked > 0)}`;
 
   /* ---- import banner ---------------------------------------------------- */
   const inbound = importPayload ? decodePicks(importPayload) : null;
@@ -180,7 +181,7 @@ export async function render(view, ctx) {
       <a class="fa-card" href="#/table/players"><b>&#9733; Follow a player</b><span>The player table, ranked across every league &mdash; open one and tap Follow.</span></a>
       <a class="fa-card" href="#/map"><b>&#128205; Find your local side</b><span>4,500+ clubs on the map. Somebody near you is on it.</span></a>
       ${addBlock()}
-      ${accountState().signedIn ? accountBlock() : ''}
+      ${accountState().signedIn || accountState().notice ? accountBlock() : ''}
       ${socialBlock()}`;
     wire();
     return;

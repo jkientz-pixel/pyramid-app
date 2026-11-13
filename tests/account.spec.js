@@ -338,3 +338,46 @@ test('a failed delete says so and leaves the visitor signed in', async ({ page }
   await expect(page.locator('#mxacctmsg')).toContainText('nothing was removed');
   await expect(page.locator('#mxdelyes')).toBeVisible();
 });
+
+/* ---- account bar at the top of My XI (TestFlight 2026-11-12) -------------- */
+
+test('signed in, the top bar names the account and signing out there says so', async ({ page }) => {
+  mockApi(page, { signedIn: true, email: 'fan@example.com', picks: 'c:lafc' });
+  await seed(page, { clubs: ['lafc'], players: [] });
+  await gotoRoute(page, '#/myxi');
+  const bar = page.locator('#mxacctbar');
+  await expect(bar).toContainText('Saved to fan@example.com');
+  await bar.getByRole('button', { name: 'Sign out' }).click();
+  await expect(page.locator('#mxacctbar')).toContainText('Signed out. Your XI stays on this device.');
+  await expect(page.locator('#mxacct')).toContainText('only exists in this browser');
+  expect((await readLocal(page)).favs.clubs).toContain('lafc');
+});
+
+test('signed out with picks, the top bar opens the sign-in form', async ({ page }) => {
+  mockApi(page, { signedIn: false });
+  await seed(page, { clubs: ['lafc'], players: [] });
+  await gotoRoute(page, '#/myxi');
+  const bar = page.locator('#mxacctbar');
+  await expect(bar).toContainText('Only on this device');
+  await bar.getByRole('button', { name: 'Save my XI' }).click();
+  await expect(page.locator('#mx-email')).toBeVisible();
+});
+
+test('an empty XI shows no account bar', async ({ page }) => {
+  mockApi(page, { signedIn: false });
+  await gotoRoute(page, '#/myxi');
+  await expect(page.locator('#mxacctbar')).toBeHidden();
+});
+
+test('the bar follows a sign-in made in the panel below', async ({ page }) => {
+  mockApi(page, { signedIn: false });
+  await seed(page, { clubs: ['lafc'], players: [] });
+  await gotoRoute(page, '#/myxi');
+  await page.locator('#mxsignin').click();
+  await page.locator('#mx-email').fill('fan@example.com');
+  await page.locator('#mxemailform input[name=age13]').check();
+  await page.locator('#mxemailform button[type=submit]').click();
+  await page.locator('#mx-code').fill('123456');
+  await page.locator('#mxcodeform button[type=submit]').click();
+  await expect(page.locator('#mxacctbar')).toContainText('Saved to fan@example.com');
+});
