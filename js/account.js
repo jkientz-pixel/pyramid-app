@@ -21,7 +21,7 @@
    year. A token here that never gets rewritten would pin every visitor to the
    first build of picks.js forever. */
 
-import { localPayload, mergePayloads, applyPayload, isHome, setHome } from './picks.js?v=__RXIV__';
+import { localPayload, mergePayloads, applyPayload, isHome, setHome, clearLocalXI } from './picks.js?v=__RXIV__';
 
 const PUSH_DEBOUNCE = 1200;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -193,26 +193,42 @@ export async function verifyCode(code) {
   return { ok: true, changed };
 }
 
+/* Sign out = this device forgets the XI (product decision 2026-11-12: after
+   signing out "it still has all my saved content", which read as broken). The
+   account keeps the XI and signing back in restores it, so the one thing that
+   must never happen is wiping picks the server has not received yet: unsent
+   changes are pushed first, and if that fails nothing is cleared. */
 export async function signOut() {
+  if (state.signedIn) {
+    clearTimeout(pushTimer);
+    await push();
+    if (state.pending) {
+      state.msg = 'Your latest picks have not saved yet. Get a connection and try again so nothing is lost.';
+      emit();
+      return { ok: false, error: state.msg };
+    }
+  }
+  const email = state.email;
   try { await api('/api/auth/session', { method: 'DELETE' }); } catch { /* clearing locally regardless */ }
+  clearLocalXI();
   state.signedIn = false;
   state.email = null;
   state.rev = 0;
   state.pending = false;
   state.step = 'idle';
-  state.notice = 'Signed out. Your XI stays on this device.';
+  state.msg = '';
+  state.notice = email
+    ? `Signed out. Your XI is saved to ${email}. Sign back in to get it back.`
+    : 'Signed out.';
   emit();
-  /* Picks stay in this browser. Signing out is "stop syncing", not "delete my
-     XI" -- wiping the visible page because somebody signed out of a shared
-     laptop would read as data loss. */
+  return { ok: true, cleared: true };
 }
 
 /* Permanent account deletion (App Store Guideline 5.1.1(v) -- deletion must
    be possible inside the app, not by emailing us). The server erases every
    row tied to the account in one transaction (functions/api/auth/account.js).
-   The XI already on this device stays, for the same reason signOut keeps it:
-   it never left the device, and wiping the screen would read as data loss
-   the visitor did not ask for. */
+   The XI on this device is left alone: after a delete there is no account to
+   restore it from, so clearing it here would destroy the only copy. */
 export async function deleteAccount() {
   state.busy = true;
   let d;
@@ -284,6 +300,7 @@ export function accountBlock() {
         <b>&#10003; Saved to ${esc(state.email)}</b>
         <p class="note" style="margin:.35em 0 .6em">Your XI syncs to every device you sign in on.
            ${state.pending ? 'One change is still waiting to save &mdash; it will retry on its own.' : 'Everything is backed up.'}</p>
+        <p class="join-msg" id="mxacctmsg" role="status" aria-live="polite">${esc(state.msg)}</p>
         <button type="button" class="mx-linkbtn" id="mxsignout">Sign out on this device</button>
         <button type="button" class="mx-linkbtn" id="mxdelete">Delete account</button>
       </div>`;
@@ -374,7 +391,10 @@ export function wireAccount(root, refresh) {
     const bar = root.querySelector('#mxacctbar');
     if (!bar || bar.dataset.wired) return;
     bar.dataset.wired = '1';
-    root.querySelector('#mxbarout')?.addEventListener('click', async () => { await signOut(); repaint(); });
+    root.querySelector('#mxbarout')?.addEventListener('click', async () => {
+      const d = await signOut();
+      if (d.ok) refresh(); else repaint();
+    });
     root.querySelector('#mxbarsave')?.addEventListener('click', () => {
       startSignIn(); repaint();
       root.querySelector('#mxacct')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -421,8 +441,9 @@ export function wireAccount(root, refresh) {
   panel.querySelector('#mxcancel')?.addEventListener('click', () => { cancelSignIn(); repaint(); });
 
   panel.querySelector('#mxsignout')?.addEventListener('click', async () => {
-    await signOut();
-    repaint();
+    const d = await signOut();
+    /* the XI is gone from this device, so the whole screen changes, not just the panel */
+    if (d.ok) refresh(); else { repaint(); say(d.error); }
   });
 
   panel.querySelector('#mxdelete')?.addEventListener('click', () => { startDelete(); repaint(); });

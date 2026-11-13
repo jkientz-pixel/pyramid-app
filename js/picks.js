@@ -100,3 +100,13 @@ export function applyPayload(payload) {
   writeFavs({ clubs: d.clubs, players: d.players });
   setExtras(d.extras);
 }
+
+/* Remove the XI from this device: clubs/players, extras + home preference,
+   and My XI's "since you last looked" snapshot. Used by sign-out, which since
+   2026-11-12 leaves the device empty (the account holds the XI; signing back
+   in restores it). Storage can be unavailable; failing to clear is not fatal. */
+export function clearLocalXI() {
+  for (const k of [FAVS_KEY, PICKS_KEY, 'rxi-myxi-seen']) {
+    try { localStorage.removeItem(k); } catch { /* storage blocked */ }
+  }
+}
