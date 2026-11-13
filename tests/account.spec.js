@@ -279,15 +279,27 @@ test('a failed push leaves the pick on screen and says it will retry', async ({ 
   expect(errors.some(e => e.startsWith('pageerror:'))).toBe(false);
 });
 
-test('signing out stops syncing but does not delete the XI', async ({ page }) => {
-  mockApi(page, { signedIn: true, email: 'fan@example.com', picks: 'c:lafc' });
+test('signing out saves the XI to the account, then clears it from this device', async ({ page }) => {
+  const api = mockApi(page, { signedIn: true, email: 'fan@example.com', picks: 'c:lafc' });
   await seed(page, { clubs: ['lafc'], players: [] });
   await gotoRoute(page, '#/myxi');
   await expect(page.locator('#mxacct')).toContainText('Saved to');
   await page.locator('#mxsignout').click();
-  await expect(page.locator('#mxacct')).toContainText('only exists in this browser');
-  // the picks are still here — signing out of a shared laptop is not a delete
+  await expect(page.locator('#mxacctbar')).toContainText('Your XI is saved to fan@example.com');
+  // pushed before clearing, so nothing the server lacked was lost
+  expect(api.puts.length).toBeGreaterThan(0);
+  const local = await readLocal(page);
+  expect(local.favs.clubs || []).toEqual([]);
+});
+
+test('if the XI cannot be saved, signing out keeps it and says why', async ({ page }) => {
+  mockApi(page, { signedIn: true, email: 'fan@example.com', picks: 'c:lafc', failPut: true });
+  await seed(page, { clubs: ['lafc'], players: [] });
+  await gotoRoute(page, '#/myxi');
+  await page.locator('#mxsignout').click();
+  await expect(page.locator('#mxacctmsg')).toContainText('have not saved yet');
   expect((await readLocal(page)).favs.clubs).toContain('lafc');
+  await expect(page.locator('#mxacctbar')).toContainText('Saved to fan@example.com');
 });
 
 test('every account endpoint failing leaves My XI fully usable', async ({ page }) => {
@@ -348,9 +360,8 @@ test('signed in, the top bar names the account and signing out there says so', a
   const bar = page.locator('#mxacctbar');
   await expect(bar).toContainText('Saved to fan@example.com');
   await bar.getByRole('button', { name: 'Sign out' }).click();
-  await expect(page.locator('#mxacctbar')).toContainText('Signed out. Your XI stays on this device.');
-  await expect(page.locator('#mxacct')).toContainText('only exists in this browser');
-  expect((await readLocal(page)).favs.clubs).toContain('lafc');
+  await expect(page.locator('#mxacctbar')).toContainText('Signed out. Your XI is saved to fan@example.com');
+  expect((await readLocal(page)).favs.clubs || []).toEqual([]);
 });
 
 test('signed out with picks, the top bar opens the sign-in form', async ({ page }) => {
