@@ -17,6 +17,16 @@ const smallFields = page => page.evaluate(() =>
 
 test.describe('on a phone', () => {
   test.use(deviceOnly('iPhone 13'));
+  /* Double-tap zoom (TestFlight 2026-11-12: tapping the colour button twice
+     left My XI magnified and shifted right). touch-action: manipulation on the
+     root turns off double-tap zoom and keeps pinch zoom for accessibility. */
+  test('double-tap zoom is off for the whole app (pinch zoom stays)', async ({ page }) => {
+    await gotoRoute(page, '#/myxi');
+    const ta = await page.evaluate(() => getComputedStyle(document.documentElement).touchAction);
+    expect(ta).toBe('manipulation');
+    const vp = await page.locator('meta[name=viewport]').getAttribute('content');
+    expect(vp).not.toMatch(/user-scalable\s*=\s*no|maximum-scale\s*=\s*1(\D|$)/);
+  });
   for (const route of ['#/', '#/tiers', '#/table', '#/matches', '#/myxi', '#/about', '#/club/la-galaxy']) {
     test(`text fields on ${route} are 16px or larger (no iOS focus zoom)`, async ({ page }) => {
       await gotoRoute(page, route);
