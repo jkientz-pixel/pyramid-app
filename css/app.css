@@ -18,6 +18,12 @@
 /* overscroll-behavior-y on the root kills Chrome's pull-to-refresh in the TWA:
    a drag starting on the appbar (outside main's own contain) reloaded the app */
 html,body{margin:0;height:100%;overscroll-behavior-y:none}
+/* No double-tap zoom (TestFlight 2026-11-12: tapping the colour button twice
+   left My XI magnified and shifted right, and the app shell has no way back
+   out). manipulation still allows pan and pinch zoom, so text stays zoomable
+   for anyone who needs it. Elements that set their own touch-action (the map
+   uses none) keep it. */
+html{touch-action:manipulation}
 body{background:#E8ECE5;color:var(--ink);font:15px/1.5 -apple-system,"Segoe UI",Roboto,sans-serif}
 .disp{font-family:var(--font-disp);text-transform:uppercase;letter-spacing:.03em}
 
