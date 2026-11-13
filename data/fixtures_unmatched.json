@@ -1,19 +1,19 @@
 [
  [
-  "ncaa1w: TBD Away",
-  68
- ],
- [
   "ncaa1w: TBD Home",
-  66
+  59
  ],
  [
-  "ncaa1: TBD Away",
-  43
+  "ncaa1w: TBD Away",
+  59
  ],
  [
   "ncaa1: TBD Home",
-  42
+  39
+ ],
+ [
+  "ncaa1: TBD Away",
+  39
  ],
  [
   "mls: TBD Away",
@@ -22,18 +22,6 @@
  [
   "mls: TBD Home",
   2
- ],
- [
-  "ncaa1: North Carolina",
-  1
- ],
- [
-  "ncaa1: NC State",
-  1
- ],
- [
-  "ncaa1: Georgetown",
-  1
  ],
  [
   "ncaa1: Charlotte",
@@ -48,31 +36,15 @@
   1
  ],
  [
+  "ncaa1: Georgetown",
+  1
+ ],
+ [
   "ncaa1: Indiana",
   1
  ],
  [
-  "ncaa1w: Arkansas",
-  1
- ],
- [
-  "ncaa1w: Texas",
-  1
- ],
- [
-  "ncaa1w: Southern",
-  1
- ],
- [
-  "ncaa1w: St. Thomas",
-  1
- ],
- [
-  "ncaa1w: South Carolina",
-  1
- ],
- [
-  "ncaa1w: Alabama",
+  "ncaa1: North Carolina",
   1
  ],
  [
@@ -81,6 +53,10 @@
  ],
  [
   "ncaa1w: Purdue",
+  1
+ ],
+ [
+  "ncaa1w: Southern",
   1
  ],
  [
@@ -100,7 +76,27 @@
   1
  ],
  [
+  "ncaa1w: Columbia",
+  1
+ ],
+ [
   "ncaa1w: Quinnipiac",
+  1
+ ],
+ [
+  "ncaa1w: Southern Illinois",
+  1
+ ],
+ [
+  "ncaa1w: South Carolina",
+  1
+ ],
+ [
+  "ncaa1w: Texas",
+  1
+ ],
+ [
+  "ncaa1w: UT Martin",
   1
  ]
 ]

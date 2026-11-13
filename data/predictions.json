@@ -5347,5 +5347,22 @@
 2,
 1
 ]
+},
+{
+"k":"nwsl:2026-11-14T17:00:washington-spirit:utah-royals",
+"lg":"nwsl",
+"start":"2026-11-14T17:00:00.000Z",
+"id1":"washington-spirit",
+"id2":"utah-royals",
+"n1":"Washington Spirit",
+"n2":"Utah Royals",
+"r1":1949,
+"r2":1884,
+"p":[
+0.5355,
+0.2368,
+0.2277
+],
+"frozen":"2026-11-13T09:36Z"
 }
 ]
