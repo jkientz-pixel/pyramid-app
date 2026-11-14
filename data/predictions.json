@@ -5415,5 +5415,22 @@
 0.3695
 ],
 "frozen":"2026-11-14T09:04Z"
+},
+{
+"k":"uslc:2026-11-16T00:00:new-mexico-united:sacramento-republic",
+"lg":"uslc",
+"start":"2026-11-16T00:00:00.000Z",
+"id1":"new-mexico-united",
+"id2":"sacramento-republic",
+"n1":"New Mexico United",
+"n2":"Sacramento Republic",
+"r1":1681,
+"r2":1806,
+"p":[
+0.2635,
+0.2467,
+0.4898
+],
+"frozen":"2026-11-14T19:18Z"
 }
 ]
