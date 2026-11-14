@@ -5398,5 +5398,22 @@
 0.3738
 ],
 "frozen":"2026-11-13T21:01Z"
+},
+{
+"k":"nwsl:2026-11-15T20:00:nj-ny-gotham:kansas-city-current",
+"lg":"nwsl",
+"start":"2026-11-15T20:00:00.000Z",
+"id1":"nj-ny-gotham",
+"id2":"kansas-city-current",
+"n1":"NJ/NY Gotham",
+"n2":"Kansas City Current",
+"r1":1957,
+"r2":2001,
+"p":[
+0.3723,
+0.2582,
+0.3695
+],
+"frozen":"2026-11-14T09:04Z"
 }
 ]

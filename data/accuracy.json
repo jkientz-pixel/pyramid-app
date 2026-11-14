@@ -1,6 +1,6 @@
 {
  "backtest": {
-  "brier": 0.612,
+  "brier": 0.611,
   "cal": [
    {
     "actual": 0.416,
@@ -15,9 +15,9 @@
     "predicted": 0.446
    },
    {
-    "actual": 0.624,
+    "actual": 0.625,
     "band": "50-60%",
-    "n": 394,
+    "n": 395,
     "predicted": 0.539
    },
    {
@@ -39,7 +39,7 @@
     "predicted": 0.808
    }
   ],
-  "hit": 0.513,
+  "hit": 0.514,
   "leagues": {
    "mls": {
     "brier": 0.627,
@@ -238,7 +238,7 @@
     "n": 372
    },
    "uslw": {
-    "brier": 0.612,
+    "brier": 0.604,
     "cal": [
      {
       "actual": 0.2,
@@ -253,19 +253,19 @@
       "predicted": 0.444
      },
      {
-      "actual": 0.833,
+      "actual": 0.857,
       "band": "50-60%",
-      "n": 6,
-      "predicted": 0.533
+      "n": 7,
+      "predicted": 0.539
      }
     ],
-    "hit": 0.452,
-    "logloss": 1.021,
-    "n": 42
+    "hit": 0.465,
+    "logloss": 1.01,
+    "n": 43
    }
   },
   "logloss": 1.022,
-  "n": 1829
+  "n": 1830
  },
  "baseline_brier": 0.667,
  "live": {
@@ -453,7 +453,7 @@
   },
   "logloss": 0.978,
   "n": 241,
-  "pending": 3,
+  "pending": 4,
   "since": "2026-09-29T18:51Z",
   "void": 16
  },
