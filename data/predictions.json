@@ -5363,7 +5363,11 @@
 0.2368,
 0.2277
 ],
-"frozen":"2026-11-13T09:36Z"
+"frozen":"2026-11-13T09:36Z",
+"res":[
+2,
+1
+]
 },
 {
 "k":"uslc:2026-11-14T23:00:charleston-battery:louisville-city",
@@ -5380,7 +5384,11 @@
 0.2572,
 0.4057
 ],
-"frozen":"2026-11-13T21:01Z"
+"frozen":"2026-11-13T21:01Z",
+"res":[
+0,
+2
+]
 },
 {
 "k":"usl1:2026-11-15T00:30:charlotte-independence:athletic-club-boise",

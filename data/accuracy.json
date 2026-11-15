@@ -11,13 +11,13 @@
    {
     "actual": 0.48,
     "band": "40-50%",
-    "n": 1027,
-    "predicted": 0.446
+    "n": 1028,
+    "predicted": 0.445
    },
    {
-    "actual": 0.625,
+    "actual": 0.626,
     "band": "50-60%",
-    "n": 395,
+    "n": 396,
     "predicted": 0.539
    },
    {
@@ -112,7 +112,7 @@
     "n": 417
    },
    "nwsl": {
-    "brier": 0.584,
+    "brier": 0.583,
     "cal": [
      {
       "actual": 0.486,
@@ -127,10 +127,10 @@
       "predicted": 0.444
      },
      {
-      "actual": 0.593,
+      "actual": 0.6,
       "band": "50-60%",
-      "n": 54,
-      "predicted": 0.541
+      "n": 55,
+      "predicted": 0.54
      },
      {
       "actual": 0.778,
@@ -151,9 +151,9 @@
       "predicted": 0.808
      }
     ],
-    "hit": 0.561,
-    "logloss": 0.981,
-    "n": 237
+    "hit": 0.563,
+    "logloss": 0.98,
+    "n": 238
    },
    "usl1": {
     "brier": 0.599,
@@ -203,9 +203,9 @@
       "predicted": 0.385
      },
      {
-      "actual": 0.453,
+      "actual": 0.451,
       "band": "40-50%",
-      "n": 203,
+      "n": 204,
       "predicted": 0.444
      },
      {
@@ -233,9 +233,9 @@
       "predicted": 0.806
      }
     ],
-    "hit": 0.495,
+    "hit": 0.493,
     "logloss": 1.041,
-    "n": 372
+    "n": 373
    },
    "uslw": {
     "brier": 0.604,
@@ -264,12 +264,12 @@
     "n": 43
    }
   },
-  "logloss": 1.022,
-  "n": 1830
+  "logloss": 1.021,
+  "n": 1832
  },
  "baseline_brier": 0.667,
  "live": {
-  "brier": 0.58,
+  "brier": 0.578,
   "cal": [
    {
     "actual": 0.364,
@@ -278,15 +278,15 @@
     "predicted": 0.385
    },
    {
-    "actual": 0.516,
+    "actual": 0.52,
     "band": "40-50%",
-    "n": 122,
+    "n": 123,
     "predicted": 0.446
    },
    {
-    "actual": 0.75,
+    "actual": 0.755,
     "band": "50-60%",
-    "n": 48,
+    "n": 49,
     "predicted": 0.534
    },
    {
@@ -308,7 +308,7 @@
     "predicted": 0.822
    }
   ],
-  "hit": 0.556,
+  "hit": 0.56,
   "leagues": {
    "mls": {
     "brier": 0.62,
@@ -343,7 +343,7 @@
     "n": 108
    },
    "nwsl": {
-    "brier": 0.478,
+    "brier": 0.474,
     "cal": [
      {
       "actual": 0.5,
@@ -358,9 +358,9 @@
       "predicted": 0.447
      },
      {
-      "actual": 0.889,
+      "actual": 0.9,
       "band": "50-60%",
-      "n": 9,
+      "n": 10,
       "predicted": 0.532
      },
      {
@@ -376,9 +376,9 @@
       "predicted": 0.822
      }
     ],
-    "hit": 0.75,
-    "logloss": 0.836,
-    "n": 36
+    "hit": 0.757,
+    "logloss": 0.83,
+    "n": 37
    },
    "usl1": {
     "brier": 0.62,
@@ -422,10 +422,10 @@
       "predicted": 0.384
      },
      {
-      "actual": 0.538,
+      "actual": 0.556,
       "band": "40-50%",
-      "n": 26,
-      "predicted": 0.448
+      "n": 27,
+      "predicted": 0.446
      },
      {
       "actual": 0.762,
@@ -446,18 +446,50 @@
       "predicted": 0.745
      }
     ],
-    "hit": 0.632,
-    "logloss": 0.941,
-    "n": 68
+    "hit": 0.638,
+    "logloss": 0.94,
+    "n": 69
    }
   },
-  "logloss": 0.978,
-  "n": 241,
-  "pending": 5,
+  "logloss": 0.976,
+  "n": 243,
+  "pending": 3,
   "since": "2026-09-29T18:51Z",
   "void": 16
  },
  "recent": [
+  {
+   "frozen": "2026-11-13T21:01Z",
+   "lg": "uslc",
+   "n1": "Charleston Battery",
+   "n2": "Louisville City",
+   "p": [
+    0.3371,
+    0.2572,
+    0.4057
+   ],
+   "res": [
+    0,
+    2
+   ],
+   "start": "2026-11-14T23:00:00.000Z"
+  },
+  {
+   "frozen": "2026-11-13T09:36Z",
+   "lg": "nwsl",
+   "n1": "Washington Spirit",
+   "n2": "Utah Royals",
+   "p": [
+    0.5355,
+    0.2368,
+    0.2277
+   ],
+   "res": [
+    2,
+    1
+   ],
+   "start": "2026-11-14T17:00:00.000Z"
+  },
   {
    "frozen": "2026-11-07T18:52Z",
    "lg": "usl1",
@@ -1063,38 +1095,6 @@
    "res": [
     0,
     2
-   ],
-   "start": "2026-11-01T22:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-31T18:38Z",
-   "lg": "nwsl",
-   "n1": "Seattle Reign",
-   "n2": "Orlando Pride",
-   "p": [
-    0.4913,
-    0.2464,
-    0.2623
-   ],
-   "res": [
-    1,
-    0
-   ],
-   "start": "2026-11-01T22:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-31T18:38Z",
-   "lg": "nwsl",
-   "n1": "Washington Spirit",
-   "n2": "Chicago Red Stars",
-   "p": [
-    0.8215,
-    0.1198,
-    0.0587
-   ],
-   "res": [
-    2,
-    0
    ],
    "start": "2026-11-01T22:00:00.000Z"
   }
