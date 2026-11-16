@@ -5422,7 +5422,11 @@
 0.2582,
 0.3695
 ],
-"frozen":"2026-11-14T09:04Z"
+"frozen":"2026-11-14T09:04Z",
+"res":[
+1,
+2
+]
 },
 {
 "k":"uslc:2026-11-16T00:00:new-mexico-united:sacramento-republic",

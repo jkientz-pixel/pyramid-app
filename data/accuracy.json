@@ -3,16 +3,16 @@
   "brier": 0.611,
   "cal": [
    {
-    "actual": 0.416,
+    "actual": 0.414,
     "band": "30-40%",
-    "n": 303,
+    "n": 304,
     "predicted": 0.385
    },
    {
-    "actual": 0.48,
+    "actual": 0.479,
     "band": "40-50%",
-    "n": 1028,
-    "predicted": 0.445
+    "n": 1029,
+    "predicted": 0.446
    },
    {
     "actual": 0.626,
@@ -39,7 +39,7 @@
     "predicted": 0.808
    }
   ],
-  "hit": 0.514,
+  "hit": 0.513,
   "leagues": {
    "mls": {
     "brier": 0.627,
@@ -115,9 +115,9 @@
     "brier": 0.583,
     "cal": [
      {
-      "actual": 0.486,
+      "actual": 0.472,
       "band": "30-40%",
-      "n": 35,
+      "n": 36,
       "predicted": 0.386
      },
      {
@@ -151,9 +151,9 @@
       "predicted": 0.808
      }
     ],
-    "hit": 0.563,
+    "hit": 0.561,
     "logloss": 0.98,
-    "n": 238
+    "n": 239
    },
    "usl1": {
     "brier": 0.599,
@@ -238,7 +238,7 @@
     "n": 373
    },
    "uslw": {
-    "brier": 0.604,
+    "brier": 0.61,
     "cal": [
      {
       "actual": 0.2,
@@ -247,10 +247,10 @@
       "predicted": 0.38
      },
      {
-      "actual": 0.419,
+      "actual": 0.406,
       "band": "40-50%",
-      "n": 31,
-      "predicted": 0.444
+      "n": 32,
+      "predicted": 0.445
      },
      {
       "actual": 0.857,
@@ -259,23 +259,23 @@
       "predicted": 0.539
      }
     ],
-    "hit": 0.465,
-    "logloss": 1.01,
-    "n": 43
+    "hit": 0.455,
+    "logloss": 1.019,
+    "n": 44
    }
   },
-  "logloss": 1.021,
-  "n": 1832
+  "logloss": 1.022,
+  "n": 1834
  },
  "baseline_brier": 0.667,
  "live": {
   "brier": 0.578,
   "cal": [
    {
-    "actual": 0.364,
+    "actual": 0.356,
     "band": "30-40%",
-    "n": 44,
-    "predicted": 0.385
+    "n": 45,
+    "predicted": 0.384
    },
    {
     "actual": 0.52,
@@ -308,7 +308,7 @@
     "predicted": 0.822
    }
   ],
-  "hit": 0.56,
+  "hit": 0.557,
   "leagues": {
    "mls": {
     "brier": 0.62,
@@ -343,13 +343,13 @@
     "n": 108
    },
    "nwsl": {
-    "brier": 0.474,
+    "brier": 0.477,
     "cal": [
      {
-      "actual": 0.5,
+      "actual": 0.4,
       "band": "30-40%",
-      "n": 4,
-      "predicted": 0.386
+      "n": 5,
+      "predicted": 0.383
      },
      {
       "actual": 0.714,
@@ -376,9 +376,9 @@
       "predicted": 0.822
      }
     ],
-    "hit": 0.757,
-    "logloss": 0.83,
-    "n": 37
+    "hit": 0.737,
+    "logloss": 0.835,
+    "n": 38
    },
    "usl1": {
     "brier": 0.62,
@@ -452,12 +452,28 @@
    }
   },
   "logloss": 0.976,
-  "n": 243,
-  "pending": 4,
+  "n": 244,
+  "pending": 3,
   "since": "2026-09-29T18:51Z",
   "void": 16
  },
  "recent": [
+  {
+   "frozen": "2026-11-14T09:04Z",
+   "lg": "nwsl",
+   "n1": "NJ/NY Gotham",
+   "n2": "Kansas City Current",
+   "p": [
+    0.3723,
+    0.2582,
+    0.3695
+   ],
+   "res": [
+    1,
+    2
+   ],
+   "start": "2026-11-15T20:00:00.000Z"
+  },
   {
    "frozen": "2026-11-13T21:01Z",
    "lg": "uslc",
@@ -1079,22 +1095,6 @@
    "res": [
     1,
     0
-   ],
-   "start": "2026-11-01T22:00:00.000Z"
-  },
-  {
-   "frozen": "2026-10-31T18:38Z",
-   "lg": "nwsl",
-   "n1": "Racing Louisville",
-   "n2": "Kansas City Current",
-   "p": [
-    0.1754,
-    0.2152,
-    0.6094
-   ],
-   "res": [
-    0,
-    2
    ],
    "start": "2026-11-01T22:00:00.000Z"
   }
