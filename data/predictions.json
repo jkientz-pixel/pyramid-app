@@ -5473,5 +5473,39 @@
 1,
 2
 ]
+},
+{
+"k":"mls:2026-11-20T00:30:orlando-city:fc-cincinnati",
+"lg":"mls",
+"start":"2026-11-20T00:30:00.000Z",
+"id1":"orlando-city",
+"id2":"fc-cincinnati",
+"n1":"Orlando City",
+"n2":"FC Cincinnati",
+"r1":1877,
+"r2":1881,
+"p":[
+0.4309,
+0.2551,
+0.3139
+],
+"frozen":"2026-11-18T22:02Z"
+},
+{
+"k":"mls:2026-11-20T03:00:seattle-sounders:real-salt-lake",
+"lg":"mls",
+"start":"2026-11-20T03:00:00.000Z",
+"id1":"seattle-sounders",
+"id2":"real-salt-lake",
+"n1":"Seattle Sounders",
+"n2":"Real Salt Lake",
+"r1":1883,
+"r2":1883,
+"p":[
+0.4369,
+0.2545,
+0.3086
+],
+"frozen":"2026-11-18T22:02Z"
 }
 ]
