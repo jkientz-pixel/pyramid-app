@@ -5507,5 +5507,56 @@
 0.3086
 ],
 "frozen":"2026-11-18T22:02Z"
+},
+{
+"k":"uslc:2026-11-21T17:00:sacramento-republic:louisville-city",
+"lg":"uslc",
+"start":"2026-11-21T17:00:00.000Z",
+"id1":"sacramento-republic",
+"id2":"louisville-city",
+"n1":"Sacramento Republic",
+"n2":"Louisville City",
+"r1":1805,
+"r2":1814,
+"p":[
+0.4235,
+0.2558,
+0.3207
+],
+"frozen":"2026-11-20T10:06Z"
+},
+{
+"k":"mls:2026-11-21T19:00:new-england-revolution:philadelphia-union",
+"lg":"mls",
+"start":"2026-11-21T19:00:00.000Z",
+"id1":"new-england-revolution",
+"id2":"philadelphia-union",
+"n1":"New England Revolution",
+"n2":"Philadelphia Union",
+"r1":1911,
+"r2":1899,
+"p":[
+0.4549,
+0.2523,
+0.2928
+],
+"frozen":"2026-11-20T10:06Z"
+},
+{
+"k":"mls:2026-11-21T21:00:fc-dallas:portland-timbers",
+"lg":"mls",
+"start":"2026-11-21T21:00:00.000Z",
+"id1":"fc-dallas",
+"id2":"portland-timbers",
+"n1":"FC Dallas",
+"n2":"Portland Timbers",
+"r1":1913,
+"r2":1885,
+"p":[
+0.4792,
+0.2486,
+0.2723
+],
+"frozen":"2026-11-20T10:06Z"
 }
 ]
