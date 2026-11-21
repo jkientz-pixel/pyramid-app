@@ -1,11 +1,11 @@
 [
  [
   "ncaa1w: TBD Home",
-  30
+  24
  ],
  [
   "ncaa1w: TBD Away",
-  30
+  24
  ],
  [
   "ncaa1: TBD Home",
@@ -48,46 +48,6 @@
   1
  ],
  [
-  "ncaa1w: UCF",
-  1
- ],
- [
-  "ncaa1w: Wisconsin",
-  1
- ],
- [
-  "ncaa1w: Penn State",
-  1
- ],
- [
-  "ncaa1w: South Carolina",
-  1
- ],
- [
-  "ncaa1w: UAB",
-  1
- ],
- [
-  "ncaa1w: Tennessee",
-  1
- ],
- [
-  "ncaa1w: Texas",
-  1
- ],
- [
-  "ncaa1w: UT Martin",
-  1
- ],
- [
-  "ncaa1w: Virginia Tech",
-  1
- ],
- [
-  "ncaa1w: Alabama",
-  1
- ],
- [
   "ncaa1w: North Carolina",
   1
  ],
@@ -97,6 +57,26 @@
  ],
  [
   "ncaa1w: Quinnipiac",
+  1
+ ],
+ [
+  "ncaa1w: Alabama",
+  1
+ ],
+ [
+  "ncaa1w: Virginia Tech",
+  1
+ ],
+ [
+  "ncaa1w: Purdue",
+  1
+ ],
+ [
+  "ncaa1w: South Carolina",
+  1
+ ],
+ [
+  "ncaa1w: Wisconsin",
   1
  ]
 ]

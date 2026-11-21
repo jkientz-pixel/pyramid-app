@@ -5600,5 +5600,22 @@
 0.3867
 ],
 "frozen":"2026-11-20T21:54Z"
+},
+{
+"k":"mls:2026-11-22T21:00:nashville-sc:fc-cincinnati",
+"lg":"mls",
+"start":"2026-11-22T21:00:00.000Z",
+"id1":"nashville-sc",
+"id2":"fc-cincinnati",
+"n1":"Nashville SC",
+"n2":"FC Cincinnati",
+"r1":1966,
+"r2":1881,
+"p":[
+0.5659,
+0.2287,
+0.2054
+],
+"frozen":"2026-11-21T09:54Z"
 }
 ]
