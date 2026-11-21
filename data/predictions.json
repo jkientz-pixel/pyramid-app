@@ -5617,5 +5617,39 @@
 0.2054
 ],
 "frozen":"2026-11-21T09:54Z"
+},
+{
+"k":"mls:2026-11-22T23:30:chicago-fire:charlotte-fc",
+"lg":"mls",
+"start":"2026-11-22T23:30:00.000Z",
+"id1":"chicago-fire",
+"id2":"charlotte-fc",
+"n1":"Chicago Fire",
+"n2":"Charlotte FC",
+"r1":1907,
+"r2":1907,
+"p":[
+0.4369,
+0.2545,
+0.3086
+],
+"frozen":"2026-11-21T20:37Z"
+},
+{
+"k":"mls:2026-11-23T01:30:vancouver-whitecaps:real-salt-lake",
+"lg":"mls",
+"start":"2026-11-23T01:30:00.000Z",
+"id1":"vancouver-whitecaps",
+"id2":"real-salt-lake",
+"n1":"Vancouver Whitecaps",
+"n2":"Real Salt Lake",
+"r1":1938,
+"r2":1883,
+"p":[
+0.5203,
+0.2404,
+0.2394
+],
+"frozen":"2026-11-21T20:37Z"
 }
 ]
