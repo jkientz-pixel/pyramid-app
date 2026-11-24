@@ -5699,7 +5699,11 @@
 0.2521,
 0.2915
 ],
-"frozen":"2026-11-22T20:54Z"
+"frozen":"2026-11-22T20:54Z",
+"res":[
+3,
+2
+]
 },
 {
 "k":"mls:2026-11-25T03:00:san-jose-earthquakes:houston-dynamo",
