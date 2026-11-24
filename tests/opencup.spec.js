@@ -129,8 +129,16 @@ test('2027 qualifying renders every round, tiers, picks and stated venues', asyn
   if (pendingLatest.length) {
     /* stated local kickoff, not the viewer's timezone */
     await expect(block).toContainText(KICKOFF);
-    /* at least some pending ties carry the model's pick */
-    expect(await block.locator('.oc-sub', { hasText: 'Our pick' }).count()).toBeGreaterThan(Math.min(3, pendingLatest.length - 1));
+    /* the model only picks a tie when both sides are matched clubs with a
+       rating, and amateur qualifiers are often unmatched or unrated — so the
+       floor comes from the data, not a fixed count: every pending tie whose
+       two ids resolve to rated clubs must carry a pick */
+    const pickable = await page.evaluate(async ties => {
+      const { CLUBS } = await import('/js/data.js');
+      const rated = id => !!id && !!(CLUBS.find(c => c.id === id) || {}).r;
+      return ties.filter(t => rated(t.id1) && rated(t.id2)).length;
+    }, pendingLatest);
+    expect(await block.locator('.oc-sub', { hasText: 'Our pick' }).count()).toBeGreaterThanOrEqual(pickable);
     /* a small set of closest-call cards, not 32 */
     expect(cards).toBeGreaterThan(0);
     expect(cards).toBeLessThanOrEqual(6);
