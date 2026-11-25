@@ -163,6 +163,11 @@ jobs:
           git config user.name "roster-bot"
           git config user.email "actions@github.com"
           git commit -m "chore: scheduled roster refresh"
+          # the scrape scripts leave tracked files modified that this job never
+          # commits (they are rebuilt every run), and `git pull --rebase` refuses
+          # to run over unstaged changes — every run failed here 11/24-25. The
+          # deploy has already shipped, so drop them before rebasing.
+          git restore --worktree -- .
           # the mini's scrape can land while this job runs; it only touches
           # files this job reads, never ones it commits, so a rebase is clean
           git pull --rebase origin master && git push
