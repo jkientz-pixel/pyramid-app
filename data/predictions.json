@@ -5742,5 +5742,22 @@
 0.3524
 ],
 "frozen":"2026-11-26T13:46Z"
+},
+{
+"k":"mls:2026-11-28T03:00:real-salt-lake:vancouver-whitecaps",
+"lg":"mls",
+"start":"2026-11-28T03:00:00.000Z",
+"id1":"real-salt-lake",
+"id2":"vancouver-whitecaps",
+"n1":"Real Salt Lake",
+"n2":"Vancouver Whitecaps",
+"r1":1883,
+"r2":1938,
+"p":[
+0.3567,
+0.258,
+0.3853
+],
+"frozen":"2026-11-26T23:04Z"
 }
 ]
