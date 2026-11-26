@@ -5725,5 +5725,22 @@
 2,
 1
 ]
+},
+{
+"k":"mls:2026-11-28T01:00:columbus-crew:inter-miami",
+"lg":"mls",
+"start":"2026-11-28T01:00:00.000Z",
+"id1":"columbus-crew",
+"id2":"inter-miami",
+"n1":"Columbus Crew",
+"n2":"Inter Miami",
+"r1":1890,
+"r2":1922,
+"p":[
+0.3896,
+0.2579,
+0.3524
+],
+"frozen":"2026-11-26T13:46Z"
 }
 ]
