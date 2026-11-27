@@ -5810,5 +5810,39 @@
 0.3247
 ],
 "frozen":"2026-11-27T10:55Z"
+},
+{
+"k":"mls:2026-11-28T23:30:fc-cincinnati:nashville-sc",
+"lg":"mls",
+"start":"2026-11-28T23:30:00.000Z",
+"id1":"fc-cincinnati",
+"id2":"nashville-sc",
+"n1":"FC Cincinnati",
+"n2":"Nashville SC",
+"r1":1881,
+"r2":1966,
+"p":[
+0.3153,
+0.2553,
+0.4294
+],
+"frozen":"2026-11-27T13:47Z"
+},
+{
+"k":"mls:2026-11-29T01:30:lafc:st-louis-city-sc",
+"lg":"mls",
+"start":"2026-11-29T01:30:00.000Z",
+"id1":"lafc",
+"id2":"st-louis-city-sc",
+"n1":"LAFC",
+"n2":"St. Louis City SC",
+"r1":1892,
+"r2":1905,
+"p":[
+0.4175,
+0.2563,
+0.3261
+],
+"frozen":"2026-11-27T13:47Z"
 }
 ]
