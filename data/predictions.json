@@ -5759,5 +5759,56 @@
 0.3853
 ],
 "frozen":"2026-11-26T23:04Z"
+},
+{
+"k":"mls:2026-11-28T17:30:charlotte-fc:chicago-fire",
+"lg":"mls",
+"start":"2026-11-28T17:30:00.000Z",
+"id1":"charlotte-fc",
+"id2":"chicago-fire",
+"n1":"Charlotte FC",
+"n2":"Chicago Fire",
+"r1":1907,
+"r2":1907,
+"p":[
+0.4369,
+0.2545,
+0.3086
+],
+"frozen":"2026-11-27T10:55Z"
+},
+{
+"k":"mls:2026-11-28T19:30:houston-dynamo:san-jose-earthquakes",
+"lg":"mls",
+"start":"2026-11-28T19:30:00.000Z",
+"id1":"houston-dynamo",
+"id2":"san-jose-earthquakes",
+"n1":"Houston Dynamo",
+"n2":"San Jose Earthquakes",
+"r1":1894,
+"r2":1899,
+"p":[
+0.4294,
+0.2553,
+0.3153
+],
+"frozen":"2026-11-27T10:55Z"
+},
+{
+"k":"mls:2026-11-28T21:30:philadelphia-union:new-england-revolution",
+"lg":"mls",
+"start":"2026-11-28T21:30:00.000Z",
+"id1":"philadelphia-union",
+"id2":"new-england-revolution",
+"n1":"Philadelphia Union",
+"n2":"New England Revolution",
+"r1":1899,
+"r2":1911,
+"p":[
+0.419,
+0.2562,
+0.3247
+],
+"frozen":"2026-11-27T10:55Z"
 }
 ]
