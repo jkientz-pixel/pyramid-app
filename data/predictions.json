@@ -5844,5 +5844,22 @@
 0.3261
 ],
 "frozen":"2026-11-27T13:47Z"
+},
+{
+"k":"mls:2026-11-29T03:30:portland-timbers:fc-dallas",
+"lg":"mls",
+"start":"2026-11-29T03:30:00.000Z",
+"id1":"portland-timbers",
+"id2":"fc-dallas",
+"n1":"Portland Timbers",
+"n2":"FC Dallas",
+"r1":1885,
+"r2":1913,
+"p":[
+0.3955,
+0.2577,
+0.3468
+],
+"frozen":"2026-11-27T22:48Z"
 }
 ]
