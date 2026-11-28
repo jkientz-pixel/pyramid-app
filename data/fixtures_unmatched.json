@@ -1,18 +1,18 @@
 [
  [
-  "ncaa1w: TBD Home",
-  15
- ],
- [
-  "ncaa1w: TBD Away",
-  15
- ],
- [
   "ncaa1: TBD Home",
   7
  ],
  [
   "ncaa1: TBD Away",
+  7
+ ],
+ [
+  "ncaa1w: TBD Home",
+  7
+ ],
+ [
+  "ncaa1w: TBD Away",
   7
  ],
  [
@@ -37,6 +37,14 @@
  ],
  [
   "ncaa1: NC State",
+  1
+ ],
+ [
+  "ncaa1w: North Carolina",
+  1
+ ],
+ [
+  "ncaa1w: Purdue",
   1
  ]
 ]

@@ -1,6 +1,6 @@
 {
  "backtest": {
-  "brier": 0.612,
+  "brier": 0.611,
   "cal": [
    {
     "actual": 0.414,
@@ -9,9 +9,9 @@
     "predicted": 0.385
    },
    {
-    "actual": 0.479,
+    "actual": 0.48,
     "band": "40-50%",
-    "n": 1036,
+    "n": 1038,
     "predicted": 0.445
    },
    {
@@ -42,7 +42,7 @@
   "hit": 0.513,
   "leagues": {
    "mls": {
-    "brier": 0.628,
+    "brier": 0.627,
     "cal": [
      {
       "actual": 0.36,
@@ -51,9 +51,9 @@
       "predicted": 0.385
      },
      {
-      "actual": 0.44,
+      "actual": 0.444,
       "band": "40-50%",
-      "n": 277,
+      "n": 279,
       "predicted": 0.447
      },
      {
@@ -75,9 +75,9 @@
       "predicted": 0.721
      }
     ],
-    "hit": 0.471,
-    "logloss": 1.045,
-    "n": 505
+    "hit": 0.473,
+    "logloss": 1.044,
+    "n": 507
    },
    "mnp": {
     "brier": 0.605,
@@ -264,17 +264,17 @@
     "n": 48
    }
   },
-  "logloss": 1.022,
-  "n": 1852
+  "logloss": 1.021,
+  "n": 1854
  },
  "baseline_brier": 0.667,
  "live": {
   "brier": 0.58,
   "cal": [
    {
-    "actual": 0.362,
+    "actual": 0.388,
     "band": "30-40%",
-    "n": 47,
+    "n": 49,
     "predicted": 0.384
    },
    {
@@ -308,15 +308,15 @@
     "predicted": 0.822
    }
   ],
-  "hit": 0.556,
+  "hit": 0.559,
   "leagues": {
    "mls": {
     "brier": 0.62,
     "cal": [
      {
-      "actual": 0.304,
+      "actual": 0.36,
       "band": "30-40%",
-      "n": 23,
+      "n": 25,
       "predicted": 0.385
      },
      {
@@ -338,9 +338,9 @@
       "predicted": 0.64
      }
     ],
-    "hit": 0.483,
-    "logloss": 1.034,
-    "n": 118
+    "hit": 0.492,
+    "logloss": 1.032,
+    "n": 120
    },
    "nwsl": {
     "brier": 0.48,
@@ -452,12 +452,44 @@
    }
   },
   "logloss": 0.978,
-  "n": 259,
-  "pending": 8,
+  "n": 261,
+  "pending": 6,
   "since": "2026-09-29T18:51Z",
   "void": 16
  },
  "recent": [
+  {
+   "frozen": "2026-11-26T23:04Z",
+   "lg": "mls",
+   "n1": "Real Salt Lake",
+   "n2": "Vancouver Whitecaps",
+   "p": [
+    0.3567,
+    0.258,
+    0.3853
+   ],
+   "res": [
+    0,
+    1
+   ],
+   "start": "2026-11-28T03:00:00.000Z"
+  },
+  {
+   "frozen": "2026-11-26T13:46Z",
+   "lg": "mls",
+   "n1": "Columbus Crew",
+   "n2": "Inter Miami",
+   "p": [
+    0.3896,
+    0.2579,
+    0.3524
+   ],
+   "res": [
+    1,
+    0
+   ],
+   "start": "2026-11-28T01:00:00.000Z"
+  },
   {
    "frozen": "2026-11-24T03:50Z",
    "lg": "mls",
@@ -1063,38 +1095,6 @@
    "res": [
     3,
     3
-   ],
-   "start": "2026-11-07T21:00:00.000Z"
-  },
-  {
-   "frozen": "2026-11-06T16:15Z",
-   "lg": "mls",
-   "n1": "Orlando City",
-   "n2": "New England Revolution",
-   "p": [
-    0.3738,
-    0.2582,
-    0.368
-   ],
-   "res": [
-    1,
-    0
-   ],
-   "start": "2026-11-07T21:00:00.000Z"
-  },
-  {
-   "frozen": "2026-11-06T16:15Z",
-   "lg": "mls",
-   "n1": "Philadelphia Union",
-   "n2": "Toronto FC",
-   "p": [
-    0.4776,
-    0.2488,
-    0.2735
-   ],
-   "res": [
-    4,
-    1
    ],
    "start": "2026-11-07T21:00:00.000Z"
   }
